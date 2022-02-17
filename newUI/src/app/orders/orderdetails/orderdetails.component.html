@@ -1,0 +1,252 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <div class="clearfix">
+      <div class="pull-left"> Order Details</div>
+      <div class="container" class="pull-right">
+        <div class="row">
+          <a title="Back" class="btn btn-info btn-sm a-btn-slide-text" (click)=cancel()>
+            <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+          </a>
+          <!-- <a [routerLink]="['/editproduct', id]" title="Update Product" class="btn btn-info btn-sm a-btn-slide-text">
+              <i class="glyphicon glyphicon-edit"></i>
+            </a>
+            <a class="btn btn-danger a-btn-slide-text btn-sm" title="Delete Product" (click)="deleteRole(id)">
+              <span class="glyphicon glyphicon-remove-circle"></span>
+            </a> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="panel-body">
+    <form #form1="ngForm">
+      <div class="col-md-12 col-sm-12 col-xs-12 img-thumbnail ">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+          <h4>Order Details:</h4>
+        </div>
+
+        <div class="col-md-12 col-sm-6 col-xs-12">
+          <div class="col-md-6 col-sm-12 col-xs-12">
+            <div class="form-group">
+              <label for="invoicenum">Invoice Number: {{orderdetails?.invoicenum}}
+              </label>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-12 col-xs-12">
+            <div class="form-group">
+              <label for="invoicedate">Invoice Date : {{orderdetails?.invoicedate | date}}
+              </label>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="custname">Customer Name: {{orderdetails?.custname}}
+              </label>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="custmobile">Phone Number: {{orderdetails?.custmobile}}
+              </label>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="custcity">City : {{orderdetails?.custcity}}
+              </label>
+            </div>
+          </div>
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <hr>
+          </div>
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <h4>Delivery Details:</h4>
+          </div>
+
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <!-- <h4>Delivery Details:</h4> -->
+
+
+            {{orderdetails?.custname}},<br>
+            {{orderdetails?.deliveryaddress?.line1}}<br>
+            {{orderdetails?.deliveryaddress.line2}}<br>
+            {{orderdetails?.deliveryaddress?.city}}-{{orderdetails?.deliveryaddress?.pincode}}<br>
+            {{orderdetails?.deliveryaddress?.states}}.<br>
+            <span class="glyphicon glyphicon-earphone"></span>{{orderdetails?.custmobile}}<br><br>
+
+            <!-- <h4 style="border: 3px solid green;border-radius: 5px;width: 63%;padding: 3px;"><b>Expected Delivery:</b> {{this.day |date }}</h4> -->
+
+          </div>
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <hr>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="status">Status:&nbsp;{{orderdetails?.status}}
+              </label>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="expdelivery">Expected Delivery : &nbsp;{{orderdetails?.expdelivery | date}}
+              </label>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="paymentmode">Payment Mode:&nbsp;{{orderdetails?.paymentmode}}
+              </label>
+            </div>
+          </div>
+          <div class="col-md-6 cdol-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="transactionid">Transaction ID:&nbsp;{{orderdetails?.transactionid}}
+              </label>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-sm-6 col-xs-12">
+
+
+            <span class="label label-danger">Order Cost </span>
+            <table class="table table-condensed table-responsive table-striped table-bordered">
+              <thead>
+                <tr>
+                  <th>Type</th>
+                  <th>Amount</th>
+
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Base Price</td>
+                  <td>{{this.orderdetails?.qcost.baseprice}} /-</td>
+
+                </tr>
+                <tr class="success">
+                  <td>Total Items</td>
+                  <td>{{this.orderdetails?.qcost.totalitem}} </td>
+
+                </tr>
+
+                <tr class="danger">
+                  <td>GST Amount</td>
+                  <td>{{this.orderdetails?.qcost.gstamt}} /-</td>
+
+                </tr>
+                <tr class="info">
+                  <td>Delivery Amount</td>
+                  <td>{{this.orderdetails?.qcost.delivery}} /-</td>
+
+                </tr>
+                <tr class="warning">
+                  <td>Service Charge</td>
+                  <td>{{this.orderdetails?.qcost.servicecharge}} /-</td>
+
+                </tr>
+                <tr class="active">
+                  <td>Discount Value</td>
+                  <td>{{this.orderdetails?.qcost.discountvalue}} /-</td>
+
+                </tr>
+                <tr class="success">
+                  <td>Discount Amount</td>
+                  <td>{{this.orderdetails?.qcost.discountrate}} /-</td>
+
+                </tr>
+                <tr class="active">
+                  <td style="background: #d7ff0091;">Final Amount</td>
+                  <td style="background: #d7ff0091;">{{this.orderdetails?.qcost.finalamt}} /-</td>
+
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="details">details:&nbsp;{{product.description}}
+                </label>
+              </div>
+            </div> -->
+          <!-- <div class="col-sm-12 img-thumbnail">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th colspan="4">Product Colours:</th>
+                  </tr>
+                  <tr>
+                    <th style="width: 100px;">Sr. No.</th>
+                    <th>Colour</th>
+                    <th>Priority</th>
+                    <th>Details</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let data of colourlistdb; let i=index;">
+                    <td style="width: 50px;">
+                      {{i+1}}
+                    </td>
+                    <td>{{data?.colour}}</td>
+                    <td>{{data?.priority}}</td>
+                    <td>{{data?.details}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+
+              <!-- <div class="col-sm-12">
+               *****
+              </div> -->
+
+
+
+        </div>
+
+
+        <div class="col-sm-12 img-thumbnail rounded"
+          style="margin-top: 3px;  border: 1px solid #c5c4c4; min-height: 10px; overflow: auto;">
+          <table class="table">
+            <thead>
+              <tr>
+                <th style="width: 50px;">-</th>
+                <th>Product Name</th>
+                <th>Quantity</th>
+                <th>Gst</th>
+                <th>Gst Amount</th>
+                <th>Rate Per unit</th>
+                <th>Amount</th>
+                <!-- <th>Values</th> -->
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of this.orderdetails?.oentry; let i=index;">
+                <td style="width: 50px;">
+                  {{i+1}}
+                </td>
+                <td>
+                  <div class="img-thumbnail  ">
+                    <img *ngIf="data?.photo?.docpath" src="{{docServer}}/{{data?.photo?.docpath}}" class="img-circle"
+                      alt="" style="width:100px; height:100px;">
+                    <img *ngIf="!data?.photo?.docpath"
+                      src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg" class="img-circle"
+                      alt="" style="width:100px; height:100px;">
+
+                    <div class="caption text-capitalize text-center"> {{data?.dname}}</div>
+                  </div>
+                </td>
+                <td>{{data.qty}}</td>
+                <td>{{data?.gst}} %</td>
+                <td>{{data?.gstamt}}</td>
+                <td>{{data?.rateperunit}}</td>
+                <td>{{data?.amount}}</td>
+
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

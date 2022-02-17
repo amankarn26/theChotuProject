@@ -1,0 +1,110 @@
+<ion-header>
+  <ion-toolbar style="--background: rgba(134,75,246,1);">
+    <ion-title class="pageheading">
+      <strong>Sign Up</strong>
+    </ion-title>
+
+    <ion-buttons slot="start">
+
+      <ion-back-button defaultHref="" (click)="cancel()" style="color: white;">
+      </ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen *ngIf="isverified && !ismapShow">
+
+  <form #form1="ngForm">
+
+    <div class="before" >
+      <div class="heading">Create Account</div>
+
+      <div class="inputBoxes">
+        <div class="input">
+          <input type="text" [(ngModel)]="user.name" name="username" placeholder="Name" required/>
+        </div>
+        <div class="input">
+          <input type="email" [(ngModel)]="user.email" name="email" placeholder="Email" required
+              pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"/>
+        </div>
+        <div class="input">
+          <input type="password" [(ngModel)]="passHaiye" name="password" placeholder="Enter Password" required/>
+        </div>
+        <div class="input">
+          <input  placeholder="Address Line 1" type="text" class="form-control" id="uline1" name="uline1"
+          [(ngModel)]="user.address.line1" required/>
+        </div>
+        <div class="input">
+          <input placeholder="Area " type="text" class="form-control" id="uline2" name="uline2"
+          [(ngModel)]="user.address.line2" required/>
+        </div>
+        <div class="input">
+          <input placeholder="Zip Code" type="number" required class="form-control" id="upincode" name="upincode"
+          [(ngModel)]="user.address.pincode" (change)="getState($event)"/>
+        </div>
+        <div class="input">
+          <input placeholder="City" type="text" required class="form-control" name="ucitiName"
+          [(ngModel)]="user.address.city"/>
+        </div>
+        <div class="input">
+          <input placeholder="State" type="text" required class="form-control" name="ustates" required
+          [(ngModel)]="user.address.states"/>
+        </div>
+      </div>
+
+      <div class="buttons" *ngIf="!locationSet">
+        <div class="proceed" *ngIf="form1.valid" (click)="setLocation()">Set Location</div>
+        <div class="proceed disabled" *ngIf="!form1.valid">Set Location</div>
+      </div>
+
+      <div class="buttons" *ngIf="locationSet">
+        <div class="proceed" *ngIf="form1.valid" (click)="submitData()">Sign Up</div>
+        <div class="proceed disabled" *ngIf="!form1.valid">Sign Up</div>
+      </div>
+    </div>
+
+  </form>
+
+  <!-- end customer -->
+
+  <ion-item *ngIf="!this.lattitude">
+    <label>If blocked from tracking your location, You will be charged higher Delivery Charges</label>
+  </ion-item>
+
+</ion-content>
+
+
+<ion-content fullscreen *ngIf="!isverified && !ismapShow">
+
+  <form class="before" #form5="ngForm">
+    <div class="heading">Create Account</div>
+    <div class="inputBoxes">
+      <div class="input">
+        <input type="number" [(ngModel)]="phone" name="phonesss" placeholder="Mobile No" pattern="[0-9]{10}" required />
+      </div>
+      <div class="input" *ngIf="showotpcontainer">
+        <input type="number" [(ngModel)]="userotp" name="userotp" placeholder="Enter OTP" pattern="[0-9]{6}" required />
+      </div>
+    </div>
+    <div class="buttons" *ngIf="!showotpcontainer">
+      <div class="proceed" *ngIf="form5.valid" (click)="checkifnumberexists()">Get OTP</div>
+      <div class="proceed disabled" *ngIf="!form5.valid">Get OTP</div>
+    </div>
+    <div class="buttons" *ngIf="showotpcontainer">
+      <div class="proceed" *ngIf="form5.valid" (click)="checkotp()">Proceed</div>
+      <div class="proceed disabled" *ngIf="!form5.valid">Proceed</div>
+      <div class="proceed" style="margin-top: 20px;" *ngIf="!form5.valid" (click)="register()">Resend</div>
+    </div>
+  </form>
+
+
+</ion-content>
+
+<ion-content class="mapBox" *ngIf="ismapShow">
+  <div id="mapcontainer">
+    <div id="map"></div>
+  </div>
+  <div class="buttons">
+    <div class="proceed" (click)="stopMap()">Select this location</div>
+  </div>
+</ion-content>

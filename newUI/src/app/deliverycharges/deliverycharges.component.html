@@ -1,0 +1,401 @@
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Modal Header</h4>
+            </div>
+            <div class="modal-body">
+                <p>Some text in the modal.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- <div class="content">
+      <div class="container-fluid">
+          <div class="row">
+              <div class="col-md-12">
+                  <div class="card">
+                      <div class="header">
+  
+                          <h4 class="title"> {{title}}</h4>
+                          <a [routerLink]="['/managecategory']" title="Manage Category" class="pull-right">
+                              <span class="glyphicon glyphicon-th-list"></span>
+                          </a>
+                      </div>
+                      <div class="content">
+                          <form #form1="ngForm">
+                              <div class="row">
+  
+                                  <div class="col-sm-6">
+                                      <div class="form-group">
+                                          <label for="name"> Name:
+                                              <span class="m glyphicon glyphicon-asterisk"></span>
+                                          </label>
+                                          <input type="text" *ngIf=!isUpdate class="form-control" required name="name"
+                                              [(ngModel)]="category.name">
+                                          <input type="text" *ngIf=isUpdate readonly class="form-control" required
+                                              name="name" [(ngModel)]="category.name">
+                                      </div>
+                                  </div>
+                                  <div class="col-sm-6">
+                                      <div class="form-group">
+                                          <label for="description"> Description:</label>
+                                          <input type="text" class="form-control" *ngIf=!isUpdate name="description"
+                                              [(ngModel)]="category.description">
+                                          <input type="text" class="form-control" *ngIf=isUpdate name="description"
+                                              [(ngModel)]="category.description">
+  
+                                      </div>
+                                  </div>
+  
+                              </div>
+  
+                              <div class="row">
+                                  <div class="col-md-6">
+                                      <div class="form-group">
+                                          <button *ngIf="this.url == '/addcategory'" type="submit"
+                                              [disabled]="!form1.valid" class="btn btn-default"
+                                              (click)="submitData()">Submit</button>
+                                          <button *ngIf="this.url == '/editcategory/' + this.id" type="submit"
+                                              [disabled]="!form1.valid" class="btn btn-default"
+                                              (click)="updateData()">Update</button>
+                                          <button type="button" class="btn btn-default" (click)="cancel()">Cancel</button>
+  
+                                      </div>
+                                  </div>
+                              </div>
+                          </form>
+  
+                      </div>
+                  </div>
+              </div>
+  
+  
+          </div>
+      </div>
+  </div> -->
+
+<!--Add delivery charges  -->
+<div [hidden]="isManageState" class="col-md-12 col-sm-12 col-xs-12">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            {{title}}
+            <a [routerLink]="['/manage_deliverycharge']" title="Manage Delivery Charge" class="pull-right">
+                <span class="glyphicon glyphicon-th-list"></span>
+            </a>
+        </div>
+
+        <div class="panel-body">
+            <form #form1="ngForm">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="citytype"> City Type:</label>
+
+                        <select class="form-control" name="citytype" *ngIf="!isUpdate" required
+                            [(ngModel)]="dcharge.citytype">
+                            <option value="NON_METRO">NON_METRO</option>
+                            <option value="METRO">METRO</option>
+                        </select>
+                        <select class="form-control" name="citytype" *ngIf="isUpdate" disabled required
+                            [(ngModel)]="dcharge.citytype">
+                            <option value="NON_METRO">NON_METRO</option>
+                            <option value="METRO">METRO</option>
+                        </select>
+
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="durationtype"> Duration Type:</label>
+                        <select class="form-control" name="durationtype" *ngIf="!isUpdate" required
+                            [(ngModel)]="dcharge.durationtype">
+                            <option value="WITHIN_2_HRS">WITHIN 2 HRS</option>
+                            <option value="WITHIN_4_HRS">WITHIN 4 HRS</option>
+                            <option value="WITHIN_24_HRS">WITHIN 24 HRS</option>
+
+
+                        </select>
+                        <select class="form-control" name="durationtype" *ngIf="isUpdate" disabled required
+                            [(ngModel)]="dcharge.durationtype">
+                            <!-- <option value="IMMEDIATE">IMMEDIATE</option> -->
+                            <option value="WITHIN_2_HRS">WITHIN 2 HRS</option>
+                            <option value="WITHIN_4_HRS">WITHIN 4 HRS</option>
+                            <option value="WITHIN_24_HRS">WITHIN 24 HRS</option>
+                        </select>
+
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="minitems"> Minimum Item:</label>
+                        <input type="number" class="form-control" *ngIf=!isUpdate name="minitems" required
+                            [(ngModel)]="dcharge.minitems">
+                        <input type="number" class="form-control" *ngIf=isUpdate name="minitems" required
+                            [(ngModel)]="dcharge.minitems">
+
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="maxitems"> Maximum Item:</label>
+                        <input type="number" class="form-control" *ngIf=!isUpdate name="maxitems" required
+                            [(ngModel)]="dcharge.maxitems">
+                        <input type="number" class="form-control" *ngIf=isUpdate name="maxitems" required
+                            [(ngModel)]="dcharge.maxitems">
+
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="mindistance"> Minimum Distance:</label>
+                        <input type="number" class="form-control" *ngIf=!isUpdate name="mindistance" required
+                            [(ngModel)]="dcharge.mindistance">
+                        <input type="number" class="form-control" *ngIf=isUpdate name="mindistance" required
+                            [(ngModel)]="dcharge.mindistance">
+
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="maxdistance"> Maximum Distance:</label>
+                        <input type="number" class="form-control" *ngIf=!isUpdate name="maxdistance" required
+                            [(ngModel)]="dcharge.maxdistance">
+                        <input type="number" class="form-control" *ngIf=isUpdate name="maxdistance" required
+                            [(ngModel)]="dcharge.maxdistance">
+
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="specialitem"> Specialitem:</label>
+                        <select class="form-control" name="specialitem" *ngIf="!isUpdate" required
+                            [(ngModel)]="dcharge.specialitem">
+                            <option value="YES">YES</option>
+                            <option value="NO">NO</option>
+                        </select>
+                        <select class="form-control" name="specialitem" *ngIf="isUpdate" required
+                            [(ngModel)]="dcharge.specialitem">
+                            <option value="YES">YES</option>
+                            <option value="NO">NO</option>
+                        </select>
+
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="vehicletype"> Vehicle Type:</label>
+                        <select class="form-control" name="vehicletype" *ngIf="!isUpdate" required
+                            [(ngModel)]="dcharge.vehicletype">
+                            <!-- <option value="AUTO">AUTO</option>
+                            <option value="TEMPO">TEMPO</option> -->
+                            <option value="TWO_WHEELER">TWO_WHEELER</option>
+                            <option value="TWO_WHEELER">THREE-WHEELER</option>
+
+                        </select>
+                        <select class="form-control" name="vehicletype" *ngIf="isUpdate" required
+                            [(ngModel)]="dcharge.vehicletype">
+                            <!-- <option value="AUTO">AUTO</option>
+                            <option value="TEMPO">TEMPO</option> -->
+                            <option value="TWO_WHEELER">TWO_WHEELER</option>
+                            <option value="TWO_WHEELER">THREE-WHEELER</option>
+                        </select>
+
+
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="charge"> Charge:</label>
+                        <input type="number" class="form-control" *ngIf=!isUpdate name="charge"
+                            [(ngModel)]="dcharge.charge">
+                        <input type="number" class="form-control" *ngIf=isUpdate name="charge"
+                            [(ngModel)]="dcharge.charge">
+
+                    </div>
+                </div>
+                <br>
+
+                <div class="col-sm-12" style="padding-top: 25px;">
+                    <button class="btn btn-info btn-sm" [disabled]="!form1.valid" title="Add"
+                        (click)="pushstockvalue()">
+                        <span class="glyphicon glyphicon-plus"></span>
+                    </button>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12"
+                        style="margin-top: 3px;  border: 1px solid #c5c4c4; min-height: 10px;    width: 95%; overflow: auto;margin-left: 31px">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 50px;">-</th>
+                                    <th>City Type</th>
+                                    <th>Durationtype</th>
+                                    <th>Maxitems</th>
+                                    <th>Minitems</th>
+                                    <th>Maxdistance</th>
+                                    <th>Mindistance</th>
+                                    <th>Specialitem</th>
+                                    <th>Vehicletype</th>
+                                    <th>Charge</th>
+
+
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let data of this.dcharge_multiple; let i=index;">
+                                    <td style="width: 50px;">
+                                        <a style="cursor: pointer; color: red;" (click)="onDeletestockval(i)">
+                                            <span class="glyphicon glyphicon-remove-circle"></span>
+                                        </a>
+                                    </td>
+                                    <td>{{data?.citytype}}</td>
+                                    <td>{{data?.durationtype}}</td>
+                                    <td>{{data?.maxitems}}</td>
+                                    <td>{{data?.minitems}}</td>
+                                    <td>{{data?.maxdistance}}</td>
+                                    <td>{{data?.mindistance}}</td>
+                                    <td>{{data?.specialitem}}</td>
+                                    <td>{{data?.vehicletype}}</td>
+                                    <td>{{data?.charge}}</td>
+
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+
+                <br><br>
+
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <button *ngIf="this.url == '/add_deliverycharge' && dcharge_multiple.length" type="submit"
+                            class="btn btn-default" (click)="submitData()">Submit</button>
+                        <button *ngIf="this.url == '/update_deliverycharge/' + this.id" type="submit"
+                            [disabled]="!form1.valid" class="btn btn-default" (click)="updateData()">Update</button>
+                        <button type="button" class="btn btn-default" (click)="cancel()">Cancel</button>
+
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--Manage delivery charges  -->
+<div [hidden]="!isManageState" class="col-md-12 col-sm-12 col-xs-12">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            {{title}}
+            <a [routerLink]="['/add_deliverycharge']" title="Add Product Type" class="pull-right"
+                *ngIf="this.userRole==='SUPERADMIN' && this.userType==='FIRM'">
+                <span class="glyphicon glyphicon-plus-sign"></span>
+            </a>
+        </div>
+
+        <div class="panel-body">
+            <div class="table-responsive">
+                <table class="table table-condensed table-striped table-bordered"
+                    [mfData]="categorydata | dataFilterPr  : filterQuery:'dcharge'" #mf="mfDataTable"
+                    [mfRowsOnPage]="rowsOnPage">
+
+                    <thead>
+
+                        <tr>
+                            <th>City Type</th>
+                            <th>Duration Type</th>
+                            <th>Minimum Items</th>
+                            <th>Maximum Items</th>
+                            <th>Minimum Distance</th>
+                            <th>Maximum Distance</th>
+                            <th>Special Item</th>
+                            <th>Vehicle Type</th>
+
+                            <th>Charge</th>
+
+                            <th>Action</th>
+                        </tr>
+                        <tr>
+                            <th colspan="10">
+                                <div id="custom-search-input">
+                                    <div class="input-group col-md-12">
+                                        <input type="text" class="form-control" placeholder="Search by Duration Time"
+                                            [(ngModel)]="filterQuery" />
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-danger btn-sm" type="button">
+                                                <span class=" glyphicon glyphicon-search"></span>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr *ngFor="let data of mf.data; let i = index; let last = last;">
+                            <td>{{data?.citytype}}</td>
+
+                            <td>{{data?.durationtype}}</td>
+                            <td>{{data?.minitems}}</td>
+                            <td>{{data?.maxitems}}</td>
+
+                            <td>{{data?.mindistance}}</td>
+                            <td>{{data?.maxdistance}}</td>
+
+                            <td>{{data?.specialitem}}</td>
+                            <td>{{data?.vehicletype}}</td>
+                            <td>{{data?.charge}}</td>
+
+                            <td class="text-right">
+                                <!-- <a [routerLink]="['/update_deliverycharge/',data.id]" data-toggle="tooltip"
+                                      *ngIf="this.userRole==='SUPERADMIN'" title="Update Category">
+                                      <button class="btn btn-default btn-sm">
+                                          <span class="glyphicon glyphicon-edit"></span>
+                                      </button>
+                                  </a> -->
+                                <button class="btn btn-danger btn-sm" title="Delete Category"
+                                    *ngIf="this.userRole==='SUPERADMIN' && this.userType==='FIRM'"
+                                    (click)="deleteRole(data.id)">
+                                    <span class="glyphicon glyphicon-remove-circle"></span>
+                                </button>
+                                <!-- <button *ngIf="userType !== 'ADMIN'" disabled class="btn btn-danger btn-sm" title="Contact admin for functionality" (click)="deleteRole(data.role)">
+                      <span class="glyphicon glyphicon-remove-circle"></span>
+                    </button> -->
+                            </td>
+                        </tr>
+                    </tbody>
+
+                    <tfoot>
+                        <tr>
+                            <td colspan="10">
+                                <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

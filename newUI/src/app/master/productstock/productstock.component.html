@@ -1,0 +1,812 @@
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+<div [hidden]="isManageState" class="col-md-12 col-sm-12 col-xs-12 text-capitalize">
+
+    
+    <!--product stock add-->
+    <div class="panel panel-default" *ngIf="!detailFlag">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          {{title}}
+          <!-- <button (click)="addsubmitdata()" class="btn">submit</button> -->
+          <a (click)="cancel()" title="View All Products" class="pull-right">
+            <span class="glyphicon glyphicon-th-list"></span>
+          </a>
+        </div>
+
+        <div class="panel-body" *ngIf="tab1">
+           <form #form1="ngForm" >
+            <!-- <div class="col-sm-6" *ngIf="this.userRole === 'SUPERADMIN' && !isUpdate">
+              <div class="form-group">
+                <label for="branch">Select Branch</label>
+                <select required *ngIf="branchlist.length"   class="form-control" id="branch" name="branch" [(ngModel)]="selectbranch" >
+                  <option *ngFor="let data of branchlist; let i=index" [value]="data.id">{{data.branch}}</option>
+                </select>
+                <select *ngIf="!branchlist.length" disabled required  class="form-control" >
+                  <option value="">For this product type shop not available</option>
+                </select>
+              </div>
+            </div> -->
+
+            <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="this.route.url === this.urllink">
+              <div class="form-group">
+                <label for="product">Product type:</label>
+                <select class="form-control"  id="prodtype" required name="prodtype"
+                   [(ngModel)]="producttype_byvendor" (change)="getdatabyprodtype()">
+                   <option required *ngFor="let type of prodtlist; let i=index" [value]="type.prodtype">{{type.prodtype}}</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="product">Product:</label>
+                <select class="form-control" *ngIf="!isUpdate && this.userRole === 'SUPERADMIN'"  name="product" required [(ngModel)]="pstock.product" (change)="getproduct($event)">
+                  <option required *ngFor="let product of prodList; let i=index" [value]="product.id">{{product.name}}</option>
+                </select>
+                <select class="form-control" *ngIf="!isUpdate && this.userRole !== 'SUPERADMIN'" disabled name="product" required [(ngModel)]="pstock.product" (change)="getproduct($event)">
+                  <option required *ngFor="let product of prodList; let i=index" [value]="product.id">{{product.name}}</option>
+                </select>
+                <!-- <select class="form-control" disabled *ngIf="isUpdate"  name="product" required [(ngModel)]="pstock.product">
+                  <option required *ngFor="let product of prodList; let i=index" [value]="product.id">{{product.name}}</option>
+                </select> -->
+
+                <input type="text" readonly style="font-weight: 500;" required *ngIf="isUpdate"  class="form-control"  name="pstock.pname" [(ngModel)]="pstock.pname" disabled>
+
+              </div>
+            </div>
+
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="soldas"> Sold as :</label>
+                <select  class="form-control" id="soldas" name="soldas" [(ngModel)]="pstock.soldas">
+                  <!-- <option value="">--Select--</option> -->
+                  <option value="FULL"  selected >FULL</option>
+                  <option value="LOOSE" >LOOSE</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="variant"> Variant :</label>
+                <input type="text" required *ngIf="!isUpdate" class="form-control"  name="variant" [(ngModel)]="pstock.variant">
+                <input type="text" required *ngIf="isUpdate"  class="form-control"  name="variant" [(ngModel)]="pstock.variant">
+              </div>
+            </div>
+
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="volumeperunit"> Volume Per Unit :</label>
+                <input type="number" required *ngIf="!isUpdate" class="form-control"  name="volumeperunit" [(ngModel)]="pstock.volumeperunit">
+                <input type="number" required *ngIf="isUpdate"  class="form-control"  name="volumeperunit" [(ngModel)]="pstock.volumeperunit">
+              </div>
+            </div>
+
+            <!-- <div id="custom-search-input">
+
+              <div class="col-sm-12">
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                      <div class="form-group" >
+                        <label for="gender"> Search by
+                        </label>&nbsp;
+                       
+                        <input type="radio" value="Customdate"  [(ngModel)]="prodtypeselect"  name="prodtypeselect" > Product Type &nbsp;
+
+
+                      </div>
+                  </div>
+              </div>
+
+              <div class="col-sm-12" *ngIf="prodtypeselect">
+                 <div class="col-sm-3" *ngIf="userRole==='BRANCH'" >
+                  <div class="form-group">
+                    <label for="prodtype"> Category:
+                    </label>
+                    <select class="form-control" id="categorytype" *ngIf="userRole==='BRANCH'"  required name="categorytype"
+                    [(ngModel)]="categorytype" (change)="getprodtypelistbycatgory()">
+                    <option required *ngFor="let type of categoryList; let i=index" [value]="type.name">{{type.name}}</option>
+                  </select>
+
+                  </div>
+                 </div>
+
+                 <div class="col-sm-3"  >
+                    <div class="form-group">
+                      <label for="prodtype"> Product type:
+                      </label>
+                      <select class="form-control" *ngIf="!isUpdate" id="prodtype" required name="prodtype"
+                        [(ngModel)]="product.prodtype" (change)="getprodbyprodtype()">
+                        <option required *ngFor="let type of prodtlistt; let i=index" [value]="type.prodtype">{{type.prodtype}}</option>
+                      </select>
+
+                    </div>
+                 </div>
+
+                 <div class="col-sm-3">
+                    <div class="form-group">
+                      <label for="state">Reset :
+                      </label>
+                      <span class="input-group-btn">
+                        <button   class="btn btn-info btn-sm" title="Reset" (click)="refreshincall()" style="font-size: 9px;">
+                          <span class="glyphicon glyphicon-refresh"></span>
+                        </button>
+                        </span>
+                    </div>
+                 </div>
+              </div>
+            
+            </div> -->
+
+            <div class="col-sm-6" *ngIf="pstock.soldas == 'FULL'">
+              <div class="form-group">
+                <label for="rateperunit"> Rate Per Unit  :</label>
+                <input type="number" style="font-weight: 500;" required *ngIf="!isUpdate" class="form-control"  name="rateperunit" [(ngModel)]="pstock.rateperunit">
+                <input type="number" style="font-weight: 500;" required *ngIf="isUpdate"  class="form-control"  name="rateperunit" [(ngModel)]="pstock.rateperunit">
+              </div>
+            </div>
+
+            <div class="col-sm-6" *ngIf="pstock.soldas == 'LOOSE'">
+              <div class="form-group">
+                <label for="looserateperunit">Loose Rate Per Unit:</label>
+                <input type="number" style="font-weight: 500;" required *ngIf="!isUpdate" class="form-control"  name="looserateperunit" [(ngModel)]="pstock.looserateperunit">
+                <input type="number" style="font-weight: 500;" required *ngIf="isUpdate"  class="form-control"  name="looserateperunit" [(ngModel)]="pstock.looserateperunit">
+              </div>
+            </div>
+
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="gst"> GST %:
+                </label>
+                <input *ngIf="!isUpdate" type="number" required required class="form-control" name="gst" [(ngModel)]="pstock.gst" (change)="gsttotal()">
+                <input *ngIf="isUpdate" type="number" required required  class="form-control" name="gst" [(ngModel)]="pstock.gst" (change)="gsttotal()">
+              </div>
+            </div>
+
+            <!-- <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="ratewithgst"> Rate With GST %:
+                  </label>
+                  <input *ngIf="!isUpdate" readonly type="number" required  class="form-control" name="ratewithgst" [(ngModel)]="pstock.ratewithgst">
+                  <input *ngIf="isUpdate" readonly type="number" required  class="form-control" name="ratewithgst" [(ngModel)]="pstock.ratewithgst">
+                </div>
+            </div> -->
+
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="totalqty"> Total Quantity:</label>
+                <input *ngIf="!isUpdate"  type="number" required  class="form-control" name="totalqty" [(ngModel)]="pstock.totalqty">
+                <input *ngIf="isUpdate"  type="number" required  class="form-control" name="totalqty" [(ngModel)]="pstock.totalqty">
+              </div>
+            </div>
+
+            <!-- <div class="col-sm-6">
+              <div class="form-group">
+                <label for="unlockedqty"> Unlock Quantity:</label>
+                <input *ngIf="!isUpdate"  type="number" required  class="form-control" name="unlockedqty" [(ngModel)]="pstock.unlockedqty">
+                <input *ngIf="isUpdate"  type="number" required  class="form-control" name="unlockedqty" [(ngModel)]="pstock.unlockedqty">
+              </div>
+            </div> -->
+
+            <!-- <div class="col-sm-6">
+              <div class="form-group">
+                <label for="balanceqty"> Balanced Quantity:</label>
+                <input *ngIf="!isUpdate"  type="number" required  class="form-control" name="balanceqty" [(ngModel)]="pstock.balanceqty">
+                <input *ngIf="isUpdate" type="number" required  class="form-control" name="balanceqty" [(ngModel)]="pstock.balanceqty">
+              </div>
+            </div> -->
+
+            <!-- <div class="col-sm-6">
+              <div class="form-group">
+                <label for="soldqty"> Sold Quantity:</label>
+                <input *ngIf="!isUpdate"  type="number" required  class="form-control" name="soldqty" [(ngModel)]="pstock.soldqty">
+                <input *ngIf="isUpdate"  type="number" required  class="form-control" name="soldqty" [(ngModel)]="pstock.soldqty">
+              </div>
+            </div> -->
+
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="reorderlevel"> Reorder Level:</label>
+                <input *ngIf="!isUpdate"  type="number" required  class="form-control" name="reorderlevel" [(ngModel)]="pstock.reorderlevel">
+                <input *ngIf="isUpdate"  type="number" required  class="form-control" name="reorderlevel" [(ngModel)]="pstock.reorderlevel">
+              </div>
+            </div>
+
+            <!-- <div class="col-sm-6">
+              <div class="form-group">
+                <label for="totalvolume"> Total Volume:</label>
+                <input *ngIf="!isUpdate"  type="number" required  class="form-control" name="totalvolume" [(ngModel)]="pstock.totalvolume">
+                <input *ngIf="isUpdate"  type="number" required  class="form-control" name="totalvolume" [(ngModel)]="pstock.totalvolume">
+              </div>
+            </div>
+
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="balancevolume"> Balance Volume:</label>
+                <input *ngIf="!isUpdate"  type="number" required  class="form-control" name="balancevolume" [(ngModel)]="pstock.balancevolume">
+                <input *ngIf="isUpdate"  type="number" required  class="form-control" name="balancevolume" [(ngModel)]="pstock.balancevolume">
+              </div>
+            </div>
+
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="soldvolume"> Sold Volume:</label>
+                <input *ngIf="!isUpdate"  type="number" required  class="form-control" name="soldvolume" [(ngModel)]="pstock.soldvolume">
+                <input *ngIf="isUpdate"  type="number" required  class="form-control" name="soldvolume" [(ngModel)]="pstock.soldvolume">
+              </div>
+            </div> -->
+            <!-- <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="prodcode">Product code:
+                </label>
+                <input type="text" class="form-control" disabled name="prodcode" [(ngModel)]="pstock.hsncode">
+
+              </div>
+            </div> -->
+            
+            
+            <!-- <div class="col-sm-6">
+              <div class="form-group">
+                <label for="batchdesc"> Batch Description:
+                </label>
+                <input type="text" *ngIf="!isUpdate" class="form-control" required name="batchdesc" [(ngModel)]="pstock.batchdesc">
+                <input type="text" *ngIf="isUpdate" disabled class="form-control" required name="batchdesc" [(ngModel)]="pstock.batchdesc">
+
+              </div>
+            </div> -->
+
+            <!-- <div class="col-sm-6">
+              <div class="form-group">
+                <label for="mfgdate"> Manufacturing Date:
+                </label>
+                <input *ngIf="!isUpdate" type="date" class="form-control" required name="mfgdate" [(ngModel)]="pstock.mfgdate">
+                <input *ngIf="isUpdate" type="date" class="form-control" required name="mfgdate" [(ngModel)]="pstock.mfgdate">
+              </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="expiry"> Expiry:
+                  </label>
+                  <input *ngIf="!isUpdate"  type="date" class="form-control" required name="expiry" [(ngModel)]="pstock.expiry">
+                  <input *ngIf="isUpdate"  type="date" class="form-control" required name="expiry" [(ngModel)]="pstock.expiry">
+                </div>
+              </div>
+
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="totalunits"> Total Units:
+                </label>
+                <input  *ngIf="!isUpdate" type="number" class="form-control" required name="totalunits" (change)="onchangetotu()" [(ngModel)]="pstock.totalunits">
+                <input *ngIf="isUpdate"type="number" class="form-control" required name="totalunits" [(ngModel)]="pstock.totalunits">
+              </div>
+            </div> -->
+            <!-- <div class="col-sm-6">
+              <div class="form-group">
+                <label for="unitsperpack"> Units per Pack:
+                </label>
+                <input *ngIf="!isUpdate" type="number" class="form-control"  name="unitsperpack" [(ngModel)]="pstock.unitsperpack">
+                <input *ngIf="isUpdate" type="number" class="form-control"  name="unitsperpack" [(ngModel)]="pstock.unitsperpack">
+              </div>
+            </div> -->
+
+            <!-- <div class="col-sm-6">
+            <div class="form-group">
+              <label for="balanceunits"> Balance units:
+              </label>
+              <input *ngIf="!isUpdate" type="number" disabled class="form-control" name="balanceunits" [(ngModel)]="pstock.balanceunits">
+              <input *ngIf="isUpdate" type="number" disabled class="form-control" name="balanceunits" [(ngModel)]="pstock.balanceunits">
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="lotno"> Lot no:
+              </label>
+              <input *ngIf="!isUpdate" type="text" disabled class="form-control" name="lotno" [(ngModel)]="pstock.lotno">
+              <input *ngIf="isUpdate" type="text" disabled class="form-control" name="lotno" [(ngModel)]="pstock.lotno">
+            </div>
+          </div> -->
+
+            <!-- <div class="col-sm-6">
+            <div class="form-group">
+              <label for="rateperunit"> Rateperunit:
+              </label>
+              <input *ngIf="!isUpdate" type="number"  class="form-control" name="rateperunit" [(ngModel)]="pstock.rateperunit">
+              <input *ngIf="isUpdate" type="number"  class="form-control" name="rateperunit" [(ngModel)]="pstock.rateperunit">
+            </div>
+          </div> -->
+
+            <!-- <div class="col-sm-6">
+            <div class="form-group">
+              <label for="purchaseprice"> Purchase Price:
+              </label>
+              <input *ngIf="!isUpdate"  type="number"  class="form-control" name="purchaseprice" [(ngModel)]="pstock.purchaseprice">
+              <input *ngIf="isUpdate" type="number"   class="form-control" name="purchaseprice" [(ngModel)]="pstock.purchaseprice">
+            </div>
+          </div> -->
+
+            <!-- <div class="col-sm-6">
+              <div class="form-group">
+                <label for="rateperunit"> Rate per unit: </label>
+                <input *ngIf="!isUpdate" type="number" required  class="form-control" name="rateperunit" [(ngModel)]="pstock.rateperunit" (change)="gsttotal()">
+                <input *ngIf="isUpdate" type="number" required  class="form-control" name="rateperunit" [(ngModel)]="pstock.rateperunit" (change)="gsttotal()">
+              </div>
+            </div>
+
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="status"> Available :</label>
+                <select  class="form-control" id="status" name="status" [(ngModel)]="pstock.available" required>
+                <option value="">--Select--</option>
+                <option value="YES">YES</option>
+                <option value="NO">NO</option>
+              </select>
+              </div>
+            </div> -->
+            <!-- <div class="col-sm-12">
+              <form #form2="ngForm" >
+              <label for="Available"> Stock Properties :
+              </label>
+              <div class="form-group">
+              <div class="row">
+                <div class="col-sm-3">
+                  <div class="form-group">
+                    <label for="name"> Name :
+                    </label>
+
+                    <select  id="prodproepertis" class="form-control" required name="prodproepertis"
+                    [(ngModel)]="stockval.name" (change)="getvalues()">
+                    <option value="{{prop.name}}" *ngFor="let prop of properties">{{prop?.name}}</option>
+                  </select>
+                  </div>
+                </div>
+
+                <div class="col-sm-3">
+                  <div class="form-group">
+                    <label for="pvalue"> Value :
+                    </label>
+                    <input *ngIf="!isPossiblevalues" type="text" required class="form-control" name="prodpropvalues1" [(ngModel)]="stockval.pvalue">
+
+                    <select  *ngIf="isPossiblevalues" id="prodpropvalues" class="form-control" required name="prodpropvalues"
+                    [(ngModel)]="stockval.pvalue">
+                    <option value="{{prop.pvalue}}" *ngFor="let prop of propvalues">{{prop?.pvalue}}</option>
+                  </select>
+                  </div>
+              </div>
+              <div class="col-sm-3" style="padding-top: 25px;">
+                <button class="btn btn-info btn-sm" [disabled]="!form2.valid"
+                (click)="pushstockvalue()" >
+                 <span class="glyphicon glyphicon-plus"></span>
+               </button>
+              </div>
+
+            </div>
+            </div>
+
+
+
+            <div class="row">
+              <div class="col-sm-6" style="margin-top: 3px;  border: 1px solid #c5c4c4; min-height: 10px; overflow: auto;margin-left: 31px">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th style="width: 50px;">-</th>
+                      <th>Name</th>
+                      <th>Value</th>
+
+
+
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let data of this.pstock.stockval; let i=index;">
+                      <td style="width: 50px;">
+                        <a style="cursor: pointer; color: red;" (click)="onDeletestockval(i)">
+                          <span class="glyphicon glyphicon-remove-circle"></span>
+                        </a>
+                      </td>
+                      <td>{{data?.name}}</td>
+                      <td>{{data?.pvalue}}</td>
+
+
+
+                    </tr>
+                  </tbody>
+                </table>
+
+              </div>
+            </div>
+         </form>
+            </div> -->
+
+            <div class="col-sm-12" *ngIf="!isUpdate || isUpdate">
+                    <div>
+                      <div>
+                        <br>
+                        <form name="form1">
+                          <!-- <button class="btn btn-info btn-sm" [disabled]="!form1.valid" (click)="pushPstock()">
+                            <span class="glyphicon glyphicon-plus"></span>
+                          </button> -->
+
+                          <button class="btn btn-info btn-sm" [disabled]="!form1.valid" (click)="submitData()">
+                            <!-- <span class="glyphicon glyphicon-plus"></span> -->submit
+                          </button>
+                        </form>
+                      </div>
+                    </div>
+            </div>
+
+            <!-- <div class="col-sm-12" style="margin-top: 3px;  border: 1px solid #c5c4c4; min-height: 10px; overflow: auto;">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th style="width: 50px;">-</th>
+                          <th>Product</th>
+                          <th>Varient </th>
+
+                          <th>GST %</th>
+                          <th>Rateperunit</th>
+                          
+                          <th>Rate with GST</th>
+
+                          <th>Available</th>
+
+
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let data of pstockArary; let i=index;">
+                          <td style="width: 50px;">
+                            <a style="cursor: pointer; color: red;" (click)="onDeletePstock(i)">
+                              <span class="glyphicon glyphicon-remove-circle"></span>
+                            </a>
+                          </td>
+                          <td>{{data?.pname}}</td>
+
+                          <td>{{data?.mfg}}</td>
+
+                          <td>{{data?.gst}}</td>
+                          <td>{{data?.rateperunit}}</td>
+                          
+                          <td>{{data?.ratewithgst}}</td>
+
+
+
+                          <td>{{data?.available}}</td>
+
+                        </tr>
+                      </tbody>
+                    </table>
+
+                  </div> -->
+
+            <!-- <div class="col-md-12">
+              <div class="form-group"><br><br>
+               <button *ngIf="!isUpdate" type="submit" class="btn btn-default" (click)="submitData()">Submit</button>
+                <button *ngIf="isUpdate" type="submit" class="btn btn-default" (click)="updateData()">Update</button>
+               <button type="button" class="btn btn-default" (click)="cancel()">Cancel</button>
+              </div>
+            </div> -->
+          </form>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Product Stock Details -->
+    <div class="panel panel-default" *ngIf="detailFlag">
+      <div class="panel-heading">
+        <div class="clearfix">
+          <div class="pull-left"> {{title}}</div>
+          <div class="container" class="pull-right">
+            <div class="row">
+              <a (click)="cancel()" title="Back" class="btn btn-info btn-sm a-btn-slide-text">
+                <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+              </a>
+
+              <!-- <a [routerLink]="['/editpstock', id]" title="Update product" class="btn btn-info btn-sm a-btn-slide-text">
+
+                <i class="glyphicon glyphicon-edit"></i>
+
+              </a>
+              <a class="btn btn-danger a-btn-slide-text btn-sm" (click)="deleteEmployee(id)">
+                <span class="glyphicon glyphicon-remove-circle"></span>
+              </a> -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-body">
+
+        <form #form1="ngForm">
+          <div class="col-md-12 col-sm-12 col-xs-12 ">
+            <!-- <div class="col-md-12 col-sm-12 col-xs-12">
+              <h4>Product Details:</h4>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <img [src]="url" style="height:200px; width:200px;" class="thumbnail">
+            </div> -->
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="form-group">
+                  <label for="product">Product: {{pstock.pname}}</label>
+                </div>
+              </div>
+
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="form-group">
+                  <label for="variant">Variant : {{pstock.variant}}
+                  </label>
+                </div>
+              </div>
+              <!-- <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="form-group">
+                  <label for="batchdesc">Batch Desc.: {{pstock.batchdesc}}</label>
+                </div>
+              </div>
+              <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-group">
+                  <label for="mfgdate">Manufacturing date:&nbsp;{{pstock.mfgdate | date}}
+                  </label>
+                </div>
+              </div>
+              <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-group">
+                  <label for="expiry">Expiry:&nbsp;{{pstock.expiry | date}}
+                  </label>
+                </div>
+              </div>
+              <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-group">
+                  <label for="available">Available:&nbsp;{{pstock.available}}
+                  </label>
+                </div>
+              </div>
+              <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-group">
+                  <label for="totalunits">Total units:&nbsp;{{pstock.totalunits}}
+                  </label>
+                </div>
+              </div> -->
+              <!-- <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-group">
+                  <label for="unitsperpack">unitsperpack:&nbsp;{{pstock.unitsperpack}}
+                  </label>
+                </div>
+              </div> -->
+
+              <!--
+              <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-group">
+                  <label for="balanceunits">Balance units:&nbsp;{{pstock.balanceunits}}
+                  </label>
+                </div>
+              </div> -->
+              <!-- <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-group">
+                  <label for="lotno">Lotno:&nbsp;{{pstock.Lotno}}
+                  </label>
+                </div>
+              </div> -->
+              <!-- <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-group">
+                  <label for="quantity">Total Weight:&nbsp;{{pstock.quantity}}
+                  </label>
+                </div>
+              </div> -->
+              <!-- <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-group">
+                  <label for="balweight">Bal Weight:&nbsp;{{pstock.balweight}}
+                  </label>
+                </div>
+              </div> -->
+              <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-group">
+                  <label for="status">Rateperunit:&nbsp;{{pstock.rateperunit}}
+                  </label>
+                </div>
+              </div>
+              <!-- <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-group">
+                  <label for="Purchaseprice">Purchaseprice:&nbsp;{{pstock.purchaseprice}}
+                  </label>
+                </div>
+              </div> -->
+
+              <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-group">
+                  <label for="gst">GST % :&nbsp;{{pstock.gst}}
+                  </label>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-group">
+                  <label for="ratewithgst">Ratewithgst:&nbsp;{{pstock.ratewithgst}}
+                  </label>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-group">
+                  <label for="status">Available:&nbsp;{{pstock.available}}
+                  </label>
+                </div>
+              </div>
+              <!-- <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-group">
+                  <label for="barcode">Barcode :&nbsp;{{pstock.barcode}}
+                  </label>
+                </div>
+              </div> -->
+
+            </div>
+          </div>
+        </form>
+
+      </div>
+    </div>
+
+</div>
+
+<!-- manage product stock -->
+
+<div [hidden]="!isManageState" class="col-md-12 col-sm-12 col-xs-12 text-capitalize">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        {{title}}
+        <!-- <a (click)="cancel()" title="Add Stock" class="pull-right">
+          <span class="glyphicon glyphicon-plus"></span>
+        </a> &nbsp; -->
+        <a *ngIf="!branchid" [routerLink]="['/addpstock',id,producttypee]" title="Add Stock" class="pull-right">
+          <span class="glyphicon glyphicon-plus" style="margin-right: 10px;"></span>
+        </a> &nbsp;&nbsp;&nbsp;&nbsp;
+
+        <a *ngIf="branchid" [routerLink]="['/addpstock',id,producttypee,branchid]" title="Add Stock" class="pull-right">
+          <span class="glyphicon glyphicon-plus" style="margin-right: 10px;"></span>
+        </a> &nbsp;&nbsp;&nbsp;&nbsp;
+
+        <a *ngIf="!branchid" [routerLink]="['/manageproduct']" title="View All Products" class="pull-right">
+          <span class="glyphicon glyphicon-th-list" style="margin-right: 10px;"></span>
+        </a>&nbsp;
+
+        <a *ngIf="branchid" (click)="cancel()" title="View All Products" class="pull-right">
+          <span class="glyphicon glyphicon-th-list" style="margin-right: 10px;"></span>
+        </a>&nbsp;
+      </div>
+
+      <div class="panel-body">
+        <div class="table-responsive">
+          <table class="table table-condensed table-striped table-bordered"
+            [mfData]="data | dataFilterPr : filterQuery:'productstock'" #mf="mfDataTable" [mfRowsOnPage]="rowsOnPage"
+            [(mfSortBy)]="Role" [(mfSortOrder)]="sortOrder">
+            <thead>
+              <tr>
+                <th>SN</th>
+                <th>Soldas</th>
+                <th>Variant </th>
+                <th>Volume Per Unit </th>
+                <th>Rate Perunit </th>
+                <th>Loose Rate Perunit </th>
+                <th>GST %</th>
+                <th>Rate with GST</th>
+                <th>Total Quantity</th>
+                <th>Unlocked Quantity</th>
+                <th>Balanced Quantity</th>
+                <!-- <th>Sold Quantity</th> -->
+                <th>Reorder Level</th>
+                <th>Total Volume</th>
+                <th>Balance Volume</th>
+                <!-- <th>Sold Volume</th> -->
+                <!-- <th>Available</th> -->
+                <th>Action</th>
+              </tr>
+              <tr> 
+                <th colspan="16">
+                  <div id="custom-search-input">
+                    <div class="input-group col-md-12">
+                      <input type="text" class="form-control" placeholder="Search by name" [(ngModel)]="filterQuery" />
+                      <span class="input-group-btn">
+                        <button class="btn btn-danger btn-sm" type="button">
+                          <span class=" glyphicon glyphicon-search"></span>
+                        </button>
+                      </span>
+                    </div>
+                  </div>
+                </th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr *ngFor="let data of mf.data; let i = index; let last = last;">
+                <td>{{i+1}}</td>
+                <td>{{data?.soldas}}</td>  
+                <td>{{data?.variant}}</td>
+                <td>{{data?.volumeperunit}}</td>
+                <td>{{data?.rateperunit}}</td>
+                <td>{{data?.looserateperunit}}</td>
+                <td>{{data?.gst}}</td>
+                <td>{{data?.ratewithgst}}</td>
+                <td>{{data?.totalqty}}</td>
+                <td>{{data?.unlockedqty}}</td>
+                <td>{{data?.balanceqty}}</td>
+                <!-- <td>{{data?.soldqty}}</td> -->
+                <td>{{data?.reorderlevel}}</td>
+                <td>{{data?.totalvolume}}</td>
+                <td>{{data?.balancevolume}}</td>
+                <!-- <td>{{data?.soldvolume}}</td> -->
+                <!-- <td>{{data?.available}}</td> -->
+                <td class="text-right">
+                  <a [routerLink]="['/detailpstock',data.id]">
+                    <button class="btn btn-info btn-sm" title="Stock Details">
+                      <span class="glyphicon glyphicon-info-sign"></span>
+                    </button>
+                  </a>
+
+                  <a [routerLink]="['/editpstock',data.id]">
+                    <button   class="btn btn-primary btn-sm" title="Update product Stock" >
+                      <span class="glyphicon glyphicon-edit"></span>
+                    </button>
+                  </a>
+                  
+                  <button  class="btn btn-danger btn-sm" title="Delete {{data.variant}}" (click)="deleteRole(data.id)">
+                    <span class="glyphicon glyphicon-remove"></span>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+
+            <tfoot>
+              <tr>
+                <td colspan="16">
+                  <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+</div>
+
+<button (click)="clickmodal()" style="display: none;" [hidden]="true" class="w3-button w3-black">Open Modal</button>
+
+<div id="id01" class="w3-modal" >
+    <div class="w3-modal-content w3-animate-top w3-card-4">
+      <header class="w3-container w3-teal"> 
+        <span (click)="cancel()"
+        class="w3-button w3-display-topright">&times;</span>
+        <h5>Product Stock List</h5>
+      </header>
+      <div class="w3-container">
+
+        <table class="w3-table">
+          <thead>
+             
+            <tr>
+              <th>Branch</th>
+              <th>Product Name</th>
+              <th>Varient</th>
+              <th>Status</th>
+              <th>Error</th>
+            </tr>
+          
+            
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of this.statusresponse; let i = index; let last = last;">
+      
+              <td>{{data.branch}}</td>
+              <td>{{data.pname}}</td>
+              <td>{{data.variant}}</td>
+              <td *ngIf="data.reqstatus == 'SUCCESS'"><span class="label label-success" style="font-size: 12px;">{{data.reqstatus}}</span></td>
+              <td *ngIf="data.reqstatus == 'FAILED'"><span class="label label-danger" style="font-size: 12px;">{{data.reqstatus}}</span></td>
+              <td><span class="label label-danger" style="font-size: 12px;"></span> {{data.errCode}}</td>
+     
+            </tr>
+          </tbody>
+          </table>
+          
+      </div>
+    </div>
+</div>

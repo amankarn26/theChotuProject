@@ -1,0 +1,787 @@
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<div class="col-md-12 col-sm-12 col-xs-12  animated flipInX">
+
+  <div class="panel panel-default" *ngIf="userType ==='FIRM'">
+    <div class="panel-heading">
+      <div class="clearfix">
+        <div class="pull-left"> {{title}}</div>
+        <div class="container" class="pull-right">
+          <div class="row">
+           
+            <a *ngIf="this.userType==='FIRM'"  [routerLink]="['/editfirm', id]" title="Update Profile" class="btn btn-info a-btn-slide-text btn-sm" style="margin-right: 10px;">
+              <i class="glyphicon glyphicon-edit"></i>
+            </a>
+
+            <a *ngIf="this.userType==='FIRM' && userRole==='FIRM'" title="Home" [routerLink]="['/vendorhomepage']"  class="btn btn-info a-btn-slide-text  btn-sm">
+              <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+            </a>
+
+            <a   title="Update Password" onclick="document.getElementById('id01').style.display='block'"  class="btn btn-info a-btn-slide-text  btn-sm" style="margin-right: 10px;">
+              <span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
+            </a>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="panel-body">
+
+      <form #form1="ngForm">
+        <div class="col-md-12 col-sm-12 col-xs-12 ">
+
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <label>Profile Details:</label>
+          </div>
+
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <img [src]="url" style="height:200px; width:200px;" class="thumbnail">
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+              <div class="form-group">
+                Email Id: {{emp?.email}}
+              </div>
+            </div>
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="form-group">
+                  Username: {{emp?.login?.username}}
+                </div>
+              </div>
+            <div class="col-md-12 col-sm-12 col-xs-12">
+              <div class="form-group">
+                Role: {{emp?.login?.role}}
+                
+              </div>
+            </div>
+            <div class="col-md-12 col-sm-12 col-xs-12">
+              <div class="form-group">
+                Contact: {{emp?.phone}}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-12 col-sm-12 col-xs-12 ">
+          <hr>
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <label>Personal details:&nbsp;</label>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              Firm Name:&nbsp;{{emp?.name}}
+            
+            </div>
+          </div>
+
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              PAN Number:&nbsp;{{emp?.pannum}}
+              
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              GST Number:&nbsp;{{emp?.gstin}}
+              
+            </div>
+          </div>
+
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              GST Transection:&nbsp;{{emp?.gst}}%
+              
+            </div>
+          </div>
+
+        </div>
+
+        <div class="col-md-12 col-sm-12 col-xs-12 ">
+          <hr>
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <label>Firm details:</label>
+          </div>
+
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              Firm Code:&nbsp; {{emp?.code}}
+
+              
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              Total Employess:&nbsp;{{emp?.empcount}}
+              
+            </div>
+          </div>
+
+          <!-- <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              Service Rate:&nbsp; {{emp?.servicerate}}
+             
+            </div>
+          </div> -->
+          
+          <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="emp.iscodsupported === 'YES'">
+            <div class="form-group">
+              Delivery Type:&nbsp; {{emp?.deliverytype}}
+             
+            </div>
+          </div>
+
+        </div>
+
+        <!-- end columnn -->
+        <div class="col-md-12 col-sm-12 col-xs-12 ">
+          <hr>
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <label>Local Address :&nbsp;</label>
+          </div>
+
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              Address Line1 :&nbsp; {{emp?.address.line1}} 
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              Address Line 2:&nbsp; {{emp?.address.line2}}
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              Pin-Code:&nbsp; {{emp?.address.pincode}}
+              
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              State:&nbsp; {{emp?.address.states}}
+
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              City:&nbsp; {{emp?.address.city}}
+              
+            </div>
+          </div>
+        </div>
+
+
+
+
+      </form>
+
+    </div>
+  </div>
+
+  <div class="panel panel-default" *ngIf="userType ==='BRANCH'">
+    <div class="panel-heading">
+      <div class="clearfix">
+        <div class="pull-left"> {{title}}</div>
+        <div class="container" class="pull-right">
+          <div class="row">
+            <!-- <a [routerLink]="['/manageemployee']" title="Manage Employees" class="btn btn-info a-btn-slide-text">
+              <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+            </a> -->
+            <!-- ||userRole === 'MARKETING' -->
+            <a *ngIf="this.userType==='BRANCH'" [routerLink]="['/editbranch', id]"   title="Update Branch"  class="btn btn-info a-btn-slide-text btn-sm" style="margin-right: 10px;">
+              <i class="glyphicon glyphicon-edit"></i>
+            </a>
+
+            <a *ngIf="this.userType==='BRANCH' && userRole==='BRANCH'" title="Home" [routerLink]="['/vendorhomepage']"  class="btn btn-info a-btn-slide-text  btn-sm" style="margin-right: 10px;">
+              <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+            </a>
+
+            <a   title="Update Password" onclick="document.getElementById('id01').style.display='block'"  class="btn btn-info a-btn-slide-text  btn-sm" style="margin-right: 10px;">
+              <span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
+            </a>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-body">
+
+      <form #form1="ngForm">
+        <div class="col-md-12 col-sm-12 col-xs-12 ">
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <h4>Profile Details:</h4>
+          </div>
+
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <img [src]="url" style="height:200px; width:200px;" class="thumbnail">
+          </div>
+
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+              <div class="form-group">
+                <label for="name">Branch Name: {{branch?.name}}</label>
+              </div>
+            </div>
+
+            <div class="col-md-12 col-sm-12 col-xs-12">
+              <div class="form-group">
+                <label for="branchtype">Branch Type: {{branch?.branchtype}}</label>
+              </div>
+            </div>
+
+            <div class="col-md-12 col-sm-12 col-xs-12">
+              <div class="form-group">
+                <label for="email">Email Id: {{branch?.email}}</label>
+              </div>
+            </div>
+
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="form-group">
+                  <label for="username">Username: {{branch?.login.username}}</label>
+                </div>
+            </div>
+
+            <div class="col-md-12 col-sm-12 col-xs-12">
+              <div class="form-group">
+                <label for="role">Role: {{branch?.login.role}}</label>
+              </div>
+            </div>
+
+            <div class="col-md-12 col-sm-12 col-xs-12">
+              <div class="form-group">
+                <label for="type">Type: {{branch?.login.type}}
+                </label>
+              </div>
+            </div>
+
+            <div class="col-md-12 col-sm-12 col-xs-12">
+              <div class="form-group">
+                <label for="phone">Contact: {{branch?.phone}}</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- <div class="col-md-12 col-sm-12 col-xs-12 ">
+          <hr>
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <h4>Personal details:&nbsp;</h4>
+          </div>
+
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="fname">Branch Name:&nbsp;{{emp?.name}}
+              </label>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="fname">PAN Number:&nbsp;{{emp?.pannum}}
+              </label>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="fname">GST Number:&nbsp;{{emp?.gstin}}
+              </label>
+            </div>
+          </div>
+        </div> -->
+
+        <!-- <div class="col-md-12 col-sm-12 col-xs-12 ">
+          <hr>
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <h4>Firm details:</h4>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="category">Category:&nbsp; {{emp?.category}}
+              </label>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="etype">Firm Code:&nbsp; {{emp?.code}}
+
+              </label>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="designation">Total Employess:&nbsp;{{emp?.empcount}}
+              </label>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="servicerate">Service Rate:&nbsp; {{emp?.servicerate}}
+              </label>
+            </div>
+          </div>
+          
+          <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="emp.iscodsupported === 'YES'">
+            <div class="form-group">
+              <label for="servicerate"> Delivery Type:&nbsp; {{emp?.deliverytype}}
+              </label>
+            </div>
+          </div>
+
+        </div> -->
+        <!-- end columnn -->
+
+        <!-- local address -->
+        <div class="col-md-12 col-sm-12 col-xs-12 ">
+          <hr>
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <h4>Local Address :&nbsp;</h4>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="line1">Address Line1 :&nbsp; {{branch?.address.line1}}</label>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="line2">Address Line 2:&nbsp; {{branch?.address.line2}}</label>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="pincode">Pin-Code:&nbsp; {{branch?.address.pincode}}</label>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="states">State:&nbsp; {{branch?.address.states}}</label>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="city">City:&nbsp; {{branch?.address.city}}</label>
+            </div>
+          </div>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+  <div class="panel panel-default" *ngIf="userType ==='CUSTOMER'">
+    <div class="panel-heading">
+      <div class="clearfix">
+        <div class="pull-left"> {{title}}</div>
+        <div class="container" class="pull-right">
+          <div class="row">
+            <a   title="Home" [routerLink]="['/custhomepage']"  class="btn btn-info a-btn-slide-text  btn-sm">
+              <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+            </a>
+
+            <a  [routerLink]="['/updatecustomer', id]" title="Update Customer" class="btn btn-info a-btn-slide-text  btn-sm" >
+
+              <i class="glyphicon glyphicon-edit"></i>
+
+            </a>
+            <a   title="Update Password" onclick="document.getElementById('id01').style.display='block'"  class="btn btn-info a-btn-slide-text  btn-sm">
+              <span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
+            </a>
+           <!--  <a [routerLink]="['/managecustomer']" title="Manage Customers" class="btn btn-info a-btn-slide-text">
+              <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+            </a>
+            <a *ngIf="userRole === 'ADMIN'" [routerLink]="['/updatecustomer', id]" title="Update Customer" class="btn btn-info a-btn-slide-text">
+
+              <i class="glyphicon glyphicon-edit"></i>
+
+            </a>
+            <a *ngIf="userRole === 'ADMIN'" class="btn btn-danger a-btn-slide-text" (click)="deletecustomer(id)">
+              <span class="glyphicon glyphicon-remove-circle"></span>
+            </a> -->
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="panel-body text-capitalize">
+
+      <form #form1="ngForm">
+        <div class="col-md-12 col-sm-12 col-xs-12 ">
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <h4>Personal details:&nbsp;</h4>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="appIndOr">Type:&nbsp; {{customer?.login.type}}</label>
+
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12" >
+            <div class="form-group">
+              <label for="name">Name:&nbsp; {{customer?.name}} </label>
+            </div>
+          </div>
+
+
+
+          <!--<div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-group">
+                  <label for="dob">Date Of Birth:&nbsp;
+
+                  </label>
+                  <input type="date" class="form-control" id="dob" name="dob" [(ngModel)]="customer.dob" required />
+                </div>
+              </div>-->
+        </div>
+
+        <div class="col-md-12 col-sm-12 col-xs-12 ">
+          <hr>
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <h4>Profile details:&nbsp;</h4>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="email">Email Id:&nbsp;
+                <span class="text-lowercase">{{customer.email}}</span></label>
+
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="username">Username :&nbsp;
+                <span class="text-lowercase">{{customer.login.username}}</span></label>
+
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="role">Role:&nbsp; {{customer.login.role}}
+              </label>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="phone">Contact:&nbsp; {{customer.phone}}</label>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="Gender">Gender:&nbsp; {{customer.gender}}
+              </label>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="dob">Date Of Birth:&nbsp; {{customer.dob | date}}
+              </label>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="pan">PAN Number:&nbsp; {{customer.pan}}
+              </label>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="gst">GST Number:&nbsp; {{customer.gst}}
+              </label>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="col-md-12 col-sm-12 col-xs-12 ">
+          <hr>
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <h4> Address :&nbsp;</h4>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="line1">Address Line1 :&nbsp; {{customer.address.line1}}
+
+              </label>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="line2">Address Line 2:&nbsp; {{customer.address.line2}}</label>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="pincode">Pin-Code:&nbsp;{{customer.address.pincode}}
+
+              </label>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="states">State:&nbsp;{{customer.address.states}}
+
+              </label>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="city">City:&nbsp; {{customer.address.city}}
+
+              </label>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="col-md-12 col-sm-12 col-xs-12 ">
+          <hr>
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <h4> Send Your Complaints on  :&nbsp;</h4>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group text-lowercase">
+              <label for="line1">Email:&nbsp;grievances@amankarn26.com
+
+              </label>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <!-- <div class="form-group">
+              <label for="line2">Address Line 2:&nbsp; {{emp?.address.line2}}</label>
+            </div> -->
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="panel panel-default" *ngIf="userType ==='DELIVERY_PERSON'">
+    <div class="panel-heading">
+      <div class="clearfix">
+        <div class="pull-left"> {{title}}</div>
+        <div class="container" class="pull-right">
+          <div class="row">
+            <a   title="Home" [routerLink]="['/delivery_dashboard']"  class="btn btn-info a-btn-slide-text  btn-sm">
+              <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+            </a>
+
+            <a  [routerLink]="['/editdeliverypool', id]" title="Update Customer" class="btn btn-info a-btn-slide-text  btn-sm" >
+
+              <i class="glyphicon glyphicon-edit"></i>
+
+            </a>
+            <a   title="Update Password" onclick="document.getElementById('id01').style.display='block'"  class="btn btn-info a-btn-slide-text  btn-sm">
+              <span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
+            </a>
+          
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="panel-body text-capitalize">
+
+      <form #form1="ngForm">
+        <div class="col-md-12 col-sm-12 col-xs-12 ">
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <h4>Personal details:&nbsp;</h4>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="appIndOr">Type:&nbsp; {{customer?.login.type}}</label>
+
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12" >
+            <div class="form-group">
+              <label for="name">Name:&nbsp; {{customer?.name}} </label>
+            </div>
+          </div>
+
+
+
+          <!--<div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-group">
+                  <label for="dob">Date Of Birth:&nbsp;
+
+                  </label>
+                  <input type="date" class="form-control" id="dob" name="dob" [(ngModel)]="customer.dob" required />
+                </div>
+              </div>-->
+        </div>
+
+        <div class="col-md-12 col-sm-12 col-xs-12 ">
+          <hr>
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <h4>Profile details:&nbsp;</h4>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="email">Email Id:&nbsp;
+                <span class="text-lowercase">{{customer.email}}</span></label>
+
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="username">Username :&nbsp;
+                <span class="text-lowercase">{{customer.login.username}}</span></label>
+
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="role">Role:&nbsp; {{customer.login.role}}
+              </label>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="phone">Contact:&nbsp; {{customer.phone}}</label>
+            </div>
+          </div>
+
+        </div>
+
+
+        <div class="col-md-12 col-sm-12 col-xs-12 ">
+          <hr>
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <h4> Address :&nbsp;</h4>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="line1">Address Line1 :&nbsp; {{customer.address.line1}}
+
+              </label>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="line2">Address Line 2:&nbsp; {{customer.address.line2}}</label>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="pincode">Pin-Code:&nbsp;{{customer.address.pincode}}
+
+              </label>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="states">State:&nbsp;{{customer.address.states}}
+
+              </label>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="city">City:&nbsp; {{customer.address.city}}
+
+              </label>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="col-md-12 col-sm-12 col-xs-12 ">
+          <hr>
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <h4> Assigned Areas :&nbsp;</h4>
+          </div>
+
+          <ul *ngFor="let dataa of customer.dvryarea">
+            <li>Area: {{dataa?.area}}</li>
+            <li>Pincode : {{dataa?.pincode}}</li>
+  
+            </ul>
+  
+        </div>
+
+        <div class="col-md-12 col-sm-12 col-xs-12 ">
+          <hr>
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <h4> Vehicle Details :&nbsp;</h4>
+          </div>
+
+
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <img [src]="url" style="height:200px; width:200px;" class="thumbnail">
+          </div>
+
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="Vehicle Type:">Vehicle Type:&nbsp; {{customer.vehicletype}}
+
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-12 col-sm-12 col-xs-12 ">
+          <hr>
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <h4> License Details :&nbsp;</h4>
+          </div>
+
+          <!-- <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="Vehicle Type:">Vehicle Type::&nbsp; {{customer.vehicletype}}
+
+              </label>
+            </div>
+          </div> -->
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <img [src]="licphoto" style="height:200px; width:200px;" class="thumbnail">
+          </div>
+        </div>
+      
+      
+
+        <div class="col-md-12 col-sm-12 col-xs-12 ">
+          <hr>
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <h4> Send Your Complaints on  :&nbsp;</h4>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group text-lowercase">
+              <label for="line1">Email:&nbsp;grievances@amankarn26.com
+
+              </label>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <!-- <div class="form-group">
+              <label for="line2">Address Line 2:&nbsp; {{emp?.address.line2}}</label>
+            </div> -->
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<button style="display: none;"  onclick="document.getElementById('id01').style.display='block'" class="w3-button w3-black">Open Animated Modal</button>
+
+<div id="id01" class="w3-modal">
+  <div class="w3-modal-content w3-animate-top w3-card-4">
+    <header class="w3-container w3-teal" style="background-color: #58427fc9!important;">
+      <span onclick="document.getElementById('id01').style.display='none'"
+      class="w3-button w3-display-topright">&times;</span>
+      <h4>Update Password</h4>
+    </header>
+    <form class="w3-container w3-card-4 w3-light-grey">
+      <!-- <h2></h2> -->
+      <!-- <p>Use any of the w3-round classes to create rounded borders.</p> -->
+
+      <p>
+      <label>New Password</label>
+      <input class="w3-input w3-border w3-round-large" name="newpassword" [(ngModel)]="newpassword" type="password"></p>
+      <p>
+      <label>Confirm Password</label>
+      <input class="w3-input w3-border w3-round-large" name="confirmpassword" [(ngModel)]="confirmpassword" type="password"></p>
+      <p>
+      <button class="w3-btn w3-blue-grey" (click)="changepassowrd()">Update</button>
+    </form>
+
+  </div>
+</div>

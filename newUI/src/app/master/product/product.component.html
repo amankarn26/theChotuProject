@@ -1,0 +1,703 @@
+<button id="openModalButton" [hidden]="true" data-toggle="modal" data-target="#csvImport">Open Modal</button>
+<div id="csvImport" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Imported File {{csvName}}</h4>
+      </div>
+      <div class="modal-body">
+        <table class="table table-condensed table-sm" style="font-size:10px;">
+          <tr>
+            <th>Name</th>
+            <th>Status</th>
+            <th>Error</th>
+          </tr>
+          <tr>
+            <td>
+              <div *ngFor="let name of name"> {{name}}</div>
+            </td>
+            <td>
+              <div *ngFor="let status of status"> {{status}}</div>
+            </td>
+            <td>
+              <div *ngFor="let error of error"> {{error}}</div>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- add dish/Update dish ..dish detail -->
+<div [hidden]="isManageState" class="col-md-12 col-sm-12 col-xs-12 text-capitalize">
+  <!-- add product/Update product -->
+  <div class="panel panel-default" *ngIf="!detailFlag">
+    <div class="panel panel-default">
+      <div class="panel-heading"> {{title}}
+        <div class="pull-right">
+          <a [routerLink]="['/manageproduct']" title="Manage Dish/Drink" class="pull-right">
+            <span class="glyphicon glyphicon-th-list"></span>
+          </a> &nbsp;
+        </div>
+      </div>
+
+      <div class="panel-body" *ngIf="tab1">
+        <form #form1="ngForm">
+          <div *ngIf="showImport" class="well">
+            <div *ngIf="showImport">
+              <div class="form-group">
+                <label>Select CSV :</label>
+                <input type="file" (change)="fileEvent1($event)" name="document" [(ngModel)]="csvFile" />
+              </div>
+              <div class="form-group">
+                <button type="button" class="btn btn-default" (click)="import_cancel()">Cancel</button>
+                <button type="button" class="btn btn-default" (click)="uploadfile1()">Upload</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="name"> name:</label>
+              <input type="text" maxlength="120"  *ngIf="!isUpdate" class="form-control" required id="name" name="name" [(ngModel)]="product.name">
+              <input type="text" maxlength="120"  *ngIf="isUpdate" class="form-control" required id="name" name="name" [(ngModel)]="product.name">
+            </div>
+          </div>
+
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="menutype"> Menu:</label>
+              <select class="form-control" *ngIf="!isUpdate" id="menutype" required name="menutype"
+                [(ngModel)]="product.menutype">
+                <option required *ngFor="let type of prodtlist; let i=index" [value]="type.name">{{type.name}}</option>
+              </select>
+              <input class="form-control" name="menutype" *ngIf="isUpdate" id="menutype" [(ngModel)]="product.menutype" readonly>
+            </div>
+          </div>
+
+          <!-- <select class="form-control" formControlName="supplierId">
+            <option>Select Supplier</option>
+            <option *ngFor="let s of suppliers" [value]="s.supplierId">{{s.supplierName}}</option>
+          </select> -->
+
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="hasvariant"> Has Variant :</label>
+              <select class="form-control" *ngIf="!isUpdate" id="hasvariant" name="hasvariant" [(ngModel)]="product.hasvariant">
+                <!-- <option value="">--Select--</option> -->
+                <option value="YES">YES</option>
+                <option value="NO">NO</option>
+              </select>
+
+
+              <select class="form-control" *ngIf="isUpdate" id="hasvariant" name="hasvariant" [(ngModel)]="product.hasvariant">
+                <!-- <option value="">--Select--</option> -->
+                <option value="YES">YES</option>
+                <option value="NO">NO</option>
+              </select>
+              <!-- <input type="text" *ngIf="isUpdate" class="form-control" required name="hasvariant" id="hasvariant"
+              [(ngModel)]="product.hasvariant" readonly> -->
+
+            </div>
+          </div>
+
+          <!-- <div class="col-sm-6" *ngIf="product.hasvariant == 'YES'">
+            <div class="form-group">
+              <label for="variant"> Variant :</label>
+              <input type="text" style="font-weight: 500;"  *ngIf="!isUpdate" class="form-control"
+              id="variant" name="variant" [(ngModel)]="product.variant" placeholder="Ex. 100ml, 200ml..">
+
+              <input type="text" style="font-weight: 500;"  *ngIf="isUpdate" class="form-control"
+              id="variant" name="variant" [(ngModel)]="product.variant">
+            </div>
+          </div> -->
+
+          <!-- <div class="col-sm-6">
+            <div class="form-group">
+              <label for="variant">Variant :</label>
+              <input type="text" maxlength="22" class="form-control" *ngIf="!isUpdate" required id="variant" name="variant" [(ngModel)]="product.variant">
+              <input type="text" maxlength="22" class="form-control" *ngIf="isUpdate" required id="variant" name="variant" [(ngModel)]="product.variant" readonly>
+            </div>
+          </div> -->
+
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="dishtype"> Dish/Drink Type :</label>
+              <select class="form-control" id="dishtype" *ngIf="!isUpdate" name="dishtype" [(ngModel)]="product.dishtype">
+                <!-- <option value="">--Select--</option> -->
+                <option value="VEG" selected>VEG</option>
+                <option value="NON_VEG">NON_VEG</option>
+                <option value="VEGAN">VEGAN</option>
+                <option value="MOCKTAIL">MOCKTAIL</option>
+                <option value="COCKTAIL">COCKTAIL</option>
+                <option value="SOFT_DRINKS">SOFT_DRINKS</option>
+                <option value="HARD_DRINKS">HARD_DRINKS</option>
+
+              </select>
+
+              <input type="text" maxlength="22" class="form-control" *ngIf="isUpdate" required name="dishtype" [(ngModel)]="product.dishtype" readonly>
+
+            </div>
+          </div>
+
+          <!-- <div class="col-sm-6">
+            <div class="form-group">
+              <label for="hsncode"> HSN Code:</label>
+              <input type="number" *ngIf="!isUpdate" class="form-control" name="hsncode" [(ngModel)]="product.hsncode">
+              <input type="number" *ngIf="isUpdate" disabled class="form-control" name="hsncode"
+                [(ngModel)]="product.hsncode">
+            </div>
+          </div> -->
+
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="rateunit"> Rate Unit:</label>
+              <!-- <input type="number" class="form-control" required name="rateunit" [(ngModel)]="product.rateunit"> -->
+              <select class="form-control" id="rateunit" *ngIf="!isUpdate" required name="rateunit"
+                [(ngModel)]="product.rateunit">
+                <option value="RATEPERPLATE">RATEPERPLATE</option>
+                <option value="RATEPERDRINK">RATEPERDRINK</option>
+                <option value="RATEPERBOTTLE">RATEPERBOTTLE</option>
+                <option value="RATEPERCOMBO">RATEPERCOMBO</option>
+                <option value="RATEPERPACKET">RATEPERPACKET</option>
+              </select>
+
+              <input class="form-control" name="rateunit" *ngIf="isUpdate" id="rateunit" [(ngModel)]="product.rateunit" readonly>
+
+            </div>
+          </div>
+
+          <div class="col-sm-6" *ngIf="product.hasvariant== 'NO'">
+            <div class="form-group">
+              <label for="rateperunit"> Rate Per Unit  :</label>
+              <input type="number" style="font-weight: 500;" required *ngIf="!isUpdate" class="form-control"  name="rateperunit" [(ngModel)]="product.rateperunit">
+              <input type="number" style="font-weight: 500;" required *ngIf="isUpdate"  class="form-control"  name="rateperunit" [(ngModel)]="product.rateperunit">
+            </div>
+          </div>
+
+          <div class="col-sm-6 ">
+            <div class="form-group">
+              <label for="priority">Dish/Drink Priority : </label>
+
+              <input type="number" *ngIf="!isUpdate" class="form-control" required name="priority"
+              [(ngModel)]="product.priority">
+
+              <input type="number" *ngIf="isUpdate" class="form-control" required name="priority"
+              [(ngModel)]="product.priority">
+
+            </div>
+          </div>
+
+          <div class="col-sm-6 ">
+            <div class="form-group">
+              <label for="serves">Serves : </label>
+
+              <select class="form-control" id="serves" name="serves" [(ngModel)]="product.serves" required>
+                <option value="1" selected>1</option>
+                <option value="2" selected>2</option>
+                <option value="3" selected>3</option>
+                <option value="4" selected>4</option>
+                <option value="5" selected>5</option>
+                <option value="6" selected>6</option>
+              </select>
+
+              <!-- <input *ngIf="isUpdate" type="number" mutiline class="form-control" id="serves" name="serves"
+                [(ngModel)]="product.serves"/> -->
+            </div>
+          </div>
+
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="bestseller"> Bestseller :</label>
+              <select class="form-control" *ngIf="!isUpdate" id="bestseller" name="bestseller" [(ngModel)]="product.bestseller">
+                <!-- <option value="">--Select--</option> -->
+                <option value="YES" selected>YES</option>
+                <option value="NO">NO</option>
+              </select>
+
+              <input type="text" *ngIf="isUpdate" class="form-control" required name="bestseller"
+              [(ngModel)]="product.bestseller" readonly>
+
+            </div>
+          </div>
+
+          <div class="col-sm-12">
+            <hr>
+          </div>
+
+          <div class="col-sm-12">
+            <div class="form-group">
+              <label for="description">Description:</label>
+              <textarea class="form-control" maxlength="127" name="description" placeholder="127 Charactres only..." [(ngModel)]="product.description"></textarea>
+            </div>
+          </div>
+
+          <div class="panel-body">
+            <div *ngIf='isUpdate' class="col-md-12" style="padding:0px;">
+              <div class='col-sm-4' *ngFor="let data of getPhots; let i = index; let last = last;">
+                <div class="thumbnail">
+                  <label>
+                    <input type="checkbox" value="" (click)="deleteNewsList(data.id)">
+                  </label>
+
+                  <label class="pull-right">
+                    <input *ngIf="data.isprimary==='YES'" checked type="radio" value="" name="isprimary"
+                      (click)="setPrimary(data.id)">
+                    <input *ngIf="data.isprimary==='NO'" type="radio" value="" name="isprimary"
+                      (click)="setPrimary(data.id)">
+                  </label>
+
+                  <img src="{{docServer}}/{{data?.docpath}}" alt="{{docServer}}/{{data?.docpath}}"
+                    style="width:100%; height:200px;">
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-12" *ngIf="getPhots[0]">
+              <a class="btn btn-danger btn-sm a-btn-slide-text" (click)="deleteMultiplePhotos()"
+                title="Delete Selected Photos">
+                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                Delete Selected Photos
+              </a>
+              <br>
+              <br>
+              <br>
+              <br>
+              <br>
+            </div>
+            <br>
+            <br>
+            <div class="col-md-12">
+              <div class="form-group">
+                <label>Photos (Max 5 photos):</label>
+                <input *ngIf="!isUpdate" required type="file" imageUpload (imageSelected)="selected($event)"
+                  [resizeOptions]="resizeOptions" name="document" [(ngModel)]="document" />
+                <img class="image" />
+                <input *ngIf="isUpdate" type="file" imageUpload (imageSelected)="selected($event)"
+                  [resizeOptions]="resizeOptions" name="document" [(ngModel)]="document" />
+                <img class="image" />
+              </div>
+
+            </div>
+            <div class="col-md-12">
+
+             
+              <div class="thumbnail col-md-4" *ngFor="let url of urls;  let i = index; let last = last;">
+                <label>
+                  <input type="radio" value="" checked name="isprimary" (click)="setPrimary(i)">
+                </label>
+                <label>
+                  <button class="btn btn-danger btn-small pull-right" (click)="deletephotofromarry(i)"
+                    style=" margin-left: 356px; "><span class="glyphicon glyphicon-trash"></span></button>
+                </label>
+                <img [src]="url" style="height:200px; width:200px;">
+              </div>
+
+            </div>
+            <div class="col-md-12">
+              <div class="form-group">
+                <button *ngIf="isUpdate" [disabled]="!form1.valid" type="submit" class="btn btn-default"
+                  (click)="updateData()" style="margin-right: 10px;">Update</button>
+
+                <button *ngIf="!isUpdate" [disabled]="!form1.valid" type="button" class="btn btn-default"
+                  (click)="submitData()" style="margin-right: 10px;">Submit</button>
+
+                <button type="button" class="btn btn-default" (click)="cancel()">Cancel</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- product detail -->
+  <div class="panel panel-default" *ngIf="detailFlag">
+    <div class="panel-heading">
+      <div class="clearfix">
+        <div class="pull-left"> {{title}}</div>
+        <div class="container" class="pull-right">
+          <div class="row">
+            <a [routerLink]="['/manageproduct']" title="Manage Dish/Drink" class="btn btn-info btn-sm a-btn-slide-text" style="margin-right: 5px;">
+              <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+            </a>
+            <!-- <a *ngIf="(this.userType ==='FIRM') && (this.userRole ==='SUPERADMIN') " [routerLink]="['/editproduct', id]"
+              title="Update Product" class="btn btn-info btn-sm a-btn-slide-text">
+              <i class="glyphicon glyphicon-edit"></i>
+            </a>
+            <a *ngIf="(this.userType ==='FIRM') && (this.userRole ==='SUPERADMIN') "
+              class="btn btn-danger a-btn-slide-text btn-sm" title="Delete Product" (click)="deleteRole(id)">
+              <span class="glyphicon glyphicon-remove-circle"></span>
+            </a> -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-body">
+      <form #form1="ngForm">
+        <div class="col-md-12 col-sm-12 col-xs-12 img-thumbnail ">
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <!-- <h4 style="font-weight: bold;">Dish/Drink Image:</h4> -->
+            <label>Dish/Drink Image:</label>
+
+          </div>
+
+          <div class="col-md-3">
+            <img src='{{docServer}}/{{getPhots[0]?.docpath}}' style="height:200px; width:200px;" class="thumbnail">
+          </div>
+
+          <div class="col-md-2" *ngIf="getPhots[1]?.docpath">
+            <img src='{{docServer}}/{{getPhots[1]?.docpath}}' style="height:200px; width:200px;" class="thumbnail">
+          </div>
+
+          <div class="col-md-2" *ngIf="getPhots[2]?.docpath">
+            <img src='{{docServer}}/{{getPhots[2]?.docpath}}' style="height:200px; width:200px;" class="thumbnail">
+          </div>
+
+          <div class="col-md-2" *ngIf="getPhots[3]?.docpath">
+            <img src='{{docServer}}/{{getPhots[3]?.docpath}}' style="height:200px; width:200px;" class="thumbnail">
+          </div>
+
+          <div class="col-md-8 col-sm-8 col-xs-8">
+
+            <div class="row">
+              <div class="col-md-6 col-sm-6 col-xs-6">
+              <!-- <h4 style="font-weight: bold;">Dish/Drink Name:</h4> -->
+              <label>Dish/Drink Name:</label>
+                <div class="form-group">
+                   {{product?.name}}
+                </div>
+              </div>
+
+              <div class="col-md-6 col-sm-6 col-xs-6">
+              <!-- <h4 style="font-weight: bold;">Dish/Drink Type:</h4> -->
+              <label>Dish/Drink Type:</label>
+
+
+                <div class="form-group">
+                  {{product?.dishtype}}
+                </div>
+              </div>
+
+              
+
+              <div class="col-md-6 col-sm-6 col-xs-6" *ngIf="product.hasvariant=='YES'">
+                <!-- <h4 style="font-weight: bold;">Dish/Drink Type:</h4> -->
+                <label>Dish/Drink Variant:</label>
+  
+  
+                  <div class="form-group">
+                    <span *ngFor="let product of product.variants">{{product?.variant}}<br></span> 
+
+                    <!-- {{product?.variant}} -->
+                  </div>
+                </div>
+
+              <div class="col-md-6 col-sm-6 col-xs-6">
+              <!-- <h4 style="font-weight: bold;">Menu Type: </h4> -->
+              <label>Menu:</label>
+
+                <div class="form-group">
+                  {{product?.menutype}}
+                </div>
+              </div>
+
+              <div class="col-md-6 col-sm-6 col-xs-6">
+              <!-- <h4 style="font-weight: bold;">Rate Unit: :</h4> -->
+              <label>Rate Unit: :</label>
+
+                <div class="form-group">
+                  {{product?.rateunit}}
+                </div>
+              </div>
+
+              <div class="col-md-6 col-sm-6 col-xs-6" *ngIf="product.hasvariant=='YES'">
+              <!-- <h4 style="font-weight: bold;">Rate Per Unit: </h4> -->
+              <label>Rate Per Unit:</label>
+
+                <div class="form-group">
+
+                  <span  *ngIf="product.hasvariant==='NO'">&#8377;{{data?.rateperunit}}</span>
+                  <span  *ngFor="let product of product.variants">&#8377;{{product?.rateperunit}}<br></span>
+                  <!-- {{product?.rateperunit}} -->
+                </div>
+              </div>
+
+              <div class="col-md-6 col-sm-6 col-xs-6" *ngIf="product.hasvariant=='NO'">
+                <label>Rate Per Unit:</label>
+  
+                  <!-- <div class="form-group"> -->
+  
+                    <!-- <span  *ngIf="product.hasvariant==='NO'">&#8377;{{data?.rateperunit}}</span>
+                    <span  *ngFor="let product of product.variants">&#8377;{{product?.rateperunit}}<br></span> -->
+                    {{product?.rateperunit}}
+                  <!-- </div> -->
+                </div>
+
+              <div class="col-md-6 col-sm-6 col-xs-6">
+              <!-- <h4 style="font-weight: bold;">Priority:</h4> -->
+              <label>Priority:</label>
+
+                <div class="form-group">
+                  {{product?.priority}}
+                </div>
+              </div>
+
+              <div class="col-md-6 col-sm-6 col-xs-6">
+              <!-- <h4 style="font-weight: bold;">Serves:</h4> -->
+              <label>Serves:</label>
+
+                <div class="form-group">
+                  {{product?.serves}}
+                </div>
+              </div>
+              
+              <div class="col-md-6 col-sm-6 col-xs-6">
+              <!-- <h4 style="font-weight: bold;">Bestseller: </h4> -->
+              <label>Bestseller:</label>
+
+                <div class="form-group">
+                  {{product?.bestseller}}
+                </div>
+              </div>
+
+              <div class="col-md-6 col-sm-6 col-xs-6">
+              <!-- <h4 style="font-weight: bold;">Description:</h4> -->
+              <label>Description:</label>
+
+                <div class="form-group">
+                   {{product?.description}}
+                </div>
+              </div>
+
+            </div>
+            
+          </div>
+
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- manage dish -->
+<div [hidden]="!isManageState" class="col-md-12 col-sm-12 col-xs-12 text-capitalize">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      {{title}} &nbsp;&nbsp;&nbsp;&nbsp;Total Dish/Drink = {{tp}}
+      <a [routerLink]="['/addproduct']" title="Add Dish/Drink" class="pull-right"
+        *ngIf="this.userRole==='SUPERADMIN' && this.userType==='FIRM'">
+        <span class="glyphicon glyphicon-plus-sign"></span>
+      </a>
+    </div>
+
+    <div class="panel-body">
+      <div class="table-responsive">
+        <table class="table table-condensed table-striped table-bordered"
+          [mfData]="data | dataFilterPr : filterQuery:'fproduct'" #mf="mfDataTable" [mfRowsOnPage]="rowsOnPage"
+          [(mfSortBy)]="role" [(mfSortOrder)]="sortOrder">
+
+          <thead>
+            <tr>
+              <th colspan="10">
+                <div id="custom-search-input">
+
+                  <div class="col-sm-12">
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                      <div class="form-group">
+                        <label for="gender"> Search by
+                        </label>&nbsp;
+
+                        <input type="radio" value="Customdate" [(ngModel)]="prodtypeselect" name="prodtypeselect">
+                          Menu &nbsp;
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-sm-12" *ngIf="prodtypeselect">
+                    <div class="col-sm-3" *ngIf="userRole==='SUPERADMIN'">
+                      <div class="form-group">
+                        <label for="prodtype"> Category:</label>
+                        <select class="form-control" id="categorytype" *ngIf="userRole==='SUPERADMIN'" required
+                          name="categorytype" [(ngModel)]="categorytype" (change)="getprodtypelistbycatgory()">
+                          <option required *ngFor="let type of categoryList; let i=index" [value]="type.name">
+                            {{type.name}}</option>
+                        </select>
+
+                      </div>
+                    </div>
+
+                    <div class="col-sm-3" *ngIf="categorytype">
+                      <div class="form-group">
+                        <label for="name"> Menu:</label>
+                        <select class="form-control" *ngIf="!isUpdate" id="name" required name="name"
+                          [(ngModel)]="product.name" (change)="getprodbyprodtype()">
+                          <option required *ngFor="let type of menulist; let i=index" [value]="type.name">
+                            {{type.name}}</option>
+                        </select>
+
+                      </div>
+                    </div>
+
+                    <div class="col-sm-3">
+                      <div class="form-group">
+                        <label for="state">Reset :
+                        </label>
+                        <span class="input-group-btn">
+                          <button class="btn btn-info btn-sm" title="Reset" (click)="refreshincall()"
+                            style="font-size: 9px;">
+                            <span class="glyphicon glyphicon-refresh"></span>
+                          </button>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                 
+                </div>
+              </th>
+            </tr>
+
+            <tr>
+              <th>SN</th>
+              <th>ID</th>
+              <th>Name</th>
+              
+              <th>Menu</th>
+              <th>Rate unit</th>
+              <th>Variants</th>
+
+              <th>Rate Per Unit</th>
+              <th>Priority</th>
+              
+              <th>Action</th>
+            </tr>
+
+            <tr>
+              <th colspan="18">
+                <div id="custom-search-input">
+                  <div class="input-group col-md-12">
+                    <input type="text" class="form-control" placeholder="Search by Dish Name, Menu"
+                      [(ngModel)]="filterQuery" />
+                    <span class="input-group-btn">
+                      <button class="btn btn-danger btn-sm" type="button">
+                        <span class=" glyphicon glyphicon-search"></span>
+                      </button>
+                    </span>
+                  </div>
+                </div>
+              </th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let data of mf.data; let i = index; let last = last;">
+              <td>{{i+1}}</td>
+              <td>{{data?.id}}</td>
+              <!-- <td>{{data?.name}}</td> -->
+              <td style="text-align: center;">
+                <div class="img-thumbnail  " style="margin: auto;">
+                  <img *ngIf="data?.photos[0]?.docpath" src="{{docServer}}/{{data?.photos[0]?.docpath}}"
+                    class="img-circle" alt="" style="width:100px; height:100px;">
+                  <img *ngIf="!data?.photos[0]?.docpath"
+                    src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg" class="img-circle"
+                    alt="" style="width:100px; height:100px;">
+
+                  <div class="caption text-capitalize text-center"> {{data?.name}}</div>
+                </div>
+              </td>
+              
+              <td>{{data?.menutype}}</td>
+              <td>
+                <p *ngIf="data.rateunit==='RATEPERPLATE'">RATEPERPLATE</p>
+                <p *ngIf="data.rateunit==='RATEPERDRINK'">RATEPERDRINK</p>
+                <p *ngIf="data.rateunit==='RATEPERBOTTLE'">RATEPERBOTTLE</p>
+                <p *ngIf="data.rateunit==='RATEPERCOMBO'">RATEPERCOMBO</p>
+                <p *ngIf="data.rateunit==='RATEPERPACKET'">RATEPERPACKET</p>
+              </td>
+
+              <td>
+                <span *ngFor="let variant of data.variants">{{variant?.variant}}<br></span> 
+              </td>
+
+              <td>
+                <span  *ngIf="data.hasvariant==='NO'">&#8377;{{data?.rateperunit}}</span>
+                <span  *ngFor="let rateperunit of data.variants">&#8377;{{rateperunit?.rateperunit}}<br></span>
+              </td>
+              <td>{{data?.priority}}</td>
+
+              <td class="text-right">
+
+                <a [routerLink]="['/editproduct/',data.id]" data-toggle="tooltip" title="Update Dish/Drink"
+                  *ngIf="(this.userType ==='FIRM') && (this.userRole ==='SUPERADMIN') " style="margin-right: 5px;">
+                  <button class="btn btn-default btn-sm">
+                    <span class="glyphicon glyphicon-edit"></span>
+                  </button>
+                </a>
+
+                <a [routerLink]="['/detailproduct',data.id]" style="margin-right: 5px;">
+                  <button class="btn btn-info btn-sm" title="Dish/Drink Details">
+                    <span class="glyphicon glyphicon-info-sign"></span>
+                  </button>
+                </a>
+
+                <a [routerLink]="['/managedishreviews', data.id]" style="margin-right: 5px;">
+                  <button class="btn btn-primary btn-sm" title="Manage Dish Reviews" style="background-color: rgb(206, 166, 58); border: rgb(206, 166, 58);">
+                    <span class="glyphicon glyphicon-th-list"></span>
+                  </button>
+                </a>
+
+                <a [routerLink]="['/adddishreviews', data.id]" style="margin-right: 5px;">
+                  <button class="btn btn-primary btn-sm" title="Add Dish Reviews" style="background-color: chocolate; border: chocolate;">
+                    <span class="glyphicon glyphicon-star"></span>
+                  </button>
+                </a>
+                <!-- <a [routerLink]="['/managevariant', data.id]">
+                  <button class="btn btn-primary btn-sm" title="Manage  Variant" style="background-color: chocolate; border: chocolate;">
+                    <span class="glyphicon glyphicon-star-empty"></span>
+                  </button>
+                </a> -->
+
+                <a [routerLink]="['/managevariant', data.id]" *ngIf="data?.hasvariant==='YES'" style="background-color: rgb(30, 210, 201); border: rgb(30, 210, 201); margin-right: 5px;">
+                  <button class="btn btn-primary btn-sm" title="Manage Variant">
+                    <span class="glyphicon glyphicon-th-list"></span>
+                  </button>
+                </a>
+
+                <a [routerLink]="['/addvariant', data.id]" *ngIf="data?.hasvariant==='YES'" style="background-color: chocolate; border: chocolate; margin-right: 5px;">
+                  <button class="btn btn-primary btn-sm" title="Add Variant">
+                    <span class="glyphicon glyphicon-plus"></span>
+                  </button>
+                </a>
+
+
+                <button *ngIf="(this.userType ==='FIRM') && (this.userRole ==='SUPERADMIN') "
+                  class="btn btn-danger btn-sm" title="Delete Dish/Drink" (click)="deleteRole(data.id)" style="margin-right: 5px;">
+                  <span class="glyphicon glyphicon-remove-circle"></span>
+                </button>
+
+              </td>
+            </tr>
+          </tbody>
+
+          <tfoot>
+            <tr>
+              <td colspan="21">
+                <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+        <!-- <div class="col-sm-12 ">
+          <strong> Note: Rows with red color indicates low stock</strong>
+        </div> -->
+      </div>
+    </div>
+  </div>
+</div>

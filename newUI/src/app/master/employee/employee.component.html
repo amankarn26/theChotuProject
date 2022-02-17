@@ -1,0 +1,623 @@
+<!-- <div class="row animated bounceInDown">
+  <div class="col-md-12">
+    <h2>{{title}}</h2>
+    {{title}}
+  </div>
+</div>
+<hr /> -->
+<div class="col-md-12 col-sm-12 col-xs-12 no-padding slideLeft" *ngIf="flag">
+    <div class="panel panel-default" *ngIf="!detailFlag">
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <div class="clearfix">
+        <div class="pull-left"> {{title}}</div>
+        <div class="container" class="pull-right">
+          <div class="row">
+            <a [routerLink]="['/manageemployee']" title="Manage Employee" class="btn btn-info btn-sm a-btn-slide-text">
+              <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="panel-body">
+      <form #form1="ngForm">
+        <div class="col-md-12 col-sm-12 col-xs-12 ">
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <h4>Personal Details:</h4>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="fname">First Name:
+              </label>
+              <input *ngIf="!isUpdate" type="text" class="form-control" id="fname" name="fname" [(ngModel)]="emp.fname" required (change)="generatepass()" />
+              <input *ngIf="isUpdate" type="text" class="form-control" id="fname" name="fname" [(ngModel)]="emp.fname" required />
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="mname">Middle Name:
+              </label>
+              <input *ngIf="!isUpdate" type="text" class="form-control" id="mname"  name="mname" [(ngModel)]="emp.mname" required />
+              <input *ngIf="isUpdate" type="text" class="form-control" id="mname"  name="mname" [(ngModel)]="emp.mname" required />
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="lname">Last Name:
+              </label>
+              <input type="text" class="form-control" id="lname" name="lname" *ngIf="!isUpdate" [(ngModel)]="emp.lname" required />
+              <input type="text" class="form-control" id="lname" name="lname" *ngIf="isUpdate" [(ngModel)]="emp.lname" required />
+
+            </div>
+          </div>
+          <div class="col-md-12 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="gender">Gender:
+
+              </label>&nbsp;
+              <input type="radio" required value="MALE" name="gender" ngModel [(ngModel)]="emp.gender"> Male &nbsp;
+              <input type="radio"  required value="FEMALE" name="gender" ngModel [(ngModel)]="emp.gender"> Female &nbsp;
+              <input type="radio"  required value="TRANSGENDER" name="gender" ngModel [(ngModel)]="emp.gender"> Third gender
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-12 col-sm-12 col-xs-12 ">
+          <hr>
+          <!-- <div class="col-md-12 col-sm-12 col-xs-12">
+            <h4>Department Details:</h4>
+          </div> -->
+          <!-- <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="dept">Department:
+              </label>
+              <input type="text" required class="form-control" *ngIf="!isUpdate" name="dept" [(ngModel)]="emp.department" />
+              <input type="text" required class="form-control" name="dept" *ngIf="isUpdate" [(ngModel)]="emp.department" />
+
+
+            </div>
+          </div> -->
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="department">Department:
+              </label>
+
+              <input type="text" required class="form-control" id="department"  name="department" [(ngModel)]="emp.department"
+              />
+              <!-- <select class="form-control" name="dep" *ngIf="!isUpdate" required [(ngModel)]="emp.department">
+                <option required *ngFor="let dep of deplist; let i=index" [value]="dep.name">{{dep.name}}</option>
+
+
+              </select> -->
+                <!-- <input type="text" required class="form-control" id="department" *ngIf="isUpdate" name="department" [(ngModel)]="emp.department"
+                /> -->
+              <!-- <select class="form-control" *ngIf="isUpdate"  name="dep" required [(ngModel)]="emp.department">
+                <option required *ngFor="let dep of deplist; let i=index" [value]="dep.name">{{dep.name}}</option>
+
+              </select> -->
+            </div>
+          </div>
+
+
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="designation">Designation:
+              </label>
+              <input type="text" required class="form-control" *ngIf="!isUpdate" id="designation" name="designation" [(ngModel)]="emp.designation" />
+              <input type="text" required class="form-control" id="designation" *ngIf="isUpdate" name="designation" [(ngModel)]="emp.designation" />
+
+            </div>
+          </div>
+
+
+        <div class="col-md-6 col-sm-6 col-xs-12">
+          <div class="form-group">
+            <label for="salary">Salary:
+            </label>
+            <input type="number" required class="form-control" *ngIf="!isUpdate" id="salary" name="salary" [(ngModel)]="emp.salary" />
+            <input type="number" required class="form-control" *ngIf="isUpdate" id="salary" name="salary" [(ngModel)]="emp.salary" />
+
+          </div>
+        </div>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+          <div class="form-group">
+            <label for="role">Role:
+            </label>
+            <select class="form-control" name="role" *ngIf="!isUpdate" required [(ngModel)]="emp.role.role">
+              <!-- <option required *ngFor="let rolee of rolelist; let i=index" [value]="rolee.role">{{rolee.name}}</option> -->
+              <!-- <option value="WHOLESALER">WHOLESALER</option> -->
+              <option value="ADMIN">ADMIN</option>
+              <!-- <option value="CUSTOMER">CUSTOMER</option> -->
+              <!-- <option value="EMPLOYEE">EMPLOYEE</option> -->
+              <option value="PRIVELEGE">PRIVELEGE</option>
+              <option value="USER">USER</option>
+              <option value="MARKETING">MARKETING</option>
+              <option value="NO_ACCESS">NO_ACCESS</option>
+              <option value="READ_ONLY">READ_ONLY</option>
+           
+              <!-- <option value="SUPERADMIN">SUPERADMIN</option> -->
+            </select>
+            <select class="form-control" name="role" *ngIf="isUpdate" disabled required [(ngModel)]="emp.role.role">
+                <!-- <option required *ngFor="let rolee of rolelist; let i=index" [value]="rolee.role">{{rolee.name}}</option> -->
+                <!-- <option value="WHOLESALER">WHOLESALER</option> -->
+                <option value="ADMIN">ADMIN</option>
+                <!-- <option value="CUSTOMER">CUSTOMER</option> -->
+                <!-- <option value="EMPLOYEE">EMPLOYEE</option> -->
+                <option value="PRIVELEGE">PRIVELEGE</option>
+                <option value="USER">USER</option>
+                <option value="MARKETING">MARKETING</option>
+                <option value="NO_ACCESS">NO_ACCESS</option>
+                <option value="READ_ONLY">READ_ONLY</option>
+                <!-- <option value="SUPERADMIN">SUPERADMIN</option> -->
+              </select>
+          </div>
+        </div>
+      </div>
+
+
+        <!-- end columnn -->
+
+
+        <div class="col-md-12 col-sm-12 col-xs-12 ">
+          <hr>
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <h4>Profile Details:</h4>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="email">Email Id:</label>
+              <input type="email" class="form-control"  *ngIf="!isUpdate"  maxlength="120" placeholder="Maximum 120 characters"  pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" id="email" name="email" required [(ngModel)]="emp.login.username" />
+              <input type="email" class="form-control" *ngIf="isUpdate" readonly maxlength="120" placeholder="Maximum 120 characters"  pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" id="email" name="email" required [(ngModel)]="emp.login.username" />
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="!isUpdate">
+            <div class="form-group">
+              <label for="password">Password:
+              </label>
+              <input type="password"  required class="form-control" readonly id="password" name="password" [(ngModel)]="emp.login.password" />
+              <!-- <input type="password" required *ngIf="isUpdate" class="form-control" id="password" name="password" [(ngModel)]="emp.login.password" /> -->
+
+            </div>
+          </div>
+
+
+
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="phone">Contact:</label>
+              <input type="number" *ngIf="!isUpdate" required class="form-control" pattern="[0-9]{10}" id="phone" name="phone" [(ngModel)]="emp.phone" />
+              <input type="number" *ngIf="isUpdate" required class="form-control" pattern="[0-9]{10}" id="phone" name="phone" [(ngModel)]="emp.phone" />
+
+            </div>
+          </div>
+
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="line1">Address Line 1 : </label>
+              <input type="text" *ngIf="!isUpdate" required class="form-control" id="line1" name="line1" [(ngModel)]="emp.address.line1" />
+              <input type="text" *ngIf="isUpdate" required class="form-control" id="line1" name="line1" [(ngModel)]="emp.address.line1" />
+
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="line2">Area</label>
+              <input type="text" *ngIf="!isUpdate"  class="form-control" id="line2"  required name="line2" [(ngModel)]="emp.address.line2" />
+              <input type="text" *ngIf="isUpdate"  class="form-control" id="line2" required name="line2" [(ngModel)]="emp.address.line2" />
+
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="pincode">Pin-Code: </label>
+              <input type="number" *ngIf="!isUpdate" required class="form-control" id="pincode" name="pincode" [(ngModel)]="emp.address.pincode" (change)="getState($event)"
+              />
+              <input type="number" *ngIf="isUpdate" required class="form-control" id="pincode" name="pincode" [(ngModel)]="emp.address.pincode"
+                (change)="getState($event)" />
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="states">State:
+              </label>
+
+              <input type="text" *ngIf="!isUpdate" required class="form-control" name="states" required [(ngModel)]="emp.address.states" />
+              <input type="text" *ngIf="isUpdate" required class="form-control" name="states" required [(ngModel)]="emp.address.states" />
+
+
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="city">City:
+              </label>
+
+              <input type="text" *ngIf="!isUpdate" required class="form-control" name="citiName" [(ngModel)]="emp.address.city" />
+              <input type="text" *ngIf="isUpdate" required class="form-control" name="citiName" [(ngModel)]="emp.address.city" />
+            </div>
+          </div>
+
+        </div>
+
+
+        <div class="col-md-12 col-sm-12 col-xs-12 ">
+            <hr>
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <h4>Photo:</h4>
+              </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label>Photo (Maximum size 500Kb):</label>
+                <input type="file" (change)="fileEvent($event)" multiple name="document" [(ngModel)]="document" />
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <img [src]="url" style="height:200px; width:200px;" class="thumbnail">
+            </div>
+          </div>
+          <!-- <div class="col-md-3 col-sm-3 col-xs-12">
+              <div class="form-group">
+                  <br>
+                  <label for="Addbutton" [hidden]='true'>Add
+                  </label>
+                   <button *ngIf="!isUpdate" class="btn btn-info btn-sm" (click)="uploadfile()" >
+                      Upload
+                  </button>
+                  <button *ngIf="isUpdate" class="btn btn-info btn-sm" (click)="uploadfile()"  >
+                      Upload
+                  </button>
+              </div>
+          </div> -->
+
+        <div class="col-md-12 col-sm-12 col-xs-12">
+          <div class="form-group">
+            <button *ngIf="!isUpdate" type="submit" [disabled]="!form1.valid" class="btn btn-default" (click)="submitData()">Submit</button>
+            <button *ngIf="isUpdate" type="submit" [disabled]="!form1.valid" class="btn btn-default" (click)="updateData()">Update</button>
+            <button type="button" class="btn btn-default" (click)="cancel()">Cancel</button>
+
+
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="panel panel-default" *ngIf="detailFlag">
+    <div class="panel-heading">
+      <div class="clearfix">
+        <div class="pull-left"> {{title}}</div>
+        <div class="container" class="pull-right">
+          <div class="row">
+            <a [routerLink]="['/manageemployee']" title="Manage Employees" class="btn btn-info btn-sm a-btn-slide-text">
+              <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+            </a>
+
+            <a [routerLink]="['/updateemployee', id]" title="Update Employee" class="btn btn-info btn-sm a-btn-slide-text">
+
+              <i class="glyphicon glyphicon-edit"></i>
+
+            </a>
+            <a class="btn btn-danger a-btn-slide-text btn-sm" title="Delete Employee" (click)="deleteEmployee(id)">
+              <span class="glyphicon glyphicon-remove-circle"></span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="panel-body">
+
+      <form #form1="ngForm">
+        <div class="col-md-12 col-sm-12 col-xs-12 ">
+
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <h4>Profile Details:</h4>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <img [src]="url" style="height:200px; width:200px;" class="thumbnail">
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+              <div class="form-group">
+                <label for="email">Email Id: {{emp.login.username}}</label>
+              </div>
+            </div>
+            <!-- <div class="col-md-12 col-sm-12 col-xs-12">
+              <div class="form-group">
+                <label for="role">LogIN Role: {{emp.role.role}}
+                </label>
+              </div>
+            </div> -->
+            <div class="col-md-12 col-sm-12 col-xs-12">
+              <div class="form-group">
+                <label for="phone">Contact: {{emp.phone}}</label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12 col-sm-12 col-xs-12 ">
+          <hr>
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <h4>Personal Details:&nbsp;</h4>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="fname">First Name:&nbsp;{{emp.fname}}
+              </label>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="mname">Middle Name:&nbsp;{{emp.mname}}
+              </label>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="lname">Last Name:&nbsp;{{emp.lname}}
+              </label>
+            </div>
+          </div>
+          <!-- <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="dob">Date Of Birth:&nbsp;{{emp.dob|date: 'dd-MM-yyyy'}}
+
+              </label>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="gender">Gender:&nbsp;{{emp.gender}}
+              </label>&nbsp;
+            </div>
+          </div> -->
+
+        </div>
+
+        <div class="col-md-12 col-sm-12 col-xs-12 ">
+          <hr>
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <h4>Department Details:</h4>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="depname">Department:&nbsp; {{emp.department}}
+              </label>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="designation">Designation:&nbsp;{{emp.designation}}
+                </label>
+              </div>
+            </div>
+
+          <!-- <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="etype">User Type:&nbsp; {{emp.login.type}}
+
+              </label>
+            </div>
+          </div> -->
+
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="salary">Salary:&nbsp;{{emp.salary}}
+              </label>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="role">User Role:&nbsp; {{emp.role.role}}
+
+              </label>
+            </div>
+          </div>
+          <!-- <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="salary">Salary:&nbsp; {{emp.salary}}
+
+              </label>
+               </div>
+          </div> -->
+        </div>
+        <!-- end columnn -->
+        <div class="col-md-12 col-sm-12 col-xs-12 ">
+          <hr>
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <h4>Local Address :&nbsp;</h4>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="line1">Address Line1 :&nbsp; {{emp.address.line1}}
+
+              </label>
+             </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="line2">Area&nbsp;  {{emp.address.line2}}</label>
+               </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="pincode">Pin-Code:&nbsp;
+             {{emp.address.pincode}}
+              </label>
+               </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="states">State:&nbsp; {{emp.address.states}}
+
+              </label>
+
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="city">City:&nbsp;
+              {{emp.address.city}}
+              </label>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- <div class="col-md-12 col-sm-12 col-xs-12 ">
+
+          <hr>
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <h4>Profile details:</h4>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+
+            <div class="form-group">
+              <label for="email">Email Id:  {{emp.login.username}}</label>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="role">Role: {{emp.role.role}}
+
+              </label>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="phone">Contact: {{emp.phone}}</label>
+
+            </div>
+          </div>
+        </div> -->
+
+
+
+
+      </form>
+
+    </div>
+  </div>
+</div>
+
+
+
+<div class="col-md-12 col-sm-12 col-xs-12 no-padding slideLeft" *ngIf="!flag">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <div class="clearfix">
+        <div class="pull-left"> {{title}}</div>
+        <div class="container" class="pull-right">
+          <div class="row">
+            <a [routerLink]="['/addemployee']"  title="Add Employee">
+              <span class="glyphicon glyphicon-plus-sign"></span>
+              <span></span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="panel-body no-padding">
+      <div class="table-responsive">
+        <table class="table table-condensed table-bordered" [mfData]="data | dataFilterPr : filterQuery:'employee'" #mf="mfDataTable" [mfRowsOnPage]="rowsOnPage"
+           >
+
+          <thead>
+            <tr>
+              <th>SN</th>
+              <th>Employee Id</th>
+              <th>Name</th>
+
+
+           
+              <th>Department</th>
+              <th>Employee Role</th>
+              <th>City</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Action</th>
+
+            </tr>
+            <tr>
+              <th colspan="20">
+                <div id="custom-search-input ">
+                  <div class="input-group col-md-12">
+                    <input type="text" class="form-control" placeholder="Search by Employee ID, Name, Email or Phone " [(ngModel)]="filterQuery" />
+                    <span class="input-group-btn">
+                      <button class="btn btn-danger btn-sm" type="button">
+                        <span class=" glyphicon glyphicon-search"></span>
+                      </button>
+                    </span>
+                  </div>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of mf.data; let i = index; let last = last;" class="animated flipInX">
+              <td>{{i+1}}</td>
+              <td>{{data.id}}</td>
+              <td>
+                <div class="img-thumbnail  ">
+                  <img *ngIf="data?.photo?.docpath" src="{{docServer}}/{{data?.photo?.docpath}}" class="img-circle" alt="" style="width:100px; height:100px;">
+                  <img *ngIf="!data?.photo?.docpath" src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg" class="img-circle" alt="" style="width:100px; height:100px;">
+
+                  <div class="caption text-capitalize text-center"> {{data.name}}</div>
+                </div>
+              </td>
+             
+              <td>{{data.department}}</td>
+              <td>{{data?.role?.role}}</td>
+              <td>{{data?.address?.city}},{{data?.address?.states}}</td>
+
+              <td>{{data?.login?.username}}</td>
+              <td>{{data?.phone}}</td>
+              <td>
+                <!-- <a [routerLink]="['/manageretailer/rm',data.id]">
+                  <button class="btn btn-info btn-sm" title="View All Customers">
+                    <i class="glyphicon glyphicon-user"></i>
+                  </button>
+                </a> -->
+                <!-- <a [routerLink]="['/managequotation',data.id]">
+                  <button class="btn btn-info btn-sm" title="View All Quotation">
+                    <i class="glyphicon glyphicon-list-alt"></i>
+                  </button>
+                </a> -->
+                <!-- <a [routerLink]="['/manageretailerorder',data.id]">
+                  <button class="btn btn-info btn-sm" title="View All Orders">
+                    <i class="glyphicon glyphicon-shopping-cart"></i>
+                  </button>
+                </a> -->
+                <a [routerLink]="['/updateemployee',data.id]">
+                  <button class="btn btn-info btn-sm" title="Update Employee">
+                    <i class="glyphicon glyphicon-edit"></i>
+                  </button>
+                </a>
+                <a [routerLink]="['/detailemployee',data.id]">
+                  <button class="btn btn-info btn-sm" title="Employee Details">
+                    <span class="glyphicon glyphicon-info-sign"></span>
+                  </button>
+                </a>
+                <button class="btn btn-danger btn-sm" title="Delete Employee" (click)="deleteEmployee(data.id)">
+                  <span class="glyphicon glyphicon-remove-circle"></span>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="20">
+                <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

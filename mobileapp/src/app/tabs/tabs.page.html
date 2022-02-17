@@ -1,0 +1,54 @@
+<ion-tabs>
+  <ion-tab-bar slot="bottom" *ngIf="islogin" style="--background: rgba(134,75,246,1);">
+    <!-- <ion-tab-button  tab="tab1"> -->
+
+    <ion-tab-button (click)="home()" class="button1">
+      <ion-icon name="home"></ion-icon>
+      <ion-label>Home</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="tab2" class="button1">
+      <ion-icon name="ellipse"></ion-icon>
+      <ion-label>My Orders</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="tab4" class="button1">
+      <ion-icon name="person-sharp"></ion-icon>
+      <ion-label>About Us</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="tab3" class="button1">
+      <ion-icon name="person-sharp"></ion-icon>
+      <ion-label>My Profile</ion-label>
+    </ion-tab-button>
+
+    <!-- <ion-tab-button tab="cart">
+      <ion-icon name="square"></ion-icon>
+      <ion-label>Tab 3</ion-label>
+    </ion-tab-button> -->
+    <!-- <ion-tab-button (click)="logout()" class="button1">
+      <ion-icon name="square"></ion-icon>
+      <ion-label>Logout</ion-label>
+    </ion-tab-button> -->
+
+  </ion-tab-bar>
+
+  <ion-tab-bar slot="bottom" *ngIf="!islogin" style="--background: rgba(134,75,246,1);">
+    <ion-tab-button (click)="goHome()" class="button1">
+      <ion-icon name="home"></ion-icon>
+      <ion-label>Home</ion-label>
+    </ion-tab-button>
+
+
+    <ion-tab-button (click)="gologin()" class="button1">
+      <ion-icon name="key"></ion-icon>
+      <ion-label>Login</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button (click)="gosignup()" class="button1">
+      <ion-icon name="create"></ion-icon>
+      <ion-label>Signup</ion-label>
+    </ion-tab-button>
+
+  </ion-tab-bar>
+</ion-tabs>

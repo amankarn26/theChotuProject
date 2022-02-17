@@ -1,0 +1,219 @@
+<!-- <div class="row">
+  <div class="col-md-12">
+    <h2>{{title}}</h2>
+
+  </div>
+</div>
+<hr /> -->
+<!--  <popup>
+    Add your custom html elements here
+</popup>  -->
+<!-- Trigger the modal with a button -->
+
+
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Modal Header</h4>
+            </div>
+            <div class="modal-body">
+                <p>Some text in the modal.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- <div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="header">
+
+                        <h4 class="title"> {{title}}</h4>
+                        <a [routerLink]="['/manage_deliverypoolarea']" title="Manage Area" class="pull-right">
+                            <span class="glyphicon glyphicon-th-list"></span>
+                        </a>
+                    </div>
+                    <div class="content">
+                        <form #form1="ngForm">
+                            <div class="row">
+
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="name"> Name:
+                                            <span class="m glyphicon glyphicon-asterisk"></span>
+                                        </label>
+                                        <input type="text" *ngIf=!isUpdate class="form-control" required name="name"
+                                            [(ngModel)]="area.name">
+                                        <input type="text" *ngIf=isUpdate readonly class="form-control" required
+                                            name="name" [(ngModel)]="area.name">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="description"> Description:</label>
+                                        <input type="text" class="form-control" *ngIf=!isUpdate name="description"
+                                            [(ngModel)]="area.description">
+                                        <input type="text" class="form-control" *ngIf=isUpdate name="description"
+                                            [(ngModel)]="area.description">
+
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <button *ngIf="this.url == '/add_deliverypoolarea'" type="submit"
+                                            [disabled]="!form1.valid" class="btn btn-default"
+                                            (click)="submitData()">Submit</button>
+                                        <button *ngIf="this.url == '/update_deliverypoolarea/' + this.id" type="submit"
+                                            [disabled]="!form1.valid" class="btn btn-default"
+                                            (click)="updateData()">Update</button>
+                                        <button type="button" class="btn btn-default" (click)="cancel()">Cancel</button>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div> -->
+
+<!-- add deliverypool area -->
+<div [hidden]="isManageState" class="col-md-12 col-sm-12 col-xs-12">
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            {{title}}
+            <a [routerLink]="['/manage_deliverypoolarea']" title="Manage Area" class="pull-right">
+                <span class="glyphicon glyphicon-th-list"></span>
+            </a>
+        </div>
+        <div class="panel-body">
+            <form #form1="ngForm">
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="name"> Area: </label>
+                        <input type="text" *ngIf=!isUpdate minlength="5" class="form-control" required name="name"
+                            placeholder="Minimum 5 letters" [(ngModel)]="area.area">
+                        <input type="text" *ngIf=isUpdate readonly class="form-control" required name="name"
+                            placeholder="Minimum 5 letters" [(ngModel)]="area.area">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="pincode"> Pincode:</label>
+                        <input type="text" class="form-control" *ngIf=!isUpdate name="pincode"
+                            [(ngModel)]="area.pincode">
+                        <input type="text" class="form-control" *ngIf=isUpdate name="pincode"
+                            [(ngModel)]="area.pincode">
+
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <button *ngIf="this.url == '/add_deliverypoolarea'" type="submit" [disabled]="!form1.valid"
+                            class="btn btn-default" (click)="submitData()">Submit</button>
+                        <button *ngIf="this.url == '/update_deliverypoolarea/' + this.id" type="submit"
+                            [disabled]="!form1.valid" class="btn btn-default" (click)="updateData()">Update</button>
+                        <button type="button" class="btn btn-default" (click)="cancel()">Cancel</button>
+
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<!-- manage deliverypool area -->
+<div [hidden]="!isManageState" class="col-md-12 col-sm-12 col-xs-12">
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            {{title}}
+            <a [routerLink]="['/add_deliverypoolarea']" title="Add Area" class="pull-right">
+                <span class="glyphicon glyphicon-plus-sign"></span>
+            </a>
+        </div>
+        
+        <div class="panel-body">
+            <div class="table-responsive">
+                <table class="table table-condensed table-striped table-bordered"
+                    [mfData]="data | dataFilterPr : filterQuery: 'manage_deliverypoolarea'" #mf="mfDataTable"
+                    [mfRowsOnPage]="rowsOnPage" [(mfSortBy)]="Role" [(mfSortOrder)]="sortOrder">
+                    <thead>
+                        <tr>
+                            <th>SN</th>
+                            <th>
+                                <mfDefaultSorter by="role">Area</mfDefaultSorter>
+                            </th>
+                            <th>Pincode</th>
+                            <th>Action</th>
+                        </tr>
+                        <tr>
+                            <th colspan="8">
+                                <div id="custom-search-input">
+                                    <div class="input-group col-md-12">
+                                        <input type="text" class="form-control" placeholder="Search by name"
+                                            [(ngModel)]="filterQuery" />
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-danger btn-sm" type="button">
+                                                <span class=" glyphicon glyphicon-search"></span>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let data of mf.data; let i = index; let last = last;">
+                            <td>{{i+1}}</td>
+                            <td>{{data?.area}}</td>
+                            <td>{{data?.pincode}}</td>
+
+                            <td class="text-right">
+                                <!-- <a [routerLink]="['/update_deliverypoolarea/',data.id]" data-toggle="tooltip" title="Update Area" >
+                    <button class="btn btn-default btn-sm">
+                      <span class="glyphicon glyphicon-edit"></span>
+                    </button>
+                  </a> -->
+                                <button class="btn btn-danger btn-sm" title="Delete Area" (click)="deleteRole(data.id)">
+                                    <span class="glyphicon glyphicon-remove-circle"></span>
+                                </button>
+
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="8">
+                                <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

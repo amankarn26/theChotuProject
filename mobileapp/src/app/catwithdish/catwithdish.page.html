@@ -1,0 +1,211 @@
+<ion-header>
+  <ion-toolbar style="--background: rgba(134,75,246,1);">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/tab1" (click)="cancel()" style="color: white;">
+      </ion-back-button>
+    </ion-buttons>
+
+
+    <ion-title class="pageheading" style="color: white;"> <strong>{{dishname}}</strong></ion-title>
+
+
+    <ion-buttons slot="end" (click)="openCart()" class="notification-icon-button"
+      style=" font-size: 31px; color:#f8e6d4;">
+      <ion-badge class="notification-badge" *ngIf="cart.length">{{cart?.length}}</ion-badge>
+      <!-- <ion-icon slot="icon-only" name="cart" ></ion-icon> -->
+      <ion-icon name="cart-outline"></ion-icon>
+    </ion-buttons>
+
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content style="--background: #e9ddff;">
+  <ion-searchbar class="searchBox" (ionInput)="getItems($event)" placeholder="{{'Search By Drinks'}}" *ngIf="!isloader"
+    style="background-color: #e9ddff;box-shadow: 5px 5px 32px 0px rgb(20 21 19 / 71%);">
+  </ion-searchbar>
+  <div class="data" *ngIf="!(filteredItems.length > 0) && !isloader">
+    <ion-label style="text-align: center; color: #ffffff;">
+      <span> Currently Not Available</span>
+    </ion-label>
+  </div>
+
+  <div id="mainContent1" *ngIf="!isloader">
+    <div class="ProductBoxHeading">
+      <ion-grid fixed>
+        <ion-row *ngIf="!serachOn">
+
+          <ion-col size="6" *ngFor="let item of filteredItems ; let i=index">
+            <ion-card class="productBox">
+              <div>
+                <a [routerLink]="['/tabs/product-details/',item.id,item.name]">
+                  <img src="{{docServer}}/{{item?.photos[0]?.docpath}}" width="163px" height="85px"
+                    alt="Product Image" />
+                </a>
+              </div>
+              <div class="textOfProduct">
+                <ion-label class="addtitle">{{item.name}}</ion-label>
+              </div>
+              <div>
+                <div *ngIf="item?.hasvariant==='YES'" style="color: white;">
+                  <ion-label class="brandOf">{{item?.variants[0]?.variant}}</ion-label>
+                </div>
+                <ion-label class="brandOfDeal">{{item.description}}</ion-label>
+              </div>
+
+              <div class="priceOfDealMainBox" *ngIf="item.rateperunit == 0">
+                <ion-label class="priceOfDeal">Coming Soon</ion-label>
+              </div>
+              <div class="priceOfDealMainBox" *ngIf="item.rateperunit != 0">
+                <ion-label class="priceOfDeal">&#8377;{{item.rateperunit}}</ion-label>
+              </div>
+
+
+              <ion-label class="textOfProduct">Serves-{{item.serves}}</ion-label>
+
+              <div style="display: none;">
+                <ion-item class="segmentt">
+                  <ion-select interface="action-sheet" (ionChange)="addvariant(item.id,item?.variants)"
+                    id="dropdownlist1{{i}}" name="varient" [(ngModel)]="variantid" placeholder="Select Variant">
+                    <ion-select-option *ngFor="let item of item?.variants; let i=index" [value]="item.id">
+                      {{item?.variant}} - {{item?.rateperunit}} &#8377; </ion-select-option>
+                  </ion-select>
+                </ion-item>
+              </div>
+              
+              <div class="button1" *ngIf="item?.hasvariant==='NO' && item.cartPresent" style="margin-bottom: 15px;">
+                <a style="color: orange; text-decoration: none;">
+                  Added
+                </a>
+              </div>
+              <div class="button1" *ngIf="item?.hasvariant==='NO' && !item.cartPresent" style="margin-bottom: 15px;">
+                <a (click)="addToCart(item.id,'filteredItems',i)" style="color: orange; text-decoration: none;">
+                  Add
+                </a>
+              </div>
+              <div class="button1" *ngIf="item?.hasvariant==='YES'" style="margin-bottom: 15px;">
+                <a (click)="getvariant(i)" style="color: orange; text-decoration: none;">
+                  Add
+                </a>
+              </div>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+
+        <ion-row *ngIf="serachOn">
+
+          <ion-col size="6" *ngFor="let item of searchData ; let i=index">
+            <ion-card class="productBox">
+              <div>
+                <a [routerLink]="['/tabs/product-details/',item.id,item.name]">
+                  <img src="{{docServer}}/{{item?.photos[0]?.docpath}}" width="163px" height="85px"
+                    alt="Product Image" />
+                </a>
+              </div>
+              <div class="textOfProduct">
+                <ion-label class="addtitle">{{item.name}}</ion-label>
+              </div>
+              <div>
+                <div *ngIf="item?.hasvariant==='YES'" style="color: white;">
+                  <ion-label class="brandOf">{{item?.variants[0]?.variant}}</ion-label>
+                </div>
+                <ion-label class="brandOfDeal">{{item.description}}</ion-label>
+              </div>
+
+              <div class="priceOfDealMainBox" *ngIf="item.rateperunit == 0">
+                <ion-label class="priceOfDeal">Coming Soon</ion-label>
+              </div>
+              <div class="priceOfDealMainBox" *ngIf="item.rateperunit != 0">
+                <ion-label class="priceOfDeal">&#8377;{{item.rateperunit}}</ion-label>
+              </div>
+
+
+              <ion-label class="textOfProduct">Serves-{{item.serves}}</ion-label>
+
+              <ion-list style="display: none;">
+
+                <ion-item class="segmentt">
+                  <ion-select interface="action-sheet" (ionChange)="addvariant(item.id,item?.variants)"
+                    id="dropdownlist1{{i}}" name="varient{{i}}" [(ngModel)]="variantid" placeholder="Select Variant"
+                    required>
+                    <ion-select-option *ngFor="let item of item?.variants; let i=index" [value]="item.id">
+                      {{item?.variant}} - {{item?.rateperunit}} &#8377; </ion-select-option>
+                  </ion-select>
+                </ion-item>
+
+              </ion-list>
+              <div class="button1" *ngIf="item?.hasvariant==='NO' && item.cartPresent">
+                <a style="color: orange; text-decoration: none;">
+                  Added
+                </a>
+              </div>
+              <div class="button1" *ngIf="item?.hasvariant==='NO' && !item.cartPresent">
+                <a (click)="addToCart(item.id,'filteredItems',i)" style="color: orange; text-decoration: none;">
+                  Add
+                </a>
+              </div>
+              <div class="button1" *ngIf="item?.hasvariant==='YES'">
+                <a (click)="getvariant(i)" style="color: orange; text-decoration: none;">
+                  Add
+                </a>
+              </div>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+
+      </ion-grid>
+    </div>
+  </div>
+
+  <div id="mainContent3" *ngIf="!isloader && menuname.length > 0">
+    <div class="CategoryBoxHeading">
+      <ion-grid fixed>
+        <ion-row>
+          <ion-col size="6">
+            <h5 class="heading">
+              <a style="color: #ffffff; text-decoration: none;">Explore More</a>
+            </h5>
+          </ion-col>
+          <ion-col size="6">
+            <h5 class="moreOption">
+
+            </h5>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
+  </div>
+  <div id="mainContent1" *ngIf="!isloader">
+    <div class="ProductBoxHeading">
+      <ion-grid fixed>
+        <ion-row>
+
+          <ion-col size="6" *ngFor="let item of menuname">
+            <ion-card class="productBox" *ngIf="item?.id != dishid">
+              <div class="imageOfDeal">
+                <a [routerLink]="['/catwithdish/',item.id,item.name]">
+                  <img src="{{docServer}}/{{item?.photo?.docpath}}" alt="Product Image" width="163px" height="85px">
+                </a>
+              </div>
+              <div class="textOfProduct1" style="color: white; margin-top: 5px">
+                <ion-label>{{item.name}}</ion-label>
+              </div>
+              <div class="brandOfDealMainBox" style="color: white; margin-bottom: 15px;">
+                <ion-label class="brandOfDeal">{{item.description}}</ion-label>
+              </div>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+
+      </ion-grid>
+    </div>
+  </div>
+  <div *ngIf="isloader" style="text-align: center; margin-top: 50px; margin-bottom: 50px">
+    <ion-label style="margin-left: auto; margin-right: auto; color: #ffffff;">
+      Please wait...
+    </ion-label>
+  </div>
+
+
+
+</ion-content>

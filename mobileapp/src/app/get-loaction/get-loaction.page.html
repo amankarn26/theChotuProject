@@ -1,0 +1,25 @@
+<ion-header>
+  <ion-toolbar style="--background: rgba(134,75,246,1); color: #FFFFFF;">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/tab1" (click)="cancel()">
+
+      </ion-back-button>
+    </ion-buttons>
+    <ion-title>Your Addresses</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="fullPage">
+
+  <div class="parentBox">
+    <div class="innerBox" *ngFor="let item of allAddress">
+      <div class="title">{{item.line1}}</div>
+      <div class="subTitle">{{item.line2}} {{item.city}} {{item.states}}   {{item.pincode}}</div>
+    </div>
+  </div>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" >
+    <ion-fab-button style="--background: rgba(134,75,246,1); color: #FFFFFF;" (click)="addLocation()">ADD</ion-fab-button>
+  </ion-fab>
+
+</ion-content>

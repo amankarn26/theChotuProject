@@ -1,0 +1,765 @@
+<!-- 
+<div class="row animated bounceInDown">
+    <div class="col-md-12">
+      <h2>{{title}}</h2>
+      <h5>{{subtitle}}</h5>
+    </div>
+  </div>
+
+  <hr /> -->
+  
+  <div class="panel panel-default slideLeft" *ngIf="flag">
+    <div class="panel-heading">
+      <div class="clearfix">
+        <div class="pull-left"> {{title}}</div>
+        <div class="container" class="pull-right">
+          <div class="row">
+            <!-- <a [routerLink]="['/addrole']" class="btn btn-primary a-btn-slide-text" title="Add Role">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                        <span></span>
+                    </a>
+                  <a href="#" class="btn btn-default a-btn-slide-text" title="Edit">
+                        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                        <span></span>
+                    </a>
+                  <a href="#" class="btn btn-info a-btn-slide-text" title="View">
+                        <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+                        <span></span>
+                    </a>
+                  <a href="#" class="btn btn-danger a-btn-slide-text" title="Delete">
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        <span></span>
+                    </a>-->
+            <a [routerLink]="['/managecampaign']" title="Manage Campaign" class="btn btn-info a-btn-slide-text">
+                      <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+    </div>
+    <div class="panel-body">
+      <form #fname="ngForm">
+<div class="row">
+  <!-- <div class="col-md-6">
+         <div class="col-md-12">
+            <div class="form-group">
+              <label for="product">Product: </label>
+              <select *ngIf="!isUpdate" required class="form-control" id="head" name="head" required [(ngModel)]="campaign.product" (change)="getproduct()">
+                <option *ngFor="let state of productDataList; let i=index" [value]="state.name">{{state.name}}</option>
+              </select>
+              <input *ngIf="isUpdate" readonly type="text"   class="form-control" id="head" name="head" required [(ngModel)]="campaign.product"
+              />
+              
+            </div>
+            
+          </div>
+
+
+      <div class="col-md-12">
+          <div class="form-group">
+            <label for="qtype">Quotation Type:
+             
+            </label>
+        
+            <select *ngIf="!isUpdate" required class="form-control" name="qtype" [(ngModel)]="campaign.qtype">
+              <option *ngFor="let state of qtypeslist; let i=index" [value]="state.qtype">{{state.qtype}}</option>
+            </select>
+            <input *ngIf="isUpdate" readonly type="text" required readonly class="form-control" name="qtype" [(ngModel)]="campaign.qtype" 
+              />
+              
+
+            
+          </div>
+        </div>
+
+        <div class="col-md-12 ">
+          <div class="form-group">
+            <label for="type">Product Sizes: </label>
+            
+            <select *ngIf="!isUpdate" required  class="form-control" id="psize" name="psize"
+            [(ngModel)]="campaign.psize" (change)="getlenbreath()">
+              <option *ngFor="let state of psizelist; let i=index" [value]="state.size">{{state.size}}</option>
+            </select>
+            <input *ngIf="isUpdate" readonly type="text" required readonly class="form-control" id="psize" name="psize"
+            [(ngModel)]="campaign.psize"
+              />
+              
+
+          </div>
+        </div>
+
+        <div class="col-md-6" *ngIf="campaign.psize">
+          <div class="form-group">
+            <label for="">Product Length  </label>
+             
+              <input *ngIf="!isUpdate" type="number" required readonly class="form-control" id="plength" name="plength"  [(ngModel)]="campaign.plength" 
+              />
+              <input *ngIf="isUpdate" readonly type="number" required readonly class="form-control" id="plength" name="plength"  [(ngModel)]="campaign.plength" 
+              />
+              
+          </div>
+        </div>
+
+        <div class="col-md-6" *ngIf="campaign.psize">
+          <div class="form-group">
+            <label for="">Product Breadth  </label>
+            <input *ngIf="!isUpdate" type="number" required readonly class="form-control" id="pbreadth" name="pbreadth"  [(ngModel)]="campaign.pbreadth" 
+              />
+
+              <input *ngIf="isUpdate" readonly type="number" required readonly class="form-control" id="pbreadth" name="pbreadth"  [(ngModel)]="campaign.pbreadth" 
+              />
+              
+          </div>
+        </div>
+
+       <div class="col-md-12 ">
+          <div class="form-group">
+            <label for="type">Paper Type : </label>
+            
+            <select *ngIf="!isUpdate" required  class="form-control" id="papertype" name="papertype"
+            [(ngModel)]="campaign.papertype" (change)="getgsmbypapertype()">
+              <option *ngFor="let state of papertypeList; let i=index" [value]="state.papertype">{{state.papertype}}</option>
+            </select>
+            <input *ngIf="isUpdate" readonly type="text" required readonly class="form-control" id="papertype" name="papertype"
+            [(ngModel)]="campaign.papertype"
+            />
+            
+
+          </div>
+        </div>
+
+        <div class="col-md-12 ">
+          <div class="form-group">
+            <label for="type">Paper Gsm : </label>
+            
+            <select *ngIf="!isUpdate" required class="form-control" id="papergsm" name="papergsm"
+            [(ngModel)]="campaign.papergsm">
+              <option *ngFor="let state of papergsmList; let i=index" [value]="state.gsm">{{state.gsm}}</option>
+            </select>
+            <input *ngIf="isUpdate" readonly type="text" required readonly class="form-control" id="papergsm" name="papergsm"
+            [(ngModel)]="campaign.papergsm"
+              />
+              
+
+          </div>
+        </div>
+
+        <div class="col-md-12 ">
+          <div class="form-group">
+            <label for="type">Paper Mill : </label>
+            
+            <select *ngIf="!isUpdate" required class="form-control" id="papermill" name="papermill"
+            [(ngModel)]="campaign.papermill">
+              <option *ngFor="let state of millList; let i=index" [value]="state.name">{{state.name}}</option>
+            </select>
+            <input *ngIf="isUpdate" readonly type="text" required readonly class="form-control"  id="papermill" name="papermill"
+            [(ngModel)]="campaign.papermill" 
+            />
+            
+
+          </div>
+        </div>
+
+        <div class="col-md-12 ">
+          <div class="form-group">
+            <label for="type">Print Color : </label>
+            
+            <select *ngIf="!isUpdate" required class="form-control" id="printcolor" name="printcolor"
+            [(ngModel)]="campaign.printcolor" >
+              <option *ngFor="let state of psidecols; let i=index" [value]="state.ctype">{{state.ctype}}</option>
+            </select>
+            <input *ngIf="isUpdate" readonly type="text" required readonly class="form-control"  id="printcolor" name="printcolor"
+            [(ngModel)]="campaign.printcolor"
+              />
+              
+          </div>
+        </div>
+
+        <div class="col-md-12 ">
+          <div class="form-group">
+            <label for="type">Print Side : </label>
+            
+            <select *ngIf="!isUpdate" required class="form-control" id="printside" name="printside"
+            [(ngModel)]="campaign.printside" >
+              <option *ngFor="let state of psideslist; let i=index" [value]="state.pside">{{state.pside}}</option>
+            </select>
+            <input *ngIf="isUpdate" readonly type="text" required readonly class="form-control"  id="printside" name="printside"
+            [(ngModel)]="campaign.printside"
+            />
+            
+          </div>
+        </div>
+
+      
+
+        <div class="col-md-6" >
+          <div class="form-group">
+            <label for="Quantity">Quantity </label>
+            <input *ngIf="!isUpdate" type="number" required class="form-control" id="Quantity" name="Quantity"  [(ngModel)]="campaign.quantity" 
+              />
+
+              <input *ngIf="isUpdate" readonly type="number" required class="form-control" id="Quantity" name="Quantity"  [(ngModel)]="campaign.quantity" 
+              />
+              
+          </div>
+        </div>
+
+     
+
+        <div class="col-md-6" >
+          <div class="form-group">
+            <label for="namune">Namune </label>
+            <input *ngIf="!isUpdate" type="number" required class="form-control" id="namune" name="namune"  [(ngModel)]="campaign.namune" 
+              />
+              <input *ngIf="isUpdate" readonly type="number" required class="form-control" id="namune" name="namune"  [(ngModel)]="campaign.namune" 
+              />
+              
+          </div>
+        </div>
+
+
+        <div class="col-md-12 ">
+          <div class="form-group"> 
+            <label for="type">Postpress Activity: </label>
+            
+            <select *ngIf="!isUpdate"  class="form-control" id="ppactivity" name="ppactivity"
+            [(ngModel)]="campaign.ppactivity" >
+              <option *ngFor="let state of ppactlist; let i=index" [value]="state.postactivity">{{state.postactivity}}</option>
+            </select>
+            <input *ngIf="isUpdate" readonly type="text" required readonly class="form-control"  id="ppactivity" name="ppactivity"
+            [(ngModel)]="campaign.ppactivity" 
+            />
+            
+
+          </div>
+        </div>
+
+
+        <div class="col-md-12 ">
+          <div class="form-group"> 
+            <label for="type">Is Lamn: </label>
+            
+            <select *ngIf="!isUpdate"  class="form-control" id="islamn" name="islamn"
+            [(ngModel)]="campaign.islamn" >
+              <option value="YES">YES</option>
+              <option value="NO">NO</option>
+
+            </select>
+            <input *ngIf="isUpdate" readonly type="text" required readonly class="form-control"  id="islamn" name="islamn"
+            [(ngModel)]="campaign.islamn" 
+            />
+            
+
+          </div>
+        </div>
+
+        <div class="col-md-12 " *ngIf="campaign.islamn === 'YES'">
+          <div class="form-group"> 
+            <label for="type">Lamination: </label>
+            
+            <select *ngIf="!isUpdate"  class="form-control" id="lamn" name="lamn"
+            [(ngModel)]="campaign.lamn" >
+              <option *ngFor="let state of plamnslist; let i=index" [value]="state.ltype">{{state.ltype}}</option>
+            </select>
+            <input *ngIf="isUpdate" readonly type="text" required readonly class="form-control" id="lamn" name="lamn"
+            [(ngModel)]="campaign.lamn" 
+            />
+            
+
+          </div>
+        </div>
+        <div class="col-md-6" >
+          <div class="form-group">
+            <label for="shoottime">Shoot Time Date </label>
+            <input  required type="datetime-local" class="form-control" id="shoottime" name="shoottime" 
+            (change)="validTill()" [(ngModel)]="campaign.shoottime" 
+              />
+              
+          </div>
+        </div>
+
+        <div class="col-md-6" >
+          <div class="form-group">
+            <label for="validtill">Valid Till </label>
+            <input  type="number"  placeholder="example: 10 Days" class="form-control" id="validtill" name="validtill"
+              [(ngModel)]="campaign.validtill"  (change)="validTill()"
+              />
+              
+          </div>
+        </div>
+
+      
+
+        <div class="col-md-6" *ngIf="campaign.shoottime">
+          <div class="form-group">
+            <label for="uptodate">Last Date </label>
+            <input readonly type="text" class="form-control" id="uptodate" name="uptodate" min="{{campaign.shoottime}}"  [(ngModel)]="campaign.uptodate" 
+              />
+
+            
+              
+          </div>
+        </div>
+
+
+        <div class="col-md-6" >
+          <div class="form-group">
+            <label for="offeramt">Offer Amount</label>
+            <input  required type="number" class="form-control" id="offeramt" name="offeramt"  [(ngModel)]="campaign.offeramt" 
+              />
+              
+          </div>
+        </div>
+      
+        <div class="col-md-12 ">
+          <div class="form-group"> 
+            <label for="type">Frequency:</label>
+            
+            <select *ngIf="!isUpdate"  class="form-control" id="frequency" name="frequency"
+            [(ngModel)]="campaign.frequency" >
+              <option value="DAILY">DAILY</option>
+              <option value="WEEKLY">WEEKLY</option>
+              <option value="BYWEEKLY">BYWEEKLY</option>
+
+              <option value="NEVER">NEVER</option>
+
+
+            </select>
+            <input *ngIf="isUpdate" readonly type="text" required  class="form-control" id="frequency1" name="frequency1"
+            [(ngModel)]="campaign.frequency"  
+            />
+            
+
+          </div>
+        </div>
+
+
+
+
+
+            </div> -->
+
+             <div class="col-md-6">
+
+              <div class="col-md-12" >
+                <div class="form-group">
+                  <label for="header">Header </label>
+                  <textarea maxlength="70"  type="number"  placeholder="example: Your Product Description" class="form-control" id="header" name="header"
+                    [(ngModel)]="campaign.header"></textarea>
+                    
+                </div>
+              </div>
+          
+              <div class="col-lg-12 col-md-12 col-sm-12 ">
+                <hr>
+              </div>
+     
+              <div class="col-sm-12">
+                <form #form2="ngForm" >
+                <label for="Available"> Campaign Product:
+                </label>
+                <div class="form-group">
+              
+          
+      
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label for="product">Product: </label>
+                      <select *ngIf="!isUpdate" required class="form-control" id="head" name="head" required [(ngModel)]="camp_prods.pname" (change)="getproduct()">
+                        <option *ngFor="let state of productDataList; let i=index" [value]="state.name">{{state.name}}</option>
+                      </select>
+                      <input *ngIf="isUpdate" readonly type="text"   class="form-control" id="head" name="head" required [(ngModel)]="campaign.product"
+                      />
+                      
+                    </div>
+                    
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label for="rateunit"> Rate Unit :
+                      </label>
+                      <input type="text"  required class="form-control" name="camp_prodsr" [(ngModel)]="camp_prods.rateunit">
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label for="rateperunit"> Rate Per Unit :
+                      </label>
+                      <input type="text"  required class="form-control" name="rateperunit" [(ngModel)]="camp_prods.rateperunit">
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label for="offerrateperunit"> Offer Price Per Unit :
+                      </label>
+                      <input type="text"  required class="form-control" name="offerrateperunit"  (change)="total()" [(ngModel)]="camp_prods.offerrateperunit">
+                    </div>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="form-group">
+                      <label for="qty">Quantity:
+                      </label>
+                      <input type="number"  required class="form-control" name="qty" [(ngModel)]="camp_prods.qty" (change)="total()">
+                    </div>
+                  </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="regularamt"> Regular Amount over Quantity:
+                  </label>
+                  <input type="text"  required class="form-control" name="regularamt" [(ngModel)]="camp_prods.regularamt">
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="offeramt"> Offer Amount over Quantity :
+                  </label>
+                  <input type="text" readonly  required class="form-control" name="offeramt" [(ngModel)]="camp_prods.offeramt" >
+                </div>
+              </div>
+  
+              <button class="btn btn-info btn-sm" [disabled]="!form2.valid" (click)="pushcamp_product()" *ngIf="this.camp_prods.qty !== 0">
+                <span class="glyphicon glyphicon-plus"></span>
+              </button>
+              <br><br>
+              <div class="row">
+                <div class="col-sm-11" style="margin-top: 3px;  border: 1px solid #c5c4c4; min-height: 10px; overflow: auto;margin-left: 31px">
+                  <table class="table table-bordered table-condensed">
+                    <thead>
+                      <tr>
+                        <th style="width: 50px;">-</th>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Rateperunit</th>
+                        <th>Offer Rate unit</th>
+                        <th>Offer Amount</th>
+
+
+
+    
+                        
+    
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let data of this.campaign.camp_prods; let i=index;">
+                        <td style="width: 50px;">
+                          <a style="cursor: pointer; color: red;" (click)="onDeletestockval(i,data)">
+                            <span class="glyphicon glyphicon-remove-circle"></span>
+                          </a>
+                        </td>
+                        <td>{{data?.pname}}</td>
+                        <td>{{data?.qty}}</td>
+                        <td>{{data?.rateperunit}}</td>
+                        <td>{{data?.offerrateperunit}}</td>
+                        <td>{{data?.offeramt}}</td>
+
+    
+                       
+    
+                      </tr>
+                    </tbody>
+                  </table>
+    
+                </div>
+              </div>
+           </form>
+              </div>
+  
+              <div class="col-lg-12 col-md-12 col-sm-12 ">
+                <hr>
+              </div>
+
+     
+
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="totalprods"> Total Products :
+                  </label>
+                  <input type="number" readonly class="form-control" name="totalprods" [(ngModel)]="campaign.totalprods">
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="totalprodqty"> Total Products Quantity:
+                  </label>
+                  <input type="number" readonly class="form-control" name="totalprodqty" [(ngModel)]="campaign.totalprodqty">
+                </div>
+              </div> 
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="totalamt"> Total Amount :
+                  </label>
+                  <input type="text"  required class="form-control" name="totalamt" [(ngModel)]="campaign.totalamt">
+                </div>
+              </div>
+  
+               <div class="col-md-6" >
+                 <div class="form-group">
+                   <label for="offeramt">Offer Amount</label>
+                   <input  required type="number" class="form-control" id="totalofferamt" name="totalofferamt"  [(ngModel)]="campaign.totalofferamt" 
+                     />
+                     
+                 </div>
+               </div>
+  
+             <div class="col-md-6" >
+               <div class="form-group">
+                 <label for="shoottime">Shoot Time Date </label>
+                 <input  required type="datetime-local" class="form-control" id="shoottime" name="shoottime" 
+                 (change)="validTill()" [(ngModel)]="campaign.shoottime" 
+                   />
+                   
+               </div>
+             </div>
+     
+             <div class="col-md-6" >
+               <div class="form-group">
+                 <label for="validtill">Valid Till </label>
+                 <input  type="number"  placeholder="example: 10 Days" class="form-control" id="validtill" name="validtill"
+                   [(ngModel)]="campaign.validtill"  (change)="validTill()"
+                   />
+                   
+               </div>
+             </div>
+     
+           
+     
+             <div class="col-md-6" *ngIf="campaign.shoottime">
+               <div class="form-group">
+                 <label for="uptodate">Last Date </label>
+                 <input readonly type="text" class="form-control" id="uptodate" name="uptodate" min="{{campaign.shoottime}}"  [(ngModel)]="campaign.uptodate" 
+                   />
+     
+                 
+                   
+               </div>
+             </div>
+     
+     
+             <div class="col-sm-6">
+              <div class="form-group">
+                <label for="discount"> Total Discount :
+                </label>
+                <input type="text"  required class="form-control" name="discount" [(ngModel)]="campaign.discount">
+              </div>
+            </div>
+    
+           
+             <div class="col-md-12 ">
+               <div class="form-group"> 
+                 <label for="type">Frequency:</label>
+                 
+                 <select *ngIf="!isUpdate"  class="form-control" id="frequency" name="frequency"
+                 [(ngModel)]="campaign.frequency" >
+                   <option value="DAILY">DAILY</option>
+                   <option value="WEEKLY">WEEKLY</option>
+                   <option value="BYWEEKLY">BYWEEKLY</option>
+     
+                   <option value="NEVER">NEVER</option>
+     
+     
+                 </select>
+                 <input *ngIf="isUpdate" readonly type="text" required  class="form-control" id="frequency1" name="frequency1"
+                 [(ngModel)]="campaign.frequency"  
+                 />
+                 
+     
+               </div>
+             </div>
+     
+     
+     
+     
+     
+                 </div>
+            <div class="col-md-6">
+              <!-- <div class="thumbnail" >
+                <label for="head">Product Image : </label>
+    
+                <img *ngIf="pimage" src="{{pimage}}" class="img-thumbnail img-responsive" alt="{{pimage}}">
+                <div class="col-md-12 col-sm-12 col-xs-12 loader" *ngIf="!pimage">
+                </div>
+             
+              </div> -->
+              <div class="thumbnail" >
+             
+
+            <div class="panel panel-default">
+              <div class="panel-heading" style="background-color: #e1eb86 !important">NEW CAMPAIGN</div>
+              <div class="panel-body" style="background: linear-gradient(to bottom, #33ccff59 0%, #ff99cc94 100%);font-size: 14px;letter-spacing: 1px;margin: 5px;border-radius: 5px;line-height: 1.8;">
+      
+                  Head :  <span class="label label-success">{{campaign?.header}}</span><br>
+                  Total Products : <span class="label label-success">{{campaign?.totalprods}}</span><br>
+                  Regular Amount : <span class="label label-info" *ngIf="campaign?.totalamt">{{campaign?.totalamt}} /-</span><br>
+                  Offer Amount : <span class="label label-info" *ngIf="campaign?.totalofferamt">{{campaign?.totalofferamt}} /-</span><br>
+                  Hurry Up Valid Till :<span class="label label-warning">{{campaign?.uptodate | date : 'dd MMM yyyy hh:mm a'}}</span><br>
+                  Shoot Time: <span class="label label-primary">{{campaign?.shoottime | date : 'dd MMM yyyy hh:mm a'}}</span>
+                  <table class="table table-bordered table-condensed" *ngIf="this.campaign.camp_prods[0]">
+                    <thead>
+                      <tr>
+                        <th style="width: 50px;color: black">-</th>
+                        <th style=" color: black; ">Product</th>
+                        <th style=" color: black; ">Quantity</th>
+                        <th style=" color: black; ">Rateperunit</th>
+                        <th style=" color: black; ">Offer Rate unit</th>
+                        <th style=" color: black; ">Offer Amount</th>
+
+
+
+    
+                        
+    
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let data of this.campaign.camp_prods; let i=index;">
+                        <td style="width: 50px;">
+                        {{i+1}}
+                        </td>
+                        <td>{{data?.pname}}</td>
+                        <td>{{data?.qty}}</td>
+                        <td>{{data?.rateperunit}}</td>
+                        <td>{{data?.offerrateperunit}}</td>
+                        <td>{{data?.offeramt}} /-</td>
+
+
+    
+                       
+    
+                      </tr>
+                    </tbody>
+                  </table>
+      
+                  <!-- <button type="button" class="btn btn-primary pull-right" style="margin-bottom: -8px;font-size: 10px;">Add Client</button> -->
+              </div>
+             
+          </div>
+            </div>
+            </div>
+
+        <div class="col-md-12">
+          <div class="form-group">
+            <button *ngIf="!isUpdate" type="submit" class="btn btn-default" [disabled]="!fname.valid" (click)="submitData()">Submit</button>
+            <button *ngIf="isUpdate" type="submit" class="btn btn-default" [disabled]="!fname.valid" (click)="updateData()">Update</button>
+            <button type="button" class="btn btn-default" (click)="cancel()">Cancel</button>
+          </div>
+        </div>
+     
+      </div> </form>
+    </div>
+  </div>
+  
+  <div class="panel panel-default slideLeft" *ngIf="!flag">
+    <div class="panel-heading">
+      <div class="clearfix">
+        <div class="pull-left"> {{title}}</div>
+        <div class="container" class="pull-right">
+          <div class="row">
+            <a *ngIf="userRole==='ADMIN' || userRole==='SUPERADMIN'" [routerLink]="['/addcampaign']" class="btn btn-primary a-btn-slide-text" title="Add Campaign">
+              <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+              <span></span>
+            </a>
+           <!-- <a href="#" class="btn btn-default a-btn-slide-text" title="Edit">
+              <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+              <span></span>
+            </a>
+            <a href="#" class="btn btn-info a-btn-slide-text" title="View">
+              <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+              <span></span>
+            </a>
+            <a href="#" class="btn btn-danger a-btn-slide-text" title="Delete">
+              <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+              <span></span>
+            </a>-->
+  
+          </div>
+        </div>
+      </div>
+  
+    </div>
+    <div class="panel-body">
+      <div class="col-md-12 col-sm-12 col-xs-12"style="padding: 0px;">
+        <div class="table-responsive">
+          <table class="table table-condensed table-striped table-bordered" [mfData]="data | dataFilterPr : filterQuery" #mf="mfDataTable"
+            [mfRowsOnPage]="rowsOnPage"  >
+            <thead>
+              <tr>
+                <th>SN</th>
+                <th>Header</th>
+                <th>Campaign Product</th>
+                <th>Valid Till</th>
+                <th>Last Date</th>
+                <th>Shoot Time</th>
+                <th>Regular Amount</th>
+
+                <th>Offer Amount</th>
+
+
+
+
+                <th *ngIf="userRole==='ADMIN' || userRole==='SUPERADMIN'" class="text-right">Action</th>
+              </tr>
+              <tr>
+                <th colspan="20">
+                  <div id="custom-search-input">
+                    <div class="input-group col-md-12">
+                      <input type="text" class="form-control" placeholder="Search" [(ngModel)]="filterQuery" />
+                      <span class="input-group-btn">
+                        <button class="btn btn-danger" type="button">
+                          <span class=" glyphicon glyphicon-search"></span>
+                        </button>
+                      </span>
+                    </div>
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of mf.data; let i = index; let last = last;">
+                <td>{{i+1}}</td>
+                <td>{{data.header}}</td>
+                <td>
+                  <ul *ngFor="let dataa of data.camp_prods">
+                    <li>Product : {{dataa?.pname}}</li>
+                    <li>Offeramt : {{dataa?.offeramt}}</li>
+  
+                    </ul>
+                    
+         
+                      
+                </td>
+                <td>{{data.validtill}} Days</td>
+                <td>{{data.uptodate | date : 'dd/MM/yyyy hh:mm a'}}</td>
+                <td>{{data.shoottime | date : 'dd/MM/yyyy hh:mm a'}}</td>
+                <td>{{data.totalamt}} /-</td>
+
+                <td>{{data.totalofferamt}} /-</td>
+
+
+
+                <td *ngIf="userRole==='ADMIN' || userRole==='SUPERADMIN'" class="text-right">
+                  <a [routerLink]="['/updatecampaign', data.id]" class="btn btn-default" title="Editcampaign" >
+                        <span class="glyphicon glyphicon-edit"></span>
+                  </a>
+                  <a class="btn btn-danger a-btn-slide-text" title="Delete Campaign" (click)="delete(data.id)">
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    <span></span>
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="20">
+                  <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+  
+      </div>
+    </div>
+  </div>

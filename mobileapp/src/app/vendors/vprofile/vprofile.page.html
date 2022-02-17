@@ -1,0 +1,269 @@
+<!-- <ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title class="pageheading">
+      Tab 3
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Tab 3</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <app-explore-container name="Tab 3 page"></app-explore-container>
+</ion-content> -->
+
+<ion-header [translucent]="true">
+  <ion-toolbar>
+
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/vendors/vendor-home" *ngIf="!isUpdate">
+      </ion-back-button>
+      <ion-back-button defaultHref="/vendors/vendor-home" (click)="back()" *ngIf="isUpdate">
+      </ion-back-button>
+    </ion-buttons>
+    <ion-title class="pageheading">
+      <strong> My Profile</strong>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" *ngIf="!isUpdate">
+  <ion-list style="font-style: italic;">
+    <ion-item class="ion-text-capitalize">
+      Name : {{name}}
+    </ion-item>
+
+    <ion-item>
+      Phone : {{phone}}
+    </ion-item>
+
+    <ion-item *ngIf="email">
+      Email : {{email}}
+    </ion-item>
+
+    <ion-item>
+      <h4>Address</h4>
+    </ion-item>
+
+    <ion-item class="ion-text-capitalize">
+
+      {{Address?.line1}} {{Address?.line2}} <br>
+      {{Address?.states}},{{Address?.city}}<br>
+      {{Address?.pincode}}
+    </ion-item>
+
+    <ion-item>
+      <br>
+      Send Your Complaints on :<br>
+      Email:&nbsp;softwiders@gmail.com
+
+    </ion-item>
+    <ion-item>
+      <a href="tel:9322717587">Call us at 9322717587</a>
+    </ion-item>
+    <!--
+  <ion-skeleton-text animated style="width: 50%">
+  pankajfdsfdsfsfs</ion-skeleton-text> -->
+    <ion-item>
+
+      <ion-tabs>
+        <ion-tab-bar slot="bottom" style="background-color: #08eafa;">
+          <ion-tab-button (click)="gotoupdatepass()">
+            <ion-icon name="key"></ion-icon>
+            <ion-label>Update Password</ion-label>
+          </ion-tab-button>
+
+          <ion-tab-button (click)="gotoupdatelocation()">
+            <ion-icon name="location"></ion-icon>
+            <ion-label>Update Address</ion-label>
+          </ion-tab-button>
+
+          <ion-tab-button (click)="gotoupdateaccount()">
+            <ion-icon name="laptop"></ion-icon>
+            <ion-label>Update Account</ion-label>
+          </ion-tab-button>
+
+        </ion-tab-bar>
+      </ion-tabs>
+
+    </ion-item>
+
+  </ion-list>
+
+  <!-- <ion-item text-center >
+  <ion-label text-center style="text-align: center; !important"   >
+    <ion-button size="small"  (click)="gotoupdatepass()" >Change Password</ion-button>
+ </ion-label>
+ </ion-item> -->
+
+</ion-content>
+
+
+<ion-content [fullscreen]="true" *ngIf="isUpdate && updatePassword">
+  <form #form5="ngForm">
+    <ion-list lines="full" class="ion-no-margin ion-no-padding">
+      <ion-row>
+        <ion-col col-12 style="padding-top: 40px;">
+          <ion-item>
+            <ion-input type="password" [(ngModel)]="pass" name="phonesss" placeholder="Enter 6 Digit Numeric Password"
+              pattern="[0-9]{6}" required></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-input type="password" [(ngModel)]="vpass" name="phonesss1" placeholder="Re-enter  Password"
+              pattern="[0-9]{6}" required></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+
+      <ion-row>
+        <ion-item text-center>
+          <ion-label text-center style="text-align: center !important">
+            <ion-button size="small" [disabled]="!form5.valid" (click)="update()">Update</ion-button>
+
+            &nbsp;
+            &nbsp;
+            <ion-button size="small" (click)="back()">Cancel </ion-button>
+
+          </ion-label>
+        </ion-item>
+      </ion-row>
+
+
+      <!-- <ion-row>
+        <ion-col col-12>
+          <button class="login-btn" type="submit" [disabled]="!form5.valid" ion-button (click)="checkifnumberexists()"
+          style="font-weight: bolder; size: 16px; !important">Next
+          </button>
+        </ion-col>
+      </ion-row> -->
+    </ion-list>
+
+  </form>
+
+</ion-content>
+
+
+<ion-content [fullscreen]="true" *ngIf="isUpdate && updateLocation">
+  <form #form6="ngForm">
+    <ion-list lines="full" class="ion-no-margin ion-no-padding">
+
+
+      <ion-row>
+
+        <ion-item>
+          <ion-label position="floating"></ion-label>
+          <ion-input placeholder="Address Line 1" type="text" class="form-control" id="uline12" name="uline12"
+            [(ngModel)]="address.line1" required></ion-input>
+
+
+          <ion-input placeholder="Area " type="text" class="form-control" id="uline2" name="uline2"
+            [(ngModel)]="address.line2"></ion-input>
+
+          <ion-input placeholder="Zip Code" type="number" required class="form-control" id="upincode" name="upincode"
+            [(ngModel)]="address.pincode" (change)="getState($event)"></ion-input>
+          <ion-input placeholder="City" type="text" required class="form-control" name="ucitiName"
+            [(ngModel)]="address.city"></ion-input>
+          <ion-input placeholder="State" type="text" required class="form-control" name="ustates" required
+            [(ngModel)]="address.states"></ion-input>
+
+        </ion-item>
+
+        <!-- <ion-item>
+          {{this.lattitude}} - {{this.longitude}}
+        </ion-item> -->
+
+
+      </ion-row>
+
+      <ion-row>
+        <ion-item text-center>
+          <ion-label text-center style="text-align: center !important">
+            <ion-button size="small" [disabled]="!form6.valid" (click)="updatecustomer()">Update</ion-button>
+
+            &nbsp;
+            &nbsp;
+            <ion-button size="small" (click)="back()">Cancel </ion-button>
+
+          </ion-label>
+        </ion-item>
+      </ion-row>
+
+    </ion-list>
+
+
+
+
+  </form>
+
+</ion-content>
+
+<ion-content [fullscreen]="true" *ngIf="isUpdate && updateAccount">
+  <form #form7="ngForm">
+    <ion-list lines="full" class="ion-no-margin ion-no-padding">
+      <ion-row>
+        <ion-col col-12 style="padding-top: 40px;">
+          <ion-item>
+
+            <ion-label position="floating"> </ion-label>
+            <ion-select value="brown" ok-text="Okay" cancel-text="Dismiss" class="form-control" id="actype" required
+              name="actype" [(ngModel)]="account.type" required placeholder="Account Type">
+              <ion-select-option value="BANK">BANK</ion-select-option>
+              <ion-select-option value="PAYTM">PAYTM</ion-select-option>
+              <ion-select-option value="GOOGLE_PAY">GOOGLE_PAY</ion-select-option>
+              <ion-select-option value="PHONE_PE">PHONE_PE</ion-select-option>
+
+            </ion-select>
+
+            <ion-input placeholder="Account Number" type="text" required class="form-control" id="acctnumber"
+              name="acctnumber" [(ngModel)]="account.acctnumber"></ion-input>
+
+
+            <ion-input placeholder="Bank Name" type="text" *ngIf="account.type === 'BANK'" required class="form-control"
+              id="banknm" name="banknm" [(ngModel)]="account.bankname"></ion-input>
+
+
+            <ion-input placeholder="Branch Name" type="text" *ngIf="account.type === 'BANK'" required
+              class="form-control" id="branch" name="branch" [(ngModel)]="account.branch"></ion-input>
+
+
+
+            <ion-input placeholder="IFSC" type="text" *ngIf="account.type === 'BANK'" required class="form-control"
+              id="ifsccode" name="ifsccode" [(ngModel)]="account.ifsccode"></ion-input>
+
+            <ion-input type="text" *ngIf="account.type === 'BANK'" placeholder="City" required class="form-control"
+              id="city" name="city" [(ngModel)]="account.city"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+
+      <ion-row>
+        <ion-item text-center>
+          <ion-label text-center style="text-align: center !important">
+            <ion-button size="small" [disabled]="!form7.valid" (click)="updatecustomer()">Update</ion-button>
+            &nbsp;
+            &nbsp;
+            <ion-button size="small" (click)="back()">Cancel </ion-button>
+          </ion-label>
+        </ion-item>
+      </ion-row>
+
+
+      <!-- <ion-row>
+        <ion-col col-12>
+          <button class="login-btn" type="submit" [disabled]="!form5.valid" ion-button (click)="checkifnumberexists()"
+          style="font-weight: bolder; size: 16px; !important">Next
+          </button>
+        </ion-col>
+      </ion-row> -->
+    </ion-list>
+
+  </form>
+
+</ion-content>

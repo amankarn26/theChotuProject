@@ -1,0 +1,623 @@
+<div [hidden]="isManageState" class="col-md-12 col-sm-12 col-xs-12">
+  <div class="panel panel-default" *ngIf="!detailFlag">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        {{title}}
+        <a [routerLink]="['/managepurchaseorderinward']" title="Manage" class="pull-right">
+          <span class="glyphicon glyphicon-th-list"></span>
+        </a>
+      </div>
+      <div class="panel-body text-capitalize">
+        <form #form1="ngForm">
+
+          <div class="col-sm-3">
+            <div class="form-group">
+              <label for="vendor"> Supplier Name:
+              </label>
+              <select class="form-control" name="vendorname" required disabled [(ngModel)]="purchase.supplier"
+                (change)="onChangeHandler1($event)">
+                <option required *ngFor="let sup of vendorList; let i=index" [value]="sup.id">{{sup.name}}</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="col-sm-3">
+            <div class="form-group">
+              <label for="porderno"> Purchase Order No:
+              </label>
+              <input type="text" class="form-control" readonly name="porderno" [(ngModel)]="purchase.porderno">
+            </div>
+          </div>
+
+          <div class="col-sm-3">
+            <div class="form-group">
+              <label for="receivedon"> Received Delivery:
+              </label>
+              <input type="date" class="form-control" required name="receivedon" [(ngModel)]="purchase.receivedon">
+            </div>
+          </div>
+
+          <div class="col-sm-3">
+            <div class="form-group">
+              <label for="deliveredby"> Delivered by:
+
+              </label>
+              <input type="text" class="form-control" name="deliveredby" required [(ngModel)]="purchase.deliveredby">
+            </div>
+          </div>
+
+          <div class="col-sm-3">
+            <div class="form-group">
+              <label for="deliveryperson"> Deliverey Person:
+
+              </label>
+              <input type="text" class="form-control" name="deliveryperson" required [(ngModel)]="purchase.deliveryperson">
+            </div>
+          </div>
+
+          <!-- <div class="col-sm-3">
+            <div class="form-group">
+              <label for="estdcarting"> Estimate Carting:
+
+              </label>
+              <input type="number" class="form-control" required name="estdcarting" [(ngModel)]="purchase.estdcarting"
+                (change)="recal()">
+            </div>
+          </div> -->
+
+          <div class="col-lg-12 col-md-12 col-sm-12 ">
+            <hr>
+          </div>
+
+          <div class="col-sm-12 img-thumbnail"
+            style="margin-top: 3px;  border: 1px solid #c5c4c4; min-height: 10px; overflow: auto;">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th style="width: 50px;">-</th>
+                  <th>Product Name</th>
+                  <th>HSN Code</th>
+                  <!-- <th>Colour</th> -->
+                  <th style="display:none;">Total Qty</th>
+                  <th>Total Qty</th>
+
+                  <th>Inwarded Qty</th>
+
+                  <th>Purchase Price</th>
+                  <th>Subtotal</th>
+                  <th>GST Amount</th>
+                  <th>Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let data of purchaeorderdetails; let i=index;">
+                  <td style="width: 50px;">
+                    <a style="cursor: pointer; color: blue;" (click)="clone(data)" *ngIf="data.qty>0 && data.isinwarded==='NO'">
+                      <span class="glyphicon glyphicon glyphicon-download"></span>
+                    </a>
+                  </td>
+                  <td>{{data?.pname}}</td>
+                  <td>{{data?.hsncode}}</td>
+                  <!-- <td>{{data?.vcolour}}</td> -->
+                  <td style="display:none;">{{data?.qty}}</td>
+                  <td>{{data?.prodqty}}</td>
+
+                  <td>{{data?.inwardedqty}}</td>
+
+                  <td>{{data?.rateperunit}}</td>
+                  <td>{{data?.subtotal}}</td>
+                  <td>{{data?.gstamt}}</td>
+                  <td>{{data?.amount}}</td>
+                </tr>
+
+              </tbody>
+            </table>
+
+          </div>
+
+
+          <div class="col-lg-12 col-md-12 col-sm-12 ">
+            <hr>
+          </div>
+          <form #form2="ngForm">
+          <div class="col-lg-12 bgcol" style="padding:0px;">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+              <h4>Product Details:</h4>
+            </div>
+
+
+            <div class="col-sm-3">
+              <div class="form-group">
+                <label for="ptype">Type:
+
+                </label>
+                <!-- <select class="form-control" name="ptype" [(ngModel)]="details.ptype" disabled>
+                  <option value="PRODUCT">PRODUCT</option>
+                  <option value="SPAREPARTS">SPAREPART</option>
+                </select> -->
+                <input type="text" class="form-control" readonly name="ptypee" [(ngModel)]="details.ptype">
+              </div>
+            </div>
+
+            <div class=" col-sm-3 " *ngIf="details.ptype !=='PRODUCT'">
+              <div class="form-group">
+                <label for="retailername">Product :
+                  <!-- {{quotation?.custname}} -->
+                </label>
+                <!-- <select class="form-control" name="staionaryname" [(ngModel)]="details.sparepart"
+                  (change)="getstationarygst()" disabled>
+                  <option required *ngFor="let retailer of stationarydata; let i=index" [value]="retailer.id">
+                    {{retailer.name}}</option>
+                </select> -->
+                <input type="text" class="form-control" readonly name="productnamee" [(ngModel)]="details.pname">
+              </div>
+            </div>
+            <!-- <div class="col-sm-3">
+              <div class="form-group">
+                <label for="qty"> Total Quantity:
+
+                </label>
+                <input type="number" class="form-control" *ngIf="details.ptype ==='PRODUCT'" readonly name="qty"
+                  [(ngModel)]="details.qty" (change)="prodtot()">
+                <input type="number" class="form-control" *ngIf="details.ptype !=='PRODUCT'" readonly name="qty"
+                  [(ngModel)]="details.qty" (change)="prodtot()">
+              </div>
+            </div> -->
+            <div class="col-sm-3">
+              <div class="form-group">
+                <label for="prodcode"> HSN Code: </label>
+                <input type="text" class="form-control" readonly name="hsncode" [(ngModel)]="details.hsncode">
+              </div>
+            </div>
+
+
+            <div class="col-sm-3">
+              <div class="form-group">
+                <label for="purchaseprice"> Purchase Price:
+                </label>
+                <input *ngIf="!isUpdate" type="number" class="form-control" disabled name="purchaseprice"
+                  [(ngModel)]="details.purchaseprice">
+                <input *ngIf="isUpdate" type="number" class="form-control" disabled name="purchaseprice"
+                  [(ngModel)]="details.purchaseprice">
+              </div>
+            </div>
+
+            <div class="col-sm-3">
+                <div class="form-group">
+                  <label for="rateperunit"> Rateper Unit:
+                  </label>
+                  <input *ngIf="!isUpdate" type="number" class="form-control" required name="rateperunit"
+                    [(ngModel)]="details.rateperunit" (change)="recalculation()">
+                  <input *ngIf="isUpdate" type="number" class="form-control" required name="rateperunit"
+                    [(ngModel)]="details.rateperunit" (change)="recalculation()">
+                </div>
+             </div>
+
+             <div class="col-sm-3">
+                <div class="form-group">
+                  <label for="expktweight"> Amount:
+                  </label>
+                  <input *ngIf="!isUpdate" type="number" class="form-control" disabled name="Amount1233"
+                    [(ngModel)]="details.amount">
+                  <input *ngIf="isUpdate" type="number" class="form-control" disabled name="Amount1233"
+                    [(ngModel)]="details.amount">
+                </div>
+              </div>
+
+
+            <div class="col-sm-3">
+              <div class="form-group">
+                <label for="mfgdate"> Manufacturing Date
+                </label>
+                <input type="date" class="form-control" required name="mfgdate" [(ngModel)]="details.mfgdate">
+              </div>
+            </div>
+
+
+
+            <div class="col-sm-3">
+              <div class="form-group">
+                <label for="expiry"> Expiry Date:
+                </label>
+                <input type="date" class="form-control" required min="{{details.mfgdate}}" name="expiry" [(ngModel)]="details.expiry">
+              </div>
+            </div>
+
+            <div class="col-sm-3">
+              <div class="form-group">
+                <label for="mfg"> Manufactured by
+                </label>
+                <input type="text" class="form-control" required name="mfg" [(ngModel)]="details.mfg">
+              </div>
+            </div>
+
+
+            <div class="col-sm-3" >
+              <div class="form-group">
+                <label for="batchdesc"> Batch Description:
+                </label>
+                <input *ngIf="!isUpdate" required type="text" class="form-control"  name="batchdesc"
+                  [(ngModel)]="details.batchdesc">
+              </div>
+            </div>
+
+             <div class="col-sm-3">
+                <div class="form-group">
+                  <label for="inwardedqty"> Inward Quantity
+                  </label>
+                  <input type="number" *ngIf="details.ptype !=='PRODUCT'" class="form-control" required name="inwardedqty"
+                   (change)="prodtot()" [(ngModel)]="details.inwardedqty">
+
+                </div>
+              </div>
+
+
+
+
+
+
+
+
+          </div>
+          </form>
+          <div class="col-sm-12">
+
+            <div>
+              <div>
+                <br>
+                <form name="form2">
+                  <button class="btn btn-info btn-sm" [disabled]="!form2.valid" title="Add Entry" (click)="push()">
+                    <span class="glyphicon glyphicon-plus"></span>
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+          <hr>
+          <div class="col-sm-12 img-thumbnail"
+            style="margin-top: 3px;  border: 1px solid #c5c4c4; min-height: 10px; overflow: auto;">
+            <table class="table">
+              <thead>
+
+
+                <tr>
+                  <th style="width: 50px;">-</th>
+                  <th>Product Name</th>
+                  <th>HSN Code</th>
+                  <th>Total Quantity</th>
+                  <!-- <th>GST Amount</th>
+                                                       <th>Subtotal</th> -->
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let data of purchase.details; let i=index;">
+                  <td style="width: 50px;" *ngIf="!isUpdate">
+                    <a style="cursor: pointer; color: red;" (click)="onDeleteproduct(i,data.id,data.qty)">
+                      <span class="glyphicon glyphicon-remove-circle"></span>
+                    </a>
+                    <!-- <a style="cursor: pointer; color: blue;" (click)="clone(data)">
+                                                          <span class="glyphicon glyphicon glyphicon-duplicate"></span>
+                                                        </a> -->
+                  </td>
+                  <td style="width: 50px;" *ngIf="isUpdate">
+                    <a style="cursor: pointer; color: red;" (click)="onDeleteproductfromdb(data.id)">
+                      <span class="glyphicon glyphicon-remove-circle"></span>
+                    </a>
+                    <!-- <a style="cursor: pointer; color: blue;" (click)="clone(data)">
+                                                           <span class="glyphicon glyphicon glyphicon-duplicate"></span>
+                                                         </a> -->
+                  </td>
+                  <td>{{data?.pname}}</td>
+                  <td>{{data?.hsncode}}</td>
+                  <td>{{data?.qty}}</td>
+                  <!-- <td>{{data?.gstamt}}</td>
+                                                       <td>{{data?.subtotal}}</td> -->
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="col-lg-12 col-md-12 col-sm-12 ">
+            <hr>
+          </div>
+
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="description"> Description:
+              </label>
+              <textarea type="text" class="form-control"  name="description" [(ngModel)]="purchase.description">
+                                                  </textarea>
+            </div>
+          </div>
+          <div>
+            <hr>
+          </div>
+
+
+          <div class="col-md-12">
+            <div class="form-group">
+              <button *ngIf="!isUpdate" type="submit" [disabled]="!form1.valid" class="btn btn-default" (click)="submitData()">Submit</button>
+              <button *ngIf="this.url == '/editpurchase/' + this.id" type="submit" [disabled]="!form1.valid"
+                class="btn btn-default" (click)="updateData()">Update</button>
+              <button type="button" class="btn btn-default" (click)="cancel()">Cancel</button>
+            </div>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+  <div class="panel panel-default" *ngIf="detailFlag">
+    <div class="panel-heading">
+      <div class="clearfix">
+        <div class="pull-left"> {{title}}</div>
+        <div class="container" class="pull-right">
+          <div class="row">
+            <a [routerLink]="['/managepurchaseorderinward']" title="Manage " class="btn btn-info btn-sm a-btn-slide-text">
+              <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+            </a>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="panel-body">
+
+      <form #form1="ngForm">
+        <div class="col-md-12 col-sm-12 col-xs-12 ">
+
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <h4>Purchase Order Details:</h4>
+          </div>
+          <div class="col-md-12 col-sm-12 col-xs-12">
+
+          </div>
+          <div class="col-md-12 col-sm-12 col-xs-12">
+
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="name">Supplier:&nbsp;&nbsp; {{purchase.suppname}}
+                </label>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="porderno">Purchase Order No.:&nbsp;&nbsp;{{purchase?.porderno}}
+                </label>
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="deliveredby">Delivered by:&nbsp;&nbsp;{{purchase?.deliveredby}}
+                </label>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="deliveredby">Deliverey Person :&nbsp;&nbsp;{{purchase?.deliveryperson}}
+                </label>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="inwardon">Inward On:&nbsp;&nbsp;{{purchase?.inwardon|date: 'dd/MM/yyyy'}}
+                </label>
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="receivedon">Received On:&nbsp;&nbsp;{{purchase?.receivedon|date: 'dd/MM/yyyy'}}
+                </label>
+              </div>
+            </div>
+          </div>
+
+
+
+
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="totalproducts">Total Products:&nbsp;&nbsp;{{purchase?.totalproducts}}
+                </label>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+
+
+
+        <div class="col-md-12 col-sm-12 col-xs-12 ">
+          <hr>
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <h4>Purchase Order Inward Details:</h4>
+          </div>
+          <!-- <div class="col-sm-12 "
+            style="margin-top: 3px;  border: 1px solid #c5c4c4; min-height: 10px; overflow: auto;">
+ -->
+
+
+            <div class="col-sm-12 img-thumbnail" *ngFor="let data of purchase.details; let i=index;">
+
+              <!-- <div class="col-sm-12" >
+                <div class="col-sm-6">
+                  Product Name      : {{data?.pname}}<br>
+                  HSN Code          : {{data?.hsncode}}<br>
+                  Colour            : {{data?.vcolour}}<br>
+                  Manufactured by   : {{data?.mfg}}<br>
+                  Manufacturing Date: {{data?.mfgdate | date:'dd/MM/yyyy'}}<br>
+                  Expiry Date       : {{data?.expiry | date:'dd/MM/yyyy'}}<br>
+                  Total Quantity    : {{data?.qty}}<br>
+                </div>
+                <div class="col-sm-6">
+                  Battery Name : {{data?.batteryname}}<br>
+                  Battery No   : {{data?.batternum}}<br>
+                  Chaisi No    : {{data?.chassisnum}}<br>
+                  Engine No    : {{data?.enginenum}}<br>
+                </div>
+              </div> -->
+
+
+              <div class="col-sm-12" >
+                <div class="col-sm-6">
+                  Product Type: {{data?.ptype}}<br>
+
+                  Product Name: {{data?.pname}}<br>
+                  HSN Code: {{data?.hsncode}}<br>
+                  Manufactured by: {{data?.mfg}}<br>
+                  Manufacturing Date: {{data?.mfgdate| date:'dd/MM/yyyy'}}<br>
+                  Expiry Date: {{data?.expiry| date:'dd/MM/yyyy'}}<br>
+                  Total Quantity: {{data?.qty}}<br>
+                </div>
+                <div class="col-sm-6">
+                </div>
+              </div>
+            </div>
+          <!-- </div> -->
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+
+
+<div [hidden]="!isManageState" class="col-md-12 col-sm-12 col-xs-12">
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      {{title}}
+      <a [routerLink]="['/managepurchase']"  title="Manage purchase Order" class="pull-right">
+        <span class="glyphicon glyphicon-th-list"></span>
+      </a>
+
+
+    </div>
+    <div class="panel-body text-capitalize">
+      <div class="table-responsive">
+        <table class="table table-condensed table-striped table-bordered"
+        [mfData]="data | dataFilterPr : filterQuery:'porderinward'"
+          #mf="mfDataTable" [mfRowsOnPage]="rowsOnPage" [(mfSortBy)]="Role" [(mfSortOrder)]="sortOrder">
+          <thead>
+            <tr>
+              <th> SN </th>
+              <th> ID </th>
+              <th> Purchase Order No </th>
+              <th> Supplier </th>
+              <th> Deliveredby By </th>
+              <th> Delivery Person </th>
+              <th> Inward On </th>
+              <th> Received on</th>
+              <th> Total Products </th>
+              <th> Action </th>
+            </tr>
+            <tr>
+              <th colspan="10">
+                <div id="custom-search-input">
+                  <div class="input-group col-md-12">
+                    <input type="text" class="form-control" placeholder="Search by Supplier Name, Deliveredby Or Delivery Person" [(ngModel)]="filterQuery" />
+                    <span class="input-group-btn">
+                      <button class="btn btn-danger btn-sm" type="button">
+                        <span class=" glyphicon glyphicon-search"></span>
+                      </button>
+                    </span>
+                  </div>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of mf.data; let i = index; let last = last;">
+              <td>{{i+1}}</td>
+              <td>{{data?.id}}</td>
+              <td>{{data?.porderno}}</td>
+              <td>{{data?.suppname}}</td>
+              <td>{{data?.deliveredby}}</td>
+              <td>{{data?.deliveryperson}}</td>
+              <td>{{data?.inwardon | date: 'dd-MM-yyyy'}}</td>
+              <td>{{data?.receivedon | date: 'dd-MM-yyyy'}}</td>
+              <td>{{data?.totalproducts}}</td>
+              <td class="text-right">
+                <a [routerLink]="['/addpurchaseorderinward/',data.id]" data-toggle="tooltip" title="Add Inward Purhase"
+                  *ngIf="data.state === 'Received'">
+                  <button class="btn btn-default btn-sm">
+                    <span class="glyphicon glyphicon-floppy-savet"></span>
+                  </button>
+                </a>
+                <a [routerLink]="['/detailpurchaseorderinward',data.id]">
+                  <button class="btn btn-info btn-sm" title="Purchase Order Details">
+                    <span class="glyphicon glyphicon-info-sign"></span>
+                  </button>
+                </a>
+                <button *ngIf="userType == 'ADMIN' || userType == 'SUPERADMIN' " class="btn btn-danger btn-sm" title="Delete purchase order inward"
+                  (click)="deleteRole(data.id)">
+                  <span class="glyphicon glyphicon-remove-circle"></span>
+                </button>
+                <button *ngIf="userType == 'MARKETING'" disabled class="btn btn-danger btn-sm"
+                  title="Contact admin for functionality" (click)="deleteRole(data.role)">
+                  <span class="glyphicon glyphicon-remove-circle"></span>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="10">
+                <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<!-- Modal -->
+<button id="openModalButton" [hidden]="true" data-toggle="modal" data-target="#csvImport">Open Modal</button>
+
+<div id="csvImport" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      <h4 class="modal-title">Purchase Order Inward Add Status</h4>
+      </div>
+      <div class="modal-body">
+       <table class="table table-condensed table-sm" style="font-size:10px;">
+          <tr>
+            <th>HSN Code</th>
+            <th>Status</th>
+            <th>Error</th>
+          </tr>
+          <tr>
+            <td>
+              <div *ngFor="let name of nm"> {{name}}</div>
+            </td>
+            <td>
+              <div *ngFor="let status of st"> {{status}}</div>
+            </td>
+            <td>
+              <div *ngFor="let error of er"> {{error}}</div>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="modal-footer">
+          <!-- <a [routerLink]="['/managepstock', this.pcode, this.pname,data.id]"></a> -->
+          <a [routerLink]="['/managepurchaseorderinward']">
+            <button type="button" class="btn btn-default " data-dismiss="modal" >Close</button>
+          </a>
+      </div>
+    </div>
+  </div>
+</div>
+<!--End Modal-->

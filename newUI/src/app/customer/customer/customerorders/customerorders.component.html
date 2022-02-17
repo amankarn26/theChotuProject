@@ -1,0 +1,1965 @@
+<div class="panel panel-default slideLeft" *ngIf="this.route.url === '/customer_orders'"
+  style="background-color: #945c0757;">
+  <div class="panel-heading">
+    <div class="clearfix">
+      <!-- <div class="pull-left">Customer Orders</div> -->
+      Customer Orders<br><br>
+
+      <div id="custom-search-input" *ngIf="this.userRole==='SUPERADMIN' && this.userType==='FIRM'">
+
+        <div class="col-sm-12">
+          <div class="col-sm-3">
+            <div class="form-group">
+              <label>Select Customer</label>
+              <select *ngIf="!isUpdate" class="form-control" id="customer" name="custname" required
+                [(ngModel)]="customer" (change)="getcustomerorders()">
+                <option required *ngFor="let dep of custlist; let i=index" [value]="dep.id">{{dep.name}}</option>
+              </select>
+            </div>
+          </div>
+
+
+          <div class="col-sm-3">
+            <div class="form-group">
+              <label for="state">Reset :
+              </label>
+              <span class="input-group-btn">
+                <button class="btn btn-info btn-sm" title="Reset" (click)="refreshincall()" style="font-size: 9px;">
+                  <span class="glyphicon glyphicon-refresh"></span>
+                </button>
+              </span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+      <div class="container" class="pull-right" *ngIf="this.userRole==='CUSTOMER' && this.userType==='CUSTOMER'">
+        <div class="row">
+          <a title="Home" [routerLink]="['/custhomepage']" class="btn btn-info a-btn-slide-text">
+            <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+          </a>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div *ngIf="this.userRole==='SUPERADMIN' && this.userType==='FIRM' && !isDeliverypoolchange">
+    <!-- && !isDeliverypoolchange -->
+    <ul class="nav nav-tabs">
+      <li class="active"><a data-toggle="tab" href="#All" id="a"><b>All Orders</b></a></li>
+      <li><a data-toggle="tab" href="#Placed" *ngIf="customer" id="b">Placed Orders</a></li>
+      <li><a data-toggle="tab" href="#PACKED" *ngIf="customer" id="c">Packed Orders</a></li>
+      <li><a data-toggle="tab" href="#PICKED_UP" *ngIf="customer" id="d">Picked Up Orders</a></li>
+      <li><a data-toggle="tab" href="#SERVED" *ngIf="customer" id="e">Served Orders</a></li>
+      <li><a data-toggle="tab" href="#DELIVERED" *ngIf="customer" id="f">Delivered Orders</a></li>
+      <li><a data-toggle="tab" href="#CLOSED" *ngIf="customer" id="g">Closed Orders</a></li>
+    </ul>
+
+    <div class="tab-content">
+      <div id="All" class="tab-pane fade in active">
+        <div class="panel-body">
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="table-responsive">
+              <table class="table table-condensed table-striped table-bordered"
+                [mfData]="data | dataFilterPr : filterQuery:'orders'" #mf="mfDataTable" [mfRowsOnPage]="rowsOnPage">
+                <thead>
+                  <tr>
+                    <th>Order No.</th>
+                    <th>Dish</th>
+                    <th>Order Details</th>
+                    <th>Customer</th>
+                    <th>Delivery Add.</th>
+                    <!-- <th>Branch Address</th> -->
+                    <th>Payment Details</th>
+                    <th>Ordertype</th>
+                    <th>Status</th>
+                    <th class="text-right">Action</th>
+                  </tr>
+                  <tr>
+                    <th colspan="9">
+                      <div id="custom-search-input">
+                        <div class="input-group col-md-12">
+                          <input type="text" class="form-control" placeholder="Search by Phone, City Or Pincode"
+                            [(ngModel)]="filterQuery" />
+                          <span class="input-group-btn">
+                            <button class="btn btn-danger" type="button">
+                              <span class=" glyphicon glyphicon-search"></span>
+                            </button>
+                          </span>
+                        </div>
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let data of mf.data; let i = index; let last = last;">
+                    <td>{{data.invoicenum}}<br>
+                      Total items : {{data.qcost.totalitem}}
+                    </td>
+                    <td>
+                      <div class="img-thumbnail  ">
+                        <img *ngIf="data?.oentry[0]?.photo?.docpath"
+                          src="{{docServer}}/{{data?.oentry[0]?.photo?.docpath}}" class="img-circle" alt=""
+                          style="width:100px; height:100px;">
+                        <img *ngIf="!data?.oentry[0]?.photo?.docpath"
+                          src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg"
+                          class="img-circle" alt="" style="width:100px; height:100px;">
+                        <div class="caption text-capitalize text-center" *ngIf="data.oentry.length<=1; else elseBlock">
+                          {{data.oentry[0]?.dname}}</div>
+                        <ng-template #elseBlock>
+                          <a>
+                            <div class="caption text-capitalize text-center"> {{data.oentry[0]?.dname}} +
+                              {{data.oentry.length - 1}} Other Items</div>
+                          </a>
+                        </ng-template>
+
+                      </div>
+                    </td>
+                    <td>
+                      <textarea style="margin: 0px; width: 180px; height: 124px;" readonly>{{data?.detail}}</textarea>
+                    </td>
+
+
+                    <td>{{data.custname}}<br>
+                      Phone-{{data.custmobile}}</td>
+
+                    <td>{{data.deliveryaddress.line1}},<br>
+                      {{data.deliveryaddress.city}}- {{data.deliveryaddress.pincode}}<br>
+
+                      <span *ngIf="data.ordertype==='HOME_DELIVERY'">Delivery by:{{data.deliveryperson}}<br>
+                        Number: {{data.deliverymobile}}<br>
+                        Expected Delivery :{{data.expdelivery | date}}<br>
+                      </span>
+                    </td>
+                    <!-- <td>
+                      {{data.firmname}}<br>
+                      {{data.vendaddress.line1}},<br>
+                      {{data.vendaddress.city}}- {{data.vendaddress.pincode}}<br>
+                      Phone-{{data.vendmobile}}
+
+                    </td> -->
+                    <td>Mode -{{data.paymentmode}}<br>
+                      Txn ID- {{data.transactionid}}<br>
+                      Amount -{{data.qcost.finalamt}}/-<br>
+                    </td>
+
+                    <td>
+                      <span class="label label-primary">{{data.ordertype}}</span><br />
+                      <span class="label label-primary">{{data.tablenumber}}</span>
+
+                    </td>
+
+                    <td *ngIf="data.status !== 'CANCELLED' && data.status !== 'DELIVERED'">
+                      <span class="label label-primary">{{data.status}}</span><br />
+                    </td>
+
+                    <td *ngIf="data.status == 'CANCELLED'">
+                      <span class="label label-danger">{{data.status}}</span><br />
+
+                    </td>
+
+                    <td *ngIf="data.status == 'DELIVERED'">
+                      <span class="label label-success">{{data.status}}</span><br />
+
+                    </td>
+
+
+                    <td class="text-right">
+                      <!-- <a *ngIf="data.status==='PLACED'" title="Cancel Order" (click)="ordercancellation(data)">
+                        <button class="btn btn-warning btn-sm">
+                          <span class="glyphicon glyphicon-exclamation-sign"></span>
+                        </button>
+                      </a> -->
+                      <a *ngIf="data.isvendoraccept === 'YES' && data.status === 'PACKED' && userRole==='SUPERADMIN'"
+                        title="Change Delivery pool" (click)="changedeliveryperson(data)">
+                        <button class="btn btn-info btn-sm">
+                          <span class="glyphicon glyphicon-user"></span>
+                        </button>
+                      </a>
+                      <a *ngIf="this.userRole === 'CUSTOMER'" title="Repeat Order" (click)="cloneorder(data.id)">
+                        <button class="btn btn-warning btn-sm">
+                          <span class="glyphicon glyphicon-repeat"></span>
+                        </button>
+                      </a>
+                      <a *ngIf="data.invoice && data.status==='DELIVERED' || data.status==='CLOSED'"
+                        href="{{docServer}}/{{data?.invoice?.docpath}}" target="_blank">
+                        <button class="btn btn-info btn-sm" title="Download Invoice">
+                          <span class="glyphicon glyphicon-cloud-download"></span>
+                        </button>
+                      </a>
+
+                      <a style="cursor: not-allowed;" title="Invoice Not Available ">
+                        <button *ngIf="!data.invoice" disabled class="btn btn-info btn-sm">
+                          <span class="glyphicon glyphicon-cloud-download"></span>
+                        </button>
+                      </a>
+                    </td>
+                    <!-- <td>Order Delivered </td> -->
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colspan="9">
+                      <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                    </td>
+                  </tr>
+                  <td colspan="25" *ngIf="!customer">
+                    <nav aria-label="Page navigation example">
+                      <ul class="pagination justify-content-center">
+                        <li class="page-item ">
+                          <a class="page-link" (click)="top200()">Top 200</a>
+
+                        </li>
+                        <li class="page-item ">
+                          <a class="page-link" (click)="top1000()">All Orders</a>
+                        </li>
+                        <!-- <li class="page-item ">
+                        <a class="page-link" (click)="increment()" title="Next 100">Next</a>
+                      </li> -->
+                      </ul>
+                    </nav>
+                  </td>
+                  <td colspan="25" *ngIf="customer">
+                    <nav aria-label="Page navigation example">
+                      <ul class="pagination justify-content-center">
+                        <li class="page-item ">
+                          <a class="page-link" (click)="decrement()">Top 25</a>
+                        </li>
+                        <li class="page-item ">
+                          <a class="page-link" (click)="getall()">All</a>
+                        </li>
+                        <!-- <li class="page-item ">
+                        <a class="page-link" (click)="increment()" title="Next 100">Next</a>
+                      </li> -->
+                      </ul>
+                    </nav>
+                  </td>
+                </tfoot>
+              </table>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div id="Placed" class="tab-pane fade in">
+        <div class="panel-body">
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="table-responsive">
+              <table class="table table-condensed table-striped table-bordered"
+                [mfData]="placedorders | dataFilterPr : filterQuery1:'orders'" #mff="mfDataTable"
+                [mfRowsOnPage]="rowsOnPage">
+                <thead>
+                  <tr>
+                    <th>Order No.</th>
+                    <th>Dish</th>
+                    <th>Order Details</th>
+                    <th>Customer</th>
+                    <th>Delivery Add.</th>
+                    <th>Payment Details</th>
+                    <th>Ordertype</th>
+                    <th>Status</th>
+
+                    <th class="text-right">Action</th>
+                  </tr>
+                  <tr>
+                    <th colspan="9">
+                      <div id="custom-search-input">
+                        <div class="input-group col-md-12">
+                          <input type="text" class="form-control" placeholder="Search by Phone, City Or Pincode"
+                            [(ngModel)]="filterQuery1" />
+                          <span class="input-group-btn">
+                            <button class="btn btn-danger" type="button">
+                              <span class=" glyphicon glyphicon-search"></span>
+                            </button>
+                          </span>
+                        </div>
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let data of mff.data; let i = index; let last = last;">
+                    <td>{{data.invoicenum}}<br>
+                      Total items : {{data.qcost.totalitem}}
+                    </td>
+                    <td>
+                      <div class="img-thumbnail  ">
+                        <img *ngIf="data?.oentry[0]?.photo?.docpath"
+                          src="{{docServer}}/{{data?.oentry[0]?.photo?.docpath}}" class="img-circle" alt=""
+                          style="width:100px; height:100px;">
+                        <img *ngIf="!data?.oentry[0]?.photo?.docpath"
+                          src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg"
+                          class="img-circle" alt="" style="width:100px; height:100px;">
+                        <div class="caption text-capitalize text-center" *ngIf="data.oentry.length<=1; else elseBlock">
+                          {{data.oentry[0]?.dname}}</div>
+                        <ng-template #elseBlock>
+                          <a>
+                            <div class="caption text-capitalize text-center"> {{data.oentry[0]?.dname}} +
+                              {{data.oentry.length - 1}} Other Items</div>
+                          </a>
+                        </ng-template>
+
+                      </div>
+                    </td>
+                    <td>
+                      <textarea style="margin: 0px; width: 180px; height: 124px;" readonly>{{data?.detail}}</textarea>
+                    </td>
+
+
+                    <td>{{data.custname}}<br>
+                      Phone-{{data.custmobile}}</td>
+                    <td>{{data.deliveryaddress.line1}},<br>
+                      {{data.deliveryaddress.city}}- {{data.deliveryaddress.pincode}}<br>
+
+                      <span *ngIf="data.ordertype==='HOME_DELIVERY'">Delivery by:{{data.deliveryperson}}<br>
+                        Number: {{data.deliverymobile}}<br>
+                        Expected Delivery :{{data.expdelivery | date}}<br>
+                      </span>
+
+                    </td>
+
+                    <!-- <td>
+                      {{data.firmname}}<br>
+                      {{data.vendaddress.line1}},<br>
+                      {{data.vendaddress.city}}- {{data.vendaddress.pincode}}<br>
+                      Phone-{{data.vendmobile}}
+                    </td> -->
+                    <td>Mode -{{data.paymentmode}}<br>
+                      Txn ID- {{data.transactionid}}<br>
+                      Amount -{{data.qcost.finalamt}}/-<br>
+                    </td>
+
+                    <td>
+                      <span class="label label-primary">{{data.ordertype}}</span><br />
+                      <span class="label label-primary">{{data.tablenumber}}</span>
+
+                    </td>
+
+                    <td *ngIf="data.status !== 'CANCELLED' && data.status !== 'DELIVERED'">
+                      <span class="label label-primary">{{data.status}}</span><br />
+
+                    </td>
+
+                    <td *ngIf="data.status == 'CANCELLED'">
+                      <span class="label label-danger">{{data.status}}</span><br />
+
+                    </td>
+
+                    <td *ngIf="data.status == 'DELIVERED'">
+                      <span class="label label-success">{{data.status}}</span><br />
+
+                    </td>
+
+                    <td class="text-right">
+                      <!-- <a *ngIf="data.status==='PLACED'" title="Cancel Order" (click)="ordercancellation(data)">
+                        <button class="btn btn-warning btn-sm">
+                          <span class="glyphicon glyphicon-exclamation-sign"></span>
+                        </button>
+                      </a> -->
+                      <a *ngIf="data.status==='DELIVERED'" title="Repeat Order" (click)="cloneorder(data.id)">
+                        <button class="btn btn-warning btn-sm">
+                          <span class="glyphicon glyphicon-repeat"></span>
+                        </button>
+                      </a>
+                      <a *ngIf="data.invoice && data.status==='DELIVERED'"
+                        href="{{docServer}}/{{data?.invoice?.docpath}}" target="_blank">
+                        <button class="btn btn-info btn-sm" title="Download Invoice">
+                          <span class="glyphicon glyphicon-cloud-download"></span>
+                        </button>
+                      </a>
+
+                      <a title="Change Delivery pool" (click)="changedeliveryperson(data)">
+                        <button class="btn btn-info btn-sm">
+                          <span class="glyphicon glyphicon-user"></span>
+                        </button>
+                      </a>
+
+                      <a style="cursor: not-allowed;" title="Invoice Not Available ">
+                        <button *ngIf="!data.invoice" disabled class="btn btn-info btn-sm">
+                          <span class="glyphicon glyphicon-cloud-download"></span>
+                        </button>
+                      </a>
+                    </td>
+                    <!-- <td>Order Delivered </td> -->
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colspan="9">
+                      <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div id="PACKED" class="tab-pane fade in">
+        <div class="panel-body">
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="table-responsive">
+              <table class="table table-condensed table-striped table-bordered"
+                [mfData]="packedorders | dataFilterPr : filterQuery2:'orders'" #mfff="mfDataTable"
+                [mfRowsOnPage]="rowsOnPage">
+                <thead>
+                  <tr>
+                    <th>Order No.</th>
+                    <th>Dish</th>
+                    <th>Order Details</th>
+
+
+                    <th>Customer</th>
+                    <th>Delivery Add.</th>
+                    <!-- <th>Branch Address</th> -->
+                    <th>Payment Details</th>
+                    <th>Ordertype</th>
+
+                    <th>Status</th>
+
+                    <th class="text-right">Action</th>
+                  </tr>
+                  <tr>
+                    <th colspan="9">
+                      <div id="custom-search-input">
+                        <div class="input-group col-md-12">
+                          <input type="text" class="form-control" placeholder="Search by Phone, City Or Pincode"
+                            [(ngModel)]="filterQuery2" />
+                          <span class="input-group-btn">
+                            <button class="btn btn-danger" type="button">
+                              <span class=" glyphicon glyphicon-search"></span>
+                            </button>
+                          </span>
+                        </div>
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let data of mfff.data; let i = index; let last = last;">
+                    <td>{{data.invoicenum}}<br>
+                      Total items : {{data.qcost.totalitem}}
+                    </td>
+                    <td>
+                      <div class="img-thumbnail  ">
+                        <img *ngIf="data?.oentry[0]?.photo?.docpath"
+                          src="{{docServer}}/{{data?.oentry[0]?.photo?.docpath}}" class="img-circle" alt=""
+                          style="width:100px; height:100px;">
+                        <img *ngIf="!data?.oentry[0]?.photo?.docpath"
+                          src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg"
+                          class="img-circle" alt="" style="width:100px; height:100px;">
+                        <div class="caption text-capitalize text-center" *ngIf="data.oentry.length<=1; else elseBlock">
+                          {{data.oentry[0]?.dname}}</div>
+                        <ng-template #elseBlock>
+                          <a>
+                            <div class="caption text-capitalize text-center"> {{data.oentry[0]?.dname}} +
+                              {{data.oentry.length - 1}} Other Items</div>
+                          </a>
+                        </ng-template>
+
+                      </div>
+                    </td>
+                    <td>
+                      <textarea style="margin: 0px; width: 180px; height: 124px;" readonly>{{data?.detail}}</textarea>
+                    </td>
+
+
+                    <td>{{data.custname}}<br>
+                      Phone-{{data.custmobile}}</td>
+
+                    <td>{{data.deliveryaddress.line1}},<br>
+                      {{data.deliveryaddress.city}}- {{data.deliveryaddress.pincode}}<br>
+
+                      <span *ngIf="data.ordertype==='HOME_DELIVERY'">Delivery by:{{data.deliveryperson}}<br>
+                        Number: {{data.deliverymobile}}<br>
+                        Expected Delivery :{{data.expdelivery | date}}<br>
+                      </span>
+                    </td>
+
+                    <!-- <td>
+                      {{data.firmname}}<br>
+                      {{data.vendaddress.line1}},<br>
+                      {{data.vendaddress.city}}- {{data.vendaddress.pincode}}<br>
+                      Phone-{{data.vendmobile}}
+
+                    </td> -->
+
+                    <td>Mode -{{data.paymentmode}}<br>
+                      Txn ID- {{data.transactionid}}<br>
+                      Amount -{{data.qcost.finalamt}}/-<br>
+                    </td>
+
+                    <td>
+                      <span class="label label-primary">{{data.ordertype}}</span><br />
+                      <span class="label label-primary">{{data.tablenumber}}</span>
+
+                    </td>
+
+                    <td *ngIf="data.status !== 'CANCELLED' && data.status !== 'DELIVERED'">
+                      <span class="label label-primary">{{data.status}}</span><br />
+
+                    </td>
+
+                    <td *ngIf="data.status == 'CANCELLED'">
+                      <span class="label label-danger">{{data.status}}</span><br />
+
+                    </td>
+
+                    <td *ngIf="data.status == 'DELIVERED'">
+                      <span class="label label-success">{{data.status}}</span><br />
+
+                    </td>
+
+                    <td class="text-right">
+                      <!-- <a *ngIf="data.status==='PLACED'" title="Cancel Order" (click)="ordercancellation(data)">
+                        <button class="btn btn-warning btn-sm">
+                          <span class="glyphicon glyphicon-exclamation-sign"></span>
+                        </button>
+                      </a> -->
+                      <a *ngIf="data.status==='DELIVERED'" title="Repeat Order" (click)="cloneorder(data.id)">
+                        <button class="btn btn-warning btn-sm">
+                          <span class="glyphicon glyphicon-repeat"></span>
+                        </button>
+                      </a>
+                      <a *ngIf="data.invoice && data.status==='DELIVERED'"
+                        href="{{docServer}}/{{data?.invoice?.docpath}}" target="_blank">
+                        <button class="btn btn-info btn-sm" title="Download Invoice">
+                          <span class="glyphicon glyphicon-cloud-download"></span>
+                        </button>
+                      </a>
+
+                      <a title="Change Delivery pool" (click)="changedeliveryperson(data)">
+                        <button class="btn btn-info btn-sm">
+                          <span class="glyphicon glyphicon-user"></span>
+                        </button>
+                      </a>
+
+                      <a style="cursor: not-allowed;" title="Invoice Not Available ">
+                        <button *ngIf="!data.invoice" disabled class="btn btn-info btn-sm">
+                          <span class="glyphicon glyphicon-cloud-download"></span>
+                        </button>
+                      </a>
+                    </td>
+                    <!-- <td>Order Delivered </td> -->
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colspan="9">
+                      <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div id="PICKED_UP" class="tab-pane fade in">
+        <div class="panel-body">
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="table-responsive">
+              <table class="table table-condensed table-striped table-bordered"
+                [mfData]="pickeduporders | dataFilterPr : filterQuery3:'orders'" #mffffp="mfDataTable"
+                [mfRowsOnPage]="rowsOnPage">
+                <thead>
+                  <tr>
+                    <th>Order No.</th>
+                    <th>Dish</th>
+                    <th>Order Details</th>
+                    <th>Customer</th>
+                    <th>Delivery Add.</th>
+                    <th>Payment Details</th>
+                    <th>Ordertype</th>
+                    <th>Status</th>
+                    <th class="text-right">Action</th>
+                  </tr>
+                  <tr>
+                    <th colspan="9">
+                      <div id="custom-search-input">
+                        <div class="input-group col-md-12">
+                          <input type="text" class="form-control" placeholder="Search by Phone, City Or Pincode"
+                            [(ngModel)]="filterQuery3" />
+                          <span class="input-group-btn">
+                            <button class="btn btn-danger" type="button">
+                              <span class=" glyphicon glyphicon-search"></span>
+                            </button>
+                          </span>
+                        </div>
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let data of mffffp.data; let i = index; let last = last;">
+                    <td>{{data.invoicenum}}<br>
+                      Total items : {{data.qcost.totalitem}}
+                    </td>
+                    <td>
+                      <div class="img-thumbnail  ">
+                        <img *ngIf="data?.oentry[0]?.photo?.docpath"
+                          src="{{docServer}}/{{data?.oentry[0]?.photo?.docpath}}" class="img-circle" alt=""
+                          style="width:100px; height:100px;">
+                        <img *ngIf="!data?.oentry[0]?.photo?.docpath"
+                          src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg"
+                          class="img-circle" alt="" style="width:100px; height:100px;">
+                        <div class="caption text-capitalize text-center" *ngIf="data.oentry.length<=1; else elseBlock">
+                          {{data.oentry[0]?.dname}}</div>
+                        <ng-template #elseBlock>
+                          <a>
+                            <div class="caption text-capitalize text-center"> {{data.oentry[0]?.dname}} +
+                              {{data.oentry.length - 1}} Other Items</div>
+                          </a>
+                        </ng-template>
+
+                      </div>
+                    </td>
+                    <td>
+                      <textarea style="margin: 0px; width: 180px; height: 124px;" readonly>{{data?.detail}}</textarea>
+                    </td>
+
+                    <td>{{data.custname}}<br>
+                      Phone-{{data.custmobile}}</td>
+                    <td>{{data.deliveryaddress.line1}},<br>
+                      {{data.deliveryaddress.city}}- {{data.deliveryaddress.pincode}}<br>
+
+                      <span *ngIf="data.ordertype==='HOME_DELIVERY'">Delivery by:{{data.deliveryperson}}<br>
+                        Number: {{data.deliverymobile}}<br>
+                        Expected Delivery :{{data.expdelivery | date}}<br>
+                      </span>
+
+                    </td>
+                    <!-- <td>
+                      {{data.firmname}}<br>
+                      {{data.vendaddress.line1}},<br>
+                      {{data.vendaddress.city}}- {{data.vendaddress.pincode}}<br>
+                      Phone-{{data.vendmobile}}
+
+                    </td> -->
+                    <td>Mode -{{data.paymentmode}}<br>
+                      Txn ID- {{data.transactionid}}<br>
+                      Amount -{{data.qcost.finalamt}}/-<br>
+                    </td>
+
+                    <td>
+                      <span class="label label-primary">{{data.ordertype}}</span><br />
+                      <span class="label label-primary">{{data.tablenumber}}</span>
+
+                    </td>
+
+                    <td *ngIf="data.status !== 'CANCELLED' && data.status !== 'DELIVERED'">
+                      <span class="label label-primary">{{data.status}}</span><br />
+
+                    </td>
+
+                    <td *ngIf="data.status == 'CANCELLED'">
+                      <span class="label label-danger">{{data.status}}</span><br />
+
+                    </td>
+
+                    <td *ngIf="data.status == 'DELIVERED'">
+                      <span class="label label-success">{{data.status}}</span><br />
+
+                    </td>
+
+                    <td class="text-right">
+                      <!-- <a *ngIf="data.status==='PLACED'" title="Cancel Order" (click)="ordercancellation(data)">
+                        <button class="btn btn-warning btn-sm">
+                          <span class="glyphicon glyphicon-exclamation-sign"></span>
+                        </button>
+                      </a> -->
+                      <a *ngIf="data.status==='DELIVERED'" title="Repeat Order" (click)="cloneorder(data.id)">
+                        <button class="btn btn-warning btn-sm"> <span class="glyphicon glyphicon-repeat"></span>
+                       </button>
+                      </a>
+                      <a *ngIf="data.invoice && data.status==='DELIVERED'"
+                        href="{{docServer}}/{{data?.invoice?.docpath}}" target="_blank">
+                        <button class="btn btn-info btn-sm" title="Download Invoice">
+                          <span class="glyphicon glyphicon-cloud-download"></span>
+                        </button>
+                      </a>
+
+                      <a style="cursor: not-allowed;" title="Invoice Not Available ">
+                        <button *ngIf="!data.invoice" disabled class="btn btn-info btn-sm">
+                          <span class="glyphicon glyphicon-cloud-download"></span>
+                        </button>
+                      </a>
+                    </td>
+                    <!-- <td>Order Delivered </td> -->
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colspan="9">
+                      <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div id="SERVED" class="tab-pane fade in">
+        <div class="panel-body">
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="table-responsive">
+              <table class="table table-condensed table-striped table-bordered"
+                [mfData]="servedorders | dataFilterPr : filterQuery4:'orders'" #mffff1="mfDataTable"
+                [mfRowsOnPage]="rowsOnPage">
+                <thead>
+                  <tr>
+                    <th>Order No.</th>
+                    <th>Dish</th>
+                    <th>Order Details</th>
+                    <th>Customer</th>
+                    <th>Delivery Add.</th>
+                    <th>Payment Details</th>
+                    <th>Ordertype</th>
+                    <th>Status</th>
+                    <th class="text-right">Action</th>
+                  </tr>
+                  <tr>
+                    <th colspan="9">
+                      <div id="custom-search-input">
+                        <div class="input-group col-md-12">
+                          <input type="text" class="form-control" placeholder="Search by Phone, City Or Pincode"
+                            [(ngModel)]="filterQuery4" />
+                          <span class="input-group-btn">
+                            <button class="btn btn-danger" type="button">
+                              <span class=" glyphicon glyphicon-search"></span>
+                            </button>
+                          </span>
+                        </div>
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let data of mffff1.data; let i = index; let last = last;">
+                    <td>{{data.invoicenum}}<br>
+                      Total items : {{data.qcost.totalitem}}
+                    </td>
+                    <td>
+                      <div class="img-thumbnail  ">
+                        <img *ngIf="data?.oentry[0]?.photo?.docpath"
+                          src="{{docServer}}/{{data?.oentry[0]?.photo?.docpath}}" class="img-circle" alt=""
+                          style="width:100px; height:100px;">
+                        <img *ngIf="!data?.oentry[0]?.photo?.docpath"
+                          src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg"
+                          class="img-circle" alt="" style="width:100px; height:100px;">
+                        <div class="caption text-capitalize text-center" *ngIf="data.oentry.length<=1; else elseBlock">
+                          {{data.oentry[0]?.dname}}</div>
+                        <ng-template #elseBlock>
+                          <a>
+                            <div class="caption text-capitalize text-center"> {{data.oentry[0]?.dname}} +
+                              {{data.oentry.length - 1}} Other Items</div>
+                          </a>
+                        </ng-template>
+
+                      </div>
+                    </td>
+                    <td>
+                      <textarea style="margin: 0px; width: 180px; height: 124px;" readonly>{{data?.detail}}</textarea>
+                    </td>
+
+                    <td>{{data.custname}}<br>
+                      Phone-{{data.custmobile}}</td>
+                    <td>{{data.deliveryaddress.line1}},<br>
+                      {{data.deliveryaddress.city}}- {{data.deliveryaddress.pincode}}<br>
+
+                      <span *ngIf="data.ordertype==='HOME_DELIVERY'">Delivery by:{{data.deliveryperson}}<br>
+                        Number: {{data.deliverymobile}}<br>
+                        Expected Delivery :{{data.expdelivery | date}}<br>
+                      </span>
+                    </td>
+
+                    <td>Mode -{{data.paymentmode}}<br>
+                      Txn ID- {{data.transactionid}}<br>
+                      Amount -{{data.qcost.finalamt}}/-<br></td>
+
+                    <td>
+                      <span class="label label-primary">{{data.ordertype}}</span><br />
+                      <span class="label label-primary">{{data.tablenumber}}</span>
+
+                    </td>
+
+                    <td *ngIf="data.status !== 'CANCELLED' && data.status !== 'DELIVERED'">
+                      <span class="label label-primary">{{data.status}}</span><br />
+
+                    </td>
+
+                    <td *ngIf="data.status == 'CANCELLED'">
+                      <span class="label label-danger">{{data.status}}</span><br />
+
+                    </td>
+
+                    <td *ngIf="data.status == 'DELIVERED'">
+                      <span class="label label-success">{{data.status}}</span><br />
+
+                    </td>
+
+
+                    <td class="text-right">
+                      <!-- <a *ngIf="data.status==='PLACED'" title="Cancel Order" (click)="ordercancellation(data)">
+                        <button class="btn btn-warning btn-sm">
+                          <span class="glyphicon glyphicon-exclamation-sign"></span>
+                        </button>
+                      </a> -->
+                      <a *ngIf="data.status==='DELIVERED'" title="Repeat Order" (click)="cloneorder(data.id)">
+                        <button class="btn btn-warning btn-sm">
+                          <span class="glyphicon glyphicon-repeat"></span>
+                        </button>
+                      </a>
+                      <a *ngIf="data.invoice && data.status==='DELIVERED'"
+                        href="{{docServer}}/{{data?.invoice?.docpath}}" target="_blank">
+                        <button class="btn btn-info btn-sm" title="Download Invoice">
+                          <span class="glyphicon glyphicon-cloud-download"></span>
+                        </button>
+                      </a>
+
+                      <a style="cursor: not-allowed;" title="Invoice Not Available ">
+                        <button *ngIf="!data.invoice" disabled class="btn btn-info btn-sm">
+                          <span class="glyphicon glyphicon-cloud-download"></span>
+                        </button>
+                      </a>
+                    </td>
+                    <!-- <td>Order Delivered </td> -->
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colspan="9">
+                      <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div id="DELIVERED" class="tab-pane fade in">
+        <div class="panel-body">
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="table-responsive">
+              <table class="table table-condensed table-striped table-bordered"
+                [mfData]="deliveredorders | dataFilterPr : filterQuery5:'orders'" #mfffff="mfDataTable"
+                [mfRowsOnPage]="rowsOnPage">
+                <thead>
+                  <tr>
+                    <th>Order No.</th>
+                    <th>Dish</th>
+                    <th>Order Details</th>
+                    <th>Customer</th>
+                    <th>Delivery Add.</th>
+                    <!-- <th>Branch Address</th> -->
+                    <th>Payment Details</th>
+                    <th>Ordertype</th>
+                    <th>Status</th>
+
+                    <th class="text-right">Action</th>
+                  </tr>
+                  <tr>
+                    <th colspan="9">
+                      <div id="custom-search-input">
+                        <div class="input-group col-md-12">
+                          <input type="text" class="form-control" placeholder="Search by Phone, City Or Pincode"
+                            [(ngModel)]="filterQuery5" />
+                          <span class="input-group-btn">
+                            <button class="btn btn-danger" type="button">
+                              <span class=" glyphicon glyphicon-search"></span>
+                            </button>
+                          </span>
+                        </div>
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let data of mfffff.data; let i = index; let last = last;">
+                    <td>{{data.invoicenum}}<br>
+                      Total items : {{data.qcost.totalitem}}
+                    </td>
+                    <td>
+                      <div class="img-thumbnail  ">
+                        <img *ngIf="data?.oentry[0]?.photo?.docpath"
+                          src="{{docServer}}/{{data?.oentry[0]?.photo?.docpath}}" class="img-circle" alt=""
+                          style="width:100px; height:100px;">
+                        <img *ngIf="!data?.oentry[0]?.photo?.docpath"
+                          src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg"
+                          class="img-circle" alt="" style="width:100px; height:100px;">
+                        <div class="caption text-capitalize text-center" *ngIf="data.oentry.length<=1; else elseBlock">
+                          {{data.oentry[0]?.dname}}</div>
+                        <ng-template #elseBlock>
+                          <a>
+                            <div class="caption text-capitalize text-center"> {{data.oentry[0]?.dname}} +
+                              {{data.oentry.length - 1}} Other Items</div>
+                          </a>
+                        </ng-template>
+
+                      </div>
+                    </td>
+                    <td>
+                      <textarea style="margin: 0px; width: 180px; height: 124px;" readonly>{{data?.detail}}</textarea>
+                    </td>
+
+
+                    <td>{{data.custname}}<br>
+                      Phone-{{data.custmobile}}</td>
+                    <td>{{data.deliveryaddress.line1}},<br>
+                      {{data.deliveryaddress.city}}- {{data.deliveryaddress.pincode}}<br>
+
+                      <span *ngIf="data.ordertype==='HOME_DELIVERY'">Delivery by:{{data.deliveryperson}}<br>
+                        Number: {{data.deliverymobile}}<br>
+                        Expected Delivery :{{data.expdelivery | date}}<br>
+                      </span>
+
+                    </td>
+                    <!-- <td>
+                      {{data.firmname}}<br>
+                      {{data.vendaddress.line1}},<br>
+                      {{data.vendaddress.city}}- {{data.vendaddress.pincode}}<br>
+                      Phone-{{data.vendmobile}}
+
+                    </td> -->
+                    <td>Mode -{{data.paymentmode}}<br>
+                      Txn ID- {{data.transactionid}}<br>
+                      Amount -{{data.qcost.finalamt}}/-<br></td>
+
+                    <td>
+                      <span class="label label-primary">{{data.ordertype}}</span><br />
+                      <span class="label label-primary">{{data.tablenumber}}</span>
+
+                    </td>
+
+                    <td *ngIf="data.status !== 'CANCELLED' && data.status !== 'DELIVERED'">
+                      <span class="label label-primary">{{data.status}}</span><br />
+
+                    </td>
+
+                    <td *ngIf="data.status == 'CANCELLED'">
+                      <span class="label label-danger">{{data.status}}</span><br />
+
+                    </td>
+
+                    <td *ngIf="data.status == 'DELIVERED'">
+                      <span class="label label-success">{{data.status}}</span><br />
+
+                    </td>
+
+
+                    <td class="text-right">
+                      <!-- <a *ngIf="data.status==='PLACED'" title="Cancel Order" (click)="ordercancellation(data)">
+                        <button class="btn btn-warning btn-sm">
+                          <span class="glyphicon glyphicon-exclamation-sign"></span>
+                        </button>
+                      </a> -->
+                      <a *ngIf="data.status==='DELIVERED'" title="Repeat Order" (click)="cloneorder(data.id)">
+                        <button class="btn btn-warning btn-sm">
+                          <span class="glyphicon glyphicon-repeat"></span>
+                        </button>
+                      </a>
+                      
+                      <a *ngIf="data.invoice && data.status==='DELIVERED'"
+                        href="{{docServer}}/{{data?.invoice?.docpath}}" target="_blank">
+                        <button class="btn btn-info btn-sm" title="Download Invoice">
+                          <span class="glyphicon glyphicon-cloud-download"></span>
+                        </button>
+                      </a>
+
+                      <a style="cursor: not-allowed;" title="Invoice Not Available ">
+                        <button *ngIf="!data.invoice" disabled class="btn btn-info btn-sm">
+                          <span class="glyphicon glyphicon-cloud-download"></span>
+                        </button>
+                      </a>
+                    </td>
+                    <!-- <td>Order Delivered </td> -->
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colspan="9">
+                      <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div id="CLOSED" class="tab-pane fade in">
+        <div class="panel-body">
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="table-responsive">
+              <table class="table table-condensed table-striped table-bordered"
+                [mfData]="closedorders | dataFilterPr : filterQuery6:'orders'" #mffff="mfDataTable"
+                [mfRowsOnPage]="rowsOnPage">
+                <thead>
+                  <tr>
+                    <th>Order No.</th>
+                    <th>Dish</th>
+                    <th>Order Details</th>
+                    <th>Customer</th>
+                    <th>Delivery Add.</th>
+                    <th>Payment Details</th>
+                    <th>Ordertype</th>
+                    <th>Status</th>
+                    <th class="text-right">Action</th>
+                  </tr>
+                  <tr>
+                    <th colspan="9">
+                      <div id="custom-search-input">
+                        <div class="input-group col-md-12">
+                          <input type="text" class="form-control" placeholder="Search by Phone, City Or Pincode"
+                            [(ngModel)]="filterQuery6" />
+                          <span class="input-group-btn">
+                            <button class="btn btn-danger" type="button">
+                              <span class=" glyphicon glyphicon-search"></span>
+                            </button>
+                          </span>
+                        </div>
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let data of mffff.data; let i = index; let last = last;">
+                    <td>{{data.invoicenum}}<br>
+                      Total items : {{data.qcost.totalitem}}
+                    </td>
+                    <td>
+                      <div class="img-thumbnail  ">
+                        <img *ngIf="data?.oentry[0]?.photo?.docpath"
+                          src="{{docServer}}/{{data?.oentry[0]?.photo?.docpath}}" class="img-circle" alt=""
+                          style="width:100px; height:100px;">
+                        <img *ngIf="!data?.oentry[0]?.photo?.docpath"
+                          src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg"
+                          class="img-circle" alt="" style="width:100px; height:100px;">
+                        <div class="caption text-capitalize text-center" *ngIf="data.oentry.length<=1; else elseBlock">
+                          {{data.oentry[0]?.dname}}</div>
+                        <ng-template #elseBlock>
+                          <a>
+                            <!-- [routerLink]="['/orderdetails',data.id]" -->
+                            <div class="caption text-capitalize text-center"> {{data.oentry[0]?.dname}} +
+                              {{data.oentry.length - 1}} Other Items</div>
+                          </a>
+                        </ng-template>
+
+                      </div>
+                    </td>
+                    <td>
+                      <textarea style="margin: 0px; width: 180px; height: 124px;" readonly>{{data?.detail}}</textarea>
+                    </td>
+
+                    <td>{{data.custname}}<br>
+                      Phone-{{data.custmobile}}</td>
+                    <td>{{data.deliveryaddress.line1}},<br>
+                      {{data.deliveryaddress.city}}- {{data.deliveryaddress.pincode}}<br>
+
+                      <span *ngIf="data.ordertype==='HOME_DELIVERY'">Delivery by:{{data.deliveryperson}}<br>
+                        Number: {{data.deliverymobile}}<br>
+                        Expected Delivery :{{data.expdelivery | date}}<br>
+                      </span>
+
+                    </td>
+                    
+                    <td>Mode -{{data.paymentmode}}<br>
+                      Txn ID- {{data.transactionid}}<br>
+                      Amount -{{data.qcost.finalamt}}/-<br></td>
+
+                    <td>
+                      <span class="label label-primary">{{data.ordertype}}</span><br />
+                      <span class="label label-primary">{{data.tablenumber}}</span>
+
+                    </td>
+
+                    <td *ngIf="data.status !== 'CANCELLED' && data.status !== 'DELIVERED'">
+                      <span class="label label-primary">{{data.status}}</span><br />
+
+                    </td>
+
+                    <td *ngIf="data.status == 'CANCELLED'">
+                      <span class="label label-danger">{{data.status}}</span><br />
+
+                    </td>
+
+                    <td *ngIf="data.status == 'DELIVERED'">
+                      <span class="label label-success">{{data.status}}</span><br />
+
+                    </td>
+
+
+                    <td class="text-right">
+                     
+                      <a *ngIf="data.status==='DELIVERED'" title="Repeat Order" (click)="cloneorder(data.id)">
+                        <button class="btn btn-warning btn-sm">
+                          <span class="glyphicon glyphicon-repeat"></span>
+                        </button>
+                      </a>
+                      <a *ngIf="data.invoice && data.status==='DELIVERED'"
+                        href="{{docServer}}/{{data?.invoice?.docpath}}" target="_blank">
+                        <button class="btn btn-info btn-sm" title="Download Invoice">
+                          <span class="glyphicon glyphicon-cloud-download"></span>
+                        </button>
+                      </a>
+
+                      <a style="cursor: not-allowed;" title="Invoice Not Available ">
+                        <button *ngIf="!data.invoice" disabled class="btn btn-info btn-sm">
+                          <span class="glyphicon glyphicon-cloud-download"></span>
+                        </button>
+                      </a>
+                    </td>
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colspan="9">
+                      <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="this.userRole==='SUPERADMIN' && this.userType==='FIRM' && isDeliverypoolchange">
+
+    <form #form1="ngForm">
+      <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+          <h4>Assign New Deliverypool Person for order: {{orderdata?.invoicenum}}</h4>
+
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="role">Select Delivery Person:</label>
+              <select class="form-control" name="role" required [(ngModel)]="deliverypool" (change)="dpchange($event)">
+                <option required *ngFor="let rolee of dpersonList; let i=index" [value]="rolee.id">{{rolee.name}}
+                </option>
+              </select>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-12 col-sm-12 col-xs-12 ">
+        <div class="form-group">
+          <button type="submit" [disabled]="!form1.valid" class="btn btn-default"
+            (click)="updatedeliveryperson()">Submit</button>
+
+          <button type="button" class="btn btn-default" (click)="cancelupdatedp()">Cancel</button>
+        </div>
+      </div>
+    </form>
+
+  </div>
+
+  <div *ngIf="this.userRole==='CUSTOMER' && this.userType==='CUSTOMER'">
+    <ul class="nav nav-tabs">
+      <li class="active"><a data-toggle="tab" href="#All" id="a">All Orders</a></li>
+      <li><a data-toggle="tab" href="#Placed" id="b">Placed Orders</a></li>
+      <li><a data-toggle="tab" href="#PACKED" id="d">Packed Orders</a></li>
+      <li><a data-toggle="tab" href="#PICKED_UP" id="d">Picked Up Orders</a></li>
+      <li><a data-toggle="tab" href="#DELIVERED" id="e">Delivered Orders</a></li>
+    </ul>
+
+    <div class="tab-content">
+      <div id="All" class="tab-pane fade in active">
+        <div class="panel-body">
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="table-responsive">
+              <table class="table table-condensed table-striped table-bordered"
+                [mfData]="data | dataFilterPr : filterQuery:'orders'" #mf="mfDataTable" [mfRowsOnPage]="rowsOnPage">
+                <thead>
+                  <tr>
+                    <th>Order No.</th>
+                    <th>Dish</th>
+                    <th>Order Details</th>
+
+                    <th>Customer</th>
+                    <th>Delivery Add.</th>
+                    <!-- <th>Branch Address</th> -->
+                    <th>Payment Details</th>
+                    <th>Ordertype</th>
+                    <th>Status</th>
+
+                    <th class="text-right">Action</th>
+                  </tr>
+                  <tr>
+                    <th colspan="9">
+                      <div id="custom-search-input">
+                        <div class="input-group col-md-12">
+                          <input type="text" class="form-control" placeholder="Search by Phone, City Or Pincode"
+                            [(ngModel)]="filterQuery" />
+                          <span class="input-group-btn">
+                            <button class="btn btn-danger" type="button">
+                              <span class=" glyphicon glyphicon-search"></span>
+                            </button>
+                          </span>
+                        </div>
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let data of mf.data; let i = index; let last = last;">
+                    <td>{{data.invoicenum}}<br>
+                      Total items : {{data.qcost.totalitem}}
+                    </td>
+                    <td>
+                      <div class="img-thumbnail  ">
+                        <img *ngIf="data?.oentry[0]?.photo?.docpath"
+                          src="{{docServer}}/{{data?.oentry[0]?.photo?.docpath}}" class="img-circle" alt=""
+                          style="width:100px; height:100px;">
+                        <img *ngIf="!data?.oentry[0]?.photo?.docpath"
+                          src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg"
+                          class="img-circle" alt="" style="width:100px; height:100px;">
+                        <div class="caption text-capitalize text-center" *ngIf="data.oentry.length<=1; else elseBlock">
+                          {{data.oentry[0]?.dname}}</div>
+                        <ng-template #elseBlock>
+                          <a>
+                            <div class="caption text-capitalize text-center"> {{data.oentry[0]?.dname}} +
+                              {{data.oentry.length - 1}} Other Items</div>
+                          </a>
+                        </ng-template>
+
+                      </div>
+                    </td>
+                    <td>
+                      <textarea style="margin: 0px; width: 180px; height: 124px;" readonly>{{data?.detail}}</textarea>
+                    </td>
+
+
+                    <td>{{data.custname}}<br>
+                      Phone-{{data.custmobile}}</td>
+
+                    <td>{{data.deliveryaddress.line1}},<br>
+                      {{data.deliveryaddress.city}}- {{data.deliveryaddress.pincode}}<br>
+
+                      <span *ngIf="data.ordertype==='HOME_DELIVERY'">Delivery by:{{data.deliveryperson}}<br>
+                        Number: {{data.deliverymobile}}<br>
+                        Expected Delivery :{{data.expdelivery | date}}<br>
+                      </span>
+                    </td>
+                    <!-- <td>
+                      {{data.firmname}}<br>
+                      {{data.vendaddress.line1}},<br>
+                      {{data.vendaddress.city}}- {{data.vendaddress.pincode}}<br>
+                      Phone-{{data.vendmobile}}
+
+                    </td> -->
+                    <td>Mode -{{data.paymentmode}}<br>
+                      Txn ID- {{data.transactionid}}<br>
+                      Amount -{{data.qcost.finalamt}}/-<br></td>
+
+                    <td>
+                      <span class="label label-primary">{{data.ordertype}}</span><br />
+                      <span class="label label-primary">{{data.tablenumber}}</span>
+
+                    </td>
+
+                    <td *ngIf="data.status !== 'CANCELLED' && data.status !== 'DELIVERED'">
+                      <span class="label label-primary">{{data.status}}</span><br />
+
+                    </td>
+
+                    <td *ngIf="data.status == 'CANCELLED'">
+                      <span class="label label-danger">{{data.status}}</span><br />
+
+                    </td>
+
+                    <td *ngIf="data.status == 'DELIVERED'">
+                      <span class="label label-success">{{data.status}}</span><br />
+
+                    </td>
+
+
+                    <td class="text-right">
+                      <!-- <a *ngIf="data.status==='PLACED'" title="Cancel Order" (click)="ordercancellation(data)">
+                        <button class="btn btn-warning btn-sm">
+                          <span class="glyphicon glyphicon-exclamation-sign"></span>
+                        </button>
+                      </a> -->
+                      <a *ngIf="this.userRole === 'CUSTOMER'" title="Repeat Order" (click)="cloneorder(data.id)">
+                        <button class="btn btn-warning btn-sm">
+                          <span class="glyphicon glyphicon-repeat"></span>
+                        </button>
+                      </a>
+                      <a *ngIf="data.invoice && data.status==='DELIVERED'"
+                        href="{{docServer}}/{{data?.invoice?.docpath}}" target="_blank">
+                        <button class="btn btn-info btn-sm" title="Download Invoice">
+                          <span class="glyphicon glyphicon-cloud-download"></span>
+                        </button>
+                      </a>
+
+                      <a style="cursor: not-allowed;" title="Invoice Not Available ">
+                        <button *ngIf="!data.invoice" disabled class="btn btn-info btn-sm">
+                          <span class="glyphicon glyphicon-cloud-download"></span>
+                        </button>
+                      </a>
+                    </td>
+                    <!-- <td>Order Delivered </td> -->
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colspan="9">
+                      <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                    </td>
+                  </tr>
+                  <td colspan="25">
+                    <nav aria-label="Page navigation example">
+                      <ul class="pagination justify-content-center">
+                        <li class="page-item ">
+                          <a class="page-link" (click)="decrement()">Top 25</a>
+                        </li>
+                        <li class="page-item ">
+                          <a class="page-link" (click)="getall()">All</a>
+                        </li>
+                        <!-- <li class="page-item ">
+                      <a class="page-link" (click)="increment()" title="Next 100">Next</a>
+                    </li> -->
+                      </ul>
+                    </nav>
+                  </td>
+                </tfoot>
+              </table>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <div id="Placed" class="tab-pane fade in">
+        <div class="panel-body">
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="table-responsive">
+              <table class="table table-condensed table-striped table-bordered"
+                [mfData]="placedorders | dataFilterPr : filterQuery1:'orders'" #mff="mfDataTable"
+                [mfRowsOnPage]="rowsOnPage">
+                <thead>
+                  <tr>
+                    <th>Order No.</th>
+                    <th>Dish</th>
+                    <th>Order Details</th>
+                    <th>Customer</th>
+                    <th>Delivery Add.</th>
+                    <!-- <th>Branch Address</th> -->
+                    <th>Payment Details</th>
+                    <th>Ordertype</th>
+                    <th>Status</th>
+
+                    <th class="text-right">Action</th>
+                  </tr>
+                  <tr>
+                    <th colspan="9">
+                      <div id="custom-search-input">
+                        <div class="input-group col-md-12">
+                          <input type="text" class="form-control" placeholder="Search by Phone, City Or Pincode"
+                            [(ngModel)]="filterQuery1" />
+                          <span class="input-group-btn">
+                            <button class="btn btn-danger" type="button">
+                              <span class=" glyphicon glyphicon-search"></span>
+                            </button>
+                          </span>
+                        </div>
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let data of mff.data; let i = index; let last = last;">
+                    <td>{{data.invoicenum}}<br>
+                      Total items : {{data.qcost.totalitem}}
+                    </td>
+                    <td>
+                      <div class="img-thumbnail  ">
+                        <img *ngIf="data?.oentry[0]?.photo?.docpath"
+                          src="{{docServer}}/{{data?.oentry[0]?.photo?.docpath}}" class="img-circle" alt=""
+                          style="width:100px; height:100px;">
+                        <img *ngIf="!data?.oentry[0]?.photo?.docpath"
+                          src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg"
+                          class="img-circle" alt="" style="width:100px; height:100px;">
+                        <div class="caption text-capitalize text-center" *ngIf="data.oentry.length<=1; else elseBlock">
+                          {{data.oentry[0]?.dname}}</div>
+                        <ng-template #elseBlock>
+                          <a>
+                            <div class="caption text-capitalize text-center"> {{data.oentry[0]?.dname}} +
+                              {{data.oentry.length - 1}} Other Items</div>
+                          </a>
+                        </ng-template>
+
+                      </div>
+                    </td>
+                    <td>
+                      <textarea style="margin: 0px; width: 180px; height: 124px;" readonly>{{data?.detail}}</textarea>
+                    </td>
+
+                    <td>{{data.custname}}<br>
+                      Phone-{{data.custmobile}}</td>
+                    <td>{{data.deliveryaddress.line1}},<br>
+                      {{data.deliveryaddress.city}}- {{data.deliveryaddress.pincode}}<br>
+
+                      <span *ngIf="data.ordertype==='HOME_DELIVERY'">Delivery by:{{data.deliveryperson}}<br>
+                        Number: {{data.deliverymobile}}<br>
+                        Expected Delivery :{{data.expdelivery | date}}<br>
+                      </span>
+                    </td>
+                    <!-- <td>
+                      {{data.firmname}}<br>
+                      {{data.vendaddress.line1}},<br>
+                      {{data.vendaddress.city}}- {{data.vendaddress.pincode}}<br>
+                      Phone-{{data.vendmobile}}
+
+                    </td> -->
+                    <td>Mode -{{data.paymentmode}}<br>
+                      Txn ID- {{data.transactionid}}<br>
+                      Amount -{{data.qcost.finalamt}}/-<br></td>
+
+                    <td>
+                      <span class="label label-primary">{{data.ordertype}}</span><br />
+                      <span class="label label-primary">{{data.tablenumber}}</span>
+
+                    </td>
+
+                    <td *ngIf="data.status !== 'CANCELLED' && data.status !== 'DELIVERED'">
+                      <span class="label label-primary">{{data.status}}</span><br />
+
+                    </td>
+
+                    <td *ngIf="data.status == 'CANCELLED'">
+                      <span class="label label-danger">{{data.status}}</span><br />
+
+                    </td>
+
+                    <td *ngIf="data.status == 'DELIVERED'">
+                      <span class="label label-success">{{data.status}}</span><br />
+
+                    </td>
+
+                    <td class="text-right">
+                      <!-- <a *ngIf="data.status==='PLACED'" title="Cancel Order" (click)="ordercancellation(data)">
+                        <button class="btn btn-warning btn-sm">
+                          <span class="glyphicon glyphicon-exclamation-sign"></span>
+                        </button>
+                      </a> -->
+                      <a *ngIf="data.status==='DELIVERED'" title="Repeat Order" (click)="cloneorder(data.id)">
+                        <button class="btn btn-warning btn-sm">
+                          <span class="glyphicon glyphicon-repeat"></span>
+                        </button>
+                      </a>
+                      <a *ngIf="data.invoice && data.status==='DELIVERED'"
+                        href="{{docServer}}/{{data?.invoice?.docpath}}" target="_blank">
+                        <button class="btn btn-info btn-sm" title="Download Invoice">
+                          <span class="glyphicon glyphicon-cloud-download"></span>
+                        </button>
+                      </a>
+
+                      <a style="cursor: not-allowed;" title="Invoice Not Available ">
+                        <button *ngIf="!data.invoice" disabled class="btn btn-info btn-sm">
+                          <span class="glyphicon glyphicon-cloud-download"></span>
+                        </button>
+                      </a>
+                    </td>
+                    <!-- <td>Order Delivered </td> -->
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colspan="9">
+                      <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <div id="PACKED" class="tab-pane fade in">
+        <div class="panel-body">
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="table-responsive">
+              <table class="table table-condensed table-striped table-bordered"
+                [mfData]="packedorders | dataFilterPr : filterQuery2:'orders'" #mfff="mfDataTable"
+                [mfRowsOnPage]="rowsOnPage">
+                <thead>
+                  <tr>
+                    <th>Order No.</th>
+                    <th>Dish</th>
+                    <th>Order Details</th>
+
+
+                    <th>Customer</th>
+                    <th>Delivery Add.</th>
+                    <!-- <th>Branch Address</th> -->
+                    <th>Payment Details</th>
+                    <th>Ordertype</th>
+                    <th>Status</th>
+
+                    <th class="text-right">Action</th>
+                  </tr>
+                  <tr>
+                    <th colspan="9">
+                      <div id="custom-search-input">
+                        <div class="input-group col-md-12">
+                          <input type="text" class="form-control" placeholder="Search by Phone, City Or Pincode"
+                            [(ngModel)]="filterQuery2" />
+                          <span class="input-group-btn">
+                            <button class="btn btn-danger" type="button">
+                              <span class=" glyphicon glyphicon-search"></span>
+                            </button>
+                          </span>
+                        </div>
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let data of mfff.data; let i = index; let last = last;">
+                    <td>{{data.invoicenum}}<br>
+                      Total items : {{data.qcost.totalitem}}
+                    </td>
+                    <td>
+                      <div class="img-thumbnail  ">
+                        <img *ngIf="data?.oentry[0]?.photo?.docpath"
+                          src="{{docServer}}/{{data?.oentry[0]?.photo?.docpath}}" class="img-circle" alt=""
+                          style="width:100px; height:100px;">
+                        <img *ngIf="!data?.oentry[0]?.photo?.docpath"
+                          src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg"
+                          class="img-circle" alt="" style="width:100px; height:100px;">
+                        <div class="caption text-capitalize text-center" *ngIf="data.oentry.length<=1; else elseBlock">
+                          {{data.oentry[0]?.dname}}</div>
+                        <ng-template #elseBlock>
+                          <a>
+                            <div class="caption text-capitalize text-center"> {{data.oentry[0]?.dname}} +
+                              {{data.oentry.length - 1}} Other Items</div>
+                          </a>
+                        </ng-template>
+
+                      </div>
+                    </td>
+                    <td>
+                      <textarea style="margin: 0px; width: 180px; height: 124px;" readonly>{{data?.detail}}</textarea>
+                    </td>
+
+
+                    <td>{{data.custname}}<br>
+                      Phone-{{data.custmobile}}</td>
+                    <td>{{data.deliveryaddress.line1}},<br>
+                      {{data.deliveryaddress.city}}- {{data.deliveryaddress.pincode}}<br>
+
+                      <span *ngIf="data.ordertype==='HOME_DELIVERY'">Delivery by:{{data.deliveryperson}}<br>
+                        Number: {{data.deliverymobile}}<br>
+                        Expected Delivery :{{data.expdelivery | date}}<br>
+                      </span>
+                    </td>
+                    <!-- <td>
+                      {{data.firmname}}<br>
+                      {{data.vendaddress.line1}},<br>
+                      {{data.vendaddress.city}}- {{data.vendaddress.pincode}}<br>
+                      Phone-{{data.vendmobile}}
+
+                    </td> -->
+                    <td>Mode -{{data.paymentmode}}<br>
+                      Txn ID- {{data.transactionid}}<br>
+                      Amount -{{data.qcost.finalamt}}/-<br></td>
+
+                    <td>
+                      <span class="label label-primary">{{data.ordertype}}</span><br />
+                      <span class="label label-primary">{{data.tablenumber}}</span>
+
+                    </td>
+
+                    <td *ngIf="data.status !== 'CANCELLED' && data.status !== 'DELIVERED'">
+                      <span class="label label-primary">{{data.status}}</span><br />
+
+                    </td>
+
+                    <td *ngIf="data.status == 'CANCELLED'">
+                      <span class="label label-danger">{{data.status}}</span><br />
+
+                    </td>
+
+                    <td *ngIf="data.status == 'DELIVERED'">
+                      <span class="label label-success">{{data.status}}</span><br />
+
+                    </td>
+
+
+                    <td class="text-right">
+                      <!-- <a *ngIf="data.status==='PLACED'" title="Cancel Order" (click)="ordercancellation(data)">
+                        <button class="btn btn-warning btn-sm">
+                          <span class="glyphicon glyphicon-exclamation-sign"></span>
+                        </button>
+                      </a> -->
+                      <a *ngIf="data.status==='DELIVERED'" title="Repeat Order" (click)="cloneorder(data.id)">
+                        <button class="btn btn-warning btn-sm">
+                          <span class="glyphicon glyphicon-repeat"></span>
+                        </button>
+                      </a>
+                      <a *ngIf="data.invoice && data.status==='DELIVERED'"
+                        href="{{docServer}}/{{data?.invoice?.docpath}}" target="_blank">
+                        <button class="btn btn-info btn-sm" title="Download Invoice">
+                          <span class="glyphicon glyphicon-cloud-download"></span>
+                        </button>
+                      </a>
+
+                      <a style="cursor: not-allowed;" title="Invoice Not Available ">
+                        <button *ngIf="!data.invoice" disabled class="btn btn-info btn-sm">
+                          <span class="glyphicon glyphicon-cloud-download"></span>
+                        </button>
+                      </a>
+                    </td>
+                    <!-- <td>Order Delivered </td> -->
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colspan="9">
+                      <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <div id="PICKED_UP" class="tab-pane fade in">
+        <div class="panel-body">
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="table-responsive">
+              <table class="table table-condensed table-striped table-bordered"
+                [mfData]="pickeduporders | dataFilterPr : filterQuery3:'orders'" #mffff="mfDataTable"
+                [mfRowsOnPage]="rowsOnPage">
+                <thead>
+                  <tr>
+                    <th>Order No.</th>
+                    <th>Dish</th>
+                    <th>Order Details</th>
+
+
+                    <th>Customer</th>
+                    <th>Delivery Add.</th>
+                    <!-- <th>Branch Address</th> -->
+                    <th>Payment Details</th>
+                    <th>Ordertype</th>
+                    <th>Status</th>
+
+                    <th class="text-right">Action</th>
+                  </tr>
+                  <tr>
+                    <th colspan="9">
+                      <div id="custom-search-input">
+                        <div class="input-group col-md-12">
+                          <input type="text" class="form-control" placeholder="Search by Phone, City Or Pincode"
+                            [(ngModel)]="filterQuery3" />
+                          <span class="input-group-btn">
+                            <button class="btn btn-danger" type="button">
+                              <span class=" glyphicon glyphicon-search"></span>
+                            </button>
+                          </span>
+                        </div>
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let data of mffff.data; let i = index; let last = last;">
+                    <td>{{data.invoicenum}}<br>
+                      Total items : {{data.qcost.totalitem}}
+                    </td>
+                    <td>
+                      <div class="img-thumbnail  ">
+                        <img *ngIf="data?.oentry[0]?.photo?.docpath"
+                          src="{{docServer}}/{{data?.oentry[0]?.photo?.docpath}}" class="img-circle" alt=""
+                          style="width:100px; height:100px;">
+                        <img *ngIf="!data?.oentry[0]?.photo?.docpath"
+                          src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg"
+                          class="img-circle" alt="" style="width:100px; height:100px;">
+                        <div class="caption text-capitalize text-center" *ngIf="data.oentry.length<=1; else elseBlock">
+                          {{data.oentry[0]?.dname}}</div>
+                        <ng-template #elseBlock>
+                          <a>
+                            <div class="caption text-capitalize text-center"> {{data.oentry[0]?.dname}} +
+                              {{data.oentry.length - 1}} Other Items</div>
+                          </a>
+                        </ng-template>
+
+                      </div>
+                    </td>
+                    <td>
+                      <textarea style="margin: 0px; width: 180px; height: 124px;" readonly>{{data?.detail}}</textarea>
+                    </td>
+
+                    <td>{{data.custname}}<br>
+                      Phone-{{data.custmobile}}</td>
+                    <td>{{data.deliveryaddress.line1}},<br>
+                      {{data.deliveryaddress.city}}- {{data.deliveryaddress.pincode}}<br>
+
+                      <span *ngIf="data.ordertype==='HOME_DELIVERY'">Delivery by:{{data.deliveryperson}}<br>
+                        Number: {{data.deliverymobile}}<br>
+                        Expected Delivery :{{data.expdelivery | date}}<br>
+                      </span>
+                    </td>
+                    <!-- <td>
+                      {{data.firmname}}<br>
+                      {{data.vendaddress.line1}},<br>
+                      {{data.vendaddress.city}}- {{data.vendaddress.pincode}}<br>
+                      Phone-{{data.vendmobile}}
+
+                    </td> -->
+                    <td>Mode -{{data.paymentmode}}<br>
+                      Txn ID- {{data.transactionid}}<br>
+                      Amount -{{data.qcost.finalamt}}/-<br></td>
+
+                    <td>
+                      <span class="label label-primary">{{data.ordertype}}</span><br />
+                      <span class="label label-primary">{{data.tablenumber}}</span>
+
+                    </td>
+
+                    <td *ngIf="data.status !== 'CANCELLED' && data.status !== 'DELIVERED'">
+                      <span class="label label-primary">{{data.status}}</span><br />
+
+                    </td>
+
+                    <td *ngIf="data.status == 'CANCELLED'">
+                      <span class="label label-danger">{{data.status}}</span><br />
+
+                    </td>
+
+                    <td *ngIf="data.status == 'DELIVERED'">
+                      <span class="label label-success">{{data.status}}</span><br />
+
+                    </td>
+
+
+
+
+
+
+
+
+                    <td class="text-right">
+                      <!-- <a *ngIf="data.status==='PLACED'" title="Cancel Order" (click)="ordercancellation(data)">
+                        <button class="btn btn-warning btn-sm">
+                          <span class="glyphicon glyphicon-exclamation-sign"></span>
+                        </button>
+                      </a> -->
+                      <a *ngIf="data.status==='DELIVERED'" title="Repeat Order" (click)="cloneorder(data.id)">
+                        <button class="btn btn-warning btn-sm">
+                          <span class="glyphicon glyphicon-repeat"></span>
+                        </button>
+                      </a>
+                      <a *ngIf="data.invoice && data.status==='DELIVERED'"
+                        href="{{docServer}}/{{data?.invoice?.docpath}}" target="_blank">
+                        <button class="btn btn-info btn-sm" title="Download Invoice">
+                          <span class="glyphicon glyphicon-cloud-download"></span>
+                        </button>
+                      </a>
+
+                      <a style="cursor: not-allowed;" title="Invoice Not Available ">
+                        <button *ngIf="!data.invoice" disabled class="btn btn-info btn-sm">
+                          <span class="glyphicon glyphicon-cloud-download"></span>
+                        </button>
+                      </a>
+                    </td>
+                    <!-- <td>Order Delivered </td> -->
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colspan="9">
+                      <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <div id="DELIVERED" class="tab-pane fade in">
+        <div class="panel-body">
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="table-responsive">
+              <table class="table table-condensed table-striped table-bordered"
+                [mfData]="deliveredorders | dataFilterPr : filterQuery4:'orders'" #mfffff="mfDataTable"
+                [mfRowsOnPage]="rowsOnPage">
+                <thead>
+                  <tr>
+                    <th>Order No.</th>
+                    <th>Dish</th>
+                    <th>Order Details</th>
+
+
+                    <th>Customer</th>
+                    <th>Delivery Add.</th>
+                    <th>Branch Address</th>
+                    <th>Payment Details</th>
+                    <th>Ordertype</th>
+                    <th>Status</th>
+
+
+
+
+
+                    <th class="text-right">Action</th>
+                  </tr>
+                  <tr>
+                    <th colspan="9">
+                      <div id="custom-search-input">
+                        <div class="input-group col-md-12">
+                          <input type="text" class="form-control" placeholder="Search by Phone, City Or Pincode"
+                            [(ngModel)]="filterQuery4" />
+                          <span class="input-group-btn">
+                            <button class="btn btn-danger" type="button">
+                              <span class=" glyphicon glyphicon-search"></span>
+                            </button>
+                          </span>
+                        </div>
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let data of mfffff.data; let i = index; let last = last;">
+                    <td>{{data.invoicenum}}<br>
+                      Total items : {{data.qcost.totalitem}}
+                    </td>
+                    <td>
+                      <div class="img-thumbnail  ">
+                        <img *ngIf="data?.oentry[0]?.photo?.docpath"
+                          src="{{docServer}}/{{data?.oentry[0]?.photo?.docpath}}" class="img-circle" alt=""
+                          style="width:100px; height:100px;">
+                        <img *ngIf="!data?.oentry[0]?.photo?.docpath"
+                          src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg"
+                          class="img-circle" alt="" style="width:100px; height:100px;">
+                        <div class="caption text-capitalize text-center" *ngIf="data.oentry.length<=1; else elseBlock">
+                          {{data.oentry[0]?.dname}}</div>
+                        <ng-template #elseBlock>
+                          <a>
+                            <div class="caption text-capitalize text-center"> {{data.oentry[0]?.dname}} +
+                              {{data.oentry.length - 1}} Other Items</div>
+                          </a>
+                        </ng-template>
+
+                      </div>
+                    </td>
+                    <td>
+                      <textarea style="margin: 0px; width: 180px; height: 124px;" readonly>{{data.detail}}</textarea>
+                    </td>
+
+
+                    <td>{{data.custname}}<br>
+                      Phone-{{data.custmobile}}</td>
+                    <td>{{data.deliveryaddress.line1}},<br>
+                      {{data.deliveryaddress.city}}- {{data.deliveryaddress.pincode}}<br>
+
+                      <span *ngIf="data.ordertype==='HOME_DELIVERY'">Delivery by:{{data.deliveryperson}}<br>
+                        Number: {{data.deliverymobile}}<br>
+                        Expected Delivery :{{data.expdelivery | date}}<br>
+                      </span>
+                    </td>
+                    <td>
+                      {{data.firmname}}<br>
+                      {{data.vendaddress.line1}},<br>
+                      {{data.vendaddress.city}}- {{data.vendaddress.pincode}}<br>
+                      Phone-{{data.vendmobile}}
+
+                    </td>
+                    <td>Mode -{{data.paymentmode}}<br>
+                      Txn ID- {{data.transactionid}}<br>
+                      Amount -{{data.qcost.finalamt}}/-<br>
+                    </td>
+
+                    <td>
+                      <span class="label label-primary">{{data.ordertype}}</span><br />
+                      <span class="label label-primary">{{data.tablenumber}}</span>
+
+                    </td>
+
+                    <td *ngIf="data.status !== 'CANCELLED' && data.status !== 'DELIVERED'">
+                      <span class="label label-primary">{{data.status}}</span><br />
+
+                    </td>
+
+                    <td *ngIf="data.status == 'CANCELLED'">
+                      <span class="label label-danger">{{data.status}}</span><br />
+
+                    </td>
+
+                    <td *ngIf="data.status == 'DELIVERED'">
+                      <span class="label label-success">{{data.status}}</span><br />
+
+                    </td>
+
+                    <td class="text-right">
+                      <!-- <a *ngIf="data.status==='PLACED'" title="Cancel Order" (click)="ordercancellation(data)">
+                        <button class="btn btn-warning btn-sm">
+                          <span class="glyphicon glyphicon-exclamation-sign"></span>
+                        </button>
+                      </a> -->
+                      <a *ngIf="data.status==='DELIVERED'" title="Repeat Order" (click)="cloneorder(data.id)">
+                        <button class="btn btn-warning btn-sm">
+                          <span class="glyphicon glyphicon-repeat"></span>
+                        </button>
+                      </a>
+                      <a *ngIf="data.invoice && data.status==='DELIVERED'"
+                        href="{{docServer}}/{{data?.invoice?.docpath}}" target="_blank">
+                        <button class="btn btn-info btn-sm" title="Download Invoice">
+                          <span class="glyphicon glyphicon-cloud-download"></span>
+                        </button>
+                      </a>
+
+                      <a style="cursor: not-allowed;" title="Invoice Not Available ">
+                        <button *ngIf="!data.invoice" disabled class="btn btn-info btn-sm">
+                          <span class="glyphicon glyphicon-cloud-download"></span>
+                        </button>
+                      </a>
+                    </td>
+                    <!-- <td>Order Delivered </td> -->
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colspan="9">
+                      <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

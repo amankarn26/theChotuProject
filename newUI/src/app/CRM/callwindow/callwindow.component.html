@@ -1,0 +1,839 @@
+
+<div *ngIf="this.route.url==='/viewcall'">
+
+
+  <div class="panel-default" style="padding: 15px;">
+    <div class="row panel-heading">
+        <div class="panel-heading">
+            <h4>Call Window</h4>
+            <form #form2="ngForm" >
+                <div class="col-md-12">
+                   
+                  </div>
+    
+                  <div > 
+    
+                
+                    <div class="col-md-4 col-sm-6 col-xs-6" *ngIf="userRole === 'SUPERADMIN' || userRole ==='ADMIN'">
+                      <div class="form-group">
+                        <label for="customer">Relationship Manager: </label>
+                         <input *ngIf="isUpdate" type="text" readonly class="form-control" id="rm" name="rm" [(ngModel)]="rm"
+                        /> 
+                        <select *ngIf="!isUpdate"  class="form-control" id="rm" name="rm" [(ngModel)]="rm" (change)="getallcustomerbyrm()">
+                          <option *ngFor="let data of rmList; let i=index" [value]="data.id">{{data.name}}</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-md-4 col-sm-6 col-xs-6" *ngIf="userRole === 'MARKETING'">
+                      <div class="form-group">
+                        <label for="customer">Relationship Manager: </label>
+                         <input type="text" readonly class="form-control" id="rm" name="rm" [(ngModel)]="rm"
+                        /> 
+                     
+                      </div>
+                    </div>
+
+                <div class="col-md-4 col-sm-6 col-xs-6">
+                    <div class="form-group">
+                      <label for="customer">Customer List: </label>
+                       <input *ngIf="isUpdate" type="text" readonly class="form-control" id="customer" name="customer" [(ngModel)]="customer"
+                      /> 
+                      <select required *ngIf="!isUpdate"  class="form-control" id="customer" name="customer" [(ngModel)]="customer" (change)="getcustomerbyid()">
+                        <option *ngFor="let data of custList; let i=index" [value]="data.id">{{data.shopname}}</option>
+                      </select>
+                    </div>
+                  </div>
+        
+                 <button *ngIf="userRole === 'SUPERADMIN' || userRole ==='ADMIN'" class="btn btn-info btn-sm" title="Reset" (click)="refresh()" style="margin-top: 22px;">
+                   <span class="glyphicon glyphicon-refresh"></span>
+                 </button>
+         
+                </div>
+    
+    
+    
+                
+    
+              
+        
+                      
+    
+    
+    
+                </form>
+          <div *ngIf="userRole === 'SUPERADMIN' || userRole ==='ADMIN'" class="clearfix">
+            <!-- <div class="pull-left"> {{title}}</div> -->
+            <div class="container" class="pull-right">
+              <div class="row" style="margin-top: -38px; ">
+    
+                <a [routerLink]="['/managecall']"  class="btn btn-primary a-btn-slide-text" title="Manage Client Wise Call History">
+                  <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+                  <span></span>
+              </a>
+  
+                <a [routerLink]="['/addcall']"  class="btn btn-primary a-btn-slide-text" title="Add Call">
+                  <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                  <span></span>
+              </a>
+               
+                
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+    </div>
+  <div class="col-sm-12 animated  flipInX" *ngIf="customer">
+    <div class="row">
+  <div class="col-sm-4">
+  
+      <table class="table table-bordered table-condensed">
+        <tbody>
+          <tr>
+            <td>Client Shop Name</td>
+            <td >{{custdetails?.shopname}}</td>
+          </tr>
+          <tr>
+            <td>City</td>
+            <td>{{custdetails?.address.city}}</td>
+          </tr>
+          <tr>
+            <td>Contact Person</td>
+            <td>{{custdetails?.l2details.relationshipmgrname}}</td>
+          </tr>
+        
+          <tr>
+            <td>Mobile Number </td>
+            <td>{{custdetails?.phone}} </td> 
+          </tr>
+          <tr>
+            <td>Client Category </td>
+            <td>Printer</td>
+          </tr>
+          <tr>
+            <td>Email - ID </td>
+            <td>{{custdetails?.login.username}}</td>
+          </tr>
+          <tr>
+            <td>GST NUMBER </td>
+            <td>{{custdetails?.gst}}</td>
+          </tr>
+          <!-- <tr>
+            <td>Max Quotes Per day</td>
+            <td>{{custdetails?.maxquoteperday}}</td>
+          </tr> -->
+          <tr>
+            <td>Payment Terms</td>
+            <td>Zero Order Approval</td>
+          </tr>
+          <tr>
+            <td>Credit Limit </td>
+            <td>{{custdetails?.l2details.creditlimit}}</td>
+
+          </tr>
+          <tr>
+            <td> Limit Utilised </td>
+            <td>{{custdetails?.l2details.limitused}}</td>
+
+          </tr>
+          <tr>
+            <td> Balance Limit </td>
+            <td>{{custdetails?.l2details.balancelimit}}</td>
+
+          </tr>
+        </tbody>
+      </table>
+      <span class="label label-warning">Last Call Detail</span>
+      <div class="" style="width: 210%;">
+        <table class="table table-hover table-bordered">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Called By</th>
+              <th>Conversation Short Notes</th>
+              <th>Next Call Remark</th>
+              <th>Next Call Date & Time</th>
+              <!-- <th>Email</th> -->
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>{{lastcall?.calltime | date: 'dd/MM/yyy hh:mm a'}}</th>
+              <th>{{lastcall?.calledbyname}}</th>
+              <th>{{lastcall?.callnotes}}</th>
+              <th>{{lastcall?.nextcallremark}}</th>
+              <th>{{lastcall?.nextcalltime | date: 'dd/MM/yyy hh:mm a'}}</th>
+
+              
+            </tr>
+            
+          </tbody>
+        </table>
+      </div>
+
+  </div>
+ 
+
+  <div class="col-sm-4">
+    <table class="table table-bordered table-condensed">
+      <tbody>
+        <tr>
+          <td>No. of Total Orders </td>
+          <td>{{orderdetails?.totalorder}}</td>
+        </tr>
+        <tr>
+          <td>Last Order Date </td>
+          <td>{{orderdetails?.lastorder | date: 'dd/MM/yyyy'}}</td>
+
+        </tr>
+        <tr>
+          <td>No. of Total Quote </td>
+          <td>{{orderdetails?.totalQuotes}}</td>
+
+        </tr>
+        <tr>
+          <td>Last Quote Date </td>
+          <td>{{orderdetails?.lastquote | date: 'dd/MM/yyyy'}}</td>
+
+        </tr>
+        <tr>
+          <td>No. of Quote Converted </td>
+          <td>{{orderdetails?.quoteconverted}}</td>
+
+        </tr>
+        <tr>
+          <td>Last 30 Days Sale </td>
+          <td>{{orderdetails?.last30daysale}}</td>
+
+        </tr>
+        <tr>
+          <td>Total Call Done </td>
+          <td>{{orderdetails?.totalcall}}</td>
+
+        </tr>
+      </tbody>
+    </table>
+    <button class="btn btn-primary btn-sm pull-right" [routerLink]="['/addquote']" type="button" data-toggle="dropdown">Direct Quote
+     
+    </button>
+  </div>
+  <div class="col-sm-4">
+      <table class="table table-bordered table-condensed">
+          <tbody> 
+            <tr>
+              <td style="background: #ff0000ab;color: yellow;">Current O/s Amount	</td>
+              <td>{{orderdetails?.outstandingamt}}</td>
+            </tr>
+            <tr>
+              <td style="background: #ff0000ab;color: yellow;">View Recent Orders	</td>
+              <td><a [routerLink]="['/recentcustorder',this.customer]">View</a></td>
+            </tr>
+            <tr>
+              <td style="background: #ff0000ab;color: yellow;">View Quote History	 </td>
+              <td><a [routerLink]="['/custquotehistory',this.customer]">View</a></td>
+            </tr>
+          </tbody>
+        </table>
+  </div>
+  <div class="col-md-4 col-sm-6 col-xs-6">
+    <div class="form-group">
+      <label for="customer">Select Speech: </label>
+       <input *ngIf="isUpdate" type="text" readonly class="form-control" id="speech" name="speech" [(ngModel)]="speech"
+      /> 
+      <select *ngIf="!isUpdate"  class="form-control" id="speech" name="speech" [(ngModel)]="speech" (change)="getspeechbyid()">
+        <option *ngFor="let data of speechList; let i=index" [value]="data.id">{{data.type}}</option>
+      </select>
+    </div>
+    <span style="margin-left: -16px;" class="label label-danger" *ngIf="this.speech">SPEECH ACCORDING CALL HEAD </span>
+    <div class="row" *ngIf="this.speech">
+      <div class="panel panel-success">
+        <div class="panel-heading text-uppercase">Call Head: {{speechdetails.type}}</div>
+        <div class="panel-body"> 
+          <p>
+            {{speechdetails.speech}}
+            <br>
+            <br>
+            <br>
+            HAVE A GOOD DAY SIR/MAAM ! 
+          </p>
+     </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row" style="margin: 0px;"> 
+
+  <!-- <button class="btn btn-danger btn-sm " type="button"  id="openModalButton1"  data-toggle="modal" data-target="#csvImport" (click)="makecall()">Make New Call
+     
+  </button> -->
+
+  
+  <span class="label label-danger" >Make new call </span>
+  <div class="" >
+    <form #form1="ngForm" >
+    <table class="table table-hover table-bordered" >
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Called By</th>
+          <th>Conversation Short Notes</th>
+          <th>Next Call Remark</th>
+          <th>Next Call Date & Time</th>
+          <th>Call Duration</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+         
+          <th>{{this.call.calltime | date: 'dd/MM/yyyy hh:mm a'}}</th>
+          <th>{{this.custdetails?.l2details.relationshipmgrname}}</th>
+          <th><textarea type="text" required class="form-control" id="callnotes" name="callnotes" [(ngModel)]="call.callnotes"></textarea></th>
+          <th><textarea type="text" required class="form-control"  id="nextcallremark" name="nextcallremark" [(ngModel)]="call.nextcallremark"></textarea></th>
+          <th><input type="date"  required class="form-control" id="nextcalltime" name="nextcalltime" [(ngModel)]="call.nextcalltime"></th>
+          <th> <input required type="time"  class="form-control" id="callduration" name="callduration" [(ngModel)]="call.callduration"></th>
+
+         
+
+          
+        </tr>
+        
+      </tbody>
+    </table>
+    <button class="btn btn-danger btn-sm  pull-right" type="submit" [disabled]="!form1.valid" (click)="submitData()">Submit
+     
+    </button>
+
+    </form>
+    <br>
+  </div>
+
+
+  <a href="#demo" data-toggle="collapse">
+      <span class="label label-success" >Client Call Remark </span>
+    </a>
+    
+  <div class=""  id="demo" class="collapse" >
+    <form #form2="ngForm" >
+    <table class="table table-hover table-bordered" >
+      <thead>
+        <tr>
+          <th>Remark Head</th>
+          <th>Reject Reason</th>
+          <th>Action</th>
+          <!-- <th>Email</th> -->
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+         
+          
+          <th><input type="text" required class="form-control" id="head" name="head" [(ngModel)]="blockcall.head"></th>
+          <th><textarea type="text" required class="form-control"  id="blockreason" name="blockreason" [(ngModel)]="blockcall.blockreason"></textarea></th>
+          <th>
+            <button class="btn btn-danger btn-sm  pull-right" type="submit" [disabled]="!form2.valid" (click)="submitcallData()">Submit
+     
+            </button>
+          </th>
+
+          
+        </tr>
+        
+      </tbody>
+    </table>
+  
+    </form>
+  </div>
+   
+   
+</div>
+<!-- <button id="openModalButton1" [hidden]="true" data-toggle="modal" data-target="#csvImport">Open Modal</button> -->
+
+<div id="csvImport" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title pull-left">Make a new call</h4>
+        </div>
+        <div class="modal-body">
+      
+            <div class=" col-md-12 ">
+              <form #form1="ngForm" >
+                <!-- <div class="col-sm-6" *ngIf="this.userRole ==='ADMIN' || this.userRole ==='SUPERADMIN' ">
+                  <div class="form-group">
+                      <label for="call">Called By:  </label>
+                      <select disabled required *ngIf="!isUpdate"  class="form-control"  id="calledby" name="calledby" [(ngModel)]="call.calledby" (change)="onChangeRM($event)">
+                        <option *ngFor="let data of rmList; let i=index" [value]="data.id">{{data.name}}</option>
+                      </select>
+                  
+                    </div>
+            
+        
+             </div>
+             <div class="col-sm-6" *ngIf="this.userRole ==='MARKETING'">
+              <div class="form-group">
+                  <label for="call">Called By  </label>
+               
+                
+                  <input *ngIf="!isUpdate" required type="text" readonly class="form-control text-uppercase" id="calledby" name="calledby" [(ngModel)]="call.calledbyname"
+                   />
+                </div>
+                
+        
+         </div>
+            
+               <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="call">Called To  </label>
+                    <select disabled *ngIf="!isUpdate" required class="form-control" id="callto" name="callto" [(ngModel)]="call.callto" (change)="onChangecustomer($event)">
+                      <option *ngFor="let data of custListbyrm; let i=index" [value]="data.id">{{data.name}}</option>
+                    </select>
+                   
+                  </div>
+          
+        
+           </div> -->
+               <div class=" col-sm-6 ">
+                  <div class="form-group">
+                    <label for="callnotes">Call Notes  </label>
+                    <textarea required type="text" maxlength="510" placeholder="Maximum 510 characters"
+                     mutiline class="form-control" id="callnotes" name="callnotes" [(ngModel)]="call.callnotes"></textarea>
+                  </div>
+                </div>
+        
+                <div class=" col-sm-6 ">
+                  <div class="form-group">
+                    <label for="nextcallremark">Next Call Remark  </label>
+                    <textarea required type="text" maxlength="510" placeholder="Maximum 510 characters"
+                     mutiline class="form-control" id="nextcallremark" name="nextcallremark" [(ngModel)]="call.nextcallremark">  </textarea>
+                  </div>
+                </div>
+        
+                
+                <div class=" col-sm-6 ">
+                  <div class="form-group">
+                    <label for="nextcallremark">Next Call Time  </label>
+                    <input required type="date" min="{{this.call.calltime}}" class="form-control" id="nextcalltime" name="nextcalltime" [(ngModel)]="call.nextcalltime"   />
+                  </div>
+                </div>
+        
+                <div class="col-md-12">
+                  <div class="form-group">
+        
+                    <button *ngIf="!isUpdate" type="submit" [disabled]="!form1.valid" class="btn btn-default" (click)="submitData()">Submit</button>
+        
+        
+                    <button type="button" class="btn btn-default" (click)="cancel()">Cancel</button>
+                  </div>
+                </div>
+              </form>
+              </div>
+        </div>
+        <div class="modal-footer">
+          <!-- <button type="button" class="btn btn-default"  data-dismiss="modal" (click)="approveReimburse1(data)">Submit</button> -->
+          <button type="button" class="btn btn-danger" id="closethis" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  
+  </div>
+
+  
+</div>
+
+<div *ngIf="this.route.url==='/addcall'">
+  <div class="panel panel-default slideLeft" >
+    <div class="panel-heading">
+        <div class="clearfix">
+            <div class="pull-left"> {{title}}</div>
+            <div class="container" class="pull-right">
+              <div class="row">
+               <!-- <a [routerLink]="['/addrole']" class="btn btn-primary a-btn-slide-text" title="Add Role">
+                      <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                      <span></span>
+                  </a>
+                <a href="#" class="btn btn-default a-btn-slide-text" title="Edit">
+                      <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                      <span></span>
+                  </a>
+                <a href="#" class="btn btn-info a-btn-slide-text" title="View">
+                      <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+                      <span></span>
+                  </a>
+                <a href="#" class="btn btn-danger a-btn-slide-text" title="Delete">
+                      <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                      <span></span>
+                  </a>-->
+
+                  <a [routerLink]="['/viewcall']" class="btn btn-primary a-btn-slide-text" title="Back to call Window">
+                    <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+                    <span></span>
+                </a> 
+
+                <a [routerLink]="['/managecall']" title="Manage calls" class="btn btn-info a-btn-slide-text" >
+                    <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span></a>
+              </div>
+            </div>
+          </div>
+
+    </div>
+    <div class="panel-body">
+       <form #form1="ngForm" >
+        <div class="col-sm-6" *ngIf="this.userRole ==='ADMIN' || this.userRole ==='SUPERADMIN' ">
+          <div class="form-group">
+              <label for="call">Called By:  </label>
+              <select required *ngIf="!isUpdate"  class="form-control"  id="calledby" name="calledby" [(ngModel)]="call.calledby" (change)="onChangeRM($event)">
+                <option *ngFor="let data of rmList; let i=index" [value]="data.id">{{data.name}}</option>
+              </select>
+          
+            </div>
+    
+
+     </div>
+     <div class="col-sm-6" *ngIf="this.userRole ==='MARKETING'">
+      <div class="form-group">
+          <label for="call">Called By  </label>
+          <!-- <select required *ngIf="!isUpdate"  class="form-control"  id="calledby" name="calledby" [(ngModel)]="call.calledby" (change)="onChangeRM($event)">
+            <option *ngFor="let data of rmList; let i=index" [value]="data.id">{{data.name}}</option>
+          </select> -->
+        
+          <input *ngIf="!isUpdate" required type="text" readonly class="form-control text-uppercase" id="calledby" name="calledby" [(ngModel)]="call.calledbyname"
+           />
+        </div>
+        
+
+ </div>
+    
+       <div class="col-sm-6">
+        <div class="form-group">
+            <label for="call">Called To  </label>
+            <select *ngIf="!isUpdate" required class="form-control" id="callto" name="callto" [(ngModel)]="call.callto" (change)="onChangecustomer($event)">
+              <option *ngFor="let data of custListbyrm; let i=index" [value]="data.id">{{data.name}}</option>
+            </select>
+           
+          </div>
+  
+
+   </div>
+       <div class=" col-sm-6 ">
+          <div class="form-group">
+            <label for="callnotes">Call Notes  </label>
+            <textarea required type="text" maxlength="510" placeholder="Maximum 510 characters"
+             mutiline class="form-control" id="callnotes" name="callnotes" [(ngModel)]="call.callnotes"></textarea>
+          </div>
+        </div>
+
+        <div class=" col-sm-6 ">
+          <div class="form-group">
+            <label for="nextcallremark">Next Call Remark  </label>
+            <textarea required type="text" maxlength="510" placeholder="Maximum 510 characters"
+             mutiline class="form-control" id="nextcallremark" name="nextcallremark" [(ngModel)]="call.nextcallremark">  </textarea>
+          </div>
+        </div>
+
+        
+        <div class=" col-sm-6 ">
+          <div class="form-group">
+            <label for="nextcallremark">Next Call Time  </label>
+            <input required type="date" min="{{this.call.calltime}}" class="form-control" id="nextcalltime" name="nextcalltime" [(ngModel)]="call.nextcalltime"   />
+          </div>
+        </div>
+
+        <div class=" col-sm-6 ">
+          <div class="form-group">
+            <label for="callcallduration">Call Duration  </label>
+            <input required type="time"  class="form-control" id="callduration" name="callduration" [(ngModel)]="call.callduration"  />
+          </div>
+        </div>
+
+        <div class="col-md-12">
+          <div class="form-group">
+
+            <button *ngIf="!isUpdate" type="submit" [disabled]="!form1.valid" class="btn btn-default" (click)="submitData()">Submit</button>
+
+
+            <button type="button" class="btn btn-default" (click)="cancel()">Cancel</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="this.route.url==='/updatecall/' + this.id">
+  <div class="panel panel-default slideLeft" >
+    <div class="panel-heading">
+        <div class="clearfix">
+            <div class="pull-left"> {{title}}</div>
+            <div class="container" class="pull-right">
+              <div class="row">
+               <!-- <a [routerLink]="['/addrole']" class="btn btn-primary a-btn-slide-text" title="Add Role">
+                      <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                      <span></span>
+                  </a>
+                <a href="#" class="btn btn-default a-btn-slide-text" title="Edit">
+                      <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                      <span></span>
+                  </a>
+                <a href="#" class="btn btn-info a-btn-slide-text" title="View">
+                      <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+                      <span></span>
+                  </a>
+                <a href="#" class="btn btn-danger a-btn-slide-text" title="Delete">
+                      <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                      <span></span>
+                  </a>-->
+                  <a [routerLink]="['/viewcall']" class="btn btn-primary a-btn-slide-text" title="Back to call Window">
+                    <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+                    <span></span>
+                </a> 
+
+                <a [routerLink]="['/managecall']" title="Manage calls" class="btn btn-info a-btn-slide-text" >
+                    <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span></a>
+              </div>
+            </div>
+          </div>
+
+    </div>
+    <div class="panel-body">
+       <form #form1="ngForm" >
+        <div class="col-sm-6" *ngIf="this.userRole ==='ADMIN' || this.userRole ==='SUPERADMIN' ">
+            <div class="form-group">
+                <label for="call">Called By:  </label>
+             
+                <input *ngIf="isUpdate" required type="text" readonly class="form-control text-uppercase" id="calledby" name="calledby" [(ngModel)]="call.calledbyname"
+                 />
+              </div>
+      
+
+       </div>
+       <div class="col-sm-6" *ngIf="this.userRole ==='MARKETING'">
+        <div class="form-group">
+            <label for="call">Called By  </label>
+          
+            <input *ngIf="isUpdate" required type="text" readonly class="form-control text-uppercase" id="calledby" name="calledby" [(ngModel)]="call.calledbyname"
+             />
+          </div>
+          
+
+   </div>
+    
+       <div class="col-sm-6">
+        <div class="form-group">
+            <label for="call">Called To  </label>
+       
+            <input *ngIf="isUpdate" type="text" readonly class="form-control text-uppercase" id="callto" name="callto" [(ngModel)]="call.calltoname"
+             />
+          </div>
+  
+
+   </div>
+       <div class=" col-sm-6 ">
+          <div class="form-group">
+            <label for="callnotes">Call Notes  </label>
+            <textarea type="text" required maxlength="510" placeholder="Maximum 510 characters"
+             mutiline class="form-control" id="callnotes" name="callnotes" [(ngModel)]="call.callnotes"></textarea>
+          </div>
+        </div>
+
+        <div class=" col-sm-6 ">
+          <div class="form-group">
+            <label for="nextcallremark">Next Call Remark  </label>
+            <textarea type="text" required maxlength="510" placeholder="Maximum 510 characters"
+             mutiline class="form-control" id="nextcallremark" name="nextcallremark" [(ngModel)]="call.nextcallremark">  </textarea>
+          </div>
+        </div>
+
+        
+        <div class="col-sm-6">
+          <div class="form-group">
+            <label for="nextcallremark">Next Call Time  </label>
+            <input type="date" required min="{{this.call.calltime}}" class="form-control" id="nextcalltime" name="nextcalltime" [(ngModel)]="call.nextcalltime"   />
+          </div>
+        </div>
+
+        <div class="col-md-12">
+          <div class="form-group">
+
+            <button *ngIf="!isUpdate" type="submit" [disabled]="!form1.valid" class="btn btn-default" (click)="submitData()">Submit</button>
+            <button *ngIf="isUpdate" type="submit" [disabled]="!form1.valid" class="btn btn-default" (click)="updateData()">Update</button>
+
+            <button type="button" class="btn btn-default" (click)="cancel()">Cancel</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="this.route.url==='/managecall'">
+  
+  <div class="panel panel-default slideLeft">
+    {{title}}
+    <div class="panel-heading">
+        <div class="clearfix">
+            <div class="pull-left"> 
+              <div class="col-md-12">
+                <label>Search By Employee</label>
+                <select *ngIf="!isUpdate"  class="form-control" id="rm" name="rm" [(ngModel)]="rm" (change)="getCallListbyemp()">
+                  <option *ngFor="let data of rmList; let i=index" [value]="data.id">{{data.name}}</option>
+                </select>
+                <button   class="btn btn-info btn-sm" title="Reset" (click)="refreshincall()" style="margin-top: 22px;">
+                  <span class="glyphicon glyphicon-refresh"></span>
+                </button>
+                
+              </div>
+            
+            </div>
+            <div class="container" class="pull-right">
+
+              <div class="row">
+
+                  <!-- <i class="fa fa-refresh btn  " title="Reload" (click)="getcallList()"></i>
+                  <span></span> -->
+                  <a [routerLink]="['/viewcall']" class="btn btn-primary a-btn-slide-text" title="Back to call Window">
+                    <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+                    <span></span>
+                </a> 
+                <a [routerLink]="['/addcall']" class="btn btn-primary a-btn-slide-text" title="Add call">
+                      <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                      <span></span>
+                  </a>
+               
+                  
+               <!-- <a href="#" class="btn btn-default a-btn-slide-text" title="Edit">
+                      <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                      <span></span>
+                </a>
+                <a href="#" class="btn btn-info a-btn-slide-text" title="View">
+                      <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+                      <span></span>
+                  </a>
+                <a href="#" class="btn btn-danger a-btn-slide-text" title="Delete">
+                      <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                      <span></span>
+                  </a>
+                <a [routerLink]="['/managerole']" title="Manage Role" class="btn btn-info a-btn-slide-text" >
+                    <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span></a>-->
+              </div>
+            </div>
+          </div>
+
+    </div>
+    <div class="panel-body">
+      <div class="col-md-12 col-sm-12 col-xs-12">
+          <div class="table-responsive">
+              <table class="table table-condensed table-striped table-bordered" [mfData]="callList | dataFilterPr : filterQuery" #mf="mfDataTable"
+                [mfRowsOnPage]="rowsOnPage"  >
+                <thead>
+                  <tr>
+                    <th>SN</th>
+                    <th>Called By Name</th>
+                    <th>Call To Name</th>
+                    <th>Call Notes </th>
+                    <th>Call Time </th>
+
+                    <th>Next Call Remark </th>
+                    <th>Next Call Time </th>
+ 
+
+
+                    <!--  <th>First Name</th>
+                    <th>Last Name</th> -->
+                    <th class="text-right">Action</th>
+                  </tr>
+                  <tr>
+                    <th colspan="15">
+                      <div id="custom-search-input">
+                        <div class="input-group" class="col-md-12">
+                          <form #form2="ngForm">
+                          <!-- <div class="col-md-6">
+                            <label>Search By Employee</label>
+                            <select class="form-control" name="category" [(ngModel)]="call.call" (change)="getbycall()" >
+                              <option value="">--Select call--</option>
+                              <option *ngFor="let state of callList; let i=index" [value]="state.call">{{state.call}}</option>
+                            </select>
+                          </div> -->
+                          <label style=" color: #ff000099; ">Search By Date</label>
+                          <div class="col-md-12">
+                            
+                            <div class="col-md-4">
+                            <label>From Date</label>
+                            <input required type="date"  class="form-control" id="fromdate" name="fromdate" [(ngModel)]="this.fromdate"   /> 
+
+                       </div>
+                       <div class="col-md-4">
+                              <label>To Date</label>
+                            
+                              <input required type="date"  class="form-control" id="todate" name="todate" [(ngModel)]="todate"   /> 
+                         </div>
+                          
+                          </div>
+                      
+                          <div class="col-md-4" style="margin-left: 69%;">
+                          <span class="input-group-btn">
+                                                  <button [disabled]="!form2.valid"  class="btn btn-danger" type="button"   (click)="check()" style="margin-top: -35px;">
+                                                      <span class=" glyphicon glyphicon-search"></span>
+                          </button> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                          <button   class="btn btn-info btn-sm" title="Reset" (click)="refreshincall()" style="margin-top: -35px;    margin-left: 18px">
+                            <span class="glyphicon glyphicon-refresh"></span>
+                          </button>
+                          </span>
+                          </div>
+                        </form>
+                        </div>
+                     
+                      
+                     </div>
+                    </th>
+                  </tr>
+
+            
+
+                </thead>
+                <tbody>
+                  <tr *ngFor="let data of mf.data; let i = index; let last = last;">
+                    <td>{{i+1}}</td>
+                    <td>{{data.calledbyname}}</td>
+                    <td>{{data.calltoname}}</td>
+                    <td>{{data.callnotes}}</td>
+                    <td>{{data.calltime | date: 'dd/MM/yyyy hh:mm a'}}</td>
+                    <td>{{data.nextcallremark}}</td>
+                    <td>{{data.nextcalltime | date: 'dd/MM/yyyy hh:mm a'}}</td>
+
+
+
+                    <td class="text-right" >
+                   
+                      <a [routerLink]="['/updatecall',data.id]" class="btn btn-default a-btn-slide-text" title="Update Call">
+                        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                        <span></span>
+                  </a>
+                      <a class="btn btn-danger a-btn-slide-text" (click)="deletecall(data.id)" title="Delete Call">
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        <span></span>
+                      </a>
+
+                    </td>
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colspan="15">
+                      <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+

@@ -1,0 +1,65 @@
+.bg-yellow{
+    background-color: yellow;
+}
+
+/* .panel-heading {
+ 
+    background-color: #b9dd0d !important;
+
+    
+} */
+.panel-body{
+    background-color: #e1eb86;
+}
+
+
+.btn-group1 button {
+    background-color: #f7f7f7; /* Green background */
+    border: 1px solid green; /* Green border */
+    color: black; /* White text */
+    padding: 10px 24px; /* Some padding */
+    cursor: pointer; /* Pointer/hand icon */
+    width: 50%; /* Set a width if needed */
+    display: block; /* Make the buttons appear below each other */
+  }
+  
+  .btn-group1 button:not(:last-child) {
+    border-bottom: none; /* Prevent double borders */
+  }
+  
+  /* Add a background color on hover */
+  .btn-group1 button:hover {
+    background-color: #3e8e41;
+  }
+
+  /* .bg-yellow{
+    background-color: yellow;
+}
+
+.bg-yellow{
+    background-color: brown;
+} */
+
+.label {
+    font-size: 85%;
+}
+
+.col-1-5 {
+  flex: 0 0 12.3%;
+  max-width: 12.3%;
+  position: relative;
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+
+.table > thead > tr > th {
+
+  color: #000000;
+
+}
+
+.table-bordered>thead>tr>th, .table-bordered>tbody>tr>th, .table-bordered>tfoot>tr>th, .table-bordered>thead>tr>td, .table-bordered>tbody>tr>td, .table-bordered>tfoot>tr>td {
+  border: 1px solid #adabab7d;
+}             

@@ -1,0 +1,1455 @@
+<div class="panel panel-default slideLeft" *ngIf="this.route.url === '/closed_orders'">
+  <div class="panel-heading">
+    <div class="clearfix">
+      <div class="pull-left"> {{title}} </div>
+
+    </div>
+  </div>
+
+  <div class="panel-body" *ngIf="this.userRole==='SUPERADMIN' && this.userType==='FIRM'">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+      <div class="table-responsive">
+        <table class="table table-condensed table-striped table-bordered"
+          [mfData]="data | dataFilterPr : filterQuery:'orders'" #mff="mfDataTable" [mfRowsOnPage]="rowsOnPage">
+          <thead>
+            <tr>
+              <th>Order No.</th>
+              <th>Dish</th>
+              <th>Order Details</th>
+              <th>Customer</th>
+              <th>Delivery Add.</th>
+              <th>Payment Details</th>
+              <th>Ordertype</th>
+              <th>Status</th>
+
+              <th class="text-right">Action</th>
+            </tr>
+            <tr>
+              <th colspan="9">
+                <div id="custom-search-input">
+                  <div class="input-group col-md-12">
+                    <input type="text" class="form-control"
+                      placeholder="Search by Customer Name, Phone, City , Pincode Or Order Number"
+                      [(ngModel)]="filterQuery" />
+                    <span class="input-group-btn">
+                      <button class="btn btn-danger" type="button">
+                        <span class=" glyphicon glyphicon-search"></span>
+                      </button>
+                    </span>
+                  </div>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of mff.data; let i = index; let last = last;">
+              <td>{{data.invoicenum}}<br>
+                Total items : {{data.qcost.totalitem}}
+              </td>
+              <td>
+                <div class="img-thumbnail  ">
+                  <img *ngIf="data?.oentry[0]?.photo?.docpath" src="{{docServer}}/{{data?.oentry[0]?.photo?.docpath}}"
+                    class="img-circle" alt="" style="width:100px; height:100px;">
+                  <img *ngIf="!data?.oentry[0]?.photo?.docpath"
+                    src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg" class="img-circle"
+                    alt="" style="width:100px; height:100px;">
+                  <div class="caption text-capitalize text-center" *ngIf="data.oentry.length<=1; else elseBlock">
+                    {{data.oentry[0]?.dname}}</div>
+                  <ng-template #elseBlock>
+                    <!-- <a > -->
+                    <div class="caption text-capitalize text-center"> {{data.oentry[0]?.dname}} + {{data.oentry.length
+                      - 1}} Other Items</div>
+                    <!-- </a> -->
+                  </ng-template>
+
+                </div>
+              </td>
+              <td><textarea style="margin: 0px; width: 180px; height: 124px;" readonly>{{data?.detail}}</textarea>
+              </td>
+
+
+              <td>{{data.custname}}<br>
+                Phone-{{data.custmobile}}</td>
+
+              <td>{{data.deliveryaddress.line1}},<br>
+                {{data.deliveryaddress.city}}- {{data.deliveryaddress.pincode}}<br>Delivery by:
+                {{data.deliveryperson}}<br>Number: {{data.deliverymobile}}
+                <br>Expected Delivery :{{data.expdelivery | date}}<br>
+              </td>
+
+              <td>Mode -{{data.paymentmode}}<br>
+                Txn ID- {{data.transactionid}}<br>
+                Amount: {{data.qcost.finalamt}}/-<br>
+                <!-- <span class="badge badge-primary">Amount :{{data?.qcost?.transferamt}}/-</span><br> -->
+                <span class="badge badge-primary" *ngIf="data.adddelivery==='YES'">Delivery charge
+                  :{{data?.qcost?.delivery}}/-</span><br>
+                <!-- <span class="badge badge-primary">Service Charge :{{data?.qcost?.servicecharge}}/-</span><br> -->
+              </td>
+
+              <td>
+                <span class="label label-primary">{{data.ordertype}}</span><br />
+                <span class="label label-primary">{{data.tablenumber}}</span>
+
+              </td>
+
+              <td><span class="label label-primary">{{data.status}}</span><br />
+                <!-- <span class="label label-primary">{{data.ordertype}}<br/> -->
+              </td>
+
+
+              <td class="text-right">
+                <a *ngIf="data.status==='PLACED' && data.isvendoraccept === 'NO'">
+                  <button (click)="acceptOrder(data.id)" class="btn btn-warning btn-sm" title="Accept Order">
+                    <span class="glyphicon glyphicon glyphicon-ok"></span>
+                  </button>
+                </a>
+
+                <a *ngIf="data.status==='PLACED' && data.isvendoraccept === 'NO'">
+                  <button (click)="RejectOrder(data)" class="btn btn-danger btn-sm" title="Reject Order">
+                    <span class="glyphicon glyphicon glyphicon-remove"></span>
+                  </button>
+                </a>
+
+                <a (click)="orderpacked(data)" *ngIf="data.status==='PLACED' && data.isvendoraccept === 'YES'"
+                  class="btn btn-default" title="Order Packed">
+                  <i class="glyphicon glyphicon-inbox"></i>
+                </a>
+
+                <a *ngIf="data.isvendoraccept === 'YES' && data.status === 'PACKED' && userRole==='SUPERADMIN'"
+                  title="Change Delivery pool" (click)="changedeliveryperson(data)">
+                  <button class="btn btn-info btn-sm">
+                    <span class="glyphicon glyphicon-user"></span>
+                  </button>
+                </a>
+
+                <a *ngIf="data.status === 'CLOSED' && data?.invoice" href="{{docServer}}/{{data?.invoice?.docpath}}" target="_blank">
+                  <button class="btn btn-info btn-sm" title="Download Invoice">
+                    <span class="glyphicon glyphicon-cloud-download"></span>
+                  </button>
+                </a>
+
+
+                <a *ngIf="userRole === 'SUPERADMIN'" class="btn btn-danger a-btn-slide-text" title="Delete Order"
+                  (click)="delete(data.id)">
+                  <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                  <span></span>
+                </a>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="9">
+                <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="panel panel-default slideLeft" *ngIf="this.route.url === '/all_orders'">
+  <!-- <div class="panel-heading">
+    <div class="clearfix">
+      <div class="pull-left"> {{title}}</div><br>
+      <div id="custom-search-input" *ngIf="this.userRole==='SUPERADMIN' && this.userType==='FIRM'">
+
+        <div class="col-sm-12">
+          <div class="col-sm-3">
+            <div class="form-group">
+              <label>Select Branch</label>
+              <select class="form-control" id="branch" name="branch" [(ngModel)]="branchlist"
+                (change)="alltypesoforders()">
+                <option *ngFor="let data of branchlist; let i=index" [value]="data.id">{{data.name}}</option>
+              </select>
+            </div>
+          </div>
+
+
+          <div class="col-sm-3">
+            <div class="form-group">
+              <label for="state">Reset :
+              </label>
+              <span class="input-group-btn">
+                <button class="btn btn-info btn-sm" title="Reset" (click)="refreshincall()" style="font-size: 9px;">
+                  <span class="glyphicon glyphicon-refresh"></span>
+                </button>
+              </span>
+            </div>
+          </div>
+
+        </div>
+        <div id="custom-search-input" *ngIf="firm">
+
+          <div class="col-sm-12">
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="gender">
+                </label>&nbsp;
+                
+                <input type="radio" [(ngModel)]="customdate" value="changestatus" name="cmonth1"> Change Status &nbsp;
+                <input type="radio" [(ngModel)]="customdate" value="deleteorders" name="cmonth2"> Delete Multiple Orders
+                &nbsp;
+                <input type="radio" [(ngModel)]="customdate" value="Customdate" name="cmonth3"
+                  (click)="gettodaysdate()"> Custom Date Order Search &nbsp;
+
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-12" *ngIf="customdate==='Customdate'">
+            <div class="col-sm-3">
+              <div class="form-group">
+                <label for="fromDate">From Date:
+                </label>
+                <input type="date" class="form-control" id="fromDatee" name="fromDatee" [(ngModel)]="fromDatee"
+                  required />
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="form-group">
+                <label for="toDate">To Date:
+                </label>
+                <input type="date" class="form-control" id="toDatee" name="toDatee" required [(ngModel)]="toDatee" />
+              </div>
+            </div>
+
+            <div class="col-sm-3">
+              <div class="form-group">
+                <label for="state">Search:
+                </label>
+                <span class="input-group-btn">
+                  <button class="btn btn-danger" type="button" (click)="searchdayspayable()">
+                    <span class=" glyphicon glyphicon-search"></span>
+                  </button>
+                </span>
+              </div>
+            </div>
+
+          </div>
+          <div class="col-sm-12" *ngIf="customdate==='deleteorders'">
+
+            <div class="col-sm-3">
+              <div class="form-group">
+                <label for="state">Click:
+                </label>
+                <span class="input-group-btn">
+                  <button class="btn btn-danger" type="button" (click)="deletemultipleorder()">
+                    <span class=" glyphicon glyphicon-trash"></span> Delete Selected Order
+                  </button>
+                </span>
+              </div>
+            </div>
+
+          </div>
+          <div class="col-sm-12" *ngIf="customdate==='changestatus'">
+            <div class="col-sm-3">
+              <div class="form-group">
+                <label for="fromDate">Select Status:
+                </label>
+                <select class="form-control" id="firm" name="firm" [(ngModel)]="selectstatus">
+                  <option value="PAID">PAID</option>
+                </select>
+              </div>
+            </div>
+
+
+
+
+            <div class="col-sm-3">
+              <div class="form-group">
+                <label for="state">Click:
+                </label>
+                <span class="input-group-btn">
+                  <button class="btn btn-success btn-sm" type="button" (click)="changestatus()">
+                    <span class=" glyphicon glyphicon-ok"></span> Change Status
+                  </button>
+                </span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div> -->
+
+  <div *ngIf="this.userRole==='SUPERADMIN' && this.userType==='FIRM'">
+    <ul class="nav nav-tabs">
+      <li class="active"><a data-toggle="tab" href="#ALL" id="a">ALL</a></li>
+      <li><a data-toggle="tab" *ngIf="firm" href="#PLACED" id="b">PLACED</a></li>
+      <!-- <li><a data-toggle="tab" href="#IN_PROCESS" id="c">IN_PROCESS</a></li> -->
+      <li><a data-toggle="tab" *ngIf="firm" href="#PACKED" id="d">PACKED</a></li>
+      <li><a data-toggle="tab" *ngIf="firm" href="#PICKED_UP" id="d">PICKED_UP</a></li>
+
+      <li><a data-toggle="tab" *ngIf="firm" href="#DELIVERED" id="e">DELIVERED</a></li>
+    </ul>
+    <div class="tab-content">
+      <div id="ALL" class="tab-pane fade in active">
+        <div class="panel-body">
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="table-responsive">
+              <table class="table table-condensed table-striped table-bordered"
+                [mfData]="data | dataFilterPr : filterQuery:'orders'" #mf="mfDataTable" [mfRowsOnPage]="rowsOnPage">
+                <thead>
+                  <tr>
+                    <th>Order No.</th>
+                    <th>Select</th>
+                    <th>Dish</th>
+                    <th>Order Details</th>
+                    <th>Customer</th>
+                    <th>Delivery Add.</th>
+                    <!-- <th>Branch Details</th> -->
+                    <th>Payment Details</th>
+                    <th>Ordertype</th>
+                    <th>Status</th>
+
+                    <th class="text-right">Action</th>
+                  </tr>
+                  <tr>
+                    <th colspan="12">
+                      <div id="custom-search-input">
+                        <div class="input-group col-md-12">
+                          <input type="text" class="form-control"
+                            placeholder="Search by Customer Name, Phone, City , Pincode Or Order Number"
+                            [(ngModel)]="filterQuery" />
+                          <span class="input-group-btn">
+                            <button class="btn btn-danger" type="button">
+                              <span class=" glyphicon glyphicon-search"></span>
+                            </button>
+                          </span>
+                        </div>
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let data of mf.data; let i = index; let last = last;">
+
+                    <td> <input type="checkbox" value="employees" (click)="deleteNewsList(data.id)"></td>
+                    <td>{{data.invoicenum}}<br>
+                      Total items : {{data.qcost.totalitem}}
+                    </td>
+                    <td>
+                      <div class="img-thumbnail  ">
+                        <img *ngIf="data?.oentry[0]?.photo?.docpath"
+                          src="{{docServer}}/{{data?.oentry[0]?.photo?.docpath}}" class="img-circle" alt=""
+                          style="width:100px; height:100px;">
+                        <img *ngIf="!data?.oentry[0]?.photo?.docpath"
+                          src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg"
+                          class="img-circle" alt="" style="width:100px; height:100px;">
+                        <div class="caption text-capitalize text-center" *ngIf="data.oentry.length<=1; else elseBlock">
+                          {{data.oentry[0]?.dname}}</div>
+                        <ng-template #elseBlock>
+                          <a [routerLink]="['/orderdetails',data.id]">
+                            <div class="caption text-capitalize text-center"> {{data.oentry[0]?.dname}} +
+                              {{data.oentry.length - 1}} Other Items</div>
+                          </a>
+                        </ng-template>
+
+                      </div>
+                    </td>
+
+
+                    <td>
+                      <textarea style="margin: 0px; width: 180px; height: 124px;" readonly>{{data?.detail}}</textarea>
+                    </td>
+
+                    <td>{{data.custname}}<br>
+
+                      Phone-{{data.custmobile}}</td>
+                    <td>{{data.deliveryaddress.line1}},<br>
+                      {{data.deliveryaddress.city}}- {{data.deliveryaddress.pincode}}<br>Delivery by:
+                      {{data.deliveryperson}}<br>Number: {{data.deliverymobile}}
+                      <br>Expected Delivery :{{data.expdelivery | date}}<br>
+                    </td>
+                    <!-- <td>
+                      {{data.firmname}}<br>
+                      {{data.vendaddress.line1}},<br>
+                      {{data.vendaddress.city}}- {{data.vendaddress.pincode}}<br>
+                      Phone-{{data.vendmobile}}
+
+                    </td> -->
+                    <td>Mode -{{data.paymentmode}}<br>
+                      Txn ID- {{data.transactionid}}<br>
+                      Amount: {{data.qcost.finalamt}}/-<br>
+                      <!-- <span class="badge badge-primary">Amount :{{data?.qcost?.transferamt}}/-</span><br> -->
+                      <span class="badge badge-primary" *ngIf="data.adddelivery==='YES'">Delivery charge
+                        :{{data?.qcost?.delivery}}/-</span><br>
+                      <!-- <span class="badge badge-primary">Service Charge :{{data?.qcost?.servicecharge}}/-</span><br> -->
+                    </td>
+
+                    <td>
+                      <span class="label label-primary">{{data.ordertype}}</span><br />
+                      <span class="label label-primary">{{data.tablenumber}}</span>
+
+                    </td>
+
+                    <td><span class="label label-primary">{{data.status}}</span><br />
+                      <!-- <span class="label label-primary">{{data.ordertype}}<br/> -->
+                    </td>
+
+
+                    <td class="text-right">
+                      <a *ngIf="data.status==='PLACED' && data.isvendoraccept === 'NO'">
+                        <button (click)="acceptOrder(data.id)" class="btn btn-warning btn-sm" title="Accept Order">
+                          <span class="glyphicon glyphicon glyphicon-ok"></span>
+                        </button>
+                      </a>
+
+                      <a *ngIf="data.status==='PLACED' && data.isvendoraccept === 'NO'">
+                        <button (click)="RejectOrder(data)" class="btn btn-danger btn-sm" title="Reject Order">
+                          <span class="glyphicon glyphicon glyphicon-remove"></span>
+                        </button>
+                      </a>
+
+                      <a (click)="orderpacked(data)" *ngIf="data.status==='PLACED' && data.isvendoraccept === 'YES'"
+                        class="btn btn-default" title="Order Packed">
+                        <i class="glyphicon glyphicon-inbox"></i>
+                      </a>
+
+
+                      <a *ngIf="data.isvendoraccept === 'YES' && data.status === 'PACKED' && userRole==='SUPERADMIN'"
+                        title="Change Delivery pool" (click)="changedeliveryperson(data)">
+                        <button class="btn btn-info btn-sm">
+                          <span class="glyphicon glyphicon-user"></span>
+                        </button>
+                      </a>
+
+
+                      <a *ngIf="data.status === 'CLOSED' && data?.invoice" href="{{docServer}}/{{data?.invoice?.docpath}}"
+                        target="_blank">
+                        <button class="btn btn-info btn-sm" title="Download Invoice">
+                          <span class="glyphicon glyphicon-cloud-download"></span>
+                        </button>
+                      </a>
+                      <a style="cursor: not-allowed;" title="Invoice Not Available ">
+                        <button *ngIf="!data.invoice" disabled class="btn btn-info btn-sm">
+                          <span class="glyphicon glyphicon-cloud-download"></span>
+                        </button>
+                      </a>
+                      <a *ngIf="userRole === 'SUPERADMIN'" class="btn btn-danger a-btn-slide-text  btn-sm"
+                        title="Delete Order" (click)="delete(data.id)">
+                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                        <span></span>
+                      </a>
+
+                    </td>
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colspan="12">
+                      <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="25" *ngIf="firm">
+                      <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-center">
+                          <li class="page-item ">
+                            <a class="page-link" (click)="decrement()">Top 25</a>
+                          </li>
+                          <li class="page-item ">
+                            <a class="page-link" (click)="getall()">All</a>
+                          </li>
+                          <!-- <li class="page-item ">
+                        <a class="page-link" (click)="increment()" title="Next 100">Next</a>
+                      </li> -->
+                        </ul>
+                      </nav>
+                    </td>
+
+                    <td colspan="25" *ngIf="!firm">
+                      <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-center">
+                          <li class="page-item ">
+                            <a class="page-link" (click)="top200()">Top 200</a>
+                          </li>
+                          <li class="page-item ">
+                            <a class="page-link" (click)="top1000()">All Orders</a>
+                          </li>
+                          <!-- <li class="page-item ">
+                        <a class="page-link" (click)="increment()" title="Next 100">Next</a>
+                      </li> -->
+                        </ul>
+                      </nav>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <div id="PLACED" class="tab-pane fade" *ngIf="placedorders">
+        <div class="panel-body">
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="table-responsive">
+              <table class="table table-condensed table-striped table-bordered"
+                [mfData]="placedorders | dataFilterPr : filterQuery:'orders'" #mff="mfDataTable"
+                [mfRowsOnPage]="rowsOnPage">
+                <thead>
+                  <tr>
+                    <th>Order No.</th>
+                    <th>Dish</th>
+                    <th>Order Details</th>
+                    <th>Customer</th>
+                    <th>Delivery Add.</th>
+                    <!-- <th>Branch Details</th> -->
+                    <th>Payment Details</th>
+                    <th>Ordertype</th>
+                    <th>Status</th>
+
+                    <th class="text-right">Action</th>
+                  </tr>
+                  <tr>
+                    <th colspan="9">
+                      <div id="custom-search-input">
+                        <div class="input-group col-md-12">
+                          <input type="text" class="form-control"
+                            placeholder="Search by Customer Name, Phone, City , Pincode Or Order Number"
+                            [(ngModel)]="filterQuery" />
+                          <span class="input-group-btn">
+                            <button class="btn btn-danger" type="button">
+                              <span class=" glyphicon glyphicon-search"></span>
+                            </button>
+                          </span>
+                        </div>
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let data of mff.data; let i = index; let last = last;">
+
+                    <td>{{data.invoicenum}}<br>
+                      Total items : {{data.qcost.totalitem}}
+                    </td>
+                    <td>
+                      <div class="img-thumbnail  ">
+
+                        <img *ngIf="data?.oentry[0]?.photo?.docpath"
+                          src="{{docServer}}/{{data?.oentry[0]?.photo?.docpath}}" class="img-circle" alt=""
+                          style="width:100px; height:100px;">
+                        <img *ngIf="!data?.oentry[0]?.photo?.docpath"
+                          src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg"
+                          class="img-circle" alt="" style="width:100px; height:100px;">
+                        <div class="caption text-capitalize text-center" *ngIf="data.oentry.length<=1; else elseBlock">
+                          {{data.oentry[0]?.dname}}</div>
+                        <ng-template #elseBlock>
+                          <a [routerLink]="['/orderdetails',data.id]">
+                            <div class="caption text-capitalize text-center"> {{data.oentry[0]?.dname}} +
+                              {{data.oentry.length - 1}} Other Items</div>
+                          </a>
+                        </ng-template>
+
+                      </div>
+                    </td>
+                    <td><textarea style="margin: 0px; width: 180px; height: 124px;" readonly>{{data?.detail}}</textarea>
+                    </td>
+
+
+                    <td>{{data.custname}}<br>
+                      Phone-{{data.custmobile}}</td>
+                    <td>{{data.deliveryaddress.line1}},<br>
+                      {{data.deliveryaddress.city}}- {{data.deliveryaddress.pincode}}<br>Delivery by:
+                      {{data.deliveryperson}}<br>Number: {{data.deliverymobile}}
+                      <br>Expected Delivery :{{data.expdelivery | date}}<br>
+
+
+                    </td>
+                    <!-- <td>
+                      {{data.firmname}}<br>
+                      {{data.vendaddress.line1}},<br>
+                      {{data.vendaddress.city}}- {{data.vendaddress.pincode}}<br>
+                      Phone-{{data.vendmobile}}
+
+                    </td> -->
+                    <td>Mode -{{data.paymentmode}}<br>
+                      Txn ID- {{data.transactionid}}<br>
+                      Amount: {{data.qcost.finalamt}}/-<br>
+                      <!-- <span class="badge badge-primary">Amount :{{data?.qcost?.transferamt}}/-</span><br> -->
+                      <span class="badge badge-primary" *ngIf="data.adddelivery==='YES'">Delivery charge
+                        :{{data?.qcost?.delivery}}/-</span><br>
+                      <!-- <span class="badge badge-primary">Service Charge :{{data?.qcost?.servicecharge}}/-</span><br> -->
+                    </td>
+
+                    <td>
+                      <span class="label label-primary">{{data.ordertype}}</span><br />
+                      <span class="label label-primary">{{data.tablenumber}}</span>
+
+                    </td>
+
+                    <td><span class="label label-primary">{{data.status}}</span><br />
+                      <!-- <span class="label label-primary">{{data.ordertype}}<br/> -->
+                    </td>
+
+
+
+
+
+
+
+                    <td class="text-right">
+                      <a *ngIf="data.status==='PLACED' && data.isvendoraccept === 'NO'">
+                        <button (click)="acceptOrder(data.id)" class="btn btn-warning btn-sm" title="Accept Order">
+                          <span class="glyphicon glyphicon glyphicon-ok"></span>
+                        </button>
+                      </a>
+
+                      <a *ngIf="data.status==='PLACED' && data.isvendoraccept === 'NO'">
+                        <button (click)="RejectOrder(data)" class="btn btn-danger btn-sm" title="Reject Order">
+                          <span class="glyphicon glyphicon glyphicon-remove"></span>
+                        </button>
+                      </a>
+
+                      <a (click)="orderpacked(data)" *ngIf="data.status==='PLACED' && data.isvendoraccept === 'YES'"
+                        class="btn btn-default" title="Order Packed">
+                        <i class="glyphicon glyphicon-inbox"></i>
+                      </a>
+
+
+                      <a *ngIf="data.isvendoraccept === 'YES' && data.status === 'PACKED' && userRole==='SUPERADMIN'"
+                        title="Change Delivery pool" (click)="changedeliveryperson(data)">
+                        <button class="btn btn-info btn-sm">
+                          <span class="glyphicon glyphicon-user"></span>
+                        </button>
+                      </a>
+
+
+                      <a *ngIf="userRole === 'SUPERADMIN'" class="btn btn-danger a-btn-slide-text" title="Delete Order"
+                        (click)="delete(data.id)">
+                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                        <span></span>
+                      </a>
+                    </td>
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colspan="9">
+                      <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <div id="PACKED" class="tab-pane fade" *ngIf="packedorders">
+        <div class="panel-body">
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="table-responsive">
+              <table class="table table-condensed table-striped table-bordered"
+                [mfData]="packedorders | dataFilterPr : filterQuery:'orders'" #mfff="mfDataTable"
+                [mfRowsOnPage]="rowsOnPage">
+                <thead>
+                  <tr>
+                    <th>Order No.</th>
+                    <th>Dish</th>
+                    <th>Order Details</th>
+                    <th>Customer</th>
+                    <th>Delivery Add.</th>
+                    <!-- <th>Branch Details</th> -->
+                    <th>Payment Details</th>
+                    <th>Ordertype</th>
+                    <th>Status</th>
+
+                    <th class="text-right">Action</th>
+                  </tr>
+                  <tr>
+                    <th colspan="9">
+                      <div id="custom-search-input">
+                        <div class="input-group col-md-12">
+                          <input type="text" class="form-control"
+                            placeholder="Search by Customer Name, Phone, City , Pincode Or Order Number"
+                            [(ngModel)]="filterQuery" />
+                          <span class="input-group-btn">
+                            <button class="btn btn-danger" type="button">
+                              <span class=" glyphicon glyphicon-search"></span>
+                            </button>
+                          </span>
+                        </div>
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let data of mfff.data; let i = index; let last = last;">
+                    <td>{{data.invoicenum}}<br>
+                      Total items : {{data.qcost.totalitem}}
+                    </td>
+                    <td>
+                      <div class="img-thumbnail  ">
+                        <img *ngIf="data?.oentry[0]?.photo?.docpath"
+                          src="{{docServer}}/{{data?.oentry[0]?.photo?.docpath}}" class="img-circle" alt=""
+                          style="width:100px; height:100px;">
+                        <img *ngIf="!data?.oentry[0]?.photo?.docpath"
+                          src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg"
+                          class="img-circle" alt="" style="width:100px; height:100px;">
+                        <div class="caption text-capitalize text-center" *ngIf="data.oentry.length<=1; else elseBlock">
+                          {{data.oentry[0]?.dname}}</div>
+                        <ng-template #elseBlock>
+                          <a [routerLink]="['/orderdetails',data.id]">
+                            <div class="caption text-capitalize text-center"> {{data.oentry[0]?.dname}} +
+                              {{data.oentry.length - 1}} Other Items</div>
+                          </a>
+                        </ng-template>
+
+                      </div>
+                    </td>
+                    <td><textarea style="margin: 0px; width: 180px; height: 124px;" readonly>{{data?.detail}}</textarea>
+                    </td>
+
+
+                    <td>{{data.custname}}<br>
+                      Phone-{{data.custmobile}}</td>
+                    <td>{{data.deliveryaddress.line1}},<br>
+                      {{data.deliveryaddress.city}}- {{data.deliveryaddress.pincode}}<br>Delivery by:
+                      {{data.deliveryperson}}<br>Number: {{data.deliverymobile}}
+                      <br>Expected Delivery :{{data.expdelivery | date}}<br>
+
+
+                    </td>
+                    <!-- <td>
+                      {{data.firmname}}<br>
+                      {{data.vendaddress.line1}},<br>
+                      {{data.vendaddress.city}}- {{data.vendaddress.pincode}}<br>
+                      Phone-{{data.vendmobile}}
+
+                    </td> -->
+                    <td>Mode -{{data.paymentmode}}<br>
+                      Txn ID- {{data.transactionid}}<br>
+                      Amount: {{data.qcost.finalamt}}/-<br>
+                      <!-- <span class="badge badge-primary">Amount :{{data?.qcost?.transferamt}}/-</span><br> -->
+                      <span class="badge badge-primary" *ngIf="data.adddelivery==='YES'">Delivery charge
+                        :{{data?.qcost?.delivery}}/-</span><br>
+                      <!-- <span class="badge badge-primary">Service Charge :{{data?.qcost?.servicecharge}}/-</span><br> -->
+                    </td>
+
+                    <td>
+                      <span class="label label-primary">{{data.ordertype}}</span><br />
+                      <span class="label label-primary">{{data.tablenumber}}</span>
+
+                    </td>
+
+                    <td><span class="label label-primary">{{data.status}}</span><br />
+                      <!-- <span class="label label-primary">{{data.ordertype}}<br/> -->
+                    </td>
+
+                    <td class="text-right">
+
+                      <a class="btn btn-danger a-btn-slide-text" title="Delete Order" (click)="delete(data.id)">
+                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                        <span></span>
+                      </a>
+                    </td>
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colspan="9">
+                      <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <div id="PICKED_UP" class="tab-pane fade" *ngIf="pickuporders">
+        <div class="panel-body">
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="table-responsive">
+              <table class="table table-condensed table-striped table-bordered"
+                [mfData]="pickuporders | dataFilterPr : filterQuery:'orders'" #mfff="mfDataTable"
+                [mfRowsOnPage]="rowsOnPage">
+                <thead>
+                  <tr>
+                    <th>Order No.</th>
+                    <th>Dish</th>
+                    <th>Order Details</th>
+                    <th>Customer</th>
+                    <th>Delivery Add.</th>
+                    <!-- <th>Branch Details</th> -->
+                    <th>Payment Details</th>
+                    <th>Ordertype</th>
+                    <th>Status</th>
+
+                    <th class="text-right">Action</th>
+                  </tr>
+                  <tr>
+                    <th colspan="9">
+                      <div id="custom-search-input">
+                        <div class="input-group col-md-12">
+                          <input type="text" class="form-control"
+                            placeholder="Search by Customer Name, Phone, City , Pincode Or Order Number"
+                            [(ngModel)]="filterQuery" />
+                          <span class="input-group-btn">
+                            <button class="btn btn-danger" type="button">
+                              <span class=" glyphicon glyphicon-search"></span>
+                            </button>
+                          </span>
+                        </div>
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let data of mfff.data; let i = index; let last = last;">
+                    <td>{{data.invoicenum}}<br>
+                      Total items : {{data.qcost.totalitem}}
+                    </td>
+
+                    <td>
+                      <div class="img-thumbnail  ">
+                        <img *ngIf="data?.oentry[0]?.photo?.docpath"
+                          src="{{docServer}}/{{data?.oentry[0]?.photo?.docpath}}" class="img-circle" alt=""
+                          style="width:100px; height:100px;">
+                        <img *ngIf="!data?.oentry[0]?.photo?.docpath"
+                          src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg"
+                          class="img-circle" alt="" style="width:100px; height:100px;">
+                        <div class="caption text-capitalize text-center" *ngIf="data.oentry.length<=1; else elseBlock">
+                          {{data.oentry[0]?.dname}}</div>
+                        <ng-template #elseBlock>
+                          <a [routerLink]="['/orderdetails',data.id]">
+                            <div class="caption text-capitalize text-center"> {{data.oentry[0]?.dname}} +
+                              {{data.oentry.length - 1}} Other Items</div>
+                          </a>
+                        </ng-template>
+
+                      </div>
+                    </td>
+                    <td><textarea style="margin: 0px; width: 180px; height: 124px;" readonly>{{data?.detail}}</textarea>
+                    </td>
+
+
+                    <td>{{data.custname}}<br>
+                      Phone-{{data.custmobile}}</td>
+                    <td>{{data.deliveryaddress.line1}},<br>
+                      {{data.deliveryaddress.city}}- {{data.deliveryaddress.pincode}}<br>Delivery by:
+                      {{data.deliveryperson}}<br>Number: {{data.deliverymobile}}
+                      <br>Expected Delivery :{{data.expdelivery | date}}<br>
+
+
+                    </td>
+                    <!-- <td>
+                      {{data.firmname}}<br>
+                      {{data.vendaddress.line1}},<br>
+                      {{data.vendaddress.city}}- {{data.vendaddress.pincode}}<br>
+                      Phone-{{data.vendmobile}}
+
+                    </td> -->
+                    <td>Mode -{{data.paymentmode}}<br>
+                      Txn ID- {{data.transactionid}}<br>
+                      Amount: {{data.qcost.finalamt}}/-<br>
+                      <!-- <span class="badge badge-primary">Amount :{{data?.qcost?.transferamt}}/-</span><br> -->
+                      <span class="badge badge-primary" *ngIf="data.adddelivery==='YES'">Delivery charge
+                        :{{data?.qcost?.delivery}}/-</span><br>
+                      <!-- <span class="badge badge-primary">Service Charge :{{data?.qcost?.servicecharge}}/-</span><br> -->
+                    </td>
+
+                    <td>
+                      <span class="label label-primary">{{data.ordertype}}</span><br />
+                      <span class="label label-primary">{{data.tablenumber}}</span>
+
+                    </td>
+
+                    <td><span class="label label-primary">{{data.status}}</span><br />
+                      <!-- <span class="label label-primary">{{data.ordertype}}<br/> -->
+                    </td>
+
+                    <td class="text-right">
+
+                      <a class="btn btn-danger a-btn-slide-text" title="Delete Order" (click)="delete(data.id)">
+                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                        <span></span>
+                      </a>
+                    </td>
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colspan="9">
+                      <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <div id="DELIVERED" class="tab-pane fade" *ngIf="deliveredorders">
+        <div class="panel-body">
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="table-responsive">
+              <table class="table table-condensed table-striped table-bordered"
+                [mfData]="deliveredorders | dataFilterPr : filterQuery:'orders'" #mffff="mfDataTable"
+                [mfRowsOnPage]="rowsOnPage">
+                <thead>
+                  <tr>
+                    <th>Order No.</th>
+                    <th>Dish</th>
+                    <th>Order Details</th>
+                    <th>Customer</th>
+                    <th>Delivery Add.</th>
+                    <!-- <th>Branch Details</th> -->
+                    <th>Payment Details</th>
+                    <th>Ordertype</th>
+                    <th>Status</th>
+
+                    <th class="text-right">Action</th>
+                  </tr>
+                  <tr>
+                    <th colspan="9">
+                      <div id="custom-search-input">
+                        <div class="input-group col-md-12">
+                          <input type="text" class="form-control"
+                            placeholder="Search by Customer Name, Phone, City , Pincode Or Order Number"
+                            [(ngModel)]="filterQuery" />
+                          <span class="input-group-btn">
+                            <button class="btn btn-danger" type="button">
+                              <span class=" glyphicon glyphicon-search"></span>
+                            </button>
+                          </span>
+                        </div>
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let data of mffff.data; let i = index; let last = last;">
+                    <td>{{data.invoicenum}}<br>
+                      Total items : {{data.qcost.totalitem}}
+                    </td>
+                    <td>
+                      <div class="img-thumbnail  ">
+                        <img *ngIf="data?.oentry[0]?.photo?.docpath"
+                          src="{{docServer}}/{{data?.oentry[0]?.photo?.docpath}}" class="img-circle" alt=""
+                          style="width:100px; height:100px;">
+                        <img *ngIf="!data?.oentry[0]?.photo?.docpath"
+                          src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg"
+                          class="img-circle" alt="" style="width:100px; height:100px;">
+                        <div class="caption text-capitalize text-center" *ngIf="data.oentry.length<=1; else elseBlock">
+                          {{data.oentry[0]?.dname}}</div>
+                        <ng-template #elseBlock>
+                          <a [routerLink]="['/orderdetails',data.id]">
+                            <div class="caption text-capitalize text-center"> {{data.oentry[0]?.dname}} +
+                              {{data.oentry.length - 1}} Other Items</div>
+                          </a>
+                        </ng-template>
+
+                      </div>
+                    </td>
+                    <td><textarea style="margin: 0px; width: 180px; height: 124px;" readonly>{{data?.detail}}</textarea>
+                    </td>
+
+
+                    <td>{{data.custname}}<br>
+                      Phone-{{data.custmobile}}</td>
+                    <td>{{data.deliveryaddress.line1}},<br>
+                      {{data.deliveryaddress.city}}- {{data.deliveryaddress.pincode}}<br>Delivery by:
+                      {{data.deliveryperson}}<br>Number: {{data.deliverymobile}}
+                      <br>Expected Delivery :{{data.expdelivery | date}}<br>
+
+
+                    </td>
+                    <!-- <td>
+                      {{data.firmname}}<br>
+                      {{data.vendaddress.line1}},<br>
+                      {{data.vendaddress.city}}- {{data.vendaddress.pincode}}<br>
+                      Phone-{{data.vendmobile}}
+
+                    </td> -->
+                    <td>Mode -{{data.paymentmode}}<br>
+                      Txn ID- {{data.transactionid}}<br>
+                      Amount: {{data.qcost.finalamt}}/-<br>
+                      <!-- <span class="badge badge-primary">Amount :{{data?.qcost?.transferamt}}/-</span><br> -->
+                      <span class="badge badge-primary" *ngIf="data.adddelivery==='YES'">Delivery charge
+                        :{{data?.qcost?.delivery}}/-</span><br>
+                      <!-- <span class="badge badge-primary">Service Charge :{{data?.qcost?.servicecharge}}/-</span><br> -->
+                    </td>
+
+                    <td>
+                      <span class="label label-primary">{{data.ordertype}}</span><br />
+                      <span class="label label-primary">{{data.tablenumber}}</span>
+
+                    </td>
+
+                    <td><span class="label label-primary">{{data.status}}</span><br />
+                      <!-- <span class="label label-primary">{{data.ordertype}}<br/> -->
+                    </td>
+
+                    <td class="text-right">
+
+                      <a class="btn btn-danger a-btn-slide-text" title="Delete Order" (click)="delete(data.id)">
+                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                        <span></span>
+                      </a>
+                    </td>
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colspan="9">
+                      <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- <div *ngIf="data.length ===0 || placedorders.length ===0 || packedorders.length ===0 || deliveredorders.length ===0">
+                    <div class="alert alert-warning">
+                        <strong>Warning!</strong> Indicates a warning that might need attention.
+                      </div>
+                </div> -->
+
+    </div>
+  </div>
+
+</div>
+
+<div class="panel panel-default slideLeft" *ngIf="this.route.url === '/active_orders'">
+  <div class="panel-heading">
+    <div class="clearfix">
+      <div class="pull-left"> {{title}}</div>
+    </div>
+
+  </div>
+
+  <div class="panel-body" *ngIf="this.userRole==='SUPERADMIN' && this.userType==='FIRM'">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+      <div class="table-responsive">
+        <table class="table table-condensed table-striped table-bordered"
+          [mfData]="data | dataFilterPr : filterQuery:'orders'" #mff="mfDataTable" [mfRowsOnPage]="rowsOnPage">
+          <thead>
+            <tr>
+              <th>Order No.</th>
+              <th>Dish</th>
+              <th>Order Details</th>
+              <th>Customer</th>
+              <th>Delivery Add.</th>
+              <th>Payment Details</th>
+              <th>Ordertype</th>
+              <th>Status</th>
+              <th class="text-right">Action</th>
+            </tr>
+            <tr>
+              <th colspan="9">
+                <div id="custom-search-input">
+                  <div class="input-group col-md-12">
+                    <input type="text" class="form-control"
+                      placeholder="Search by Customer Name, Phone, City , Pincode Or Order Number"
+                      [(ngModel)]="filterQuery" />
+                    <span class="input-group-btn">
+                      <button class="btn btn-danger" type="button">
+                        <span class=" glyphicon glyphicon-search"></span>
+                      </button>
+                    </span>
+                  </div>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of mff.data; let i = index; let last = last;">
+              <td>{{data.invoicenum}}<br>
+                Total items : {{data.qcost.totalitem}}
+              </td>
+              <td style="text-align: center;">
+                <div class="img-thumbnail " style="margin: auto;">
+                  <img *ngIf="data?.oentry[0]?.photo?.docpath" src="{{docServer}}/{{data?.oentry[0]?.photo?.docpath}}"
+                    class="img-circle" alt="" style="width:100px; height:100px;">
+                  <img *ngIf="!data?.oentry[0]?.photo?.docpath"
+                    src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg" class="img-circle"
+                    alt="" style="width:100px; height:100px;">
+                  <div class="caption text-capitalize text-center" *ngIf="data.oentry.length<=1; else elseBlock">
+                    {{data.oentry[0]?.dname}}
+                  </div>
+                  <ng-template #elseBlock>
+                    <!-- <a [routerLink]="['/orderdetails',data.id]"> -->
+                    <div class="caption text-capitalize text-center"> {{data.oentry[0]?.dname}} + {{data.oentry.length
+                      - 1}} Other Items</div>
+                    <!-- </a> -->
+                  </ng-template>
+
+                </div>
+              </td>
+              <td><textarea style="margin: 0px; width: 180px; height: 124px;" readonly>{{data?.detail}}</textarea>
+              </td>
+
+              <td>{{data.custname}}<br>
+                Phone-{{data.custmobile}}</td>
+              <td>{{data.deliveryaddress.line1}},<br>
+                {{data.deliveryaddress.city}}- {{data.deliveryaddress.pincode}}<br>
+                <span *ngIf="data.ordertype==='HOME_DELIVERY'">Delivery by:{{data.deliveryperson}}<br>
+                  Number: {{data.deliverymobile}}<br>
+                  Expected Delivery :{{data.expdelivery | date}}<br>
+                </span>
+
+              </td>
+
+              <td>Mode -{{data.paymentmode}}<br>
+                <!-- Txn ID- {{data.transactionid}}<br> -->
+                Amount: {{data.qcost.finalamt}}/-<br>
+                <span class="badge badge-primary" *ngIf="data.adddelivery==='YES'">Delivery charge
+                  :{{data?.qcost?.delivery}}/-</span><br>
+              </td>
+
+              <td>
+                <span class="label label-primary">{{data.ordertype}}</span><br />
+                <span class="label label-primary">{{data.tablenumber}}</span>
+
+              </td>
+
+              <td>
+                <span class="label label-primary">{{data.status}}</span><br />
+                <!-- <span class="label label-primary">{{data.ordertype}}</span><br/> -->
+              </td>
+
+              <!-- dine in -->
+
+              <td class="text-right">
+                <a *ngIf="data.status==='PLACED' && data.ordertype==='DINE_IN'">
+                  <button (click)="acceptOrder(data.id,data.ordertype)" class="btn btn-warning btn-sm"
+                    title="Served Order">
+                    <span class="glyphicon glyphicon-user"></span>
+                  </button>
+                </a>
+
+                <a (click)="orderpacked(data.id,data.ordertype,data.custmobile)"
+                  *ngIf="data.status==='SERVED' && data.ordertype==='DINE_IN'" class="btn btn-default"
+                  title="Order Closed">
+                  <i class="glyphicon glyphicon glyphicon-remove"></i>
+                </a>
+
+
+                <!-- pick up -->
+                <a *ngIf="data.status==='PLACED' && data.ordertype==='PICK_UP'">
+                  <button (click)="acceptOrder(data.id,data.ordertype)" class="btn btn-warning btn-sm"
+                    title="Packed Order">
+                    <span class="glyphicon glyphicon glyphicon-ok"></span>
+                  </button>
+                </a>
+
+                <a (click)="orderpacked(data.id,data.ordertype,data.custmobile)"
+                  *ngIf="data.status==='PACKED' && data.ordertype==='PICK_UP'" class="btn btn-default"
+                  title="Order Closed">
+                  <i class="glyphicon glyphicon-inbox"></i>
+                </a>
+
+                <!-- Home delivery -->
+
+                <a *ngIf="data.status==='PLACED' && data.ordertype==='HOME_DELIVERY'">
+                  <button (click)="acceptOrder(data.id,data.ordertype)" class="btn btn-warning btn-sm"
+                    title="Packed Order">
+                    <span class="glyphicon glyphicon glyphicon-ok"></span>
+                  </button>
+                </a>
+
+                <!-- <a (click)="orderpacked(data.id,data.ordertype,data.custmobile)" *ngIf="data.status==='PACKED' && data.ordertype==='HOME_DELIVERY'" class="btn btn-default"
+                  title="Picked Up Packed">
+                  <i class="glyphicon glyphicon-inbox"></i>
+                </a> -->
+
+                <!-- <a (click)="orderpacked1(data.id,data.ordertype,data.custmobile)" *ngIf="data.status==='PICKED_UP' && data.ordertype==='HOME_DELIVERY'" class="btn btn-default"
+                  title="Order Delivered">
+                  <i class="glyphicon glyphicon-inbox"></i>
+                </a> -->
+
+                <a (click)="orderpacked2(data.id,data.ordertype,data.custmobile)"
+                  *ngIf="data.status==='DELIVERED' && data.ordertype==='HOME_DELIVERY'" class="btn btn-default"
+                  title="Order Closed">
+                  <i class="glyphicon glyphicon glyphicon-remove"></i>
+                </a>
+                <a *ngIf="data.status === 'CLOSED' && data?.invoice" href="{{docServer}}/{{data?.invoice?.docpath}}" target="_blank">
+                  <button class="btn btn-info btn-sm" title="Download Invoice">
+                    <span class="glyphicon glyphicon-cloud-download"></span>
+                  </button>
+                </a>
+
+                <!-- Reject order -->
+
+                <a *ngIf="data.status==='PLACED'">
+                  <button (click)="RejectOrder(data)" class="btn btn-danger btn-sm" title="Reject Order">
+                    <span class="glyphicon glyphicon glyphicon-remove"></span>
+                  </button>
+                </a>
+
+                <!-- change delivery person -->
+                <a *ngIf="data.status === 'PACKED' && userRole==='SUPERADMIN'" title="Change Delivery pool"
+                  (click)="changedeliveryperson(data)">
+                  <button class="btn btn-info btn-sm">
+                    <span class="glyphicon glyphicon-user"></span>
+                  </button>
+                </a>
+
+                <!-- delete order -->
+                <a *ngIf="userRole ==='SUPERADMIN'" class="btn btn-danger a-btn-slide-text" title="Delete Order"
+                  (click)="delete(data.id)">
+                  <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                  <span></span>
+                </a>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="9">
+                <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="panel panel-default slideLeft" *ngIf="this.route.url === '/all_delivered_orders'">
+  <div class="panel-heading">
+    <div class="clearfix">
+      <div class="pull-left"> {{title}}</div>
+    </div>
+
+  </div>
+
+  <div class="panel-body" *ngIf="this.userRole==='SUPERADMIN' && this.userType==='FIRM'">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+      <div class="table-responsive">
+        <table class="table table-condensed table-striped table-bordered"
+          [mfData]="data | dataFilterPr : filterQuery:'orders'" #mff="mfDataTable" [mfRowsOnPage]="rowsOnPage">
+          <thead>
+            <tr>
+              <th>Order No.</th>
+              <th>Dish</th>
+              <th>Order Details</th>
+              <th>Customer</th>
+              <th>Delivery Add.</th>
+              <th>Payment Details</th>
+              <th>Ordertype</th>
+              <th>Status</th>
+              <th class="text-right">Action</th>
+            </tr>
+            <tr>
+              <th colspan="9">
+                <div id="custom-search-input">
+                  <div class="input-group col-md-12">
+                    <input type="text" class="form-control"
+                      placeholder="Search by Customer Name, Phone, City , Pincode Or Order Number"
+                      [(ngModel)]="filterQuery" />
+                    <span class="input-group-btn">
+                      <button class="btn btn-danger" type="button">
+                        <span class=" glyphicon glyphicon-search"></span>
+                      </button>
+                    </span>
+                  </div>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of mff.data; let i = index; let last = last;">
+              <td>{{data.invoicenum}}<br>
+                Total items : {{data.qcost.totalitem}}
+              </td>
+              <td style="text-align: center;">
+                <div class="img-thumbnail " style="margin: auto;">
+                  <img *ngIf="data?.oentry[0]?.photo?.docpath" src="{{docServer}}/{{data?.oentry[0]?.photo?.docpath}}"
+                    class="img-circle" alt="" style="width:100px; height:100px;">
+                  <img *ngIf="!data?.oentry[0]?.photo?.docpath"
+                    src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg" class="img-circle"
+                    alt="" style="width:100px; height:100px;">
+                  <div class="caption text-capitalize text-center" *ngIf="data.oentry.length<=1; else elseBlock">
+                    {{data.oentry[0]?.dname}}
+                  </div>
+                  <ng-template #elseBlock>
+                    <!-- <a [routerLink]="['/orderdetails',data.id]"> -->
+                    <div class="caption text-capitalize text-center"> {{data.oentry[0]?.dname}} + {{data.oentry.length
+                      - 1}} Other Items</div>
+                    <!-- </a> -->
+                  </ng-template>
+
+                </div>
+              </td>
+              <td><textarea style="margin: 0px; width: 180px; height: 124px;" readonly>{{data?.detail}}</textarea>
+              </td>
+
+              <td>{{data.custname}}<br>
+                Phone-{{data.custmobile}}</td>
+              <td>{{data.deliveryaddress.line1}},<br>
+                {{data.deliveryaddress.city}}- {{data.deliveryaddress.pincode}}<br>
+                <span *ngIf="data.ordertype==='HOME_DELIVERY'">Delivery by:{{data.deliveryperson}}<br>
+                  Number: {{data.deliverymobile}}<br>
+                  Expected Delivery :{{data.expdelivery | date}}<br>
+                </span>
+
+              </td>
+
+              <td>Mode -{{data.paymentmode}}<br>
+                <!-- Txn ID- {{data.transactionid}}<br> -->
+                Amount: {{data.qcost.finalamt}}/-<br>
+                <span class="badge badge-primary" *ngIf="data.adddelivery==='YES'">Delivery charge
+                  :{{data?.qcost?.delivery}}/-</span><br>
+              </td>
+
+              <td>
+                <span class="label label-primary">{{data.ordertype}}</span><br />
+                <span class="label label-primary">{{data.tablenumber}}</span>
+
+              </td>
+
+              <td>
+                <span class="label label-primary">{{data.status}}</span><br />
+                <!-- <span class="label label-primary">{{data.ordertype}}</span><br/> -->
+              </td>
+
+              <!-- dine in -->
+
+              <td class="text-right">
+                <a *ngIf="data.status==='PLACED' && data.ordertype==='DINE_IN'">
+                  <button (click)="acceptOrder(data.id,data.ordertype)" class="btn btn-warning btn-sm"
+                    title="Served Order">
+                    <span class="glyphicon glyphicon-user"></span>
+                  </button>
+                </a>
+
+                <a (click)="orderpacked(data.id,data.ordertype,data.custmobile)"
+                  *ngIf="data.status==='SERVED' && data.ordertype==='DINE_IN'" class="btn btn-default"
+                  title="Order Closed">
+                  <i class="glyphicon glyphicon glyphicon-remove"></i>
+                </a>
+
+
+                <!-- pick up -->
+                <a *ngIf="data.status==='PLACED' && data.ordertype==='PICK_UP'">
+                  <button (click)="acceptOrder(data.id,data.ordertype)" class="btn btn-warning btn-sm"
+                    title="Packed Order">
+                    <span class="glyphicon glyphicon glyphicon-ok"></span>
+                  </button>
+                </a>
+
+                <a (click)="orderpacked(data.id,data.ordertype,data.custmobile)"
+                  *ngIf="data.status==='PACKED' && data.ordertype==='PICK_UP'" class="btn btn-default"
+                  title="Order Closed">
+                  <i class="glyphicon glyphicon-inbox"></i>
+                </a>
+
+                <!-- Home delivery -->
+
+                <a *ngIf="data.status==='PLACED' && data.ordertype==='HOME_DELIVERY'">
+                  <button (click)="acceptOrder(data.id,data.ordertype)" class="btn btn-warning btn-sm"
+                    title="Packed Order">
+                    <span class="glyphicon glyphicon glyphicon-ok"></span>
+                  </button>
+                </a>
+
+                <!-- <a (click)="orderpacked(data.id,data.ordertype,data.custmobile)"
+                  *ngIf="data.status==='PACKED' && data.ordertype==='HOME_DELIVERY'" class="btn btn-default"
+                  title="Picked Up Packed">
+                  <i class="glyphicon glyphicon-inbox"></i>
+                </a>
+
+                <a (click)="orderpacked1(data.id,data.ordertype,data.custmobile)"
+                  *ngIf="data.status==='PICKED_UP' && data.ordertype==='HOME_DELIVERY'" class="btn btn-default"
+                  title="Order Delivered">
+                  <i class="glyphicon glyphicon-inbox"></i>
+                </a> -->
+
+                <a (click)="orderpacked2(data.id,data.ordertype,data.custmobile)"
+                  *ngIf="data.status==='DELIVERED' && data.ordertype==='HOME_DELIVERY'" class="btn btn-default"
+                  title="Order Closed">
+                  <i class="glyphicon glyphicon glyphicon-remove"></i>
+                </a>
+                <a *ngIf="data.status === 'CLOSED' && data?.invoice" href="{{docServer}}/{{data?.invoice?.docpath}}" target="_blank">
+                  <button class="btn btn-info btn-sm" title="Download Invoice">
+                    <span class="glyphicon glyphicon-cloud-download"></span>
+                  </button>
+                </a>
+
+                <!-- Reject order -->
+
+                <a *ngIf="data.status==='PLACED'">
+                  <button (click)="RejectOrder(data)" class="btn btn-danger btn-sm" title="Reject Order">
+                    <span class="glyphicon glyphicon glyphicon-remove"></span>
+                  </button>
+                </a>
+
+                <!-- change delivery person -->
+                <a *ngIf="data.status === 'PACKED' && userRole==='SUPERADMIN'" title="Change Delivery pool"
+                  (click)="changedeliveryperson(data)">
+                  <button class="btn btn-info btn-sm">
+                    <span class="glyphicon glyphicon-user"></span>
+                  </button>
+                </a>
+
+                <a *ngIf="data.status === 'DELIVERED' && data?.invoice" href="{{docServer}}/{{data?.invoice?.docpath}}" target="_blank">
+                  <button class="btn btn-info btn-sm" title="Download Invoice">
+                    <span class="glyphicon glyphicon-cloud-download"></span>
+                  </button>
+                </a>
+
+                <!-- delete order -->
+                <a *ngIf="userRole ==='SUPERADMIN'" class="btn btn-danger a-btn-slide-text" title="Delete Order"
+                  (click)="delete(data.id)">
+                  <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                  <span></span>
+                </a>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="9">
+                <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div id="id01" class="w3-modal">
+  <div class="w3-modal-content w3-animate-top w3-card-4">
+    <header class="w3-container w3-teal" style="background-color: #58427fc9!important;">
+      <span onclick="document.getElementById('id01').style.display='none'"
+        class="w3-button w3-display-topright">&times;</span>
+      <h4>Update Delivery Person</h4>
+    </header>
+    <form class="w3-container w3-card-4 w3-light-grey">
+      <div class="form-group">
+        <label for="role">Select Delivery Person:</label>
+        <select class="form-control" name="role" required [(ngModel)]="deliverypersonupdate"
+          (change)="dpchange($event)">
+          <option required *ngFor="let rolee of dpersonList; let i=index" [value]="rolee.id">{{rolee.name}}</option>
+        </select>
+      </div>
+
+      <button class="w3-btn w3-blue-grey" (click)="updatedeliveryperson()">Update</button>
+    </form>
+
+  </div>
+</div>

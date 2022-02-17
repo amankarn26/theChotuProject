@@ -1,0 +1,11 @@
+
+.hd {
+    background-color: rgb(127, 62, 202) /*blue*/;
+    color: white;
+  }
+
+  label {
+    display: inline-block;
+    margin-bottom: 5px;
+    /* font-weight: bold; */
+}

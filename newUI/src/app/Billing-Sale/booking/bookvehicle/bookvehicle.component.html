@@ -1,0 +1,380 @@
+<!-- <div class="row">
+  <div class="col-md-12">
+    <h2>{{title}}</h2>
+
+  </div>
+</div>
+<hr /> -->
+
+<div [hidden]="isManageState" class="col-md-12 col-sm-12 col-xs-12">
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        {{title}}
+        <a [routerLink]="['/managefirm']" title="View all firms" class="pull-right">
+          <span class="glyphicon glyphicon-th-list"></span>
+        </a>
+      </div>
+      <div class="panel-body">
+         <form #form1="ngForm" >
+
+          <div class="col-sm-12 img-thumbnail">
+
+            <div class="col-sm-3">
+
+                <img src="{{docServer}}/{{productdata?.photos[0]?.docpath}}" alt="{{docServer}}/{{productdata?.photos[0]?.docpath}}" style="width:100%; height:200px;">
+
+            </div>
+
+            <div class="col-sm-9">
+                <table class="table table-bordered">
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        
+                      <tr *ngFor="let data of this.bookvehicles; let i = index; let last = last;" >
+                        <td>{{data?.pname}}</td>
+                        <td>
+                     Model:{{data?.vmodel}} , 
+                            <!-- {{data?.vtype}} -->
+                            <!-- {{data?.voption}} -->
+                     Colour:       {{data?.vcolour}}<br>
+                       Chasis No:     {{data?.chassisnum}}
+                       Engine No:     {{data?.enginenum}}
+                        </td>
+                        <td>
+                          Amount : {{data?.amount}}
+                          GST Amount : {{data?.gstamt}}
+                         Final Amount : {{data?.finalamt}}
+                        </td>
+                      </tr>
+                    
+                    </tbody>
+                  </table>
+              </div>
+             
+          </div>
+
+          <div class="col-sm-8">
+           <div class="col-sm-12 img-thumbnail" id="first">
+
+              <div class=" col-sm-4" >
+                  <div class="form-group">
+                    <label for="bookingnum">Booking No.:
+                    </label>
+                    <input *ngIf="!isUpdate" type="text" class="form-control" id="bookingnum" name="bookingnum" readonly
+                      [(ngModel)]="bookingnum" required (change)="generatepass()" />
+                    <input *ngIf="isUpdate" type="text" class="form-control" id="bookingnum" name="bookingnum" readonly
+                      [(ngModel)]="bookingnum" required />
+                  </div>
+                </div>
+                <div class=" col-sm-4">
+                    <div class="form-group">
+                      <label for="bookingdate">Booking Date:
+                      </label>
+                      <input *ngIf="!isUpdate" type="date" class="form-control" id="bookingdate" name="bookingdate"
+                        [(ngModel)]="bookingdate" required  />
+                      <input *ngIf="isUpdate" type="date" class="form-control" id="bookingdate" name="bookingdate" readonly
+                        [(ngModel)]="bookingdate" required />
+                    </div>
+                  </div>
+
+
+
+                    <div class=" col-sm-4">
+                        <div class="form-group">
+                          <label for="pricetype">Price Type:
+                          </label>
+                          <select class="form-control" name="pricetype" *ngIf="!isUpdate" required [(ngModel)]="pricetype">
+                            <option value="RETAIL">RETAIL</option>
+                            <option value="CSD">CSD</option>
+                            <option value="GOVT">GOVT</option>
+                            <option value="INSTITUTIONAL">INSTITUTIONAL</option>
+                            <option value="DGS_D">DGS_D</option>
+                            <option value="NONE">NONE</option>
+                          </select>
+                          <select class="form-control" name="pricetype" *ngIf="isUpdate" disabled required
+                            [(ngModel)]="pricetype">
+                            <option value="RETAIL">RETAIL</option>
+                            <option value="CSD">CSD</option>
+                            <option value="GOVT">GOVT</option>
+                            <option value="INSTITUTIONAL">INSTITUTIONAL</option>
+                            <option value="DGS_D">DGS_D</option>
+                            <option value="NONE">NONE</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-sm-4">
+                        <div class="form-group">
+                          <label for="expdelivery"> Expected Delivery:
+                          </label>
+                          <input type="date" class="form-control" required name="expDelivery" [(ngModel)]="expdelivery">
+                        </div>
+                      </div>
+                      <!-- <div class=" col-sm-12" >
+                          <div class="form-group">
+                            <label for="salesman">Salesman: </label>
+                            <input *ngIf="isUpdate" readonly class="form-control" name="primhandler" [(ngModel)]="salesman" />
+                            <select class="form-control" name="salesman" [(ngModel)]="salesman" required (change)="onChangeHandler1($event)">
+                              <option required *ngFor="let primhandler of empList; let i=index" [value]="primhandler.id">{{primhandler.name}}</option>
+                          </select>
+                          </div>
+                        </div> -->
+        
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="salesman">Comments: </label>
+                                <textarea rows="4" cols="50"  class="form-control" name="comment" [(ngModel)]="comments">
+                                </textarea>
+                            </div>
+                        </div>
+
+                  
+      
+           </div>
+           <div class="col-sm-12 img-thumbnail" id="second">
+             
+              <div class=" col-sm-4 ">
+                  <div class="form-group">
+                    <label for="custstate"> State:
+                    </label>
+                    <input *ngIf="isUpdate" readonly class="form-control" name="custstate" [(ngModel)]="custstate" />
+                    <select *ngIf="!isUpdate" class="form-control" name="custstate" required [(ngModel)]="custstate"
+                      (change)="onChangeState($event)">
+                      <option *ngFor="let state of statelist; let i=index" [value]="state">{{state}}</option>
+                    </select>
+                  </div>
+                </div>
+                <div class=" col-sm-4 ">
+                  <div class="form-group">
+                    <label for="custcity"> City:
+                    </label>
+                    <input *ngIf="isUpdate" readonly name="custcity" class="form-control" [(ngModel)]="custcity" />
+                    <select *ngIf="!isUpdate" (ngModel)="citiName" name="custcity" required class="form-control"
+                      [(ngModel)]="custcity" (change)="getClienList()">
+                      <option *ngFor="let city of citylist; let i=index" [value]="city">{{city}}</option>
+                    </select>
+                  </div>
+                </div>
+    
+    
+                <div class=" col-sm-4 ">
+                  <div class="form-group">
+                    <label for="customer">Customer :
+                    </label>
+                    <input *ngIf="isUpdate" readonly class="form-control" name="customer" [(ngModel)]="customer" />
+                    <select *ngIf="!isUpdate" class="form-control" name="customer" [(ngModel)]="customer" required
+                      (change)="onChangeCustomer($event)">
+                      <option required *ngFor="let retailer of clientdata; let i=index" [value]="retailer.id">
+                        {{retailer.name}}</option>
+                    </select>
+                  </div>
+                </div>
+
+            
+           </div>
+          </div>
+
+
+           <div class="col-sm-4 img-thumbnail" id="third">
+              <div class=" col-sm-6 ">
+                  <div class="form-group">
+                    <label for="saletype">Sale Type:
+                    </label>
+                    <select class="form-control" name="saletype" *ngIf="!isUpdate" required [(ngModel)]="saletype">
+                      <option value="NEW">NEW</option>
+                      <option value="OLD">OLD</option>
+                    </select>
+                    <select class="form-control" name="saletype" *ngIf="isUpdate" disabled required [(ngModel)]="saletype">
+                      <option value="NEW">NEW</option>
+                      <option value="OLD">OLD</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class=" col-sm-6">
+                    <div class="form-group">
+                      <label for="hypothecation">Hypothecation:
+                      </label>
+                      <select class="form-control" name="hypothecation" *ngIf="!isUpdate" required
+                        [(ngModel)]="hypothecation">
+                        <option value="YES">YES</option>
+                        <option value="NO">NO</option>
+                      </select>
+                      <select class="form-control" name="hypothecation" *ngIf="isUpdate" disabled required
+                        [(ngModel)]="hypothecation">
+                        <option value="YES">YES</option>
+                        <option value="NO">NO</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="col-sm-6" *ngIf="hypothecation==='YES'">
+                      <div class="form-group">
+                        <label for="financename">Financer:
+                        </label>
+                        <input *ngIf="!isUpdate" type="text" class="form-control" id="financename" name="financename"
+                          [(ngModel)]="financename" required />
+                        <input *ngIf="isUpdate" type="text" class="form-control" id="financename" name="financename"
+                          [(ngModel)]="financename" required />
+                      </div>
+                    </div>
+
+                    <div class=" col-sm-6 ">
+                        <div class="form-group">
+                          <label for="isexchg">Exchange:
+                          </label>
+                          <select class="form-control" name="isexchg" *ngIf="!isUpdate" required
+                            [(ngModel)]="isexchg">
+                            <option value="YES">YES</option>
+                            <option value="NO">NO</option>
+                          </select>
+                          <select class="form-control" name="isexchg" *ngIf="isUpdate" disabled required
+                            [(ngModel)]="isexchg">
+                            <option value="YES">YES</option>
+                            <option value="NO">NO</option>
+                          </select>
+                        </div>
+                      </div>
+
+
+                      <div class=" col-sm-6" *ngIf="isexchg==='YES'" >
+                          <div class="form-group">
+                            <label for="model">Model:
+                            </label>
+                            <input *ngIf="!isUpdate" type="text" class="form-control" id="model" name="model" 
+                              [(ngModel)]="model" required />
+                            <input *ngIf="isUpdate" type="text" class="form-control" id="model" name="model" readonly
+                              [(ngModel)]="model" required />
+                          </div>
+                        </div>
+            
+    
+                        <div class=" col-sm-6" *ngIf="isexchg==='YES'">
+                            <div class="form-group">
+                              <label for="yrofmfg">Year Of Manifacturing:
+                              </label>
+                              <input *ngIf="!isUpdate" type="date" class="form-control" id="yrofmfg" name="yrofmfg"
+                                [(ngModel)]="yrofmfg" required (change)="generatepass()" />
+                              <input *ngIf="isUpdate" type="date" class="form-control" id="yrofmfg" name="yrofmfg" readonly
+                                [(ngModel)]="yrofmfg" required />
+                            </div>
+                          </div>
+    
+                          <div class=" col-sm-6 " *ngIf="isexchg==='YES'">
+                              <div class="form-group">
+                                <label for="exchgvalue">Exchange Value:
+                                </label>
+                                <input *ngIf="!isUpdate" type="number" class="form-control" id="exchgvalue" name="exchgvalue" 
+                                  [(ngModel)]="exchgvalue" required (change)="generatepass()" />
+                                <input *ngIf="isUpdate" type="number" class="form-control" id="exchgvalue" name="exchgvalue" readonly
+                                  [(ngModel)]="exchgvalue" required />
+                              </div>
+                            </div>
+        
+           </div>
+         
+         
+          <div class="col-md-12">
+            <div class="form-group">
+              <button *ngIf="this.url == '/makebooking/'+this.id" type="submit" [disabled]="!form1.valid" class="btn btn-default" (click)="submitData()">Submit</button>
+              <button *ngIf="this.url == '/editfirm/' + this.id" type="submit" [disabled]="!form1.valid" class="btn btn-default" (click)="updateData()">Update</button>
+             <button type="button" class="btn btn-default" (click)="cancel()">Cancel</button>
+            </div>
+          </div>
+        </form>
+  
+      </div>
+    </div>
+  </div>
+  
+  <div [hidden]="!isManageState" class="col-md-12 col-sm-12 col-xs-12">
+  
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        {{title}}
+        <a [routerLink]="['/addfirm']"  title="Add Firm" class="pull-right">
+          <span class="glyphicon glyphicon-plus-sign"></span>
+        </a>
+      </div>
+      <div class="panel-body">
+        <div class="table-responsive">
+          <table class="table table-condensed table-striped table-bordered" [mfData]="data | dataFilterPr : filterQuery" #mf="mfDataTable"
+            [mfRowsOnPage]="rowsOnPage" [(mfSortBy)]="Role" [(mfSortOrder)]="sortOrder">
+            <thead>
+              <tr>
+                <th>SN</th>
+                <th>Id</th>
+                <th>
+                  <mfDefaultSorter by="role">Name</mfDefaultSorter>
+                </th>
+                <th>Code</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Members</th>
+                <th>Address</th>
+                <th>Action</th>
+              </tr>
+              <tr>
+                <th colspan="9">
+                  <div id="custom-search-input">
+                    <div class="input-group col-md-12">
+                      <input type="text" class="form-control" placeholder="Search by name" [(ngModel)]="filterQuery" />
+                      <span class="input-group-btn">
+                        <button class="btn btn-danger" type="button">
+                          <span class=" glyphicon glyphicon-search"></span>
+                        </button>
+                      </span>
+                    </div>
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of mf.data; let i = index; let last = last;">
+                <td>{{i+1}}</td>
+                <td>{{data?.id}}</td>
+                <td>{{data?.name}}</td>
+                <td>{{data?.code}}</td>
+                <td>{{data?.email}}</td>
+                <td>{{data?.phone}}</td>
+                <td>{{data?.empcount}}</td>
+                <td>
+                  {{data?.address.line1}},
+                  <br> {{data?.address.line2}},
+                  <br> {{data?.address.country}},
+                  <br> {{data?.address.states}},{{data?.address.city}},
+                  <br> {{data?.address.pincode}}
+                </td>
+                <td class="text-right">
+                  <a [routerLink]="['/editfirm/',data.id]" data-toggle="tooltip" title="Update Firm">
+                    <button class="btn btn-default btn-sm">
+                      <span class="glyphicon glyphicon-edit"></span>
+                    </button>
+                  </a>
+                  <button  class="btn btn-danger btn-sm" title="Delete Firm" (click)="deleteRole(data.id)">
+                    <span class="glyphicon glyphicon-remove-circle"></span>
+                  </button>
+                  <!-- <button *ngIf="userType !== 'ADMIN'" disabled class="btn btn-danger btn-sm" title="Contact admin for functionality" (click)="deleteRole(data.role)">
+                    <span class="glyphicon glyphicon-remove-circle"></span>
+                  </button> -->
+                </td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="9">
+                  <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>

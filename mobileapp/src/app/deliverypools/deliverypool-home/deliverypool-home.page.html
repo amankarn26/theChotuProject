@@ -1,0 +1,129 @@
+<!-- <ion-header>
+  <ion-toolbar>
+    <ion-title>deliverypool_home</ion-title>
+  </ion-toolbar>
+</ion-header> -->
+
+<ion-header [translucent]="true"    >
+  <ion-toolbar style="--background: rgba(134,75,246,1);">
+    <ion-title class="pageheading">
+    &nbsp; AAI
+    </ion-title>
+
+    <ion-label slot="end" style="font-size: small;color: white;"> {{user}}</ion-label>
+
+    <ion-buttons class="cartt" slot="end" >
+      <ion-button (click)="onNotificationsClick()" class="notification-icon-button">
+        <ion-badge class="notification-badge" *ngIf="notificationList">{{notificationList?.length}}</ion-badge>
+        <ion-icon slot="icon-only" style="color: #e9ddff;" name="notifications"></ion-icon>
+      </ion-button>
+     </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content style="--background:#e9ddff;">
+
+  <div class="offers" style="background-color: #864bf6;color: white;">
+    <ion-row no-padding class="category-banner">
+      <ion-col text-left button align-self-center>
+        ORDERS
+      </ion-col>
+    </ion-row>
+  </div>
+
+  <ion-grid>
+    <ion-row justify-content-center>
+
+      <ion-col size="3" text-center>
+        <ion-buttons>
+          <button ion-button style="background: none; text-align: center;">
+            <ion-icon name="basket-sharp" style="font-size: 40px; color:#864bf6;" (click)="showOrders('PLACED')"></ion-icon>
+            <p class="ion-text-center">Active</p>
+          </button>
+        </ion-buttons>
+      </ion-col>
+
+      <ion-col size="3" text-center>
+        <ion-buttons >
+          <button ion-button  style="background: none; text-align: center;">
+            <!-- <ion-icon name="basket-sharp"></ion-icon> -->
+            <ion-icon name="briefcase-sharp" style="font-size: 40px;color: #864bf6;" (click)="showOrders('PACKED')" ></ion-icon>
+            <p class="ion-text-center" color="primary">Packed</p>
+          </button>
+        </ion-buttons>
+      </ion-col>
+
+      <ion-col size="3" text-center >
+        <ion-buttons >
+          <button ion-button  color="primary" style="background: none; text-align: center;">
+
+            <ion-icon name="bicycle-sharp" style="font-size: 40px;color: #864bf6;" (click)="showOrders('PICKED_UP')"></ion-icon>
+            <p class="ion-text-center" color="secondary">Picked Up</p>
+          </button>
+        </ion-buttons>
+      </ion-col>
+
+      <ion-col size="3" class="ordersIcon" text-center>
+        <ion-buttons>
+          <button ion-button style="background: none; text-align: center;">
+            <ion-icon name="folder-sharp" style="font-size: 40px;color: #864bf6;" (click)="showOrders('DELIVERED')"></ion-icon>
+            <p class="ion-text-center" color="success">Delivered</p>
+          </button>
+        </ion-buttons>
+      </ion-col>
+
+      <ion-col size="3" class="ordersIcon" text-center>
+        <ion-buttons>
+          <button ion-button style="background: none; text-align: center;">
+
+            <ion-icon name="newspaper-sharp" style="font-size: 40px;color: #864bf6;" (click)="showOrders('ALL')"></ion-icon>
+            <p class="ion-text-center">All</p>
+          </button>
+        </ion-buttons>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+<!--
+amount payable and recevied start
+ -->
+
+
+ <div class="offers" style="background-color: #864bf6;color: white;">
+  <ion-row no-padding class="category-banner">
+    <ion-col text-left button align-self-center>
+      Amount Payable/Received
+    </ion-col>
+  </ion-row>
+</div>
+
+<ion-grid>
+  <ion-row>
+    <ion-col size="3" class="ordersIcon" >
+      <ion-buttons>
+        <button ion-button style="background: none; text-align: center;">
+          <ion-icon name="wallet-sharp" style="font-size: 40px;color: #864bf6;" (click)="showOrders('AMOUNTPAYBLE')" ></ion-icon>
+          <p class="ion-text-center">Amount Payable</p>
+        </button>
+      </ion-buttons>
+    </ion-col>
+    <ion-col size="3" class="ordersIcon" >
+      <ion-buttons>
+        <button ion-button style="background: none; text-align: center;">
+          <ion-icon name="wallet-sharp" style="font-size: 40px;color: #864bf6;" (click)="showOrders('AMOUNTRECEIVED')"></ion-icon>
+          <p class="ion-text-center">Amount Received</p>
+        </button>
+      </ion-buttons>
+    </ion-col>
+    <ion-col l size="6">
+
+    </ion-col>
+  </ion-row>
+</ion-grid>
+
+
+ <!-- Amount payable and received end -->
+
+
+
+</ion-content>

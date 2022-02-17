@@ -1,0 +1,475 @@
+<!-- <button id="openModalButton" [hidden]="true" data-toggle="modal" data-target="#csvImport">Open Modal</button>
+<div id="csvImport" class="modal fade" role="dialog">
+  <div class="modal-dialog"> -->
+    <!-- Modal content-->
+    <!-- <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Imported File {{csvName}}</h4>
+      </div>
+      <div class="modal-body">
+        <table class="table table-condensed table-sm" style="font-size:10px;">
+          <tr>
+            <th>Name</th>
+            <th>Status</th>
+            <th>Error</th>
+          </tr>
+          <tr>
+            <td>
+              <div *ngFor="let name of name"> {{name}}</div>
+            </td>
+            <td>
+              <div *ngFor="let status of status"> {{status}}</div>
+            </td>
+            <td>
+              <div *ngFor="let error of error"> {{error}}</div>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div> -->
+  <!-- </div>
+</div> -->
+
+<div [hidden]="isManageState" class="col-md-12 col-sm-12 col-xs-12 text-capitalize">
+  <div class="panel panel-default" *ngIf="!detailFlag">
+    <div class="panel panel-default">
+      <div class="panel-heading"> {{title}}
+        <div class="pull-right">
+          <a [routerLink]="['/manageproduct']" title="Manage Product" class="pull-right">
+            <span class="glyphicon glyphicon-th-list"></span>
+          </a> &nbsp;
+        </div>
+      </div>
+      <div class="panel-body" *ngIf="tab1">
+
+
+        <form #form1="ngForm">
+              <div class="col-sm-4">
+                <div class="form-group">
+                  <label for="name"> Property Name:
+                  </label>
+                  <input type="text" *ngIf="!isUpdate" class="form-control" required name="name" [(ngModel)]="property.name">
+                  <input type="text" *ngIf="isUpdate" class="form-control" required name="name" [(ngModel)]="property.name"
+                    disabled>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group">
+                  <label for="name"> Details:
+                  </label>
+                  <input type="text" *ngIf="!isUpdate" class="form-control" required name="details" [(ngModel)]="property.details">
+                  <input type="text" *ngIf="isUpdate" class="form-control" required name="details" [(ngModel)]="property.details"
+                    disabled>
+                </div>
+              </div>
+              <div class="col-sm-4 ">
+                <div class="form-group">
+                  <label for="priority"> Priority : </label>
+                  <input *ngIf="!isUpdate" type="number" mutiline class="form-control" id="priority" name="priority"
+                    [(ngModel)]="property.priority" />
+                  <input *ngIf="isUpdate" type="number" mutiline class="form-control" id="priority" name="priority"
+                    [(ngModel)]="property.priority" />
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group">
+                  <label for="name"> Start Range:
+                  </label>
+                  <input type="number" *ngIf="!isUpdate" class="form-control"  name="name" [(ngModel)]="property.startrange">
+                  <input type="number" *ngIf="isUpdate" class="form-control"  name="name" [(ngModel)]="property.startrange"
+                    disabled>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group">
+                  <label for="name"> End Range:
+                  </label>
+                  <input type="number" *ngIf="!isUpdate" class="form-control"  name="endrange" [(ngModel)]="property.endrange">
+                  <input type="number" *ngIf="isUpdate" class="form-control"  name="endrange" [(ngModel)]="property.endrange"
+                    disabled>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group">
+                  <label for="gsttype">Mandatory:
+                  </label>
+                  <select class="form-control" id="gst" *ngIf="!isUpdate" required name="gst" [(ngModel)]="property.mandatory">
+                    <option value="YES">YES</option>
+                    <option value="NO">NO</option>
+                  </select>
+                  <select class="form-control" id="gst" *ngIf="isUpdate" required name="gst" [(ngModel)]="property.mandatory">
+                    <option value="YES">YES</option>
+                    <option value="NO">NO</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="col-sm-6">
+                <div class="form-group" style="margin-top: 5px;">
+                  <br>
+
+                  <label for="Addbutton" [hidden]='true'>Add
+                  </label>
+                  <button [disabled]="!form1.valid" class="btn btn-info btn-sm" (click)="pushproperty()">
+                    <span class="glyphicon glyphicon-plus"></span>
+                  </button>&nbsp;&nbsp;
+                  <button  class="btn btn-info btn-sm" (click)="next()">
+                    <!-- <span class="glyphicon glyphicon-plus">Next</span> -->Next
+                  </button>
+                </div>
+              </div>
+          <div class="col-sm-12">
+            <hr>
+          </div>
+
+          <div class="col-sm-12 img-thumbnail rounded"
+          style="margin-top: 3px;  border: 1px solid #c5c4c4; min-height: 10px; overflow: auto;">
+          <table class="table">
+            <thead>
+              <tr>
+                <th style="width: 50px;">-</th>
+                <!-- <th>Customer</th> -->
+
+                <th>Name</th>
+                <th>Details</th>
+                <th>Priority</th>
+                <th>Start range</th>
+                <th>End range</th>
+                <th>mandatory</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of datalist; let i=index;">
+                <td style="width: 50px;">
+                  <a style="cursor: pointer; color: red;" (click)="delproperty(data.id)">
+                    <span class="glyphicon glyphicon-remove-circle"></span>
+                  </a>
+                </td>
+                <!-- <td style="width: 50px;" *ngIf="isUpdate">
+                  <a style="cursor: pointer; color: red;" (click)="onDeletelabourfromdb(data.id)">
+                    <span class="glyphicon glyphicon-remove-circle"></span>
+                  </a>
+                </td> -->
+
+                <td>{{data?.name}}</td>
+                <td>{{data?.details}}</td>
+                <td>{{data?.priority}}</td>
+                <td>{{data?.startrange}}</td>
+                <td>{{data?.endrange}}</td>
+                <td>{{data?.mandatory}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel panel-default" *ngIf="detailFlag">
+    <div class="panel-heading">
+      <div class="clearfix">
+        <div class="pull-left"> {{title}}</div>
+        <div class="container" class="pull-right">
+          <div class="row">
+            <a [routerLink]="['/manageproduct']" title="Manage Product" class="btn btn-info btn-sm a-btn-slide-text">
+              <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+            </a>
+            <a [routerLink]="['/editproduct', id]" title="Update Product" class="btn btn-info btn-sm a-btn-slide-text">
+              <i class="glyphicon glyphicon-edit"></i>
+            </a>
+            <a class="btn btn-danger a-btn-slide-text btn-sm" title="Delete Product" (click)="deleteRole(id)">
+              <span class="glyphicon glyphicon-remove-circle"></span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="panel-body">
+      <form #form1="ngForm">
+        <div class="col-md-12 col-sm-12 col-xs-12 img-thumbnail ">
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <h4>Product Image:</h4>
+          </div>
+          <div class="col-md-3">
+            <img src='{{docServer}}/{{getPhots[0]?.docpath}}' style="height:200px; width:200px;" class="thumbnail">
+          </div>
+          <div class="col-md-3" *ngIf="getPhots[1]?.docpath">
+            <img src='{{docServer}}/{{getPhots[1]?.docpath}}' style="height:200px; width:200px;" class="thumbnail">
+          </div>
+          <div class="col-md-3" *ngIf="getPhots[2]?.docpath">
+            <img src='{{docServer}}/{{getPhots[2]?.docpath}}' style="height:200px; width:200px;" class="thumbnail">
+          </div>
+          <div class="col-md-3" *ngIf="getPhots[3]?.docpath">
+            <img src='{{docServer}}/{{getPhots[3]?.docpath}}' style="height:200px; width:200px;" class="thumbnail">
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+              <div class="form-group">
+                <label for="name">Product Name: {{product?.name}}
+                </label>
+              </div>
+            </div>
+            <div class="col-md-12 col-sm-12 col-xs-12">
+              <div class="form-group">
+                <label for="priority">Product Priority: {{product?.priority}}
+                </label>
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="vtype">Vehicle Type: {{product?.vtype}}
+                </label>
+              </div>
+            </div>
+            <!-- <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="vcolour">Vehicle Colour: {{product?.vcolour}}
+                </label>
+              </div>
+            </div> -->
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="vcolour">Vehicle Model: {{product?.vmodel}}
+                </label>
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="vcolour">Vehicle Option: {{product?.voption}}
+                </label>
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="vcolour">Maker Name : {{product?.makername}}
+                </label>
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="prodtype">Product Type: {{product?.prodtype}}
+                </label>
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="vtype">HSN Code: {{product?.hsncode}}
+                </label>
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="ongoingrate">Ongoing Rate:&nbsp;{{product?.ongoingrate}}
+                </label>
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="instockunits">Units in stock:&nbsp;{{product?.unitsinstock}}
+                </label>
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="unitsonorder">Units on order:&nbsp;{{product?.unitsonorder}}
+                </label>
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="reorderlevel">Reorder level:&nbsp;{{product?.reorderlevel}}
+                </label>
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="reservedunits">Reserved Units:&nbsp;{{product?.reservedunits}}
+                </label>
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="gst">GST Type :&nbsp;{{product.gsttype}}
+                </label>
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="gst">GST :&nbsp;{{product.gst}}
+                </label>
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="videolink">Videolink:&nbsp;{{product.videolink}}
+                </label>
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="details">details:&nbsp;{{product.description}}
+                </label>
+              </div>
+            </div>
+            <div class="col-sm-12 img-thumbnail">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th colspan="4">Product Colours:</th>
+                  </tr>
+                  <tr>
+                    <th style="width: 100px;">Sr. No.</th>
+                    <th>Colour</th>
+                    <th>Priority</th>
+                    <th>Details</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let data of colourlistdb; let i=index;">
+                    <td style="width: 50px;">
+                      {{i+1}}
+                    </td>
+                    <td>{{data?.colour}}</td>
+                    <td>{{data?.priority}}</td>
+                    <td>{{data?.details}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- <div [hidden]="!isManageState" class="col-md-12 col-sm-12 col-xs-12 text-capitalize">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      {{title}} &nbsp;&nbsp;&nbsp;&nbsp;Total Products = {{tp}}
+      <a [routerLink]="['/addproduct']" title="Add Product" class="pull-right" *ngIf="userRole !=='MARKETING'">
+        <span class="glyphicon glyphicon-plus-sign"></span>
+      </a>
+    </div>
+    <div class="panel-body">
+      <div class="table-responsive">
+        <table class="table table-condensed table-striped table-bordered"
+          [mfData]="data | dataFilterPr : filterQuery:'fproduct'" #mf="mfDataTable" [mfRowsOnPage]="rowsOnPage"
+          [(mfSortBy)]="Role" [(mfSortOrder)]="sortOrder">
+          <thead>
+            <tr>
+              <th>SN</th>
+              <th>ID</th>
+              <th>
+                <mfDefaultSorter by="role">Name</mfDefaultSorter>
+              </th>
+              <th>Priority</th>
+              <th>HSN Code</th>
+              <th>Maker name</th>
+              <th>Engine</th>
+              <th>Mileage</th>
+              <th>Type</th>
+              <th>Ongoing Rate</th>
+              <th>GST%</th>
+              <th>In Stock Quantity</th>
+              <th>Stock value</th>
+              <th>Reorder level</th>
+              <th>Reserved Units</th>
+              <th>Unreserved Units</th>
+              <th>Booked Units</th>
+              <th>Action</th>
+            </tr>
+            <tr>
+              <th colspan="18">
+                <div id="custom-search-input">
+                  <div class="input-group col-md-12">
+                    <input type="text" class="form-control" placeholder="Search by name, hsn code or maker name"
+                      [(ngModel)]="filterQuery" />
+                    <span class="input-group-btn">
+                      <button class="btn btn-danger btn-sm" type="button">
+                        <span class=" glyphicon glyphicon-search"></span>
+                      </button>
+                    </span>
+                  </div>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of mf.data; let i = index; let last = last;"
+              [ngStyle]="data.reorderlevel<=data.unitsinstock?{'background-color':'none'} : {'background-color': 'rgb(245, 194, 194)'}">
+              <td>{{i+1}}</td>
+              <td>{{data?.id}}</td>
+              <td>{{data?.name}}</td>
+              <td>{{data?.priority}}</td>
+              <td>{{data?.hsncode}}</td>
+              <td>{{data?.makername}}</td>
+              <td>{{data?.enginecc}}</td>
+              <td>{{data?.mileage}}</td>
+              <td>{{data?.prodtype}}</td>
+              <td>{{data?.ongoingrate}}</td>
+              <td>{{data?.gst}}</td>
+              <td>{{data?.unitsinstock}}</td>
+              <td>{{data?.totalstockvalue}}</td>
+              <td
+                [ngStyle]="data.reorderlevel<=data.unitsinstock?{'background-color':'none'} : {'background-color': 'rgb(245, 194, 194)'}">
+                <strong>{{data?.reorderlevel }}</strong>
+              </td>
+              <td>{{data?.reservedunits}}</td>
+              <td>{{data?.unreservedunits}}</td>
+              <td>{{data?.bookedunits}}</td>
+              <td class="text-right">
+                <a [routerLink]="['/addpstock',data.id]" data-toggle="tooltip" title="Add In Product Stock"
+                  *ngIf="userRole !=='MARKETING'">
+                  <button class="btn btn-default btn-sm">
+                    <span class="glyphicon glyphicon-plus"></span>
+                  </button>
+                </a>
+                <a [routerLink]="['/managepstock',data.name, data.id]" data-toggle="tooltip"
+                  title="Manage Product Stock">
+                  <button class="btn btn-info btn-sm">
+                    <span class="glyphicon glyphicon-th-list"></span>
+                  </button>
+                </a>
+                <a [routerLink]="['/editproduct/',data.id]" data-toggle="tooltip" title="Update Product"
+                  *ngIf="userRole !=='MARKETING'">
+                  <button class="btn btn-default btn-sm">
+                    <span class="glyphicon glyphicon-edit"></span>
+                  </button>
+                </a>
+                <a [routerLink]="['/detailproduct',data.id]">
+                  <button class="btn btn-info btn-sm" title="Product Details">
+                    <span class="glyphicon glyphicon-info-sign"></span>
+                  </button>
+                </a>
+                <button *ngIf="userRole !=='MARKETING'" class="btn btn-danger btn-sm" title="Delete Product"
+                  (click)="deleteRole(data.id)">
+                  <span class="glyphicon glyphicon-remove-circle"></span>
+                </button>
+                <button *ngIf="userType !== 'ADMIN'" disabled class="btn btn-danger btn-sm"
+                  title="Contact admin for functionality" (click)="deleteRole(data.role)">
+                  <span class="glyphicon glyphicon-remove-circle"></span>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="21">
+                <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+        <div class="col-sm-12 ">
+          <strong> Note: Rows with red color indicates low stock</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> -->

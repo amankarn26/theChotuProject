@@ -1,0 +1,757 @@
+<div class="panel panel-default slideLeft" *ngIf="this.route.url === '/manage_amountpayable'">
+  <div class="panel-heading">
+    <div class="clearfix">
+      <div class="pull-left"> {{title}} </div> <br><br>
+      
+      <div id="custom-search-input" *ngIf="this.userRole==='SUPERADMIN' || this.userType==='BRANCH'">
+
+        <div class="col-sm-12">
+          <div class="col-sm-3">
+            <div class="form-group">
+              <label>Select Branch</label>
+              <select class="form-control" id="branch" name="branch" [(ngModel)]="selectbranch"
+                (change)="getamountpayablemonth()">
+                <option *ngFor="let data of branchlist; let i=index" [value]="data.id">{{data.name}}</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="col-sm-3">
+            <div class="form-group">
+              <label for="state">Reset :
+              </label>
+              <span class="input-group-btn">
+                <button class="btn btn-info btn-sm" title="Reset" (click)="refreshincall()" style="font-size: 9px;">
+                  <span class="glyphicon glyphicon-refresh"></span>
+                </button>
+              </span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <div class="panel-body" *ngIf="selectbranch">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+      <div class="table-responsive">
+        <table class="table table-condensed table-striped table-bordered"
+          [mfData]="data | dataFilterPr : filterQuery:'orders'" #mff="mfDataTable" [mfRowsOnPage]="rowsOnPage">
+          <thead>
+            <tr>
+              <th colspan="10">
+                <div id="custom-search-input">
+
+                  <div class="col-sm-12">
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                      <div class="form-group">
+                        <label for="gender">
+                        </label>&nbsp;
+                        <input type="radio" value="Cmonth" name="cmonth" checked (change)="changemonth('c')"> Current
+                        Month &nbsp;
+                        <input type="radio" value="Lmonth" name="cmonth" (change)="changemonth('l')"> Last Month &nbsp;
+                        <input type="radio" value="Pmonth" name="cmonth" (change)="changemonth('w')"> Week &nbsp;
+                        <input type="radio" value="Pmonth" name="cmonth" (change)="changemonth('t')"> Today &nbsp;
+                        <input type="radio" value="Customdate" [(ngModel)]="customdate" name="cmonth"
+                          (click)="gettodaysdate()"> Custom Date &nbsp;
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-sm-12">
+                    <div class="col-sm-3" *ngIf="customdate">
+                      <div class="form-group">
+                        <label for="fromDate">From Date:
+                        </label>
+                        <input type="date" class="form-control" id="fromDatee" name="fromDatee" [(ngModel)]="fromDatee"
+                          required />
+                      </div>
+                    </div>
+                    <div class="col-sm-3" *ngIf="customdate">
+                      <div class="form-group">
+                        <label for="toDate">To Date:
+                        </label>
+                        <input type="date" class="form-control" id="toDatee" name="toDatee" required
+                          [(ngModel)]="toDatee" />
+                      </div>
+                    </div>
+
+
+
+                    <div class="col-sm-3" *ngIf="customdate">
+                      <div class="form-group">
+                        <label for="state">Search:
+                        </label>
+                        <span class="input-group-btn">
+                          <button class="btn btn-danger" type="button" (click)="searchdayspayable()">
+                            <span class=" glyphicon glyphicon-search"></span>
+                          </button>
+                        </span>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-3">
+                      <div class="form-group">
+                        <label for="averageattenn">Total Amount Payable:
+                        </label>
+                        <input type="text" class="form-control" id="averageattenn" name="averageattenn"
+                          [(ngModel)]="totalamount" disabled />
+                      </div>
+                    </div>
+
+                  </div>
+                  
+                </div>
+              </th>
+            </tr>
+            <tr>
+              <th>Order No.</th>
+              <th>Dish Name</th>
+              <th>Order Details</th>
+              <th>Customer</th>
+              <th>Delivery Add.</th>
+              <th>Expected Delivery</th>
+              <th>Payment Details</th>
+              <th>Status</th>
+
+            </tr>
+            <tr>
+              <th colspan="9">
+                <div id="custom-search-input">
+                  <div class="input-group col-md-12">
+                    <input type="text" class="form-control"
+                      placeholder="Search by Customer Name, Phone, City , Pincode Or Order Number"
+                      [(ngModel)]="filterQuery" />
+                    <span class="input-group-btn">
+                      <button class="btn btn-danger" type="button">
+                        <span class=" glyphicon glyphicon-search"></span>
+                      </button>
+                    </span>
+                  </div>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of mff.data; let i = index; let last = last;">
+              <td>{{data.invoicenum}}<br>
+                Total items : {{data.qcost.totalitem}}
+              </td>
+
+              <td>
+                <div class="img-thumbnail  ">
+                  <img *ngIf="data?.oentry[0]?.photo?.docpath" src="{{docServer}}/{{data?.oentry[0]?.photo?.docpath}}"
+                    class="img-circle" alt="" style="width:100px; height:100px;">
+                  <img *ngIf="!data?.oentry[0]?.photo?.docpath"
+                    src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg" class="img-circle"
+                    alt="" style="width:100px; height:100px;">
+                  <div class="caption text-capitalize text-center" *ngIf="data.oentry.length<=1; else elseBlock">
+                    {{data.oentry[0]?.pname}}</div>
+                  <ng-template #elseBlock>
+                    <a [routerLink]="['/orderdetails',data.id]">
+                      <div class="caption text-capitalize text-center"> {{data.oentry[0]?.pname}} + {{data.oentry.length
+                        - 1}} Other Items</div>
+                    </a>
+                  </ng-template>
+
+                </div>
+              </td>
+              <td>
+                <textarea style="margin: 0px; width: 180px; height: 124px;" readonly>{{data?.detail}}</textarea>
+              </td>
+
+              <td>{{data.custname}}<br>
+                Phone-{{data.custmobile}}</td>
+              <td>{{data.deliveryaddress.line1}},<br>
+                {{data.deliveryaddress.city}}- {{data.deliveryaddress.pincode}}<br>Delivery by:
+                {{data.deliveryperson}}<br>Number: {{data.deliverymobile}}
+
+              </td>
+              <td>{{data.expdelivery | date}}<br>
+
+              </td>
+              <td>Mode -{{data.paymentmode}}<br>
+                Txn ID- {{data.transactionid}}
+                Amount -{{data.qcost.finalamt}}/-<br></td>
+              <td><span class="label label-primary">{{data.status}}</span></td>
+
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="9">
+                <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="panel-body" *ngIf="this.userRole==='FIRM' && this.userType==='FIRM'">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+      <div class="table-responsive">
+        <table class="table table-condensed table-striped table-bordered"
+          [mfData]="data | dataFilterPr : filterQuery:'orders'" #mff="mfDataTable" [mfRowsOnPage]="rowsOnPage">
+          <thead>
+            <tr>
+              <th colspan="10">
+                <div id="custom-search-input">
+
+                  <div class="col-sm-12">
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                      <div class="form-group">
+                        <label for="gender">
+                        </label>&nbsp;
+                        <input type="radio" value="Cmonth" name="cmonth" checked (change)="changemonth('c')"> Current
+                        Month &nbsp;
+                        <input type="radio" value="Lmonth" name="cmonth" (change)="changemonth('l')"> Last Month &nbsp;
+                        <input type="radio" value="Pmonth" name="cmonth" (change)="changemonth('w')"> Week &nbsp;
+                        <input type="radio" value="Pmonth" name="cmonth" (change)="changemonth('t')"> Today &nbsp;
+                        <input type="radio" value="Customdate" [(ngModel)]="customdate" name="cmonth"
+                          (click)="gettodaysdate()"> Custom Date &nbsp;
+
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-sm-12">
+                    <div class="col-sm-3" *ngIf="customdate">
+                      <div class="form-group">
+                        <label for="fromDate">From Date:
+                        </label>
+                        <input type="date" class="form-control" id="fromDatee" name="fromDatee" [(ngModel)]="fromDatee"
+                          required />
+                      </div>
+                    </div>
+                    <div class="col-sm-3" *ngIf="customdate">
+                      <div class="form-group">
+                        <label for="toDate">To Date:
+                        </label>
+                        <input type="date" class="form-control" id="toDatee" name="toDatee" required
+                          [(ngModel)]="toDatee" />
+                      </div>
+                    </div>
+
+                    <div class="col-sm-3" *ngIf="customdate">
+                      <div class="form-group">
+                        <label for="state">Search:
+                        </label>
+                        <span class="input-group-btn">
+                          <button class="btn btn-danger" type="button" (click)="searchdayspayable()">
+                            <span class=" glyphicon glyphicon-search"></span>
+                          </button>
+                        </span>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-3">
+                      <div class="form-group">
+                        <label for="averageattenn">Total Amount Payable:
+                        </label>
+                        <input type="text" class="form-control" id="averageattenn" name="averageattenn"
+                          [(ngModel)]="totalamount" disabled />
+                      </div>
+                    </div>
+
+                  </div>
+                  
+                </div>
+              </th>
+            </tr>
+            <tr>
+              <th>Order No.</th>
+              <th>Dish Name</th>
+              <th>Order Details</th>
+              <th>Customer</th>
+              <th>Delivery Add.</th>
+              <th>Expected Delivery</th>
+              <th>Payment Details</th>
+              <th>Status</th>
+
+            </tr>
+            <tr>
+              <th colspan="9">
+                <div id="custom-search-input">
+                  <div class="input-group col-md-12">
+                    <input type="text" class="form-control"
+                      placeholder="Search by Customer Name, Phone, City , Pincode Or Order Number"
+                      [(ngModel)]="filterQuery" />
+                    <span class="input-group-btn">
+                      <button class="btn btn-danger" type="button">
+                        <span class=" glyphicon glyphicon-search"></span>
+                      </button>
+                    </span>
+                  </div>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of mff.data; let i = index; let last = last;">
+              <td>{{data.invoicenum}}<br>
+                Total items : {{data.qcost.totalitem}}
+              </td>
+              <td>
+                <div class="img-thumbnail  ">
+                  <img *ngIf="data?.oentry[0]?.photo?.docpath" src="{{docServer}}/{{data?.oentry[0]?.photo?.docpath}}"
+                    class="img-circle" alt="" style="width:100px; height:100px;">
+                  <img *ngIf="!data?.oentry[0]?.photo?.docpath"
+                    src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg" class="img-circle"
+                    alt="" style="width:100px; height:100px;">
+                  <div class="caption text-capitalize text-center" *ngIf="data.oentry.length<=1; else elseBlock">
+                    {{data.oentry[0]?.pname}}</div>
+                  <ng-template #elseBlock>
+                    <a [routerLink]="['/orderdetails',data.id]">
+                      <div class="caption text-capitalize text-center"> {{data.oentry[0]?.pname}} + {{data.oentry.length
+                        - 1}} Other Items</div>
+                    </a>
+                  </ng-template>
+
+                </div>
+              </td>
+              <td>
+                <textarea style="margin: 0px; width: 180px; height: 124px;" readonly>{{data?.detail}}</textarea>
+              </td>
+
+              <td>{{data.custname}}<br>
+                Phone-{{data.custmobile}}</td>
+              <td>{{data.deliveryaddress.line1}},<br>
+                {{data.deliveryaddress.city}}- {{data.deliveryaddress.pincode}}<br>Delivery by:
+                {{data.deliveryperson}}<br>Number: {{data.deliverymobile}}
+
+              </td>
+              <td>{{data.expdelivery | date}}<br>
+
+              </td>
+              <td>Mode -{{data.paymentmode}}<br>
+                Txn ID- {{data.transactionid}}
+                Amount -{{data.qcost.finalamt}}/-<br></td>
+              <td><span class="label label-primary">{{data.status}}</span></td>
+
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="9">
+                <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="panel panel-default slideLeft" *ngIf="this.route.url === '/manage_amountreceived'">
+  <div class="panel-heading">
+    <div class="clearfix">
+      <div class="pull-left"> {{title}} </div><br> <br>
+      <div id="custom-search-input" *ngIf="this.userRole==='SUPERADMIN' || this.userType==='BRANCH'">
+
+
+
+        <div class="col-sm-12">
+          <div class="col-sm-3">
+            <div class="form-group">
+              <label>Select Branch</label>
+              <select class="form-control" id="branch" name="branch" [(ngModel)]="selectbranch"
+                (change)="getamountpayablemonth()">
+                <option *ngFor="let data of branchlist; let i=index" [value]="data.id">{{data.name}}</option>
+              </select>
+            </div>
+          </div>
+
+
+          <div class="col-sm-3">
+            <div class="form-group">
+              <label for="state">Reset :
+              </label>
+              <span class="input-group-btn">
+                <button class="btn btn-info btn-sm" title="Reset" (click)="refreshincall()" style="font-size: 9px;">
+                  <span class="glyphicon glyphicon-refresh"></span>
+                </button>
+              </span>
+            </div>
+          </div>
+
+
+
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <div class="panel-body" *ngIf="selectbranch">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+      <div class="table-responsive">
+        <table class="table table-condensed table-striped table-bordered"
+          [mfData]="data | dataFilterPr : filterQuery:'orders'" #mff="mfDataTable" [mfRowsOnPage]="rowsOnPage">
+          <thead>
+            <tr>
+              <th colspan="10">
+                <div id="custom-search-input">
+
+                  <div class="col-sm-12">
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                      <div class="form-group">
+                        <label for="gender">
+                        </label>&nbsp;
+                        <input type="radio" value="Cmonth" name="cmonth" checked (change)="changemonth('c')"> Current
+                        Month &nbsp;
+                        <input type="radio" value="Lmonth" name="cmonth" (change)="changemonth('l')"> Last Month &nbsp;
+                        <input type="radio" value="Pmonth" name="cmonth" (change)="changemonth('w')"> Week &nbsp;
+                        <input type="radio" value="Pmonth" name="cmonth" (change)="changemonth('t')"> Today &nbsp;
+                        <input type="radio" value="Customdate" [(ngModel)]="customdate" name="cmonth"
+                          (click)="gettodaysdate()"> Custom Date &nbsp;
+
+
+                        <!-- <input type="radio" value="Nmonth" name="cmonth" ngModel [(ngModel)]="month"(change)="changemonth('n')"> Next Month -->
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-sm-12">
+                    <div class="col-sm-3" *ngIf="customdate">
+                      <div class="form-group">
+                        <label for="fromDate">From Date:
+                        </label>
+                        <input type="date" class="form-control" id="fromDatee" name="fromDatee" [(ngModel)]="fromDatee"
+                          required />
+                      </div>
+                    </div>
+                    <div class="col-sm-3" *ngIf="customdate">
+                      <div class="form-group">
+                        <label for="toDate">To Date:
+                        </label>
+                        <input type="date" class="form-control" id="toDatee" name="toDatee" required
+                          [(ngModel)]="toDatee" />
+                      </div>
+                    </div>
+
+
+
+                    <div class="col-sm-3" *ngIf="customdate">
+                      <div class="form-group">
+                        <label for="state">Search:
+                        </label>
+                        <span class="input-group-btn">
+                          <button class="btn btn-danger" type="button" (click)="searchdayspayable()">
+                            <span class=" glyphicon glyphicon-search"></span>
+                          </button>
+                        </span>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-3">
+                      <div class="form-group">
+                        <label for="averageattenn">Total Amount Received:
+                        </label>
+                        <input type="text" class="form-control" id="averageattenn" name="averageattenn"
+                          [(ngModel)]="totalamount" disabled />
+                      </div>
+                    </div>
+
+                  </div>
+                  <!-- <div class="input-group col-md-12">
+                          <input type="text" class="form-control" placeholder="Search By Shift, Working Regular, Reason or State" [(ngModel)]="filterQuery" />
+                          <span class="input-group-btn">
+                            <button class="btn btn-danger" type="button">
+                              <span class=" glyphicon glyphicon-search"></span>
+                            </button>
+                          </span>
+                        </div> -->
+                </div>
+              </th>
+            </tr>
+            <tr>
+              <th>Order No.</th>
+              <th>Dish Name</th>
+              <th>Order Details</th>
+
+
+              <th>Customer</th>
+              <th>Delivery Add.</th>
+              <th>Expected Delivery</th>
+              <th>Payment Details</th>
+              <th>Status</th>
+
+
+
+
+
+              <!-- <th class="text-right">Action</th> -->
+            </tr>
+            <tr>
+              <th colspan="9">
+                <div id="custom-search-input">
+                  <div class="input-group col-md-12">
+                    <input type="text" class="form-control"
+                      placeholder="Search by Customer Name, Phone, City , Pincode Or Order Number"
+                      [(ngModel)]="filterQuery" />
+                    <span class="input-group-btn">
+                      <button class="btn btn-danger" type="button">
+                        <span class=" glyphicon glyphicon-search"></span>
+                      </button>
+                    </span>
+                  </div>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of mff.data; let i = index; let last = last;">
+              <td>{{data.invoicenum}}<br>
+                Total items : {{data.qcost.totalitem}}
+              </td>
+              <td>
+                <div class="img-thumbnail  ">
+                  <img *ngIf="data?.oentry[0]?.photo?.docpath" src="{{docServer}}/{{data?.oentry[0]?.photo?.docpath}}"
+                    class="img-circle" alt="" style="width:100px; height:100px;">
+                  <img *ngIf="!data?.oentry[0]?.photo?.docpath"
+                    src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg" class="img-circle"
+                    alt="" style="width:100px; height:100px;">
+                  <div class="caption text-capitalize text-center" *ngIf="data.oentry.length<=1; else elseBlock">
+                    {{data.oentry[0]?.pname}}</div>
+                  <ng-template #elseBlock>
+                    <a [routerLink]="['/orderdetails',data.id]">
+                      <div class="caption text-capitalize text-center"> {{data.oentry[0]?.pname}} + {{data.oentry.length
+                        - 1}} Other Items</div>
+                    </a>
+                  </ng-template>
+
+                </div>
+              </td>
+              <td>
+                <textarea style="margin: 0px; width: 180px; height: 124px;" readonly>{{data?.detail}}</textarea>
+              </td>
+
+
+
+              <td>{{data.custname}}<br>
+                Phone-{{data.custmobile}}</td>
+              <td>{{data.deliveryaddress.line1}},<br>
+                {{data.deliveryaddress.city}}- {{data.deliveryaddress.pincode}}<br>Delivery by:
+                {{data.deliveryperson}}<br>Number: {{data.deliverymobile}}
+
+              </td>
+              <td>{{data.expdelivery | date}}<br>
+
+              </td>
+              <td>Mode -{{data.paymentmode}}<br>
+                Txn ID- {{data.transactionid}}
+                Amount -{{data.qcost.finalamt}}/-<br></td>
+              <td><span class="label label-primary">{{data.status}}</span></td>
+
+
+
+
+
+              <!--                  
+                  <td class="text-right">
+                    <a (click)="orderpacked(data)" *ngIf="data.status==='PLACED'" class="btn btn-default" title="Order Packed" >
+                      <i class="glyphicon glyphicon-inbox"></i>
+                    </a>
+                    <a class="btn btn-danger a-btn-slide-text" title="Delete Order" (click)="delete(data.id)">
+                      <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                      <span></span>
+                    </a>
+                  </td> -->
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="9">
+                <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="panel-body" *ngIf="this.userRole==='FIRM' && this.userType==='FIRM'">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+      <div class="table-responsive">
+        <table class="table table-condensed table-striped table-bordered"
+          [mfData]="data | dataFilterPr : filterQuery:'orders'" #mff="mfDataTable" [mfRowsOnPage]="rowsOnPage">
+          <thead>
+            <tr>
+              <th colspan="10">
+                <div id="custom-search-input">
+
+                  <div class="col-sm-12">
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                      <div class="form-group">
+                        <label for="gender">
+                        </label>&nbsp;
+                        <input type="radio" value="Cmonth" name="cmonth" checked (change)="changemonth('c')"> Current
+                        Month &nbsp;
+                        <input type="radio" value="Lmonth" name="cmonth" (change)="changemonth('l')"> Last Month &nbsp;
+                        <input type="radio" value="Pmonth" name="cmonth" (change)="changemonth('w')"> Week &nbsp;
+                        <input type="radio" value="Pmonth" name="cmonth" (change)="changemonth('t')"> Today &nbsp;
+                        <input type="radio" value="Customdate" [(ngModel)]="customdate" name="cmonth"
+                          (click)="gettodaysdate()"> Custom Date &nbsp;
+
+
+                        <!-- <input type="radio" value="Nmonth" name="cmonth" ngModel [(ngModel)]="month"(change)="changemonth('n')"> Next Month -->
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-sm-12">
+                    <div class="col-sm-3" *ngIf="customdate">
+                      <div class="form-group">
+                        <label for="fromDate">From Date:
+                        </label>
+                        <input type="date" class="form-control" id="fromDatee" name="fromDatee" [(ngModel)]="fromDatee"
+                          required />
+                      </div>
+                    </div>
+                    <div class="col-sm-3" *ngIf="customdate">
+                      <div class="form-group">
+                        <label for="toDate">To Date:
+                        </label>
+                        <input type="date" class="form-control" id="toDatee" name="toDatee" required
+                          [(ngModel)]="toDatee" />
+                      </div>
+                    </div>
+
+
+
+                    <div class="col-sm-3" *ngIf="customdate">
+                      <div class="form-group">
+                        <label for="state">Search:
+                        </label>
+                        <span class="input-group-btn">
+                          <button class="btn btn-danger" type="button" (click)="searchdayspayable()">
+                            <span class=" glyphicon glyphicon-search"></span>
+                          </button>
+                        </span>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-3">
+                      <div class="form-group">
+                        <label for="averageattenn">Total Amount Received:
+                        </label>
+                        <input type="text" class="form-control" id="averageattenn" name="averageattenn"
+                          [(ngModel)]="totalamount" disabled />
+                      </div>
+                    </div>
+
+                  </div>
+                  <!-- <div class="input-group col-md-12">
+                          <input type="text" class="form-control" placeholder="Search By Shift, Working Regular, Reason or State" [(ngModel)]="filterQuery" />
+                          <span class="input-group-btn">
+                            <button class="btn btn-danger" type="button">
+                              <span class=" glyphicon glyphicon-search"></span>
+                            </button>
+                          </span>
+                        </div> -->
+                </div>
+              </th>
+            </tr>
+            <tr>
+              <th>Order No.</th>
+              <th>Dish Name</th>
+              <th>Order Details</th>
+
+
+              <th>Customer</th>
+              <th>Delivery Add.</th>
+              <th>Expected Delivery</th>
+              <th>Payment Details</th>
+              <th>Status</th>
+
+
+
+
+
+              <!-- <th class="text-right">Action</th> -->
+            </tr>
+            <tr>
+              <th colspan="9">
+                <div id="custom-search-input">
+                  <div class="input-group col-md-12">
+                    <input type="text" class="form-control"
+                      placeholder="Search by Customer Name, Phone, City , Pincode Or Order Number"
+                      [(ngModel)]="filterQuery" />
+                    <span class="input-group-btn">
+                      <button class="btn btn-danger" type="button">
+                        <span class=" glyphicon glyphicon-search"></span>
+                      </button>
+                    </span>
+                  </div>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of mff.data; let i = index; let last = last;">
+              <td>{{data.invoicenum}}<br>
+                Total items : {{data.qcost.totalitem}}
+              </td>
+              <td>
+                <div class="img-thumbnail  ">
+                  <img *ngIf="data?.oentry[0]?.photo?.docpath" src="{{docServer}}/{{data?.oentry[0]?.photo?.docpath}}"
+                    class="img-circle" alt="" style="width:100px; height:100px;">
+                  <img *ngIf="!data?.oentry[0]?.photo?.docpath"
+                    src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg" class="img-circle"
+                    alt="" style="width:100px; height:100px;">
+                  <div class="caption text-capitalize text-center" *ngIf="data.oentry.length<=1; else elseBlock">
+                    {{data.oentry[0]?.pname}}</div>
+                  <ng-template #elseBlock>
+                    <a [routerLink]="['/orderdetails',data.id]">
+                      <div class="caption text-capitalize text-center"> {{data.oentry[0]?.pname}} + {{data.oentry.length
+                        - 1}} Other Items</div>
+                    </a>
+                  </ng-template>
+
+                </div>
+              </td>
+              <td>
+                <textarea style="margin: 0px; width: 180px; height: 124px;" readonly>{{data?.detail}}</textarea>
+              </td>
+
+              <td>{{data.custname}}<br>
+                Phone-{{data.custmobile}}</td>
+              <td>{{data.deliveryaddress.line1}},<br>
+                {{data.deliveryaddress.city}}- {{data.deliveryaddress.pincode}}<br>Delivery by:
+                {{data.deliveryperson}}<br>Number: {{data.deliverymobile}}
+
+              </td>
+              <td>{{data.expdelivery | date}}<br>
+
+              </td>
+              <td>Mode -{{data.paymentmode}}<br>
+                Txn ID- {{data.transactionid}}
+                Amount -{{data.qcost.finalamt}}/-<br></td>
+              <td><span class="label label-primary">{{data.status}}</span></td>
+
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="9">
+                <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+    </div>
+  </div>
+</div>

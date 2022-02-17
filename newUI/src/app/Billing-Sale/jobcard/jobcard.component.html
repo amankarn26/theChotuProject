@@ -1,0 +1,480 @@
+<div class="col-md-12 col-sm-12 col-xs-12" *ngIf="!isManageState && !isdetails && !isinvoice">
+    <div class="panel panel-default">
+      <div class="panel-heading">{{title}}
+        <a class="pull-right">
+          <button title="View All Jobcard" (click)="cancel()">
+            <span class="glyphicon glyphicon-th-list"></span></button>
+        </a>
+      </div>
+      <div class="panel-body">
+        <form #form1="ngForm">
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="jobcardno">Jobcard No</label>
+              <input *ngIf="!isUpdate" type="text" class="form-control" id="jobcardno" name="jobcardno" required
+                [(ngModel)]="jobcard.jobcardno" />
+              <input *ngIf="isUpdate" readonly type="text" class="form-control" id="jobcardno" name="jobcardno"
+                [(ngModel)]="jobcard.jobcardno" required />
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="addedon">Added On:
+              </label>
+              <input *ngIf="!isUpdate" required type="date" class="form-control" id="addedon" name="addedon"
+                [(ngModel)]="todaydate" />
+              <input *ngIf="isUpdate" type="date" class="form-control" id="addedon" name="addedon" readonly required
+                [(ngModel)]="todaydate" />
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="name"> Customer Name: </label>
+              <select *ngIf="!isUpdate" class="form-control" id="customer" name="custname" required [(ngModel)]="customer"
+                (change)="passcustomer($event)">
+                <option required *ngFor="let dep of custlist; let i=index" [value]="dep.id">{{dep.name}}</option>
+              </select>
+              <input *ngIf="isUpdate" readonly required type="text" class="form-control" id="custname" name="custname"
+                [(ngModel)]="jobcard.custname" />
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="status">Status:
+              </label>
+              <select class="form-control" name="status" *ngIf="!isUpdate" required [(ngModel)]="jobcard.status">
+                <option value="OPEN">OPEN</option>
+                <option value="IN_PROGRESS">IN PROGRESS</option>
+                <option value="CLOSED">CLOSED</option>
+              </select>
+              <select class="form-control" name="status" *ngIf="isUpdate" required disabled [(ngModel)]="jobcard.status">
+                <option value="OPEN">OPEN</option>
+                <option value="IN_PROGRESS">IN PROGRESS</option>
+                <option value="CLOSED">CLOSED</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="servicetype">Service Type</label>
+              <select *ngIf="!isUpdate" class="form-control" required name="servicetype"
+                [(ngModel)]="jobcard.servicetype">
+                <option value="ACCIDENT_WORK">ACCIDENT_WORK</option>
+                <option value="REGULAR">REGULAR</option>
+              </select>
+              <input *ngIf="isUpdate" readonly type="text" class="form-control" id="servicetype" name="servicetype"
+                required [(ngModel)]="jobcard.servicetype" />
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="supervisor">Supervisor Name</label>
+              <select *ngIf="!isUpdate" class="form-control" name="supervisor" required [(ngModel)]="jobcard.supervisor"
+                (change)="passupervisorname($event)">
+                <option required *ngFor="let dep of empList; let i=index" [value]="dep.id">{{dep.name}}</option>
+              </select>
+              <input *ngIf="isUpdate" required readonly type="text" class="form-control" id="supervisor"
+                name="supervisorname" [(ngModel)]="jobcard.supervisorname" />
+            </div>
+          </div>
+  
+          <div class="col-lg-12 col-md-12 col-sm-12 ">
+            <hr>
+          </div>
+          <div class="col-lg-12 col-md-12 col-sm-12">
+            <h4>Product Details:</h4>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="prodname">Product</label>
+              <input *ngIf="!isUpdate" type="text" class="form-control" id="prodname" name="prodname" required
+                [(ngModel)]="jobcard.prodname" />
+              <input *ngIf="isUpdate" type="text" class="form-control" id="prodname" name="prodname" required readonly
+                [(ngModel)]="jobcard.prodname" />
+            </div>
+          </div>
+        
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="details"> Details </label>
+              <input *ngIf="!isUpdate" type="text" class="form-control" name="details" required
+                [(ngModel)]="jobcard.details">
+              <input *ngIf="isUpdate" type="text" class="form-control" name="details" required
+                [(ngModel)]="jobcard.details">
+            </div>
+          </div>
+          <div class="col-md-12 img-thumbnail">
+            <div class="form-group">
+              <h4>Jobcard Data:</h4>
+              <hr>
+              <div class="col-md-12" style="padding-left: 0px !important;">
+                <div class="col-md-5" style="padding-left: 0px !important;">
+                  <input type="text" class="form-control" name="name" [(ngModel)]="dyelem.name" />
+                </div>
+                <div class="col-md-5" style="padding-left: 0px !important;">
+                  <input type="text" class="form-control" name="value" [(ngModel)]="dyelem.value" />
+                </div>
+                <div class="col-md-1" style="padding-left: 0px !important;">
+                  <button type="button" class="form-control" class="btn btn-default" (click)="onAddDyelem()">Add</button>
+                </div>
+                <hr>
+              </div>
+            </div>
+            <div class="form-group" style="margin-top: 3px;
+                                            border: 1px solid #c5c4c4;
+                                            height: 150px;
+                                            overflow: auto;">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 50px;">-</th>
+                    <th>Name</th>
+                    <th>Value</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let data of dyElemObjData; let i=index;">
+                    <td style="width: 50px;">
+                      <a style="cursor: pointer; color: red;" (click)="onDeleteDyelem(i)">
+                        <span class="glyphicon glyphicon-remove-circle"></span>
+                      </a>
+                    </td>
+                    <td>{{data.name}}</td>
+                    <td>{{data.value}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+  
+          <div class="col-md-12">
+            <div class="form-group">
+              <button *ngIf="this.url == '/addjobcard/'+ this.id" type="submit" [disabled]="!form1.valid"
+                class="btn btn-default" (click)="submitData()">Submit</button>
+              <button *ngIf="this.url == '/updatejobcard/' + this.id" type="submit" [disabled]="!form1.valid"
+                class="btn btn-default" (click)="updateData()">Update</button>
+              <button type="button" class="btn btn-default" (click)="cancel()">Cancel</button>
+            </div>
+          </div>
+  
+        </form>
+      </div>
+    </div>
+</div>
+  
+<div class="col-md-12 col-sm-12 col-xs-12" *ngIf="isManageState && !isdetails && !isinvoice">
+  
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <div class="clearfix">
+          <div class="pull-left">
+            Manage Job Card For {{custname}}
+          </div>
+          <div class="container" class="pull-right">
+            <div class="row">
+  
+              <a [routerLink]="['/manageservicing']" title="Manage All Servicing" class="btn btn-info a-btn-slide-text">
+                <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+              </a>
+  
+              <a [routerLink]="['/addjobcard',this.id]" title="Add Job Card" class="btn btn-info a-btn-slide-text">
+                <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+              </a>
+  
+            </div>
+          </div>
+        </div>
+  
+      </div>
+      <div class="panel-body">
+        <div class="table-responsive">
+          <table class="table table-condensed table-striped table-bordered"
+            [mfData]="data | dataFilterPr : filterQuery:'jobcard'" #mf="mfDataTable" [mfRowsOnPage]="rowsOnPage"
+            [(mfSortBy)]="Role" [(mfSortOrder)]="sortOrder">
+            <thead>
+              <tr>
+                <th>SN</th>
+                <th>
+                  <mfDefaultSorter by="role">Customer Name</mfDefaultSorter>
+                </th>
+                <th>Product Name</th>
+
+                <th>Jobcard No</th>
+                <!-- <th>Vehical Registry No.</th> -->
+                <th>Service Type</th>
+                <th>Added On</th>
+
+                <!-- <th>Model</th>
+                <th>Engine No</th>
+                <th>Chassis No</th> -->
+  
+                <th>Action</th>
+              </tr>
+              <tr>
+                <th colspan="13">
+                  <div id="custom-search-input">
+                    <div class="input-group col-md-12">
+                      <input type="text" class="form-control" placeholder="Search by jobcardno, Reg No Or Chassis No"
+                        [(ngModel)]="filterQuery" />
+                      <span class="input-group-btn">
+                        <button class="btn btn-danger" type="button">
+                          <span class=" glyphicon glyphicon-search"></span>
+                        </button>
+                      </span>
+                    </div>
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of mf.data; let i = index; let last = last;">
+                <td>{{i+1}}</td>
+                <td>{{custname}}</td>
+                <td>{{data?.prodname}}</td>
+                
+                <td>{{data?.jobcardno}}</td>
+                <!-- <td>{{data?.vregno}}</td> -->
+                <td>{{data?.servicetype}}</td>
+                <td>{{data?.addedon | date}}</td>
+
+                <!-- <td>{{data?.vmodel}}</td>
+                <td>{{data?.enginenum}}</td>
+                <td>{{data?.chassisnum}}</td> -->
+  
+                <td class="text-right">
+  
+  
+  
+                  <a *ngIf="data.iscustinvoicegen ==='YES'" [routerLink]="['/invoice/',data.id,'CUSTOMER']"
+                    data-toggle="tooltip" title="Customer Invoice ">
+                    <button class="btn btn-info btn-sm">
+                      <span class="glyphicon glyphicon-print"></span>
+                    </button>
+                  </a>
+  
+                  <!-- <a *ngIf="data.iscustinvoicegen ==='YES'" href="{{pdfpath}}{{data?.id}}.pdf" target="_blank"> -->
+                    <button *ngIf="data.iscustinvoicegen ==='YES'"  class="btn btn-info btn-sm" title="Download Customer Invoice" (click)="generatepdf1(data.id,'CUSTOMER')">
+                      <span  class="glyphicon glyphicon-cloud-download"></span>
+                    </button>
+                  <!-- </a> -->
+  
+                  <!-- <a [hidden]='true' id='generatepdf2' href="{{pdfpath}}{{servicingid}}.pdf" target="_blank">
+                    <button class="btn btn-info btn-sm" title="Download Invoice">
+                      <span  class="glyphicon glyphicon-cloud-download"></span>
+                    </button>
+                  </a> -->
+                  <!-- <a *ngIf="data.iscustinvoicegen ==='NO'" [routerLink]="['/invoice/',data.id,'CUSTOMER']" data-toggle="tooltip" title="Customer Invoice ">
+                    <button class="btn btn-info btn-sm">
+                      <span class="glyphicon glyphicon-print"></span>
+                    </button>
+                  </a> -->
+  
+  
+                  <a *ngIf="data.isinsurinvoicegen ==='YES' && data.isinsured ==='YES'"
+                    [routerLink]="['/invoice/',data.id,'INSURER']" data-toggle="tooltip" title="Insurer Invoice ">
+                    <button class="btn btn-success btn-sm">
+                      <span class="glyphicon glyphicon-print"></span>
+                    </button>
+                  </a>
+  
+                  <button *ngIf="data.isinsurinvoicegen ==='YES'"  class="btn btn-info btn-sm" title="Download Insurer Invoice" (click)="generatepdf1(data.id,'INSURER')">
+                    <span  class="glyphicon glyphicon-cloud-download"></span>
+                  </button>
+  
+  
+  
+  
+  
+                  <a *ngIf="data.isinsurinvoicegen ==='NO' && data.isinsured ==='YES'"
+                    [routerLink]="['/updateservicingjob/',data.id]" data-toggle="tooltip"
+                    title="Generate Invoice For Insurer">
+                    <button class="btn btn-success btn-sm">
+                      <span class="glyphicon glyphicon-edit"></span>
+                    </button>
+                  </a>
+  
+                  <a *ngIf="data.isinsurinvoicegen ==='YES' && data.isinsured ==='YES'" data-toggle="tooltip"
+                    title="Invoice Is Already Generated For Insurer">
+                    <button disabled class="btn btn-success btn-sm">
+                      <span class="glyphicon glyphicon-edit"></span>
+                    </button>
+                  </a>
+  
+  
+  
+                  <!-- <a [routerLink]="['/viewinvoiceservicing/',data.servicing,data.jobcardno,'INSURER']" data-toggle="tooltip" title=" Servicing Invoice For Insurer"
+                  >
+                  <button class="btn btn-sm btn-success">
+                    <span class="glyphicon glyphicon-print"></span>
+                  </button>
+                </a> -->
+                  <a [routerLink]="['/updatejobcard/',data.id]" data-toggle="tooltip" title="Update Jobcard">
+                    <button class="btn btn-default btn-sm">
+                      <span class="glyphicon glyphicon-edit"></span>
+                    </button>
+                  </a>
+                  <a [routerLink]="['/detailjobcard/',data.id]" data-toggle="tooltip" title="Job Card Detail">
+                    <button class="btn btn-primary btn-sm">
+                      <span class="glyphicon glyphicon-info-sign"></span>
+                    </button>
+                  </a>
+                  <a *ngIf="data.iscustinvoicegen ==='NO'" [routerLink]="['/addservicingjob/',data.id]"
+                    data-toggle="tooltip" title="Generate Customer Invoice">
+                    <button class="btn btn-primary btn-sm">
+                      <span class="glyphicon glyphicon-print"></span>
+                    </button>
+                  </a>
+                  <a *ngIf="data.iscustinvoicegen ==='YES'" [routerLink]="['/addservicingjob/',data.id]"
+                    data-toggle="tooltip" title="Generate Invoice" data-toggle="tooltip"
+                    title="Customer Invoice Is Already Generated">
+                    <button disabled class="btn btn-primary btn-sm">
+                      <span class="glyphicon glyphicon-print"></span>
+                    </button>
+                  </a>
+                  <!-- <a [routerLink]="['/manageservicingjob/',data.id]" data-toggle="tooltip" title="View Servicing Job">
+                    <button class="btn btn-primary btn-sm">
+                      <span class="glyphicon glyphicon-tasks"></span>
+                    </button>
+                  </a> -->
+                  <!-- <button class="btn btn-danger btn-sm" title="Delete Servicing" (click)="deleteRole(data.id)">
+                    <span class="glyphicon glyphicon-remove-circle"></span>
+                  </button> -->
+                </td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="13">
+                  <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+</div>
+  
+  
+<div class="col-md-12 col-sm-12 col-xs-12" *ngIf="isdetails">
+  
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <div class="clearfix">
+          <div class="pull-left"> {{title}}</div>
+          <div class="container" class="pull-right">
+            <div class="row">
+              <a class="pull-right">
+                <button title="View All Jobcard" (click)="cancel()"> <span
+                    class="glyphicon glyphicon-th-list"></span></button>
+              </a>
+              <!-- <a title="Download" class="btn btn-info a-btn-slide-text" (click)="generatePdf()">
+                <i class="glyphicon glyphicon-download-alt"></i>
+              </a> -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="panel-body" id="content" #content>
+  
+        <form #form1="ngForm">
+          <div class="col-md-12 col-sm-12 col-xs-12 ">
+            <div class="col-md-12 col-sm-12 col-xs-12 ">
+              <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-group">
+                  <label for="jobcardno">Jobcard No. : {{jobcard.jobcardno}}</label>
+                </div>
+              </div>
+              <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-group">
+                  <label for="custname">Customer Name : {{jobcard.custname}}</label>
+                </div>
+              </div>
+              <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-group">
+                  <label for="supervisorname">Supervisor Name : {{jobcard.supervisorname}}</label>
+                </div>
+              </div>
+              <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-group">
+                  <label for="servicetype">Service Type : {{jobcard.servicetype}}</label>
+                </div>
+              </div>
+              <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-group">
+                  <label for="servicetype">Insurance Applicable : {{jobcard?.isinsured}}</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12 col-sm-12 col-xs-12 ">
+            <hr>
+            <div class="col-md-12 col-sm-12 col-xs-12">
+              <h4>Product Details:&nbsp;</h4>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="vmodel">Product : {{jobcard.prodname}}</label>
+              </div>
+            </div>
+            <!-- <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="enginenum">Engine No : {{jobcard.enginenum}}</label>
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="chassisnum">Chassis No : {{jobcard.chassisnum}}</label>
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="vregno">Registry No : {{jobcard.vregno}}</label>
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="kmscoverage">KMS Covered : {{jobcard.kmscoverage}}</label>
+              </div>
+            </div> -->
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="details">Details&nbsp;:&nbsp;{{jobcard.details}}</label>
+              </div>
+            </div>
+            <div class="col-md-6 img-thumbnail">
+              <h4>Jobcard Data:</h4>
+              <div class="form-group" style="margin-top: 3px;
+                                                      border: 1px solid #c5c4c4;
+                                                      height: 150px;
+                                                      overflow: auto;">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th style="width: 100px;">-</th>
+                      <th>Name</th>
+                      <th>Jobcard Details</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let data of dyElemObjData; let i=index;">
+                      <td style="width: 50px;">
+                        <!-- <a style="cursor: pointer; color: red;" (click)="onDeleteDyelem(i)">
+                          <span class="glyphicon glyphicon-remove-circle"></span>
+                        </a> -->
+                      </td>
+                      <td>{{data.name}}</td>
+                      <td>{{data.value}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+</div>
+  
+<div class="col-md-12 col-sm-12 col-xs-12" style="padding:0px; margin:0px;">
+</div>

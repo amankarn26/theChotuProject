@@ -1,0 +1,343 @@
+<div  class="row" style="padding:0px; margin:0px;">
+  <div class="panel-default" style="padding: 15px;">
+  <div class="row panel-heading">
+    <div class="panel-heading">
+        <h4>Customer Statistics</h4>
+        <form #form2="ngForm" >
+            <div class="col-md-12">
+               
+              </div>
+
+         
+
+            <div class="row">
+
+         
+                <div class="col-md-6 col-sm-6 col-xs-12" >
+                    <div class="col-md-6 form-group" *ngIf="customer ==''">
+                      <label for="rm">Customer: </label>
+                     
+                      <select *ngIf="!isUpdate"  class="form-control" id="customer" name="customer" [(ngModel)]="customer" (change)="getcustomersale()" >
+                        <option *ngFor="let data of custList; let i=index" [value]="data.id">{{data.shopname}}</option>
+                      </select>
+                    </div>
+
+                    <div class="col-md-6 form-group"  *ngIf="customer !==''">
+                      <label for="rm">Customer: </label>
+                     
+                      <select disabled *ngIf="!isUpdate"  class="form-control" id="customer" name="customer" [(ngModel)]="customer" (change)="getcustomersale()" >
+                        <option *ngFor="let data of custList; let i=index" [value]="data.id">{{data.shopname}}</option>
+                      </select>
+                    </div>
+
+
+                    <!-- <div class="col-md-6 form-group">
+                      <label for="rm">Product: </label>
+                      
+                      <select class="form-control" name="product" [(ngModel)]="product" required (change)="getproduct($event)">
+                        <option required *ngFor="let data of productList; let i=index" [value]="data.id">{{data.name}}</option>
+                      </select>
+                    </div> -->
+
+                  </div>
+    
+    
+                
+                  <button *ngIf="userRole === 'SUPERADMIN' || userRole ==='ADMIN'" class="btn btn-info btn-sm" title="Reset" (click)="refresh()" style="margin-top: 22px;">
+                    <span class="glyphicon glyphicon-refresh"></span>
+                  </button>
+                </div>
+            
+              
+            
+
+          
+    
+                  
+
+
+
+            </form>
+      <div class="clearfix">
+     
+        <div class="container" class="pull-right">
+          <div class="row" style="margin-top: -38px; ">
+
+       
+            
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+  </div>
+  <div *ngIf="customer">
+
+  <div class="col-md-8 col-sm-12 col-xs-12 no-padding animated  flipInX"  >
+    <div class="panel panel-default">
+      <div class="panel-heading">
+      Customer Sale Over Last 1 year 
+      </div>
+      <div>
+        <div style="display: block">
+          <canvas id="barchart1" baseChart [datasets]="barChartData1" [labels]="barChartLabels1" [options]="barChartOptions" [legend]="barChartLegend"
+          [chartType]="barChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)" style="font-size:5px;"></canvas>
+        </div>
+        <!--<button (click)="randomize()">Update</button>-->
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4 col-sm-12 col-xs-12 no-padding animated  flipInX" >
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        Number of Quotations Per Type of product
+      </div>
+      <div>
+        <div style="display: block; background-color: white; border-radius: 10px;" >
+          <!--[options]="doughnutChartOptions"-->
+              <canvas class="pie"
+                      baseChart [data]="doughnutChartData"
+                      [colors]="doughnutChartColours"
+                      [labels]="doughnutChartLabels"
+                      [chartType]="doughnutChartType"
+                      (chartHover)="chartHovered($event)"
+                      (chartClick)="chartClicked($event)">
+             </canvas>
+         </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-8 col-sm-12 col-xs-12 no-padding animated  flipInX"  >
+    <div class="panel panel-default">
+      <div class="panel-heading">
+      Customer's Quotation Count Over Last 1 year 
+      </div>
+      <div>
+        <div style="display: block">
+          <canvas id="barchart3" baseChart [datasets]="barChartData3" [colors]="barChartColors3" [labels]="barChartLabels3" [options]="barChartOptions" [legend]="barChartLegend"
+          [chartType]="barChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)" style="font-size:5px;"></canvas>
+        </div>
+        <!--<button (click)="randomize()">Update</button>-->
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4 col-sm-12 col-xs-12 no-padding animated  flipInX" >
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        Number of Quotations Per Type of PaperType
+      </div>
+      <div>
+        <div style="display: block; background-color: white; border-radius: 10px;" >
+          <!--[options]="doughnutChartOptions"-->
+              <canvas class="pie"
+                      baseChart [data]="doughnutChartData1"
+                      [colors]="doughnutChartColours"
+                      [labels]="doughnutChartLabels1"
+                      [chartType]="doughnutChartType"
+                      (chartHover)="chartHovered($event)"
+                      (chartClick)="chartClicked($event)">
+             </canvas>
+         </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="panel-default" style="padding: 15px;">
+    <br><br>
+    <div class="row panel-heading">
+      <div class="panel-heading">
+          <!-- <h4>Statistics by Datatype</h4> -->
+          <form #form2="ngForm" >
+           
+           
+  
+              <div class="row">
+  
+           
+                  <div class="col-md-6 col-sm-6 col-xs-12" >
+                      <div class="col-md-6 form-group" *ngIf="product ==''">
+                        <label for="rm">Product: </label>
+                        
+                        <select class="form-control" name="product" [(ngModel)]="product" required (change)="getproduct($event)">
+                          <option required *ngFor="let data of productList; let i=index" [value]="data.id">{{data.name}}</option>
+                        </select>
+                      </div>
+
+
+                      <div class="col-md-6 form-group" *ngIf="product !==''">
+                        <label for="rm">Product: </label>
+                        
+                        <select disabled class="form-control" name="product" [(ngModel)]="product" required (change)="getproduct($event)">
+                          <option required *ngFor="let data of productList; let i=index" [value]="data.id">{{data.name}}</option>
+                        </select>
+                      </div>
+  
+  
+                      <button *ngIf="userRole === 'SUPERADMIN' || userRole ==='ADMIN'" class="btn btn-info btn-sm" title="Reset" (click)="productrefresh()" style="margin-top: 22px;">
+                        <span class="glyphicon glyphicon-refresh"></span>
+                      </button>
+  
+                    </div>
+      
+                 
+                  </div>
+         
+  
+  
+              </form>
+        <div class="clearfix">
+       
+          <div class="container" class="pull-right">
+            <div class="row" style="margin-top: -38px; ">
+  
+         
+              
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+    </div>
+
+<div class=""  *ngIf="product" >
+
+
+    <div class="col-md-6 col-sm-12 col-xs-12 no-padding animated  flipInX">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+        {{prodname}} Sale Over Last 1 year 
+        </div>
+        <div>
+          <div style="display: block">
+            <canvas id="barchart" baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions" [legend]="barChartLegend"
+              [chartType]="barChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)" style="font-size:5px;"></canvas>
+          </div>
+          <!--<button (click)="randomize()">Update</button>-->
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-sm-12 col-xs-12 no-padding animated  flipInX">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+        {{prodname}} Sale Count Last 1 year 
+        </div>
+        <div>
+          <div style="display: block">
+            <canvas id="barchart4" baseChart [colors]="barChartColors3" [datasets]="barChartData4" [labels]="barChartLabels4" [options]="barChartOptions" [legend]="barChartLegend"
+              [chartType]="barChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)" style="font-size:5px;"></canvas>
+          </div>
+          <!--<button (click)="randomize()">Update</button>-->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel-default" style="padding: 15px;">
+  
+    <div class="row panel-heading">
+      <div class="panel-heading">
+          <!-- <h4>Statistics by Datatype</h4> -->
+          <form #form2="ngForm" >
+           
+           
+  
+              <div class="row">
+  
+           
+                  <div class="col-md-6 col-sm-6 col-xs-12" >
+                      <div class="col-md-6 form-group" *ngIf="papertype ==''">
+                        <label for="rm">PaperType: </label>
+                        
+                        <select class="form-control" id="papertype" name="papertype" [(ngModel)]="papertype" (change)="getpapertypesale($event)" >
+                          <option *ngFor="let data of papertypeList; let i=index" [value]="data.prodtype">{{data.prodtype}}</option>
+                        </select>
+                      </div>
+  
+                      <div class="col-md-6 form-group" *ngIf="papertype !==''">
+                        <label for="rm">PaperType: </label>
+                        
+                        <select disabled class="form-control" id="papertype" name="papertype" [(ngModel)]="papertype" (change)="getpapertypesale($event)" >
+                          <option *ngFor="let data of papertypeList; let i=index" [value]="data.prodtype">{{data.prodtype}}</option>
+                        </select>
+                      </div>
+                    
+  
+                    </div>
+      
+      
+                  
+                    <button *ngIf="userRole === 'SUPERADMIN' || userRole ==='ADMIN'" class="btn btn-info btn-sm" title="Reset" (click)="papertyperefresh()" style="margin-top: 22px;">
+                      <span class="glyphicon glyphicon-refresh"></span>
+                    </button>
+                  </div>
+              
+                
+              
+  
+            
+      
+                    
+  
+  
+  
+              </form>
+        <div class="clearfix">
+       
+          <div class="container" class="pull-right">
+            <div class="row" style="margin-top: -38px; ">
+  
+         
+              
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+    </div>
+
+    <div  *ngIf="papertype" >
+    <div class="col-md-6 col-sm-12 col-xs-12 no-padding animated  flipInX"  >
+      <div class="panel panel-default">
+        <div class="panel-heading">
+
+        {{papertypename}} Sale Over Last 1 year 
+
+        </div>
+        <div>
+          <div style="display: block">
+            <canvas id="barchart2" baseChart [datasets]="barChartData2" [labels]="barChartLabels2" [options]="barChartOptions" [legend]="barChartLegend"
+            [chartType]="barChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)" style="font-size:5px;"></canvas>
+          </div>
+          <!--<button (click)="randomize()">Update</button>-->
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-sm-12 col-xs-12 no-padding animated  flipInX"  >
+      <div class="panel panel-default">
+        <div class="panel-heading">
+
+        {{papertypename}} Sale Count Over Last 1 year 
+
+        </div>
+        <div>
+          <div style="display: block">
+            <canvas id="barchart5" baseChart [datasets]="barChartData5" [colors]="barChartColors3" [labels]="barChartLabels5" [options]="barChartOptions" [legend]="barChartLegend"
+            [chartType]="barChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)" style="font-size:5px;"></canvas>
+          </div>
+          <!--<button (click)="randomize()">Update</button>-->
+        </div>
+      </div>
+    </div>
+</div>
+</div>
+  
+
+
+
+</div>

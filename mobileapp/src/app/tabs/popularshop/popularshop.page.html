@@ -1,0 +1,156 @@
+<ion-header>
+  <ion-toolbar class="new-background-color">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/tab1">
+      </ion-back-button>
+    </ion-buttons>
+    <ion-title class="pageheading"> <strong>{{title}}</strong></ion-title>
+    <ion-buttons class="cartt" slot="end" >
+      <ion-button class="cartt" (click)="openCart()" style="--ackground: transparent !important;">
+        <ion-badge class="bd" *ngIf="cart.length>0">{{cart.length}}</ion-badge>
+        <ion-icon name="cart" slot="icon-only" style="color: black; " ></ion-icon>
+      </ion-button>
+     </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+
+
+
+  <ion-list  >
+    <ion-item  class="shoplist" *ngIf="firm"  >
+     <ion-label>Branch: {{fname}}</ion-label>
+    </ion-item>
+  </ion-list>
+
+
+  <div class="offers"  *ngIf="firm">
+    <!-- <ion-row no-padding class="category-banner">
+      <ion-col text-left button  align-self-center>
+        Product Types
+      </ion-col>
+    </ion-row> -->
+     <ion-slides [options]="sliderConfig4" >
+      <ion-slide *ngFor="let cat of prodtypeList" >
+        <ion-card style="margin: 2px">
+          <ion-card-header style="font-size: 10px; font-weight: bold;padding: 2px;">
+               <ion-card-title>
+                {{cat?.prodtype}}
+               </ion-card-title>
+               <ion-card-content style="padding: 2px 2px 0px; cursor: pointer;" (click)="getproductbytype(cat.prodtype)" >
+
+                  <img src="{{docServer}}/{{cat?.photo?.docpath}}" style="width: 300px; height: 130px; border-radius: 10px" *ngIf="cat.photo" >
+                  <img src="{{'https://via.placeholder.com/100X100'}}" style="width: 300px; height: 100px; border-radius: 10px" *ngIf="!cat.photo" >
+
+               </ion-card-content>
+          </ion-card-header>
+        </ion-card>
+      </ion-slide>
+    </ion-slides>
+  </div>
+
+
+  <div class="offers"  *ngIf="firm && prodtype" style="padding-top:2px; padding-bottom:2px;">
+    <ion-row no-padding class="category-banner">
+      <ion-col text-left button  align-self-center>
+        {{this.prodtype}}
+      </ion-col>
+    </ion-row>
+    <ion-slides [options]="sliderConfig">
+
+      <!-- <ion-slide *ngFor="let product of items" > -->
+        <ion-slide *ngFor="let product of filteredItems" >
+       <ion-card style="margin: 2px">
+         <ion-card-header style="font-size: 10px; font-weight: bold;padding: 2px;">
+              <ion-card-title>
+                {{product.name}}
+                <!-- - Rs {{product.rateperunit}} -->
+              </ion-card-title>
+              <ion-button slot="end">
+                <ion-button (click)="openCart()">
+                  <ion-badge *ngIf="cart.length>0">{{cart.length}}</ion-badge>
+                  <ion-icon name="cart" slot="icon-only"></ion-icon>
+                </ion-button>
+              </ion-button>
+
+              <ion-card-content style="padding:2px 2px 0px;">
+                <a [routerLink]="['/tabs/product-detailss',product.id, product.name,firm]">
+                  <img src="{{docServer}}/{{product?.image}}"  style="width: 300px; height: 130px; border-radius: 10px" *ngIf="product.image" >
+                  <img src="{{'https://via.placeholder.com/100X100'}}"  style="width: 300px; height: 130px; border-radius: 10px" *ngIf="!product.image" >
+
+                  <!-- <img src="{{docServer}}/{{product?.photos[0]?.docpath}}"  style="width: 100px; height: 100px; border-radius: 10px" *ngIf="product.photos[0]" >
+                  <img src="{{'https://via.placeholder.com/100X100'}}"  style="width: 100px; height: 100px; border-radius: 10px" *ngIf="!product.photos[0]" > -->
+                 </a>
+                 <!-- <ion-button expand="full" (click)="addToCart(product)">
+                   Add to Cart
+                 </ion-button> -->
+              </ion-card-content>
+         </ion-card-header>
+
+       </ion-card>
+      </ion-slide>
+    </ion-slides>
+  </div>
+
+
+  <!-- <div   style="background-color: #6DC183;" *ngIf="firm" >
+
+  <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
+
+  <ion-slides [options]="sliderConfig"   *ngIf="items"  >
+
+    <ion-slide *ngFor="let product of filteredItems" >
+     <ion-card>
+       <ion-card-header>
+            <ion-card-title>
+              {{product.name}}
+            </ion-card-title>
+            <ion-button slot="end">
+              <ion-button (click)="openCart()">
+                <ion-badge *ngIf="cart.length>0">{{cart.length}}</ion-badge>
+                <ion-icon name="cart" slot="icon-only"></ion-icon>
+              </ion-button>
+            </ion-button>
+            <ion-card-content>
+              <a [routerLink]="['/tabs/product-detailss',product.id, product.name,firm]">
+                <img src="{{docServer}}/{{product?.image}}" style="width: 100px; height: 100px; border-radius: 10px">
+               </a>
+            </ion-card-content>
+       </ion-card-header>
+     </ion-card>
+    </ion-slide>
+  </ion-slides>
+  </div> -->
+
+
+  <div class="offers"   *ngIf="firm">
+    <ion-row no-padding class="category-banner">
+      <ion-col text-left button  align-self-center>
+        Best Sellers
+      </ion-col>
+    </ion-row>
+     <!-- crateing by me for offer -->
+     <ion-slides [options]="sliderConfig3">
+      <ion-slide  *ngFor="let prod of propularprodList">
+        <!-- <img src="{{docServer}}/{{prod?.path}}" style="width: 100px; height: 100px; border-radius: 10px"> -->
+        <ion-card style="margin: 2px">
+          <ion-card-header style="font-size: 10px; font-weight: bold;padding: 2px;">
+               <ion-card-title>
+                {{prod?.name}}
+               </ion-card-title>
+               <ion-card-content style="padding:2px 2px 0px;">
+                  <!-- <img src="{{docServer}}/{{prod?.path}}"> -->
+                  <a [routerLink]="['/tabs/product-detailss',prod.id, prod.name,firm]">
+                  <img src="{{docServer}}/{{prod?.path}}" style="width: 400px; height: 120px; border-radius: 10px">
+                </a>
+               </ion-card-content>
+          </ion-card-header>
+        </ion-card>
+      </ion-slide>
+    </ion-slides>
+
+  </div>
+
+</ion-content>
+
+

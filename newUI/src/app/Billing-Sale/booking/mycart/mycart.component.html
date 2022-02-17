@@ -1,0 +1,357 @@
+
+<div [hidden]="isManageState" class="col-md-12 col-sm-12 col-xs-12">
+  <div class="panel panel-default" *ngIf="!detailFlag">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        {{title}}
+        <a [routerLink]="['/manageshop']" title="View all Shop" class="pull-right">
+          <span class="glyphicon glyphicon-th-list"></span>
+        </a>
+      </div>
+      <div class="panel-body">
+        <form #form1="ngForm">
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="name"> Name: </label>
+              <input type="text" *ngIf="!isUpdate" class="form-control" required name="name" [(ngModel)]="shop.name">
+              <input type="text" *ngIf="isUpdate" readonly class="form-control" name="name" [(ngModel)]="shop.name">
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="fax">Fax:</label>
+              <input type="number" *ngIf="!isUpdate" class="form-control" id="fax" name="fax" required
+                [(ngModel)]="shop.fax" />
+              <input type="number" *ngIf="isUpdate" class="form-control" id="fax" name="fax" required
+                [(ngModel)]="shop.fax" />
+
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="phone">Contact:</label>
+              <input type="number" *ngIf="!isUpdate" class="form-control" id="phone" name="phone" pattern="[0-9]{10}"
+                required [(ngModel)]="shop.phone" />
+              <input type="number" *ngIf="isUpdate" class="form-control" id="phone" name="phone" pattern="[0-9]{10}"
+                required [(ngModel)]="shop.phone" />
+
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="email">Email Id:</label>
+              <input type="email" class="form-control" *ngIf="!isUpdate" id="email" name="email" required
+                [(ngModel)]="shop.email" />
+              <input type="email" class="form-control" *ngIf="isUpdate" id="email" name="email" required
+                [(ngModel)]="shop.email" />
+
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="line1">Address Line1 :
+              </label>
+              <input type="text" required class="form-control" *ngIf="!isUpdate" id="line1" name="line1"
+                [(ngModel)]="shop.address.line1" />
+              <input type="text" required class="form-control" disabled *ngIf="isUpdate" id="line1" name="line1"
+                [(ngModel)]="shop.address.line1" />
+
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="line2">Area</label>
+              <input type="text" class="form-control" id="line2" required *ngIf="!isUpdate" name="line2"
+                [(ngModel)]="shop.address.line2" />
+              <input type="text" class="form-control" id="line2" required disabled *ngIf="isUpdate" name="line2"
+                [(ngModel)]="shop.address.line2" />
+
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="pincode">Pin-Code:
+              </label>
+              <input type="number" required class="form-control" id="pincode" *ngIf="!isUpdate" name="pincode"
+                [(ngModel)]="shop.address.pincode" (change)="getState($events)" />
+              <input type="number" required class="form-control" disabled id="pincode" *ngIf="isUpdate" name="pincode"
+                [(ngModel)]="shop.address.pincode" (change)="getState($events)" />
+
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="states">State:
+              </label>
+              <input type="text" required class="form-control" *ngIf="!isUpdate" name="states" required
+                [(ngModel)]="shop.address.states" />
+              <input type="text" required class="form-control" disabled *ngIf="isUpdate" name="states" required
+                [(ngModel)]="shop.address.states" />
+
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="city">City:
+              </label>
+              <input type="text" required class="form-control" *ngIf="!isUpdate" name="citiName"
+                [(ngModel)]="shop.address.city" />
+              <input type="text" required class="form-control" disabled *ngIf="isUpdate" name="citiName"
+                [(ngModel)]="shop.address.city" />
+
+
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="form-group">
+              <button *ngIf="this.url == '/addshop'" type="submit" [disabled]="!form1.valid"
+                class="btn btn-default">Submit</button>
+              <button *ngIf="this.url == '/editshop/' + this.id" type="submit" [disabled]="!form1.valid"
+                class="btn btn-default" (click)="updateData()">Update</button>
+              <button type="button" class="btn btn-default" (click)="cancel()">Cancel</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="panel panel-default" *ngIf="detailFlag">
+    <div class="panel-heading">
+      <div class="clearfix">
+        <div class="pull-left"> {{title}}</div>
+        <div class="container" class="pull-right">
+          <div class="row">
+            <a [routerLink]="['/manageshop']" title="Manage Shop" class="btn btn-info a-btn-slide-text">
+              <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+            </a>
+
+            <a [routerLink]="['/editshop', id]" title="Update Shop" class="btn btn-info a-btn-slide-text">
+
+              <i class="glyphicon glyphicon-edit"></i>
+
+            </a>
+            <a class="btn btn-danger a-btn-slide-text" (click)="deleteEmployee(id)">
+              <span class="glyphicon glyphicon-remove-circle"></span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="panel-body">
+
+      <form #form1="ngForm">
+        <div class="col-md-12 col-sm-12 col-xs-12 ">
+
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <h4>Shop Details:</h4>
+          </div>
+
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+              <div class="form-group">
+                <label for="name">Name: &nbsp; {{shop.name}}</label>
+              </div>
+            </div>
+            <div class="col-md-12 col-sm-12 col-xs-12">
+              <div class="form-group">
+                <label for="email">Email: &nbsp; {{shop.email}}
+                </label>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="phone">Phone:&nbsp;{{shop.phone}}
+                </label>
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="fax">Fax:&nbsp;{{shop.fax}}
+                </label>
+              </div>
+            </div>
+
+
+
+          </div>
+
+        </div>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <h4>Local Address :</h4>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="line1">Line1:&nbsp;{{shop.address.line1}}
+                </label>
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="line1">Line2:&nbsp;{{shop.address.line2}}
+                </label>
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="city">City:&nbsp;{{shop.address.city}}
+                </label>
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="states">States:&nbsp;{{shop.address.states}}
+                </label>
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="country">Country:&nbsp;{{shop.address.country}}
+                </label>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+
+
+
+</div>
+
+<div [hidden]="!isManageState" class="col-md-12 col-sm-12 col-xs-12">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      {{title}}
+      <a title="Home" [routerLink]="['/custhomepage']" class="btn btn-info a-btn-slide-text pull-right btn-sm">
+        <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+      </a>
+    </div>
+    <div class="panel-body">
+
+      <div class="row">
+        <div class="col-12">
+          <div class="table-responsive" *ngIf="this.productdata.length !== 0">
+            <table class="table table-striped " style="background-color: whitesmoke;">
+              <thead>
+                <tr>
+                  <th scope="col">SN </th>
+                  <th scope="col">Product</th>
+                  <th scope="col" class="text-center">Quantity</th>
+                  <th scope="col" class="text-right">Rateper Unit</th>
+                  <th scope="col" class="text-right">Total</th>
+                  <th scope="col" class="text-right"> <span style=" font-size: 10px; cursor: pointer; "
+                      (click)="clearcart()" class="label label-danger" class="material-icons">Clear Cart</span> 
+                  </th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr *ngFor="let pdata of this.productdata; let i = index; let last = last;">
+
+                  <td>{{i+1}}</td>
+                  <td>
+                    <div class="img-thumbnail  ">
+                      <img *ngIf="pdata?.image" src="{{docServer}}/{{pdata?.image}}" class="img-circle" alt=""
+                        style="width:100px; height:100px;">
+                      <img *ngIf="!pdata?.image"
+                        src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg"
+                        class="img-circle" alt="" style="width:100px; height:100px;">
+                      <div class="caption text-capitalize text-center"> {{pdata?.dname}}</div>
+                    </div>
+                  </td>
+                  <td class="text-center"> {{pdata?.qty}}
+                    <span *ngIf="pdata?.rateunit === 'RATE_PER_PKT'">(Rate per packet)</span>
+                    <span *ngIf="pdata?.rateunit === 'RATEPERFULLPLATE'">(Rate per Plate)</span>
+                  </td>
+                  <td class="text-right">{{pdata?.rateperunit}} &#x20b9;</td>
+                  <td class="text-right">{{pdata?.qty * pdata?.rateperunit | number:'1.2-2'}} &#x20b9;</td>
+                  <td class="text-right">
+                    <button class="btn btn-danger btn-sm" title="Delete" (click)="onDeletePstock(i)">
+                      <span class="glyphicon glyphicon-remove-circle"></span>
+                    </button>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td>Product Total</td>
+                  <td class="text-right">{{this.ptotal | number:'1.2-2'}} &#x20b9;</td>
+                </tr>
+
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td>Total items</td>
+                  <td class="text-right">{{this.productdata.length}} </td>
+                </tr>
+
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td>Gst</td>
+                  <td class="text-right">{{this.gsttotal | number:'1.2-2' }} &#x20b9;</td>
+                </tr>
+
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td><strong>Grand Total</strong></td>
+                  <td class="text-right"><strong>{{this.grandtotal | number:'1.0-0'}} &#x20b9;</strong></td>
+                </tr>
+
+              </tbody>
+            </table>
+          </div>
+          <div class="table-responsive" *ngIf="this.productdata.length === 0">
+
+            <div class="alert alert-danger">
+              <strong>INFO!</strong> Your Cart is<strong> Empty</strong>
+            </div>
+          </div>
+        </div>
+        <div class="col mb-2">
+          <div class="row">
+            <div class="col-sm-12  col-md-6">
+              <a [routerLink]="['/custhomepage']">
+                <button class="btn btn-lg btn-block "
+                  style="background-image: linear-gradient(to bottom, #081708 0%, #273027 100%);  color: white;">Continue
+                  Shopping</button>
+
+              </a>
+            </div>
+            <div class="col-sm-12 col-md-6 text-right" *ngIf="productdata.length===0">
+              <a style="cursor:not-allowed;" title="please Add some product to checkout">
+                <button class="btn btn-lg btn-block"
+                  style="background-image: linear-gradient(to bottom, #08170899 0%, #2730278f 100%);color: white;cursor: not-allowed;">Checkout</button>
+              </a>
+            </div>
+            <div class="col-sm-12 col-md-6 text-right" *ngIf="productdata.length !==0">
+              <a (click)="checkouttonextpage()" title="Checkout">
+                <button class="btn btn-lg btn-block"
+                  style="background-image: linear-gradient(to bottom, #081708 0%, #273027 100%);  color: white;">Checkout</button>
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

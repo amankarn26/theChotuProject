@@ -1,0 +1,76 @@
+<ion-header [translucent]="true">
+  <ion-toolbar  style="--background: rgba(134,75,246,1);">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="" (click)="back()">
+      </ion-back-button>
+    </ion-buttons>
+    <ion-title class="pageheading">
+      <strong>Rate The Dish</strong>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content>
+
+  <div *ngIf="isDataLoaded" >
+    <div *ngFor="let item of selectedDish; let i = index " class="cartShowBox">
+      <ion-row>
+        <ion-col size="4">
+          <img src="{{docServer}}/{{item?.photo?.docpath}}" style="width: 60px; height:60px;">
+        </ion-col>
+        <ion-col size="8">
+          <ion-label style="font-weight: 600;">
+            {{item?.dname}}
+            <br/>
+            <span *ngIf="item?.hasvariant === 'YES'">{{item?.variant}}</span>
+          </ion-label>
+          <p>
+            <span class="star-count" (click)="setRating(1,i)" style="color: #ffffff;">
+              <ion-icon name="star" *ngIf="item?.rating >= 1"></ion-icon>
+              <ion-icon name="star-outline" *ngIf="item?.rating < 1"></ion-icon>
+            </span>
+  
+            <span class="star-count" (click)="setRating(2,i)" style="color: #ffffff;">
+              <ion-icon name="star" *ngIf="item?.rating >= 2"></ion-icon>
+              <ion-icon name="star-outline" *ngIf="item?.rating < 2"></ion-icon>
+            </span>
+  
+            <span class="star-count" (click)="setRating(3,i)" style="color: #ffffff;">
+              <ion-icon name="star" *ngIf="item?.rating >= 3"></ion-icon>
+              <ion-icon name="star-outline" *ngIf="item?.rating < 3"></ion-icon>
+            </span>
+          </p>
+        </ion-col>
+        <ion-col size="12">
+          <div class="inputbox">
+            <ion-input type="text" name="username" [(ngModel)]="item.review" placeholder="Enter your Review" required></ion-input>
+          </div>
+        </ion-col>
+      </ion-row>
+  
+    </div>
+  </div>
+  <div *ngIf="!isDataLoaded">
+    Please wait...
+  </div>
+
+
+
+  <div style="text-align: center;
+  margin-top: 29px;">
+  <ion-button size="small" (click)="addreview()"  style="--background: #151413c2;" >Submit</ion-button>
+  <ion-button size="small" (click)="back()"  style="--background: #151413c2;margin: 17px;" >Cancel</ion-button>
+</div>
+
+      <!-- <button id="submit" (click)="addreview()" style="font-size: 18px; --background: #151413c2; color: white; font-weight: 800;" >Submit</button>
+   
+      <button id="cancel"  style="font-size: 18px;color: white; --background: #151413c2;   font-weight: 800;" (click)="back()">Cancel</button> -->
+   
+ 
+
+
+
+
+
+</ion-content>

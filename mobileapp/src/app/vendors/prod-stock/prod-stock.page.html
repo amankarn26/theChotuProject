@@ -1,0 +1,376 @@
+<!-- <ion-header>
+  <ion-toolbar>
+    <ion-title>{{title}}</ion-title>
+  </ion-toolbar>
+</ion-header> -->
+
+
+
+
+<ion-header [translucent]="true"    >
+  <ion-toolbar>
+    <ion-buttons slot="start">
+
+      <ion-back-button defaultHref="/vendors/vendor-home" (click)="cancel()"  >
+      </ion-back-button>
+    </ion-buttons>
+
+    <ion-title class="pageheading">
+    <strong>{{title}}</strong>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="showproductlist">
+  <ion-toolbar style="margin-top: 2px;" >
+    <ion-segment (ionChange)="segmentChanged($event)" [(ngModel)]='segment'>
+      <ion-segment-button value="STOCK">Added Stock</ion-segment-button>
+      <ion-segment-button value="NO_STOCK">Stock Not Added</ion-segment-button>
+    </ion-segment>
+
+
+
+
+    <ion-buttons>
+      <button ion-button style="background: none; text-align: center;" *ngIf="!filter" >
+        <ion-icon name="eye" style="font-size: 20px;" (click)="changeFilter()"></ion-icon>
+     </button>
+     <button ion-button style="background: none; text-align: center;" *ngIf="filter" >
+      <ion-icon name="eye-off" style="font-size: 20px;" (click)="changeFilter()"></ion-icon>
+   </button>
+    </ion-buttons>
+
+
+
+  </ion-toolbar>
+
+
+  <ion-item *ngIf="filter"  >
+    <!-- <ion-label position="floating">  Category: <ion-text color="danger">*</ion-text>
+    </ion-label> -->
+    <ion-select value="brown" ok-text="Okay" cancel-text="Dismiss" required name="fcategory"
+    placeholder="Category"   [(ngModel)]="prodtype" (ionChange)="getallProductdata()">
+      <ion-select-option *ngFor="let type of prodtypeList; let i=index" value={{type.prodtype}}>{{type?.prodtype}}
+      </ion-select-option>
+    </ion-select>
+  </ion-item>
+
+
+  <ion-searchbar (ionInput)="getItems($event)" placeholder="{{'Type Item Name'}}">
+  </ion-searchbar>
+
+
+
+
+  <div class="no-padding" *ngIf="filteredItems" >
+  <ion-item *ngFor="let item of filteredItems">
+    <ion-avatar slot="start">
+
+      <ion-img [src]='docServer +"/"+ item.image' ></ion-img>
+
+
+    </ion-avatar>
+    <ion-label>
+      <h2>{{item.name}}</h2>
+      <p>{{item?.description | slice:0:50}}</p>
+      <p style="font-size: smaller;">
+        <ion-badge *ngIf="item.rateunit==='RATEPERKG'" color="light">
+          1 KG for <strong> &nbsp; &#8377; {{item?.pstock[0]?.rateperunit}}</strong>
+        </ion-badge>
+
+        <ion-badge *ngIf="item.rateunit==='RATEPERPRODUCT'" color="light">
+          1 Pack for <strong> &nbsp; &#8377; {{item?.pstock[0]?.rateperunit}}</strong>
+        </ion-badge>
+
+        <ion-badge *ngIf="item.rateunit==='RATE_PER_PKT'" color="light">
+          1 Pack for <strong> &nbsp; &#8377; {{item?.pstock[0]?.rateperunit}}</strong>
+        </ion-badge>
+      </p>
+    </ion-label>
+    <!-- <ion-button fill="outline">View</ion-button> -->
+
+
+    <ion-icon name="albums" style="font-size: 40px;" (click)="showStock(item.id, item.name, item.rateunit)" color="medium"></ion-icon>
+
+
+
+    <ion-icon name="add-circle-sharp" slot="end" color="primary" style="cursor: pointer;"
+      (click)="gotoaddstock(item.id, item.name, item.rateunit)" title="Add Stock"></ion-icon>
+
+      <!-- <ion-icon name="create" slot="end" color="primary" style="cursor: pointer;"
+      (click)="gotoupdatestock(item.id)" title="Update Stock"></ion-icon> -->
+    <!-- <ion-icon name="apps-sharp" slot="end" color="secondary" style="cursor: pointer;"></ion-icon> -->
+  </ion-item>
+</div>
+
+<div class="spin" *ngIf="spinner">
+  <ion-spinner name="lines" color="primary"></ion-spinner>
+</div>
+
+</ion-content>
+
+<ion-content *ngIf="addproductstock">
+
+  <form #form1="ngForm">
+    <ion-list lines="full" class="ion-no-margin ion-no-padding">
+      <!-- <ion-item>
+        <ion-label position="floating">Name <ion-text color="danger">*</ion-text>
+        </ion-label>
+        <ion-input type="text" class="form-control" readony name="dname" [(ngModel)]="pstock.pname"></ion-input>
+      </ion-item> -->
+      <ion-item>
+        <ion-label position="floating">Variant: <ion-text color="danger">*</ion-text>
+        </ion-label>
+        <ion-input type="text" class="form-control" name="Varient" [(ngModel)]="pstock.mfg"
+           required></ion-input>
+      </ion-item>
+      <!-- <ion-item> onkeyup="this.value = this.value.toUpperCase();"
+        <ion-label position="floating"> Purchase Price: <ion-text color="danger">*</ion-text>
+        </ion-label>
+        <ion-input type="number" class="form-control" maxlength="3" name="purchaseprice"
+          [(ngModel)]="pstock.purchaseprice"></ion-input>
+      </ion-item> -->
+
+      <ion-item>
+        <ion-label position="floating">Rate Unit: <ion-text color="danger">*</ion-text>
+        </ion-label>
+        <ion-input type="text" class="form-control" readonly name="rateunit" [(ngModel)]="rateunit"
+          ></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Rate per unit: <ion-text color="danger">*</ion-text>
+        </ion-label>
+        <ion-input type="number" class="form-control" maxlength="3" name="rateperunit" [(ngModel)]="pstock.rateperunit"
+          (ionChange)="gsttotal()" required></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating"> GST %: <ion-text color="danger">*</ion-text>
+        </ion-label>
+        <ion-input type="number" class="form-control" maxlength="3" name="gst" [(ngModel)]="pstock.gst"
+          (ionChange)="gsttotal()" required></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating"> Rate With GST %: <ion-text color="danger">*</ion-text>
+        </ion-label>
+        <ion-input type="number" class="form-control" maxlength="3" readonly name="ratewithgst"
+          [(ngModel)]="pstock.ratewithgst"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Available: <ion-text color="danger">*</ion-text>
+        </ion-label>
+        <ion-select value="brown" ok-text="Okay" cancel-text="Dismiss" required name="dp"
+          [(ngModel)]="pstock.available" required>
+          <ion-select-option value="YES">YES</ion-select-option>
+          <ion-select-option value="NO">NO</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-list>
+    <ion-row>
+      <ion-col col-12>
+        <!-- <button class="login-btn" type="submit" [disabled]="!form1.valid" ion-button (click)="addstock()">Submit
+        </button> -->
+
+        <ion-button expand="block" (click)="addstock()" [disabled]="!form1.valid" type="submit" >Add Stock</ion-button>
+
+
+      </ion-col>
+    </ion-row>
+  </form>
+</ion-content>
+
+
+
+<ion-content *ngIf="showproductstock">
+  <ion-list>
+  <ion-item *ngFor="let item of stockList" >
+    <ion-card class="orders-item" [ngStyle]="item.available==='YES'?{'background-color': '#c1ebff ' } : {'background-color': 'rgb(245, 194, 194) '}">
+
+    <ion-card-title>
+      <!-- <h5>Variant: <strong>{{item?.mfg}}</strong></h5>
+ -->
+
+ <ion-item  no-padding>
+
+  <h5 slot="start"><strong>{{item?.mfg}}</strong></h5>
+  <button ion-button (click)="gotoupdatestock(item.id)" slot="end" >
+    <ion-icon name="create" style="color:blue; font-size: 20px;"  ></ion-icon>
+  </button>
+  <button ion-button (click)="deletestock(item.id)" slot="end" >
+    <ion-icon name="close" style="color:red; font-size: 20px;"  ></ion-icon>
+  </button>
+ </ion-item>
+    </ion-card-title>
+
+
+
+     <ion-row>
+             <ion-col col-6 no-padding>
+                 <p class="status">Available :{{item?.available}}</p>
+             </ion-col>
+             <ion-col col-6 no-padding>
+               <p style=" margin-top: 5px;" >GST :{{item?.gst }} %</p>
+             </ion-col>
+         </ion-row>
+
+         <!-- <ion-row>
+             <ion-col col-6 no-padding>
+                 <p class="status">Purchase Price :{{item?.purchaseprice | currency: 'INR':'symbol' }}</p>
+             </ion-col>
+             <ion-col col-6 no-padding>
+               <p style=" margin-top: 5px;" >GST :{{item?.gst }} %</p>
+             </ion-col>
+         </ion-row> -->
+
+         <ion-row>
+          <ion-col col-6 no-padding>
+              <p class="status">Rateperunit :{{item?.rateperunit | currency: 'INR':'symbol'  }}</p>
+          </ion-col>
+          <ion-col col-6 no-padding>
+            <p style=" margin-top: 5px;" >Rate With GST :{{item?.ratewithgst | currency: 'INR':'symbol' }}</p>
+
+
+          </ion-col>
+
+      </ion-row>
+
+      <ion-row>
+        <ion-col col-6 no-padding>
+            <p class="status">Rateunit :{{ rateunit }}</p>
+        </ion-col>
+        <ion-col col-6 no-padding>
+          <p style=" margin-top: 5px;" ></p>
+
+
+        </ion-col>
+
+    </ion-row>
+
+      <ion-row>
+        <!-- <ion-icon name="create" slot="end"  color="primary" style="cursor: pointer;"
+        (click)="gotoupdatestock(item.id)" title="Update Stock"></ion-icon> -->
+
+        <!-- <button ion-button (click)="gotoupdatestock(item.id)" slot="end" >
+          <ion-icon name="create" style="color:blue; font-size: 30px;"  ></ion-icon>
+        </button> -->
+      </ion-row>
+     </ion-card>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--
+  </div> -->
+    <!-- <ion-icon name="add-circle-sharp" slot="end" color="primary" style="cursor: pointer;"
+      (click)="gotoaddstock(item.id, item.name, item.rateunit)" title="Add Stock"></ion-icon> -->
+
+      <!-- <ion-icon name="create" slot="end" color="primary" style="cursor: pointer;"
+      (click)="gotoupdatestock(item.id)" title="Update Stock"></ion-icon> -->
+  </ion-item>
+</ion-list>
+</ion-content>
+<ion-content *ngIf="editproductstock">
+
+  <form #form1="ngForm">
+
+    <ion-list lines="full" class="ion-no-margin ion-no-padding">
+      <!-- <ion-item>
+        <ion-label position="floating">Name <ion-text color="danger">*</ion-text>
+        </ion-label>
+        <ion-input type="text" class="form-control" readony name="dname" [(ngModel)]="pstock.pname"></ion-input>
+      </ion-item> -->
+
+      <!-- <ion-item>
+        <h3>Update</h3>
+      </ion-item> -->
+
+      <ion-item>
+        <ion-label position="floating">Variant: <ion-text color="danger">*</ion-text>
+        </ion-label>
+        <ion-input type="text" class="form-control" readonly name="Varient" [(ngModel)]="pstock.mfg"
+          onkeyup="this.value = this.value.toUpperCase();" required></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Rate Unit: <ion-text color="danger">*</ion-text>
+        </ion-label>
+        <ion-input type="text" class="form-control" readonly name="rateunit" [(ngModel)]="rateunit"
+          ></ion-input>
+      </ion-item>
+      <!-- <ion-item>
+        <ion-label position="floating"> Purchase Price: <ion-text color="danger">*</ion-text>
+        </ion-label>
+        <ion-input type="number" class="form-control" maxlength="3" name="purchaseprice"
+          [(ngModel)]="pstock.purchaseprice"></ion-input>
+      </ion-item> -->
+
+      <!-- <ion-item>
+        <ion-label position="floating">Rate Unit: <ion-text color="danger">*</ion-text>
+        </ion-label>
+        <ion-input type="text" class="form-control" name="rateunit" readonly [(ngModel)]="rateunit"
+          ></ion-input>
+      </ion-item> -->
+
+      <ion-item>
+        <ion-label position="floating">Rate per unit: <ion-text color="danger">*</ion-text>
+        </ion-label>
+        <ion-input type="number" class="form-control" maxlength="3" name="rateperunit" [(ngModel)]="pstock.rateperunit"
+          (ionChange)="gsttotal()" required></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating"> GST %: <ion-text color="danger">*</ion-text>
+        </ion-label>
+        <ion-input type="number" class="form-control" maxlength="3" name="gst" [(ngModel)]="pstock.gst"
+          (ionChange)="gsttotal()" required></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating"> Rate With GST %: <ion-text color="danger">*</ion-text>
+        </ion-label>
+        <ion-input type="number" class="form-control" maxlength="3" readonly name="ratewithgst"
+          [(ngModel)]="pstock.ratewithgst" required></ion-input>
+      </ion-item>
+
+
+      <ion-item>
+        <ion-label position="floating">Available: <ion-text color="danger">*</ion-text>
+        </ion-label>
+        <ion-select value="brown" ok-text="Okay" cancel-text="Dismiss" required name="dp"
+          [(ngModel)]="pstock.available" required>
+          <ion-select-option value="YES">YES</ion-select-option>
+          <ion-select-option value="NO">NO</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-list>
+    <ion-row>
+      <ion-col col-12>
+        <!-- <button class="login-btn" type="submit" [disabled]="!form1.valid" ion-button (click)="addstock()">Submit
+        </button> -->
+
+        <ion-button expand="block" (click)="updatestock()" [disabled]="!form1.valid" type="submit" >Update Stock</ion-button>
+
+
+      </ion-col>
+    </ion-row>
+  </form>
+</ion-content>
+
+<!-- <span *ngFor="let entry of data" >
+
+      <span class="billno"  [ngStyle]="entry.payment=='STOP'?{'background-color':'red'} : {'background-color': 'green'}" >
+          <a [routerLink]="['/detaildispatch',e.dispatch]">
+    {{entry.orderno}}
+    </a>
+  </span>
+ </span> -->

@@ -1,0 +1,252 @@
+<!-- <div class="row">
+  <div class="col-md-12">
+    <h2>{{title}}</h2>
+
+  </div>
+</div>
+<hr /> -->
+
+<div [hidden]="isManageState" class="col-md-12 col-sm-12 col-xs-12">
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      {{subtitle}}
+      <a [routerLink]="['/managefirm']" title="View all firms" class="pull-right">
+        <span class="glyphicon glyphicon-th-list"></span>
+      </a>
+    </div>
+    <div class="panel-body">
+       <form #form1="ngForm" >
+        <div class="col-sm-6">
+          <div class="form-group">
+            <label for="name"> Name:
+            </label>
+            <input type="text" class="form-control" required name="name" [(ngModel)]="firm.name">
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="form-group">
+            <label for="regno"> Registration no:</label>
+            <input type="text" class="form-control" name="regno" [(ngModel)]="firm.regno">
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="form-group">
+            <label for="phone"> Phone:</label>
+            <input type="number" class="form-control"
+             name="phone" pattern="[0-9]{10}" [(ngModel)]="firm.phone">
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="form-group">
+            <label for="email"> Email:
+            </label>
+            <input type="email" class="form-control" name="email" required [(ngModel)]="firm.email">
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="form-group">
+            <label for="empcount"> Member Count:</label>
+            <input type="number" class="form-control" name="empcount" [(ngModel)]="firm.empcount">
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="line1">Address Line 1:
+            </label>
+            <input type="text" class="form-control" id="line1" name="line1" [(ngModel)]="firm.address.line1" required />
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="line2">Area</label>
+            <input type="text" class="form-control" id="line2" name="line2" required [(ngModel)]="firm.address.line2" />
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="pincode">Pin-Code:
+            </label>
+            <input type="number" class="form-control" id="pincode" name="pincode" [(ngModel)]="firm.address.pincode" required pattern="[0-9]{5}"
+            />
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="states">State:
+            </label>
+            <select class="form-control" name="states" [(ngModel)]="firm.address.states" required (change)="onChangeState($event)">
+              <option *ngFor="let state of statelist; let i=index" [value]="state.state_name">{{state.state_name}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="city">City:
+            </label>
+            <select (ngModel)="citiName" name="citiName" class="form-control" required [(ngModel)]="firm.address.city">
+              <option *ngFor="let city of citylist; let i=index" [value]="city.city_name">{{city.city_name}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <button *ngIf="this.url == '/addfirm'" type="submit" [disabled]="!form1.valid" class="btn btn-default" (click)="submitData()">Submit</button>
+            <button *ngIf="this.url == '/editfirm/' + this.id" type="submit" [disabled]="!form1.valid" class="btn btn-default" (click)="updateData()">Update</button>
+           <button type="button" class="btn btn-default" (click)="cancel()">Cancel</button>
+          </div>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+
+<div [hidden]="!isManageState" class="col-md-12 col-sm-12 col-xs-12">
+
+    <!-- <div class="col-sm-12">
+          <div class="col-sm-3">
+              <div class="form-group">
+                <label for="fromDate">From date:
+
+                </label>
+                <input type="date" class="form-control" id="fromDate" name="fromDate" [(ngModel)]="fromDate"  />
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="form-group">
+                <label for="toDate">To date:
+                </label>
+                <input type="date" class="form-control" id="toDate" name="toDate" [(ngModel)]="toDate"  />
+              </div>
+            </div>
+            <div class="col-sm-3 text-center " style=" vertical-align:middle; padding-top: 20px;">
+
+                  Or
+            </div>
+            <div class="col-sm-3">
+                <div class="form-group">
+                  <label for="jobno">Job No:
+                  </label>
+                  <input type="string" class="form-control" id="jobno" name="jobno" [(ngModel)]="jobno"  />
+                </div>
+              </div>
+               <div class="col-sm-4">
+                  <button type="button" class="btn btn-default">TODAY'S</button>
+                  <button type="button" class="btn btn-default">YESTERDAY</button>
+               </div>
+      </div> -->
+  <div class="panel panel-default">
+   <!-- <div class="panel-heading">
+      <div class="col-sm-12">
+          <div class="col-sm-3">
+              <div class="form-group">
+                <label for="fromDate">From date:
+
+                </label>
+                <input type="date" class="form-control" id="fromDate" name="fromDate" [(ngModel)]="fromDate"  />
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="form-group">
+                <label for="toDate">To date:
+                </label>
+                <input type="date" class="form-control" id="toDate" name="toDate" [(ngModel)]="toDate"  />
+              </div>
+            </div>
+            <div class="col-sm-3 text-center " style=" vertical-align:middle; padding-top: 20px;">
+
+                  Or
+            </div>
+            <div class="col-sm-3">
+                <div class="form-group">
+                  <label for="jobno">Job No:
+                  </label>
+                  <input type="string" class="form-control" id="jobno" name="jobno" [(ngModel)]="jobno"  />
+                </div>
+              </div>
+               <div class="col-sm-4">
+                  <button type="button" class="btn btn-default">TODAY'S</button>
+                  <button type="button" class="btn btn-default">YESTERDAY</button>
+               </div>
+      </div>
+
+   </div> -->
+
+    <div class="panel-heading">
+
+      {{subtitle}}
+
+      <!-- [routerLink]="['/addfirm']" *ngIf="userType == 'ADMIN'" -->
+
+      <a  title="Add Firm" class="pull-right">
+        <span class="glyphicon glyphicon-plus-sign"></span>
+      </a>
+    </div>
+    <div class="panel-body">
+      <div class="table-responsive">
+        <!-- <table class="table table-condensed table-striped table-bordered" [mfData]="data | dataFilterPr : filterQuery" #mf="mfDataTable"
+          [mfRowsOnPage]="rowsOnPage" [(mfSortBy)]="Role" [(mfSortOrder)]="sortOrder">
+          <thead>
+            <tr>
+              <th>Order No</th>
+              <th>Retail Order Detail</th>
+              <th>
+                <mfDefaultSorter by="role">Order Date</mfDefaultSorter>
+              </th>
+              <th>Delivery Date </th>
+              <th>Packed On</th>
+              <th>Payment Status</th>
+              <th>Action</th>
+
+            </tr>
+            <tr>
+              <th colspan="12">
+                <div id="custom-search-input">
+                  <div class="input-group col-md-12">
+                    <input type="text" class="form-control" placeholder="Search by name" [(ngModel)]="filterQuery" />
+                    <span class="input-group-btn">
+                      <button class="btn btn-danger btn-sm" type="button">
+                        <span class=" glyphicon glyphicon-search"></span>
+                      </button>
+                    </span>
+                  </div>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of mf.data; let i = index; let last = last;">
+              <td>{{i+1}}</td>
+              <td>{{data?.retailorder}}</td>
+              <td>{{data?.orderdate | date:'dd-MM-yyyy'}}</td>
+              <td>{{data?.deliverytime  | date:'dd-MM-yyyy'}}</td>
+              <td>{{data?.packedon | date:'dd-MM-yyyy'}}</td>
+              <td>{{data?.paystatus}}</td>
+              <td class="text-right">
+                <a [routerLink]="['/editfirm/',data.id]" data-toggle="tooltip" title="Edit Firm" *ngIf="userType == 'ADMIN'">
+                  <button class="btn btn-default btn-sm">
+                    <span class="glyphicon glyphicon-edit"></span>
+                  </button>
+                </a>
+                <button *ngIf="userType == 'ADMIN'" class="btn btn-danger btn-sm" title="Delete Firm" (click)="deleteRole(data.id)">
+                  <span class="glyphicon glyphicon-remove-circle"></span>
+                </button>
+                <button *ngIf="userType !== 'ADMIN'" disabled class="btn btn-danger btn-sm" title="Contact admin for functionality" (click)="deleteRole(data.role)">
+                  <span class="glyphicon glyphicon-remove-circle"></span>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="12">
+                <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+              </td>
+            </tr>
+          </tfoot>
+        </table> -->
+      </div>
+    </div>
+  </div>
+</div>

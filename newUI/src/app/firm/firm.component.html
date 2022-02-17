@@ -1,0 +1,706 @@
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+<!-- Add firm -->
+
+<div [hidden]="isManageState" class="col-md-12 col-sm-12 col-xs-12">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      {{title}}
+
+      <a *ngIf="this.userRole==='SUPERADMIN' && this.userType==='FIRM'" title="Back" (click)="cancel()" class="pull-right">
+        <span class="glyphicon glyphicon-th-list"></span>
+      </a>
+    </div>
+
+    <div class="panel-body">
+      <form #form1="ngForm">
+        <div class="col-sm-12 img-thumbnail ">
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="name"> Name:</label>
+              <input type="text" maxlength="32" class="form-control" required name="name" [(ngModel)]="firm.name"
+                (change)="setcode()">
+            </div>
+          </div>
+
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="code"> Code:</label>
+              <input type="text" class="form-control" *ngIf="!isUpdate" required maxlength="4" name="code" readonly
+                [(ngModel)]="firm.code" onkeyup="this.value = this.value.toUpperCase();">
+              <input type="text" class="form-control" *ngIf="isUpdate"  maxlength="4" name="code" readonly
+                [(ngModel)]="firm.code" onkeyup="this.value = this.value.toUpperCase();">
+            </div>
+          </div>
+
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="pannum"> PAN No:</label>
+              <input type="text" *ngIf="!isUpdate" class="form-control" name="pannum" pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}"
+                [(ngModel)]="firm.pannum">
+              <input type="text" *ngIf="isUpdate" readonly class="form-control" pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}"
+                name="pannum" [(ngModel)]="firm.pannum">
+            </div>
+          </div>
+
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="gstin"> GST NO:</label>
+              <input type="text" *ngIf="!isUpdate" class="form-control" name="gstin" [(ngModel)]="firm.gstin"
+                pattern="^([0][1-9]|[1-2][0-9]|[3][0-5])([a-zA-Z]{5}[0-9]{4}[a-zA-Z]{1}[1-9a-zA-Z]{1}[zZ]{1}[0-9a-zA-Z]{1})+$">
+              <input type="text" *ngIf="isUpdate" class="form-control" name="gstin" [(ngModel)]="firm.gstin"
+                pattern="^([0][1-9]|[1-2][0-9]|[3][0-5])([a-zA-Z]{5}[0-9]{4}[a-zA-Z]{1}[1-9a-zA-Z]{1}[zZ]{1}[0-9a-zA-Z]{1})+$">
+            </div>
+          </div>
+
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="phone"> Phone:</label>
+              <input type="number" class="form-control" name="phone" pattern="[0-9]{10}" [(ngModel)]="firm.phone"
+                required (change)="Setphone()">
+            </div>
+          </div>
+
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="emaill"> Email:</label>
+              <input type="email" class="form-control" name="emaill" *ngIf="!isUpdate"
+                pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" [(ngModel)]="firm.email" required>
+              <input type="email" class="form-control" name="emaill" *ngIf="isUpdate"
+                pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" [(ngModel)]="firm.email">
+            </div>
+          </div>
+
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="empcount"> Member Count:</label>
+              <input type="number" class="form-control" name="empcount" [(ngModel)]="firm.empcount">
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="line1">Address Line 1:</label>
+              <input type="text" class="form-control" id="line1" name="line1" [(ngModel)]="firm.address.line1"
+                required />
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="line2">Area</label>
+              <input type="text" maxlength="19" class="form-control" id="line2" required name="line2"
+                [(ngModel)]="firm.address.line2" />
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="pincode">Pin-Code:</label>
+              <!-- <input type="number" class="form-control" id="pincode" name="pincode" [(ngModel)]="firm.address.pincode" required pattern="[0-9]{6}"/> -->
+              <input type="number" *ngIf="!isUpdate" required class="form-control" id="pincode" name="pincode"
+                [(ngModel)]="firm.address.pincode" (change)="getState($event)" />
+              <input type="number" *ngIf="isUpdate" required class="form-control" id="pincode" name="pincode"
+                [(ngModel)]="firm.address.pincode" (change)="getState($event)" />
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="states">State:</label>
+              <!-- <select class="form-control" name="states" [(ngModel)]="firm.address.states" required (change)="onChangeState($event)">
+              <option *ngFor="let state of statelist; let i=index" [value]="state.state_name">{{state.state_name}}</option>
+            </select> -->
+              <input type="text" required class="form-control" name="states" required
+                [(ngModel)]="firm.address.states" />
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="city">City:</label>
+              <!-- <select (ngModel)="citiName" name="citiName" class="form-control" required [(ngModel)]="firm.address.city">
+              <option *ngFor="let city of citylist; let i=index" [value]="city.city_name">{{city.city_name}}</option>
+            </select> -->
+              <input type="text" required class="form-control" name="citiName" [(ngModel)]="firm.address.city" />
+            </div>
+          </div>
+
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="name"> Delivery Pool:</label>
+              <!-- <input type="text"  class="form-control" required name="pvalue" [(ngModel)]="config.pvalue"> -->
+              <select class="form-control" disabled class="form-control" required name="dp"
+                [(ngModel)]="firm.usedeliverypool">
+                <option value="YES">YES</option>
+                <option value="NO">NO</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- <div class="col-sm-6">
+            <div class="form-group">
+              <label for="category"> Firm Category:
+              </label>
+              <select class="form-control" *ngIf="!isUpdate" id="category" required name="category"
+                [(ngModel)]="firm.category" (change)="setservicerate($event)">
+                <option required *ngFor="let type of categoryList; let i=index" [value]="type.name">{{type.name}}
+                </option>
+              </select>
+              <select class="form-control" id="category" *ngIf="isUpdate" readonly required name="category"
+                [(ngModel)]="firm.category">
+                <option required *ngFor="let type of categoryList; let i=index" [value]="type.name">{{type.name}}
+                </option>
+              </select>
+            </div>
+          </div> -->
+
+          <!-- <div class="col-md-6">
+            <div class="form-group">
+              <label for="servicerate">Service Rate:</label>
+              <input type="number" *ngIf="!isUpdate" class="form-control" readonly id="servicerate" name="servicerate"
+                [(ngModel)]="firm.servicerate" />
+              <input type="number" *ngIf="isUpdate" class="form-control" readonly id="servicerate" name="servicerate"
+                [(ngModel)]="firm.servicerate" />
+            </div>
+          </div> -->
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="deliverdays">Delivery Days:</label>
+              <input type="number" *ngIf="!isUpdate" required class="form-control" id="deliverdays" name="deliverdays"
+                [(ngModel)]="firm.deliverdays" />
+              <input type="number" *ngIf="isUpdate" required class="form-control" id="deliverdays" name="deliverdays"
+                [(ngModel)]="firm.deliverdays" />
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="gst">GST Transection (%):</label>
+              <input type="number" *ngIf="!isUpdate" required class="form-control" id="gst" name="gst"
+                [(ngModel)]="firm.gst" />
+              <input type="number" *ngIf="isUpdate" required class="form-control" id="gst" name="gst"
+                [(ngModel)]="firm.gst" />
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-12 col-sm-12 col-xs-12 img-thumbnail " style="margin-top: 10px;">
+          <h4>Account Details</h4>
+
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="actype"> Account Type
+              </label>
+              <select class="form-control" id="actype" required name="actype" [(ngModel)]="firm.account.type" required>
+                <option value="BANK">BANK</option>
+                <option value="PAYTM">PAYTM</option>
+                <option value="GOOGLE_PAY">GOOGLE_PAY</option>
+                <option value="PHONE_PE">PHONE_PE</option>
+                <option *ngIf="userRole === 'SUPERADMIN'" value="CASH">CASH</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="col-md-6" *ngIf="firm.account.type === 'BANK'">
+            <div class="form-group">
+              <label for="acctnumber">Bank Name:</label>
+              <input type="text" *ngIf="!isUpdate" required class="form-control" id="bankname" name="bankname"
+                [(ngModel)]="firm.account.bankname" />
+              <input type="text" *ngIf="isUpdate" readonly class="form-control" id="bankname" name="bankname"
+                [(ngModel)]="firm.account.bankname" />
+            </div>
+          </div>
+
+          <div class="col-md-6" *ngIf="firm.account.type !== 'CASH'">
+            <div class="form-group">
+              <label for="acctnumber">Account Number:
+              </label>
+              <input type="number" *ngIf="!isUpdate" required class="form-control" id="acctnumber" name="acctnumber"
+                [(ngModel)]="firm.account.acctnumber" />
+              <input type="number" *ngIf="isUpdate" required class="form-control" id="acctnumber" name="acctnumber"
+                [(ngModel)]="firm.account.acctnumber" />
+            </div>
+          </div>
+
+          <div class="col-md-6" *ngIf="firm.account.type === 'BANK'">
+            <div class="form-group">
+              <label for="branch">Branch Name:
+              </label>
+              <input type="text" *ngIf="!isUpdate" required class="form-control" id="branch" name="branch"
+                [(ngModel)]="firm.account.branch" />
+              <input type="text" *ngIf="isUpdate" required class="form-control" id="branch" name="branch"
+                [(ngModel)]="firm.account.branch" />
+            </div>
+          </div>
+
+          <div class="col-md-6" *ngIf="firm.account.type === 'BANK'">
+            <div class="form-group">
+              <label for="ifsccode">IFSC Code:
+              </label>
+              <input type="text" *ngIf="!isUpdate" required class="form-control" id="ifsccode" name="ifsccode"
+                [(ngModel)]="firm.account.ifsccode" />
+              <input type="text" *ngIf="isUpdate" required class="form-control" id="ifsccode" name="ifsccode"
+                [(ngModel)]="firm.account.ifsccode" />
+            </div>
+          </div>
+
+          <div class="col-md-6" *ngIf="firm.account.type === 'BANK'">
+            <div class="form-group">
+              <label for="city">CITY:
+              </label>
+              <input type="text" *ngIf="!isUpdate" required class="form-control" id="city" name="city"
+                [(ngModel)]="firm.account.city" />
+              <input type="text" *ngIf="isUpdate" required class="form-control" id="city" name="city"
+                [(ngModel)]="firm.account.city" />
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-12 col-sm-12 col-xs-12 img-thumbnail " style="margin-top: 10px;">
+          <h4>Login Details</h4>
+
+          <div class="col-sm-3">
+            <div class="form-group">
+              <label for="username">User name:</label>
+              <input type="number" pattern="[0-9]{10}" readonly class="form-control" id="username" name="username"
+                required [(ngModel)]="firm.login.username" />
+            </div>
+          </div>
+
+          <div class="col-sm-3" *ngIf="!isUpdate">
+            <!-- <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="text" class="form-control" id="password" name="password" readonly [(ngModel)]="firm.login.password"
+              />
+          </div> -->
+            <div class="form-group">
+              <label for="password">Password:</label>
+              <input type="password" class="form-control" id="password" name="password" readonly
+                [(ngModel)]="firm.login.password" *ngIf="showpassword===false">
+              <input type="text" class="form-control" id="password" name="password" readonly
+                [(ngModel)]="firm.login.password" *ngIf="showpassword===true">
+
+              <div class="input-group-btn">
+                <button *ngIf="showpassword===false" class="btn btn-default" type="submit" (click)="showpass()"><i
+                    class="glyphicon glyphicon-eye-open"></i></button>
+                <button *ngIf="showpassword===true" class="btn btn-default" type="submit" (click)="hidepass()"><i
+                    class="glyphicon glyphicon-eye-close"></i></button>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-12 col-sm-12 col-xs-12 img-thumbnail " style="margin-top: 10px;"
+          *ngIf="(this.userRole==='SUPERADMIN' && this.userType==='FIRM') || isUpdate">
+          <h4>Location Details</h4>
+
+          <div class="col-sm-3">
+            <div class="form-group">
+              <label for="Latitude">Latitude:</label>
+              <input type="number" pattern="^(\+|-)?(?:90(?:(?:\.0{1,6})?)|(?:[0-9]|[1-8][0-9])(?:(?:\.[0-9]{1,8})?))$"
+                class="form-control" id="Latitude" name="Latitude" [(ngModel)]="this.firm.address['latitude']" />
+            </div>
+          </div>
+
+          <div class="col-sm-3">
+            <div class="form-group">
+              <label for="Longitude">Longitude:</label>
+              <input type="number"
+                pattern="^(\+|-)?(?:180(?:(?:\.0{1,6})?)|(?:[0-9]|[1-9][0-9]|1[0-7][0-9])(?:(?:\.[0-9]{1,8})?))$"
+                class="form-control" id="Longitude" name="Longitude" [(ngModel)]="this.firm.address['longitude']" />
+            </div>
+          </div>
+        </div>
+
+        <!-- <div class="col-md-12 col-sm-12 col-xs-12 img-thumbnail " style="margin-top: 10px;" *ngIf="(this.userRole==='SUPERADMIN' && this.userType==='FIRM')">
+        <h4>COD Support</h4>
+
+        <div class="col-sm-3">
+          <div class="form-group">
+            <label for="iscodsupported">Is COD Supported ?</label>
+            <select class="form-control" name="iscodsupported" required
+            [(ngModel)]="firm.iscodsupported">
+            <option value="YES">YES</option>
+            <option value="NO">NO</option>
+          </select>
+          </div>
+        </div>
+
+        <div class="col-sm-3" *ngIf="firm.iscodsupported === 'YES'">
+          <div class="form-group">
+            <label for="deliverytype">Delivery Type</label>
+            <select class="form-control" name="deliverytype" required
+            [(ngModel)]="firm.deliverytype">
+            <option value="IMMEDIATE">IMMEDIATE</option>
+            <option value="AS_PER_DELIVERY_DAYS">AS PER DELIVERY DAYS</option>
+          </select>
+          </div>
+        </div>
+   
+      </div> -->
+        <!-- <div class="col-md-12 col-sm-12 col-xs-12 img-thumbnail " style="margin-top: 10px;">
+          <h4>System Configuration</h4>
+          <form #form2="ngForm">
+          <div class="col-sm-5">
+            <div class="form-group">
+              <label for="cname"> Name
+              </label>
+       
+              <select class="form-control" id="cname" required name="cname"
+                [(ngModel)]="config.name" required>
+            
+                <option value="enable.customer">Customer</option>
+    
+                <option value="enable.product">Product</option>
+             
+              </select>
+            </div>
+          </div>
+          <div class="col-sm-5">
+            <div class="form-group">
+              <label for="name"> Value:
+              </label>
+
+              <select class="form-control" class="form-control" required name="pvalue" [(ngModel)]="config.value">
+                <option value="YES">YES</option>
+                <option value="NO">NO</option>
+              </select>
+            </div>
+          </div>
+        </form>
+
+          <div class="col-sm-2">
+            <div class="form-group" style="margin-top: 5px;">
+              <br>
+              <label for="Addbutton" [hidden]='true'>Add
+              </label>
+              <button [disabled]="!form2.valid" class="btn btn-info btn-sm" (click)="push()">
+                <span class="glyphicon glyphicon-plus"></span>
+              </button>
+            </div>
+          </div>
+
+          <div class="col-sm-12 img-thumbnail rounded"
+          style="margin-top: 3px;  border: 1px solid #c5c4c4; min-height: 10px; overflow: auto;">
+          <table class="table">
+            <thead>
+              <tr>
+                <th style="width: 50px;">-</th>
+                <th>Name</th>
+
+                <th>Value</th>
+
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of configlist; let i=index;">
+                <td style="width: 50px;">
+                  <a style="cursor: pointer; color: orange;" (click)="delproperty(i)">
+                    <span class="glyphicon glyphicon-remove-circle"></span>
+                  </a>
+                </td>
+              
+                <td>{{data?.name}}</td>
+                <td>{{data?.value}}</td>
+              </tr>
+
+              <tr *ngFor="let data of configlist1; let i=index;" >
+                <td style="width: 50px;">
+                  <a style="cursor: pointer; color: red;" (click)="delproperty1(data.id)">
+                    <span class="glyphicon glyphicon-remove-circle"></span>
+                  </a>
+                </td>
+              
+
+                <td>{{data?.name}}</td>
+                <td>{{data?.value}}</td>
+              </tr>
+           
+            </tbody>
+          </table>
+        </div>
+        </div> -->
+        <div class="col-md-12 col-sm-12 col-xs-12 ">
+          <hr>
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <h4>Firm Logo:</h4>
+          </div>
+
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label>Logo:</label>
+              <input required *ngIf="!isUpdate" type="file" (change)="fileEvent($event)" name="document"
+                [(ngModel)]="document" />
+              <input *ngIf="isUpdate" type="file" (change)="fileEvent($event)" name="document" [(ngModel)]="document" />
+
+            </div>
+          </div>
+
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <img [src]="urls" style="height:200px; width:200px;" class="thumbnail">
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="form-group">
+            <button *ngIf="this.url == '/addfirm/' + this.number || this.url == '/addfirm' " [disabled]="!form1.valid"
+              type="submit" class="btn btn-default" (click)="submitData()" style="margin-right: 10px;">Submit</button>
+
+            <!-- <button *ngIf="this.url == '/addfirm'" type="submit" [disabled]="!form1.valid" class="btn btn-default" (click)="submitData()">Submit</button> -->
+            <button *ngIf="this.url == '/editfirm/' + this.id" type="submit" [disabled]="!form1.valid"
+              class="btn btn-default" (click)="updateData()" style="margin-right: 10px;">Update</button>
+
+            <button type="button" class="btn btn-default" (click)="cancel()">Cancel</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Manage firm -->
+
+<div [hidden]="!isManageState" class="col-md-12 col-sm-12 col-xs-12">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      {{title}} &nbsp;&nbsp; Total Branch = {{data.length}}
+      <a [routerLink]="['/addfirm']" title="Add Vendor" class="pull-right">
+        <span class="glyphicon glyphicon-plus-sign"></span>
+      </a>
+    </div>
+
+    <div class="panel-body">
+      <div class="table-responsive">
+        <!-- <table class="table table-condensed table-striped table-bordered" [mfData]="data | dataFilterPr : filterQuery" #mf="mfDataTable"
+          [mfRowsOnPage]="rowsOnPage" [(mfSortBy)]="Role" [(mfSortOrder)]="sortOrder">
+
+           -->
+        <table class="table table-condensed table-striped table-bordered"
+          [mfData]="data | dataFilterPr : filterQuery:'firm'" #mf="mfDataTable" [mfRowsOnPage]="rowsOnPage">
+          <!-- <table > -->
+          <thead>
+            <tr *ngIf="this.userRole==='SUPERADMIN'">
+              <th colspan="10">
+                <div id="custom-search-input">
+
+                  <div class="col-sm-12">
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                      <div class="form-group">
+                        <label for="gender"> Search by
+                        </label>&nbsp;
+
+                        <input type="radio" value="Customdate" [(ngModel)]="categoryselect" name="categoryselect">
+                        Product Category &nbsp;
+
+
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-sm-12" *ngIf="categoryselect">
+                    <div class="col-sm-3">
+                      <div class="form-group">
+                        <label for="prodtype"> Category:
+                        </label>
+                        <select *ngIf="!isUpdate" class="form-control" name="category" [(ngModel)]="category" required
+                          (change)="getprodtypebycat()">
+                          <option required *ngFor="let data of categorydata; let i=index" [value]="data.name">
+                            {{data.name}}</option>
+                        </select>
+
+                      </div>
+                    </div>
+
+                    <div class="col-sm-3">
+                      <div class="form-group">
+                        <label for="state">Reset :
+                        </label>
+                        <span class="input-group-btn">
+                          <button class="btn btn-info btn-sm" title="Reset" (click)="refreshincall()"
+                            style="font-size: 9px;">
+                            <span class="glyphicon glyphicon-refresh"></span>
+                          </button>
+                        </span>
+                      </div>
+                    </div>
+
+
+
+
+
+                  </div>
+
+                </div>
+              </th>
+            </tr>
+
+            <tr>
+              <th>SN</th>
+              <th>ID</th>
+
+              <th>
+                <!-- <mfDefaultSorter by="role">Name</mfDefaultSorter> -->
+                Name
+              </th>
+              <th>Code</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Category</th>
+              <th>Address</th>
+              <th>Action</th>
+            </tr>
+
+            <tr>
+              <th colspan="9">
+                <div id="custom-search-input">
+                  <div class="input-group col-md-12">
+                    <input type="text" class="form-control" placeholder="Search by name" [(ngModel)]="filterQuery" />
+                    <span class="input-group-btn">
+                      <button class="btn btn-danger btn-sm" type="button">
+                        <span class=" glyphicon glyphicon-search"></span>
+                      </button>
+                    </span>
+                  </div>
+                </div>
+              </th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let data of mf.data; let i = index; let last = last;">
+              <td>{{i+1}}</td>
+              <td>{{data?.id}}</td>
+              <td>
+                <div class="img-thumbnail  ">
+                  <img *ngIf="data?.logo?.docpath" src="{{docServer}}/{{data?.logo?.docpath}}" class="img-thumbnail"
+                    alt="" style="width:100px; height:100px;">
+                  <img *ngIf="!data?.logo?.docpath" src="{{docServer}}/sample-product2.jpg" class="img-thumbnail" alt=""
+                    style="width:100px; height:100px;">
+
+                  <div class="caption text-capitalize text-center"> {{data?.name}}</div>
+                </div>
+
+              </td>
+              <td>{{data?.code}}</td>
+              <td>{{data?.email}}</td>
+              <td>{{data?.phone}}</td>
+              <td>{{data?.category}}</td>
+              <td>
+                {{data?.address.line1}}
+                <br *ngIf="data.address.line2"> {{data?.address.line2}}
+                <br> {{data?.address.country}}
+                <br> {{data?.address.states}},{{data?.address.city}}
+                <br> {{data?.address.pincode}}
+              </td>
+              <td class="text-right">
+
+                <a [routerLink]="['/detailfirm',data.id]" title="Vendor Details">
+                  <button class="btn btn-primary btn-sm">
+                    <span class="glyphicon glyphicon-info-sign"></span>
+                  </button>
+                </a>
+
+                <a [routerLink]="['/vendor_orderbyid',data.id]">
+                  <button class="btn btn-danger btn-sm" title="Vendors Orders">
+                    <i class="glyphicon glyphicon-th-list"></i>
+                  </button>
+                </a>
+
+                <a [routerLink]="['/editfirm',data.id]" title="Update Vendor">
+                  <button class="btn btn-default btn-sm">
+                    <span class="glyphicon glyphicon-edit"></span>
+                  </button>
+                </a>
+
+                <a [routerLink]="['/addpstock_byvendor',data.id,data.category]" data-toggle="tooltip"
+                  title="Add In Product Stock" *ngIf="userRole !=='MARKETING'">
+                  <button class="btn btn-default btn-sm">
+                    <span class="glyphicon glyphicon-plus"></span>
+                  </button>
+                </a>
+
+                <a [routerLink]="['/vendor_stock',data.id,data.category]" data-toggle="tooltip"
+                  title="Manage Product Stock">
+                  <button class="btn btn-info btn-sm">
+                    <span class="glyphicon glyphicon-th-list"></span>
+                  </button>
+                </a>
+
+                <a data-toggle="tooltip" title="Send SMS" (click)="showpopup(data)">
+                  <button class="btn btn-warning btn-sm">
+                    <span class="glyphicon glyphicon-comment"></span>
+                  </button>
+                </a>
+
+                <a [routerLink]="['/updatesysconfig',data.id]">
+                  <button class="btn btn-success btn-sm" title="Add/Update System config">
+                    <i class="glyphicon glyphicon-cog"></i>
+                  </button>
+                </a>
+
+
+                <button class="btn btn-danger btn-sm" title="Delete Vendor" (click)="deleteRole(data.id)">
+                  <span class="glyphicon glyphicon-remove-circle"></span>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+
+          <tfoot>
+            <tr>
+              <td colspan="9">
+                <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button style="display: none;" onclick="document.getElementById('id01').style.display='block'"
+  class="w3-button w3-black">Open Animated Modal</button>
+
+<div id="id01" class="w3-modal">
+  <div class="w3-modal-content w3-animate-top w3-card-4">
+    <header class="w3-container w3-teal" style="background-color: #58427fc9!important;">
+      <span onclick="document.getElementById('id01').style.display='none'"
+        class="w3-button w3-display-topright">&times;</span>
+      <h4>Send SMS</h4>
+    </header>
+
+    <form class="w3-container w3-card-4 w3-light-grey">
+      <!-- <h2></h2> -->
+      <!-- <p>Use any of the w3-round classes to create rounded borders.</p> -->
+
+      <p>
+        <label>To </label>
+        <input class="w3-input w3-border w3-round-large" readonly name="message.toMobile" [(ngModel)]="message.toMobile"
+          type="text">
+      </p>
+
+      <p>
+        <label>Type </label>
+        <!-- <input 
+          class="w3-input w3-border w3-round-large" readonly name="message.type" [(ngModel)]="message.type" type="text"> -->
+        <select class="w3-input w3-border w3-round-large" name="message.DCS" [(ngModel)]="message.DCS">
+          <option value="0">English</option>
+          <option value="8">Hindi</option>
+        </select>
+      </p>
+
+      <p>
+        <label>Type your message</label>
+        <textarea style="width: 868px;height: 197px;" class="w3-input w3-border w3-round-large" maxlength="160"
+          name="messagebody" placeholder="Maximum 160 Characters" [(ngModel)]="message.message" type="password">
+         </textarea>
+      </p>
+
+      <button class="w3-btn w3-blue-grey" (click)="submitmsg()">Submit</button>
+      <br>
+    </form>
+  </div>
+</div>

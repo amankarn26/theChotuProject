@@ -1,0 +1,205 @@
+
+.new-background-color{
+  --background: white;  /* fallback for old browsers */
+  --background: -webkit-linear-gradient(to right, #ebe8e2, #e4e1de);  /* Chrome 10-25, Safari 5.1-6 */
+  --background: linear-gradient(to right, #eeece8, #e9ded5); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+}
+
+  .btn-log-in {
+    --backgroung-color:   #32cd32;
+    --font-family: 'Montserrat', sans-serif;
+
+  }
+  .item {
+    background-color: rgba(119, 119, 119, 0.8);
+    width: 80%;
+    display: block;
+    margin: 0 auto;
+    border-radius: 5px;
+  }
+  .item.item-block .item-inner {
+
+  }
+  .item-input .label {
+    color: #fff;
+  }
+
+  .login-h{
+    margin-top: 69px;
+    margin-left: 100px;
+    margin-right: 100px;
+    margin-bottom: 69px;
+  }
+
+  .form1{
+    padding: 9px;
+  }
+  .login {
+    
+
+      //  --background: url("../../../assets/img/login.jpg") 0 0/100% 100% no-repeat;
+
+
+
+        // --background: #2980B9;  /* fallback for old browsers */
+        // --background: -webkit-linear-gradient(to right, #FFFFFF, #6DD5FA, #2980B9);  /* Chrome 10-25, Safari 5.1-6 */
+        // --background: linear-gradient(to right, #FFFFFF, #6DD5FA, #2980B9); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+
+        // --background: #f12711;  /* fallback for old browsers */
+        // --background: -webkit-linear-gradient(to right, #f5af19, #f12711);  /* Chrome 10-25, Safari 5.1-6 */
+        // --background: linear-gradient(to right, #f5af19, #f12711); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+
+
+    // --background: #11998e;  /* fallback for old browsers */
+    // --background: -webkit-linear-gradient(to right, #38ef7d, #11998e);  /* Chrome 10-25, Safari 5.1-6 */
+    // --background: linear-gradient(to right, #38ef7d, #11998e); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+    // no-repeat center !important;
+    // --background: url(../assets/imgs/carp.jpg) 0 0/100% 100% no-repeat;
+    background-size: cover;
+    color: #fff;
+    .logo {
+      width: 86px;
+      display: block;
+      margin: 0 auto;
+      margin-top: 4em;
+      padding-bottom: 2em;
+    }
+  }
+  .login-btn {
+    text-align: center;
+    padding: 16px;
+    width: 100%;
+    box-shadow: 0px 10px 30px rgba(64, 191, 255, 0.24);
+    border-radius: 5px;
+    background:#151413c2;// width: 161px;
+    font-family: Poppins;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 180%;
+    letter-spacing: 0.5px;
+    color: #FFFFFF;
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+    margin-top: 10px;
+    margin-right: 30px;
+  
+
+    
+  }
+
+  .login-btn:disabled {
+    background: #b8bbbd;
+  }
+
+
+  
+  .login-o{
+    
+    text-align: center;
+    font-family: Poppins;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 27px;
+    color: orange;
+    margin-top: 9px;
+    cursor: pointer;
+  }
+
+  
+
+  .login-u{
+    
+    width: 100%;
+          border: 2px solid #EBF0FF;
+          box-sizing: border-box;
+          border-radius: 5px;
+          background: #FFFFFF;
+          margin-bottom: 5px;
+    margin-right: 30px;
+
+    
+  
+  }
+  .login-otp{
+    
+    width: 100%;
+         
+          box-sizing: border-box;
+          border-radius: 5px;
+          background: #FFFFFF;
+          margin-bottom: 5px;
+    margin-right: 30px;
+
+    
+  
+  }
+
+  .inner1{
+    padding-left: 4px;
+  }
+
+  
+  .login-u input{
+    padding-top: 14px;
+    padding-left: 10px;
+  }
+
+  .login-u input:invalid {
+    border: 3px solid orange;
+  }
+
+
+  // .login-u:hover{
+  //   border: 3px solid #40BFFF;
+  // }
+  .login-p{
+    width: 343px;
+      left: 16px;
+      border: 1px solid #EBF0FF;
+      box-sizing: border-box;
+      border-radius: 5px;
+  }
+
+  .login-p:hover{
+    text-decoration: 2px solid orange;
+  }
+  .login-small:hover{
+    text-decoration: 2px solid orange;
+  }
+  .social-icon {
+    width: 86px;
+    padding: 0px 20px;
+  }
+.login-small{
+  position: absolute;
+width: 232px;
+left: 71px;
+
+font-family: Poppins;
+font-style: normal;
+font-size: 12px;
+line-height: 150%;
+/* identical to box height, or 18px */
+
+text-align: center;
+letter-spacing: 0.5px;
+margin-top: 100px;
+color: #9098B1;
+
+}
+.login-small a{
+  font-weight: normal;
+  color: orange;
+  text-decoration: none;
+
+}
+  
+
+  

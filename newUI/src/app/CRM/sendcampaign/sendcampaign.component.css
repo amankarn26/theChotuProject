@@ -1,0 +1,19 @@
+input[type="checkbox"], input[type="radio"] {
+    box-sizing: unset;
+    padding: 0;
+    width: 25px;
+    height: 20px;
+}
+
+
+input[type="radio"], input[type="checkbox"] {
+    margin: 8px 6px 5px;
+    margin-top: 1px \9;
+    line-height: normal;
+}
+
+
+.table-bordered>thead>tr>th, .table-bordered>tbody>tr>th, .table-bordered>tfoot>tr>th, .table-bordered>thead>tr>td, .table-bordered>tbody>tr>td, .table-bordered>tfoot>tr>td {
+    border: 1px solid #adabab7d;
+  }             
+  

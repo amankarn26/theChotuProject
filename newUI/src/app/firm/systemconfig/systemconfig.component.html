@@ -1,0 +1,94 @@
+<div class="col-md-12 col-sm-12 col-xs-12 no-padding slideLeft">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <div class="clearfix">
+        <div class="pull-left"> Add/Update System Config</div>
+        <div class="container" class="pull-right">
+          <div class="row">
+            <a [routerLink]="['/managefirm']" title="Manage Vendors" class="btn btn-info btn-sm a-btn-slide-text">
+              <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-body text-capitalize">
+      <div class="col-md-12 col-sm-12 col-xs-12 img-thumbnail " style="margin-top: 10px;">
+        <h4>System Configuration</h4>
+        <form #form2="ngForm">
+          <div class="col-sm-5">
+            <div class="form-group">
+              <label for="cname"> Name
+              </label>
+
+              <!-- <input type="text" class="form-control"  id="cname"  name="cname" [(ngModel)]="config.name" required> -->
+              <select class="form-control" id="cname" name="cname" [(ngModel)]="config.name" required>
+                <option value="DESCRIPTION">DESCRIPTION</option>
+                <option value="Has_Own_Delivery_Person">Has Own Delivery Person?</option>
+
+                
+              </select>
+            </div>
+          </div>
+          <div class="col-sm-5">
+            <div class="form-group">
+              <label for="name"> Value:
+              </label>
+
+              <textarea type="text" class="form-control" id="pvalue" name="pvalue" [(ngModel)]="config.value">
+                  </textarea>
+
+            </div>
+          </div>
+        </form>
+
+        <div class="col-sm-2">
+          <div class="form-group" style="margin-top: 5px;">
+            <br>
+            <label for="Addbutton" [hidden]='true'>Add
+            </label>
+            <button [disabled]="!form2.valid" class="btn btn-info btn-sm" (click)="push()">
+              <span class="glyphicon glyphicon-plus"></span>
+            </button>
+          </div>
+        </div>
+
+        <div class="col-sm-12 img-thumbnail rounded"
+          style="margin-top: 3px;  border: 1px solid #c5c4c4; min-height: 10px; overflow: auto;">
+          <table class="table">
+            <thead>
+              <tr>
+                <th style="width: 50px;">-</th>
+                <th>Name</th>
+
+                <th>Value</th>
+
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of configlist; let i=index;">
+                <td style="width: 50px;">
+                  <a style="cursor: pointer; color: orange;" (click)="delproperty(i,data.id)">
+                    <span class="glyphicon glyphicon-remove-circle"></span>
+                  </a>
+                </td>
+
+                <td>{{data?.name}}</td>
+                <td>{{data?.value}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="col-md-6">
+          <div class="form-group">
+            <button type="submit" *ngIf="configlist.length" class="btn btn-default"
+              (click)="submitConfig()">Submit</button>
+            <button type="button" class="btn btn-default" (click)="cancel()">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

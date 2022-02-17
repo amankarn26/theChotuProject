@@ -1,0 +1,175 @@
+<!-- <div class="row animated bounceInDown">
+  <div class="col-md-12">
+    <h2>{{title}}</h2>
+    <h5>{{subtitle}}</h5>
+  </div>
+</div>
+<hr /> -->
+<div class="row">
+<div class="col-sm-12" style="width: 1000px; margin: auto; padding-top: 60px; ">
+
+</div>
+</div>
+
+<div class="panel panel-default slideLeft" *ngIf="!isOtpsend" style="width: 1000px; margin: auto; ">
+    <div class="panel-heading">
+        <div class="clearfix">
+            <div class="pull-left"> {{title}}</div>
+            <div class="container" class="pull-right">
+                <div class="row">
+                    <!-- <a [routerLink]="['/addrole']" class="btn btn-primary  btn-sm a-btn-slide-text" title="Add Role">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                        <span></span>
+                    </a>
+                  <a href="#" class="btn btn-default a-btn-slide-text" title="Edit">
+                        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                        <span></span>
+                    </a>
+                  <a href="#" class="btn btn-info btn-sm a-btn-slide-text" title="View">
+                        <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+                        <span></span>
+                    </a>
+                  <a href="#" class="btn btn-danger a-btn-slide-text btn-sm" title="Delete">
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        <span></span>
+                    </a>-->
+                    <!-- <a [routerLink]="['/managedept']" title="Manage Departments" class="btn btn-info btn-sm a-btn-slide-text">
+                        <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+                    </a> -->
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="panel-body">
+        <form #fname="ngForm">
+
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="vehicletype"> Register As:
+                  </label>
+                  <!-- <input type="text"  class="form-control" required name="pvalue" [(ngModel)]="config.pvalue"> -->
+                  <select class="form-control" class="form-control" required name="vehicletype" [(ngModel)]="reg.type">
+                    <option value="CUSTOMER">CUSTOMER</option>
+                    <option value="VENDOR">BRANCH</option>
+                    <option value="DELIVERYPOOL">DELIVERYPOOL</option>
+                  </select>
+                </div>
+              </div>
+
+
+            <div class="col-sm-6">
+                <div class="form-group" >
+                    <label for="phone">Mobile No:</label>
+                    <input type="number" class="form-control" id="phone" name="phone" pattern="[0-9]{10}" required
+                      [(ngModel)]="reg.phone" />
+                    <!--   <input type="text" class="form-control" pattern="[A-Za-z_]+" id="role" name="role" [(ngModel)]="user.role" #role="ngModel" minlength="4" required
+              />-->
+                    <!-- <input type="text" maxlength="120" (keypress)="omit_special_char($event)"
+                        placeholder="Maximum 120 characters" class="form-control" id="name" name="name"
+                        [(ngModel)]="dept.name" required /> -->
+                    <!-- <div *ngIf="name.invalid && (name.dirty || name.touched)" class="alert alert-danger">
+
+              <div *ngIf="name.errors.required">
+                Name is required.
+              </div>
+              <div *ngIf="name.errors.minlength">
+                Name must be at least 4 characters long.
+              </div>
+              <div *ngIf="name.errors.forbiddenName">
+                Name cannot be Bob.
+              </div>
+              <div *ngIf="name.errors.pattern">
+                Match the pattern
+              </div>
+            </div> -->
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <div class="form-group">
+                    <button *ngIf="!isUpdate" type="submit" class="btn btn-default" [disabled]="!fname.valid"
+                        (click)="sendOtop()">Submit</button>
+                    <button *ngIf="isUpdate" type="submit" class="btn btn-default" [disabled]="!fname.valid"
+                        (click)="updateData()">Update</button>
+                    <button type="button" class="btn btn-default" (click)="cancel()">Cancel</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="panel panel-default slideLeft" *ngIf="isOtpsend" style="width: 1000px; margin: auto; ">
+    <div class="panel-heading">
+        <div class="clearfix">
+            <div class="pull-left"> {{title}}</div>
+            <div class="container" class="pull-right">
+                <div class="row">
+                    <!-- <a [routerLink]="['/adddept']" title="Add Department">
+                      <span class="glyphicon glyphicon-plus-sign"></span>
+                        <span></span>
+                    </a> -->
+                    <!--   <a href="#" class="btn btn-default a-btn-slide-text" title="Edit">
+              <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+              <span></span>
+            </a>
+            <a href="#" class="btn btn-info btn-sm a-btn-slide-text" title="View">
+              <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+              <span></span>
+            </a>
+            <a href="#" class="btn btn-danger a-btn-slide-text btn-sm" title="Delete">
+              <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+              <span></span>
+            </a> -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+          <form #form2="ngForm">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+              <h4>Verify OTP Send To Your Registered Number:</h4>
+            </div>
+            <div class="col-md-3 col-sm-3 col-xs-3">
+              <div class="form-group">
+                <label for="name">Enter OTP  :
+                </label>
+                <input type="number" class="form-control"  id="userotp " name="userotp" [(ngModel)]="userotp" />
+              </div>
+            </div>
+          </form>
+          <div class="col-sm-12">
+            <div class="col-sm-6">
+
+
+                <form name="form2">
+                  <button type="button" class="btn btn-default" [disabled]="!form2.valid" (click)="vefifyotp()">Verify</button>
+                  <button type="button" class="btn btn-default" (click)="sendOtop()">Resend</button>
+                  <!-- <button class="btn btn-info btn-sm" [disabled]="!form2.valid" (click)="push()">
+                    <span class="glyphicon glyphicon-plus"></span>
+                  </button> -->
+
+                </form>
+
+            </div>
+
+            <!-- <div class="col-sm-6">
+
+              <div class="form-group">
+                <button type="button" class="btn btn-default" (click)="sendOtop()">Resend</button>
+              </div>
+            </div> -->
+          </div>
+          <hr>
+
+
+          <!-- <div class="col-md-12 col-sm-12 col-xs-12 ">
+            <div class="form-group">
+              <button type="button" class="btn btn-default" (click)="sendOtop()">Resend</button>
+            </div>
+          </div> -->
+        </div>
+    </div>
+</div>

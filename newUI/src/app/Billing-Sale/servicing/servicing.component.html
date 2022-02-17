@@ -1,0 +1,160 @@
+<div [hidden]="isManageState" class="col-md-12 col-sm-12 col-xs-12">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        {{title}}
+        <a [routerLink]="['/manageservicing']" title="View All Servicing" class="pull-right">
+          <span class="glyphicon glyphicon-th-list"></span>
+        </a>
+      </div>
+      <div class="panel-body" >
+        <form #form1="ngForm">
+          <!-- <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="dept">Servicing: </label>
+              <select class="form-control" name="Servicing" required [(ngModel)]="servicing.Servicing">
+                <option required *ngFor="let dep of catList; let i=index" [value]="dep.id">{{dep.name}}</option>
+              </select>
+            </div>
+          </div> -->
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="name"> Customer Name:  </label>
+              <select *ngIf="!isUpdate" class="form-control" name="customer" required [(ngModel)]="servicing.customer" (change)="pascustomer($event)">
+                <option required *ngFor="let dep of custList; let i=index" [value]="dep.id">{{dep.name}}</option>
+              </select>
+              <input *ngIf="isUpdate" readonly type="text" class="form-control" id="customer" name="customer"  [(ngModel)]="servicing.custname" />
+              </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="vregno">Product Reg. Number:</label>
+              <input type="text" class="form-control" id="vregno" name="vregno" required [(ngModel)]="servicing.vregno" />
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="vdetails">Product Details:</label>
+              <input type="text" class="form-control" id="vdetails" name="vdetails" placeholder="Product Model and Color" required [(ngModel)]="servicing.vdetails" />
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="totalservices">Total Services:</label>
+              <input type="number" class="form-control" id="totalservices" name="totalservices" (change)="changefreeservices()" required [(ngModel)]="servicing.totalservices" />
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="freeservices">Free Services</label>
+              <input type="number" class="form-control" id="freeservices" name="freeservices" (change)="changefreeservices()" required [(ngModel)]="servicing.freeservices" />
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="otalavailed">Total Availed:</label>
+              <input type="number" class="form-control"  id="otalavailed" name="otalavailed" required [(ngModel)]="servicing.totalavailed"
+              />
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <button *ngIf="this.url == '/addservicing'" type="submit" [disabled]="!form1.valid" class="btn btn-default" (click)="submitData()">Submit</button>
+              <button *ngIf="this.url == '/updateservicing/' + this.id" type="submit" [disabled]="!form1.valid" class="btn btn-default" (click)="updateData()">Update</button>
+             <button type="button" class="btn btn-default" (click)="cancel()">Cancel</button>
+            </div>
+          </div>
+        </form>
+  
+      </div>
+    </div>
+</div>
+  
+<div [hidden]="!isManageState" class="col-md-12 col-sm-12 col-xs-12">
+  
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        {{title}}
+        <a [routerLink]="['/addservicing']"  title="Add Servicing" class="pull-right">
+          <span class="glyphicon glyphicon-plus-sign"></span>
+        </a>
+      </div>
+      <div class="panel-body">
+        <div class="table-responsive">
+          <table class="table table-condensed table-striped table-bordered" [mfData]="data | dataFilterPr : filterQuery:'servicing'" #mf="mfDataTable"
+            [mfRowsOnPage]="rowsOnPage" [(mfSortBy)]="Role" [(mfSortOrder)]="sortOrder">
+            <thead>
+              <tr>
+                <th>SN</th>
+                <th>
+                  <mfDefaultSorter by="role">Customer Name</mfDefaultSorter>
+                </th>
+                <th>Total Services</th>
+                <th>Free Services</th>
+                <th>Total Availed</th>
+                <th>Action</th>
+              </tr>
+              <tr>
+                <th colspan="10">
+                  <div id="custom-search-input">
+                    <div class="input-group col-md-12">
+                      <input type="text" class="form-control" placeholder="Search by name" [(ngModel)]="filterQuery" />
+                      <span class="input-group-btn">
+                        <button class="btn btn-danger" type="button">
+                          <span class=" glyphicon glyphicon-search"></span>
+                        </button>
+                      </span>
+                    </div>
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of mf.data; let i = index; let last = last;">
+                <td>{{i+1}}</td>
+                <td>{{data?.custname}}</td>
+                <td>{{data?.totalservices }}</td>
+                <td>{{data?.freeservices}}</td>
+                <td>{{data?.totalavailed}}</td>
+                <td class="text-right">
+                  <a [routerLink]="['/updateservicing/',data.id]" data-toggle="tooltip" title="Update Servicing" >
+                    <button class="btn btn-default btn-sm">
+                      <span class="glyphicon glyphicon-edit"></span>
+                    </button>
+                  </a>
+                  <a [routerLink]="['/managejobcard/',data.id]" data-toggle="tooltip" title="Manage Job Card" *ngIf="userType == 'ADMIN' || userType == 'SUPERADMIN'">
+                    <button class="btn btn-success btn-sm">
+                      <span class="glyphicon glyphicon glyphicon-new-window"></span>
+                    </button>
+                  </a>
+                  <!-- <a [routerLink]="['/detailjobcard/',data.id]" data-toggle="tooltip" title="Job Card Details">
+                    <button class="btn btn-primary btn-sm">
+                      <span class="glyphicon glyphicon-info-sign"></span>
+                    </button>
+                  </a> -->
+                  <a [routerLink]="['/manageservicingdetails/',data.id]" data-toggle="tooltip" title="View Servicing History" *ngIf="userType == 'ADMIN' || userType == 'SUPERADMIN'">
+                    <button class="btn btn-primary btn-sm">
+                      <span class="glyphicon glyphicon-list-alt"></span>
+                    </button>
+                  </a>
+                  <!-- <button *ngIf="userType == 'ADMIN' || userType == 'SUPERADMIN'" class="btn btn-danger btn-sm" title="Delete Servicing" (click)="deleteRole(data.id)">
+                    <span class="glyphicon glyphicon-remove-circle"></span>
+                  </button> -->
+                </td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="9">
+                  <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+</div>
+  
+  
+  
+  

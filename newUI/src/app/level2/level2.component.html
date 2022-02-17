@@ -1,0 +1,609 @@
+<!-- <div class="row animated bounceInDown">
+    <div class="col-md-12">
+      <h2>{{title}}</h2>
+      <h5>{{subtitle}}</h5>
+    </div>
+  </div>
+  
+  <hr /> -->
+  
+  <div class="panel panel-default slideLeft" *ngIf="flag">
+      <div class="panel panel-default" *ngIf="!detailFlag">
+     <div class="panel-heading" >
+       <div class="clearfix">
+         <div class="pull-left"> {{title}}</div>
+         <div class="container" class="pull-right">
+           
+             <a [routerLink]="['/managecustomer']" title="Manage Customer" class="btn btn-info a-btn-slide-text">
+                       <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+             </a>
+           </div>
+         </div>
+       </div>
+   
+     
+     <div class="panel-body">
+       <form #fname="ngForm">
+            
+            
+              
+       
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="ratelabel">Rate Label : </label>
+              <select *ngIf="isUpdate" class="form-control" id="ratelabel" name="ratelabel" [(ngModel)]="leveltwo.ratelabel"
+                required>
+                <option *ngFor="let state of ratelabelList; let i=index" [value]="state.label">{{state.label}}</option>
+              </select>
+              <select *ngIf="!isUpdate" class="form-control" id="ratelabel" name="ratelabel" [(ngModel)]="leveltwo.ratelabel"
+                required>
+                <option *ngFor="let state of ratelabelList; let i=index" [value]="state.label">{{state.label}}</option>
+              </select>
+            </div>
+          </div>
+               
+ 
+                
+ 
+                 
+          <div class="col-sm-3">
+              <div class="form-group">
+                <label for="relationshipmgrname"> Relationship Manager: </label>
+  
+                <select class="form-control" *ngIf="!isUpdate" name="relationshipmgr"
+                  [(ngModel)]="leveltwo.relationshipmgr" (change)="onChangeRM($event)" required>
+                  <option required *ngFor="let relationshipmgrname of rmList; let i=index"
+                    [value]="relationshipmgrname.id">{{relationshipmgrname.name}}</option>
+                </select>
+                <select class="form-control" *ngIf="isUpdate" name="relationshipmgr"
+                [(ngModel)]="leveltwo.relationshipmgr" (change)="onChangeRM($event)" required>
+                <option required *ngFor="let relationshipmgrname of rmList; let i=index"
+                  [value]="relationshipmgrname.id">{{relationshipmgrname.name}}</option>
+              </select>
+              </div>
+            </div>
+                
+
+ 
+ 
+             
+               
+ 
+                 
+                
+ 
+                   
+ 
+ 
+ 
+ <!--******************************** preferd Travel Vendor ****************************-->
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                 <hr>
+                </div>
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                <h4> Select Preferred Travel Vendor</h4>
+                </div>
+               
+           <div class="col-md-4 col-sm-4 col-xs-12">
+             <div class="form-group">
+               <label for="priority">Priority:&nbsp;
+                 <!--<span class=" m glyphicon glyphicon-asterisk"></span>-->
+               </label>
+               <select *ngIf="!isUpdate" class="form-control" name="priority" [(ngModel)]="priority">
+                 <option value="">--Select Priority--</option>
+                 <option value="P1">P1</option>
+                 <option value="P2">P2</option>
+                 <option value="P3">P3</option>
+                 <option value="P4">P4</option>
+               </select>
+ 
+                <select  *ngIf="isUpdate" class="form-control" name="priority" [(ngModel)]="priority">
+                 <option value="">--Select Priority--</option>
+                 <option value="P1">P1</option>
+                 <option value="P2">P2</option>
+                 <option value="P3">P3</option>
+                 <option value="P4">P4</option>
+               </select>
+             </div>
+           </div>
+ 
+ 
+ 
+           <div class="col-md-4 col-sm-4 col-xs-12">
+             <div class="form-group">
+               <label for=" vendor">Preferred Travel Vendor : </label> 
+              
+               <select *ngIf="!isUpdate" class="form-control" id="vendor" name="vendor"  [(ngModel)]="vendor" >
+                 <option *ngFor="let state of vendorDatalist; let i=index" [value]="state.name">{{state.name}}</option>
+               </select>
+                <select  *ngIf="isUpdate" class="form-control" id="vendor" name="vendor"  [(ngModel)]="vendor" >
+                 <option *ngFor="let state of vendorDatalist; let i=index" [value]="state.name">{{state.name}}</option>
+               </select>
+             </div>
+           </div>
+ 
+ 
+              <div class="col-md-4 col-sm-4 col-xs-12">
+                     <div class="form-group">
+                         <br>
+                         <label for="Addbutton" [hidden]='true'>Add
+                         </label>
+                          <button *ngIf="!isUpdate" class="btn btn-info btn-sm" title="Add Vendor" (click)="onAddPrefVendor()" >
+                             <span class="glyphicon glyphicon-plus"></span>
+                         </button>
+                         <button *ngIf="isUpdate" class="btn btn-info btn-sm" title="Add Vendor" (click)="onAddPrefVendor()"  >
+                             <span class="glyphicon glyphicon-plus"></span>
+                         </button>
+                     </div>
+                 </div>
+                 
+                <div class="form-group" >
+                         <table class="table">
+                             <thead>
+                                 <tr >
+                                     <th style="width: 100px;">-</th>
+                                     <th>Priority</th>
+                                     <th>Travel Vender</th>
+                                 </tr>
+                             </thead>
+                             <tbody>
+                                 <tr *ngFor="let data of preftraarr; let i=index;">
+                                     <td style="width: 50px;">
+                                         <a style="cursor: pointer; color: red;" (click)="onDeletePrefVendor(i)">
+                                             <span class="glyphicon glyphicon-remove-circle"></span>
+                                         </a>
+                                     </td>
+                                     <td>{{data?.priority}}</td>
+                                     <td>{{data?.vendor}}</td>
+                                 </tr>
+                                 <tr *ngFor="let data of preftraarr1; let i=index;">
+                                     <td style="width: 50px;">
+                                         <a style="cursor: pointer; color: red;" (click)="onDeletePrefVendor1(data.id)">
+                                             <span class="glyphicon glyphicon-remove-circle"></span>
+                                         </a>
+                                     </td>
+                                     <td>{{data?.priority}}</td>
+                                     <td>{{data?.vendor}}</td>
+                                 </tr>
+                             </tbody>
+                         </table>
+                     </div>
+ 
+                     <div class=" col-sm-4 " *ngIf="!isUpdate">
+                      <div class="form-group">
+                        <label for="creditlimit">Credit Limit :  </label>
+                        <input type="number"
+                         class="form-control" id="creditlimit" name="creditlimit" [(ngModel)]="leveltwo.creditlimit"  (change)="totalbalance()" />
+                      </div>
+                    </div>
+
+                    
+                  
+                     
+                    <div class=" col-sm-2 " *ngIf="isUpdate">
+                      <div class="form-group">
+                        <label for="creditlimit">Increase/Decrease Limit :  </label>
+                       
+                        <input type="number"
+                         class="form-control" id="limitindc" name="limitindc" [(ngModel)]="limitindc"  />
+                        
+
+                      </div>
+                     
+                    </div>
+                    <div class="col-sm-1" style="padding-top: 22px;"  *ngIf="isUpdate">
+                      <div class="form-group">
+                        <!-- <label for="creditlimit">Click Icons:</label> -->
+                        <button class="btn btn-success btn-sm" title="Increase Limit" (click)="increaselimit()" style="font-size: xx-small;">
+                          <span class="glyphicon glyphicon-arrow-up"></span> 
+                      </button>&nbsp;
+                      <button class="btn btn-danger btn-sm" title="Decrease Limit" (click)="decreaselimit()" style="font-size: xx-small;">
+                        <span class="glyphicon glyphicon-arrow-down"></span> 
+                    </button>&nbsp;
+                      <!-- <span class="glyphicon glyphicon-arrow-up" title="Increase Limit" (click)="increaselimit()"></span>&nbsp; -->
+                      <!-- <span class="glyphicon  glyphicon-arrow-down" title="Increase Limit" (click)="decreaselimit()"></span>&nbsp; -->
+                      </div>
+                    </div>
+
+                    <div class=" col-sm-2 " *ngIf="isUpdate">
+                      <div class="form-group">
+                        <label for="creditlimit">Credit Limit :  </label>
+                        <input type="number"
+                         class="form-control" readonly id="creditlimit" name="creditlimit" [(ngModel)]="leveltwo.creditlimit"  (change)="totalbalance()" />
+                       
+
+                      </div>
+                     
+                    </div>
+                    
+                    <div class=" col-sm-3 ">
+                      <div class="form-group">
+                        <label for="limitused"> Limit Used:  </label>
+                        <input type="number"
+                         class="form-control" id="limitused" readonly name="limitused" [(ngModel)]="leveltwo.limitused"  (change)="totalbalance()" />
+                      </div>
+                    </div>
+                    
+                    <div class=" col-sm-4 ">
+                      <div class="form-group">
+                        <label for="balancelimit">Balance limit :  </label>
+                        <input type="number"
+                         class="form-control" readonly id="balancelimit" name="balancelimit" [(ngModel)]="leveltwo.balancelimit"   />
+                      </div>
+                    </div>
+         
+              <div class=" col-sm-2 "  *ngIf="isUpdate">
+                <div class="form-group">
+                  <label for="acctbalance">Increase Account Balance :  </label>
+                  <input type="number"
+                   class="form-control" id="increasebal" name="increasebal" [(ngModel)]="increasebal" (change)="changeaccountbal()"  />
+                </div>
+              </div>
+              <div class=" col-sm-4 ">
+                <div class="form-group">
+                  <label for="acctbalance">Account Balance :  </label>
+                  <input type="number" *ngIf="!isUpdate"
+                   class="form-control" id="acctbalance" name="acctbalance" [(ngModel)]="leveltwo.acctbalance"   />
+                   <input type="number"  *ngIf="isUpdate"
+                   class="form-control" readonly id="acctbalance" name="acctbalance" [(ngModel)]="leveltwo.acctbalance"   />
+                </div>
+              </div>
+           
+                 
+            
+                  
+
+ 
+               
+              
+ 
+            
+          
+ 
+    
+ 
+            
+              
+         
+ 
+         
+           
+             
+                  
+ 
+ 
+      
+    
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+         <div class="col-md-12">
+           <div class="form-group">
+             <button *ngIf="!isUpdate" type="submit" class="btn btn-default" [disabled]="!fname.valid" (click)="submitData()">Submit</button>
+             <button *ngIf="isUpdate" type="submit" class="btn btn-default" [disabled]="!fname.valid" (click)="updateData()">Update</button>
+             <button type="button" class="btn btn-default" (click)="cancel()">Cancel</button>
+           </div>
+         </div>
+       </form>
+     </div>
+   </div>
+ 
+     
+   <div class="panel panel-default" *ngIf="detailFlag">
+     <div class="panel-heading">
+       <div class="clearfix">
+         <div class="pull-left"> {{title}}</div>
+         <div class="container" class="pull-right">
+           <div class="row" *ngIf="userRole==='ADMIN'">
+             <a [routerLink]="['/managecustomer']" title="Manage level2detail" class="btn btn-info a-btn-slide-text">
+               <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+             </a>
+             <a  [routerLink]="['/updatelevel2detail', this.id]" title="Update level2detail" class="btn btn-info a-btn-slide-text">
+ 
+               <i class="glyphicon glyphicon-edit"></i>
+ 
+             </a> 
+           
+             <a  class="btn btn-danger a-btn-slide-text" title="Delete level2detail" (click)="deletel2(this.leveltwo.id)">
+               <span class="glyphicon glyphicon-remove-circle"></span>
+             </a>
+ 
+           </div>
+         </div>
+       </div>
+     </div>
+     <div class="panel-body text-capitalize">
+ 
+       <form #form1="ngForm">
+       
+ 
+ 
+ 
+        
+         <div class="col-md-12 col-sm-12 col-xs-12 ">
+           
+           <div class="col-md-12 col-sm-12 col-xs-12">
+          
+             <hr>
+           </div>
+           <div class="col-sm-12">
+           <div class="col-md-6 col-sm-6 col-xs-12">
+             <div class="form-group ">
+               <label for="ratelabel">Ratelabel:&nbsp;
+                 <span>{{leveltwo.ratelabel}}</span>
+               </label>
+ 
+             </div>
+           </div>
+ 
+           <div class="col-md-6 col-sm-6 col-xs-12">
+             <div class="form-group">
+               <label for="relationshipmgrname">Relationship Manager:&nbsp; {{leveltwo.relationshipmgrname}}
+               </label>
+             </div>
+           </div>
+           
+           
+            <!-- <div class="col-md-6 col-sm-6 col-xs-12">
+             <div class="form-group">
+               <label for="weeklyoff">Weekly off:&nbsp; {{leveltwo?.weeklyoff}}</label>
+             </div>
+           </div> -->
+          
+         
+          
+           
+         </div>
+            <!-- <div class="col-md-6 col-sm-6 col-xs-12" >
+             <div class="form-group">
+               <label for="materialpkg">Material Pkg:&nbsp; {{leveltwo?.materialpkg}}</label>
+             </div>
+           </div> -->
+           
+ 
+ 
+           
+     <div class="col-md-12 col-sm-12 col-xs-12 ">
+             <hr>
+             <div class="col-md-12 col-sm-12 col-xs-12">
+               <h5>Preferred Travel Vendors :&nbsp;</h5>
+             </div>
+             <div class="col-md-6 col-sm-6 col-xs-12" style="padding:0px" >
+ 
+                 
+                     
+                       <div class="col-sm-12" *ngFor="let data of preftraarr1; let i=index; " style="padding:0px">
+                           
+                              
+                          
+                         <div class="col-sm-6" >
+                                
+                          <b> {{data.priority}} :&nbsp; {{data.vendor}}</b>
+                         </div>
+                         
+                       
+                       </div>
+                       
+                  
+                   
+               
+             </div>
+          
+             <div class="col-md-6 col-sm-6 col-xs-12" style="padding:0px" >
+
+                
+                    
+              <div class="col-sm-12"  style="padding:0px">
+                  
+                     
+                 
+                <div class="col-sm-6" >
+                       
+                 <b>Credit Limit  :&nbsp; {{leveltwo.creditlimit}}</b><br>
+                 <b>Limit Used :&nbsp; {{leveltwo.limitused}}</b><br>
+                 <b>Balance Limit :&nbsp; {{leveltwo.balancelimit}}</b><br>
+                 <b>Account Balance :&nbsp; {{leveltwo.acctbalance}}</b>
+
+                </div>
+              
+              </div>
+              
+         
+          
+      
+    </div>
+            
+           </div>
+  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+  </div>
+ 
+ 
+ 
+ 
+ 
+          
+ 
+       </form>
+     </div>
+   </div>
+ 
+   
+   </div>
+   
+   <div class="panel panel-default slideLeft" *ngIf="!flag">
+     <div class="panel-heading">
+       <div class="clearfix">
+         <div class="pull-left"> {{title}}</div>
+         <div class="container" class="pull-right">
+           <div class="row">
+             <a [routerLink]="['/addlevel2detail']" class="btn btn-primary a-btn-slide-text" title="Add level 2">
+               <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+               <span></span>
+             </a>
+            <!-- <a href="#" class="btn btn-default a-btn-slide-text" title="Edit">
+               <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+               <span></span>
+             </a>
+             <a href="#" class="btn btn-info a-btn-slide-text" title="View">
+               <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+               <span></span>
+             </a>
+             <a href="#" class="btn btn-danger a-btn-slide-text" title="Delete">
+               <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+               <span></span>
+             </a>-->
+   
+           </div>
+         </div>
+       </div>
+   
+     </div>
+     <div class="panel-body">
+       <div class="col-md-12 col-sm-12 col-xs-12">
+         <div class="table-responsive">
+           <table class="table table-condensed table-striped table-bordered" [mfData]="data | dataFilterPr : filterQuery" #mf="mfDataTable"
+             [mfRowsOnPage]="rowsOnPage"  >
+             <thead>
+               <tr>
+                 <th>SN</th>
+                 <!--<th>
+                   <mfDefaultSorter by="role">Role</mfDefaultSorter>
+                 </th>-->
+                 <th>Ratelabel</th>
+                  <th>Relationship Manager</th>
+                 <!-- <th>dob</th>
+                  <th>nickname</th>
+                   <th>weeklyoff</th>
+                   <th *ngIf="leveltwo.weeklyoff === 'YES'" >week off Day</th>
+                    <th>workhrfrom</th>
+                 <th>workhrto</th>
+                 <th>materialpkg</th>
+                  <th>workTypeSet</th>
+                 <th>machineSet</th> -->
+                 <th>preftravels</th>
+                 <!-- <th>contacts</th>
+                 <th>identitySet</th> -->
+                 <!--  <th>First Name</th>
+                       <th>Last Name</th> -->
+                 <th class="text-right">Action</th>
+               </tr>
+               <!--<tr>
+                 <th colspan="6">
+                   <div id="custom-search-input">
+                     <div class="input-group col-md-12">
+                       <input type="text" class="form-control" placeholder="Search" [(ngModel)]="filterQuery" />
+                       <span class="input-group-btn">
+                         <button class="btn btn-danger" type="button">
+                           <span class=" glyphicon glyphicon-search"></span>
+                         </button>
+                       </span>
+                     </div>
+                   </div>
+                 </th>
+               </tr>-->
+             </thead>
+             <tbody>
+               <tr *ngFor="let data of mf.data; let i = index; let last = last;">
+                 <td>{{i+1}}</td>
+                 <!--<td>{{data.name}}</td>-->
+                 <td>{{data.ratelabel}}</td>
+                 <td>{{data.relationshipmgrname}}</td>
+                 <!-- <td>{{data.dob}}</td>
+                 <td>{{data.nickname}}</td>
+                 <td>{{data.weeklyoff}}</td>
+                 <td *ngIf="leveltwo.weeklyoff === 'YES'">{{data.weekoffday}}</td>
+                 <td>{{data.workhrfrom}}</td>
+                 <td>{{data.workhrto}}</td>
+                 <td>{{data.materialpkg}}</td>
+                 <td>
+                  
+                   <span *ngFor="let d of data.workTypeSet">
+                     {{d?.worktype}}&ensp;
+                   </span>
+                 </td>
+                 <td>
+                  
+                   <span *ngFor="let d of data.machineSet">
+                     {{d?.machine}}&ensp;
+                   </span>
+                 </td> -->
+                  <td>
+                  
+                   <span *ngFor="let d of data.preftravels">
+                     <ul><li>{{d?.priority}} - {{d?.vendor}}&ensp;</li></ul>
+                   </span>
+                 </td>
+                 <!-- <td>
+                  
+                   <span *ngFor="let d of data.contacts">
+                   <ul> <li> {{d?.contype}}</li>
+                    <li> {{d?.phone}}</li>
+                    <li> {{d?.email}}</li> </ul>
+                   </span>
+                 </td>
+                  <td>
+                  
+                  
+                   <ul  *ngFor="let d of data.identitySet"> <li> {{d?.type}}</li>
+                    <li> {{d?.idvalue}}</li></ul>
+                   
+                  
+                 </td> -->
+                 <td class="text-right">
+                 <a [routerLink]="['/updatelevel2detail', data.id]" class="btn btn-default" title="Edit level 2 detail" >
+                         <span class="glyphicon glyphicon-edit"></span>
+                   </a>
+ 
+                    <a [routerLink]="['/detaillevel2',data.id]">
+                   <button class="btn btn-info btn-sm" title="Level 2 Details">
+                     <span class="glyphicon glyphicon-info-sign"></span>
+                   </button>
+                 </a>
+ 
+                   <a [routerLink]="['/addlevel3detail', data.id, data.retailer]" title="Add Level 3 Detail"
+                    class="btn btn-primary a-btn-slide-text">
+                       <span class="glyphicon glyphicon-plus"></span>
+                    
+                   </a>
+                    <a [routerLink]="['/managelevel3detail']" title="Manage Level 3 Detail"
+                     class="btn btn-info a-btn-slide-text">
+                       <span class="glyphicon glyphicon-th-list"></span>
+                     
+                   </a>
+                   <a class="btn btn-danger a-btn-slide-text" title="Delete level 2 detail" (click)="delete(data.id)">
+                     <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                     <span></span>
+                   </a>
+                 </td>
+               </tr>
+             </tbody>
+             <tfoot>
+               <tr>
+                 <td colspan="6">
+                   <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                 </td>
+               </tr>
+             </tfoot>
+           </table>
+         </div>
+   
+       </div>
+     </div>
+   </div>

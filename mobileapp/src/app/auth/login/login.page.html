@@ -1,0 +1,131 @@
+
+
+<ion-content class="login" *ngIf="!loginwithOTP && !newpassword">
+  <div class="login-h">
+    <img src="../../../assets/imgStatic/logo3.png" width="100%" height="100%">
+  </div>
+  <form #form1="ngForm" class="form1">
+
+    <ion-item class="login-u" id="usernameWaliId">
+
+      <ion-icon name="person-outline" style="color:#9098B1;"></ion-icon>
+      <ion-input type="number" [(ngModel)]="login.username" name="username" placeholder="User Name" required
+        pattern="[0-9]{10}" style="padding: top 14px;"></ion-input>
+    </ion-item>
+
+    <ion-item class="login-u" id="passwordvalid">
+      <ion-icon name="lock-closed-outline" style="color:#9098B1;"></ion-icon>
+      <ion-input type="password" [(ngModel)]="login.password" name="password" placeholder="Password" required>
+      </ion-input>
+    </ion-item>
+    <button class="login-btn" type="submit" [disabled]="!form1.valid" ion-button (click)="loginFunc()">Login
+    </button>
+
+
+
+
+    <br>
+    <br>
+
+    <p class="login-o" (click)="loginwith()">Forgot Password</p>
+
+  </form>
+
+</ion-content>
+
+
+
+
+<ion-content class="login" *ngIf="loginwithOTP && !newpassword">
+  <div class="login-h">
+    <img src="../../../assets/imgStatic/logo3.png" width="100%" height="100%">
+  </div>
+  <ion-card>
+    <form #form1="ngForm">
+
+      <ion-row>
+        <ion-col col-12>
+          <ion-item class="login-u">
+            <ion-icon name="person-outline" style="color:#9098B1;"></ion-icon>
+            <ion-input class="inner1" type="number" [(ngModel)]="login.username" name="username" placeholder="User Name"
+              required pattern="[0-9]{10}"></ion-input>
+          </ion-item>
+
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col col-12 (click)="onClickForgotPassword()">
+          <p text-center>{{"FORGOT PASSWORD ?"}}</p>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col col-sm-12>
+          <ion-item text-center *ngIf="!showotpcontainer" class="login-otp">
+            <ion-label text-center style="text-align: center !important;  ">
+              <ion-button size="small" [disabled]="!form1.valid" (click)="sendotp()" style="--background: #151413c2;">
+                Get OTP</ion-button>
+            </ion-label>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col col-sm-12>
+          <ion-item *ngIf="showotpcontainer" class="login-u" style="text-align: center;">
+            <ion-input type="number" [(ngModel)]="userotp" name="userotp" placeholder="Enter OTP" required></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col col-sm-12>
+          <ion-item text-center *ngIf="showotpcontainer" class="login-otp">
+            <ion-label text-center style="text-align: center !important">
+              <ion-button size="small" [disabled]="!form1.valid" style="--background: #151413c2;" (click)="checkotp()">
+                Verify</ion-button>
+
+              &nbsp;
+              &nbsp;
+              <ion-button size="small" [disabled]="shouldDisable" style="--background: #151413c2;" (click)="sendotp()">
+                Resend </ion-button>
+
+            </ion-label>
+          </ion-item>
+        </ion-col>
+
+
+      </ion-row>
+      <ion-row class="text-center">
+        <ion-item style="text-align: center;">
+          <ion-col col-12 class="text-center" style="cursor: pointer;color: orange;" (click)="loginwith()">
+            <ion-label color="primary" style="color: orange;">Or Login With Password</ion-label>
+          </ion-col>
+        </ion-item>
+      </ion-row>
+
+
+    </form>
+  </ion-card>
+</ion-content>
+
+<ion-content class="login" *ngIf="newpassword">
+  <div class="login-h">
+    <img src="../../../assets/imgStatic/logo3.png" width="100%" height="100%">
+  </div>
+  <form #form1="ngForm" class="form1">
+    <ion-item class="login-u" id="passwordvalid">
+      <ion-icon name="lock-closed-outline" style="color:#9098B1;"></ion-icon>
+      <ion-input type="password" [(ngModel)]="login.password" name="password" placeholder="Enter New Password" required>
+      </ion-input>
+    </ion-item>
+
+
+
+
+
+    <ion-button size="small" [disabled]="!form1.valid" (click)="updatepass()" style="--background: #151413c2; margin-left: 42%;
+      margin-top: 22px;">Save</ion-button>
+
+
+  </form>
+
+</ion-content>

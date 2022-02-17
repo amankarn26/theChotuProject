@@ -1,0 +1,557 @@
+<div [hidden]="isManageState" class="col-md-12 col-sm-12 col-xs-12">
+    <div class="panel panel-default" *ngIf="!isdetails">
+      <div class="panel-heading">
+        {{title}}
+        <a [routerLink]="['/managereturnchallan']" title="Manage Return Challan" class="pull-right">
+          <span class="glyphicon glyphicon-th-list"></span>
+        </a>
+      </div>
+      <div class="panel-body">
+        <form #form1="ngForm">
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="challannum">Challan No:
+              </label>
+              <input required readonly type="text" class="form-control" id="challannum" name="challannum"
+                [(ngModel)]="returnchallan.challannum" />
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="suppname"> Supplier Name:
+              </label>
+              <select class="form-control" name="suppname" required [(ngModel)]="returnchallan.supplier"
+                (change)="onChangeHandler1($event)">
+                <option required *ngFor="let sup of suppList; let i=index" [value]="sup.id">{{sup.name}}</option>
+              </select>
+            </div>
+          </div>
+  
+          <!-- product details end -->
+          <div class="col-lg-12 col-md-12 col-sm-12 ">
+            <hr>
+          </div>
+          <form #form2="ngForm">
+            <div class="col-lg-12 img-thumbnail rounded" style="padding:0px;">
+              <div class="col-lg-12 col-md-12 col-sm-12">
+                <h4>Return Challan Entry:</h4>
+              </div>
+              <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="!isUpdate">
+                <div class="form-group">
+                  <label for="product">Product Name:</label>
+                  <select class="form-control" name="product" required [(ngModel)]="entries.product"
+                    (change)="getproddetails()">
+                    <option required *ngFor="let dep of prodList; let i=index" [value]="dep.id">{{dep.name}}</option>
+                  </select>
+                </div>
+              </div>
+  
+              <div class="col-sm-10 form-group img-thumbnail" style="margin: 12px;width: 98%;margin-top: 3px;border: 1px solid #c5c4c4;
+                min-height: 10px;overflow: auto;" *ngIf="entries.product">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th style="width: 50px;">-</th>
+                      <!-- <th>Product Type</th> -->
+                      <th>HSN Code</th>
+                      <!-- <th>Chassis No</th>
+                      <th>Engine No</th> -->
+                      <th>Lot No</th>
+                      <!-- <th>Battery Name</th>
+                      <th>Battry No</th> -->
+                      <th>MFG Date</th>
+                      <th>Status</th>
+                      <th>Quantity</th>
+
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let data of this.productstockdetails; let i =index;">
+                      <td style="width: 50px;">
+                        <button class="btn btn-info btn-sm" (click)="push(data,i)">
+                          <span class="glyphicon glyphicon-chevron-down"></span>
+                        </button>
+                        <!-- <input type="checkbox" id="sel" name="sel" value=""  (click)="deleteNewsList(data.id, data)"> -->
+                      </td>
+                      <!-- <td>{{data?.makername}}</td> -->
+                      <td>{{data?.hsncode}}</td>
+                      <!-- <td>{{data?.chassisnum}}</td>
+                      <td>{{data?.enginenum}}</td> -->
+                      <td>{{data?.lotno}}</td>
+                      <!-- <td>{{data?.batteryname}}</td>
+                      <td>{{data?.batternum}}</td> -->
+                      <th>{{data?.mfgdate | date:'dd/MM/yyyy'}} </th>
+                      <td>{{data?.status}}</td>
+                      <td><input type="text" class="form-control" name="qtyy" value="1" [(ngModel)]="dummqty"></td>
+
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </form>
+          <!-- <div class="col-sm-12">
+              <div>
+                <br>
+                <form name="form2">
+                  <button class="btn btn-info a-btn-sm" (click)="push()">
+                    <span class="glyphicon glyphicon-plus"></span>
+                  </button>
+                </form>
+              </div>
+            </div> -->
+          <hr>
+          <div class="col-sm-12 img-thumbnail rounded"
+            style="margin-top: 3px;  border: 1px solid #c5c4c4; min-height: 10px; overflow: auto;">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th style="width: 50px;">-</th>
+                  <!-- <th>Product</th> -->
+                  <th>Product Name</th>
+                  <th>MFG Date</th>
+                  <!-- <th>Maker Name</th> -->
+                  <th>HSN Code</th>
+                  <!-- <th>VModel</th>
+                  <th>VType</th>
+                  <th>VOption</th>
+                  <th>VColour</th>
+                  <th>Chassis No</th>
+                  <th>Engine No</th> -->
+                  <th *ngIf="!isUpdate">Lot No</th>
+                  <!-- <th>Battery Name</th>
+                  <th>Battry No</th> -->
+                  <th>GST</th>
+                  <th>GST Amt</th>
+                  <th>Amount</th>
+                  <th>Final Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let data of returnchallan.entries; let i=index;">
+                  <td style="width: 50px;" *ngIf="!isUpdate">
+                    <a style="cursor: pointer; color: red;" (click)="onDeleteproduct(i)">
+                      <span class="glyphicon glyphicon-remove-circle"></span>
+                    </a>
+                  </td>
+                  <!-- <td style="width: 50px;" *ngIf="isUpdate">
+                        <a style="cursor: pointer; color: red;" (click)="onDeletelabourfromdb(data.id)">
+                          <span class="glyphicon glyphicon-remove-circle"></span>
+                        </a>
+                      </td> -->
+                  <!-- <td>{{data?.product}}</td> -->
+                  <td *ngIf="isUpdate"> - </td>
+                  <td>{{data?.pname}}</td>
+                  <th>{{data?.mfgdate | date:'dd/MM/yyyy'}} </th>
+                  <!-- <td>{{data?.makername}}</td> -->
+                  <td>{{data?.hsncode}}</td>
+                  <!-- <td>{{data?.vmodel}}</td>
+                  <td>{{data?.vtype}}</td>
+                  <td>{{data?.voption}}</td>
+                  <td>{{data?.vcolour}}</td>
+                  <td>{{data?.chassisnum}}</td>
+                  <td>{{data?.enginenum}}</td> -->
+                  <td *ngIf="!isUpdate">{{data?.lotno}}</td>
+                  <!-- <td>{{data?.batteryname}}</td>
+                  <td>{{data?.batternum}}</td> -->
+                  <td>{{data?.gst}} %</td>
+                  <td>{{data?.gstamt}} /-</td>
+                  <td>{{data?.amount}} /-</td>
+                  <td>{{data?.finalamt}} /-</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="col-lg-12 col-md-12 col-sm-12 ">
+            <hr>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="finalreturnval"> Final Return Value:</label>
+              <input type="text" class="form-control" required readonly name="finalreturnval"
+                [(ngModel)]="returnchallan.finalreturnval">
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="state">State:
+              </label>
+              <select class="form-control" name="state" *ngIf="!isUpdate" disabled [(ngModel)]="returnchallan.state">
+                <option value="ADDED">ADDED</option>
+                <option value="APPROVED">APPROVED</option>
+                <option value="RETURNED">RETURNED</option>
+                <option value="REJECTED">REJECTED</option>
+              </select>
+              <select class="form-control" name="state" *ngIf="isUpdate" [(ngModel)]="returnchallan.state">
+                <option value="ADDED">ADDED</option>
+                <option value="APPROVED">APPROVED</option>
+                <option value="RETURNED">RETURNED</option>
+                <option value="REJECTED">REJECTED</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="returnchallan.state ==='ADDED'">
+            <div class="form-group">
+              <label for="estdcarting"> Estimate Carting:</label>
+              <input type="number" class="form-control" required name="estdcarting"
+                [(ngModel)]="returnchallan.estdcarting" (change)="totCal()">
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="totalprods"> Total Products:</label>
+              <input *ngIf="!isUpdate" type="number" class="form-control" name="totalprods"
+                [(ngModel)]="returnchallan.totalprods">
+              <input *ngIf="isUpdate" type="number" class="form-control" name="totalprods"
+                [(ngModel)]="returnchallan.totalprods" readonly>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="expreturndate">Expected Return Date:</label>
+              <input *ngIf="!isUpdate" type="date" class="form-control" id="expreturndate" name="expreturndate"
+                [(ngModel)]="returnchallan.expreturndate" />
+              <input *ngIf="isUpdate" type="date" class="form-control" id="expreturndate" name="expreturndate" 
+                [(ngModel)]="returnchallan.expreturndate" />
+            </div>
+          </div>
+          <!-- <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="returnchallan.state ==='RETURNED'">
+            <div class="form-group">
+              <label for="returnedon">Return On:</label>
+              <input type="date" class="form-control" id="returnedon" name="returnedon" readonly
+                [(ngModel)]="returnchallan.returnedon" />
+            </div>
+          </div> -->
+          <!-- <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="!isUpdate">
+            <div class="form-group">
+              <label for="returnedon">Return On:</label>
+              <input type="date" class="form-control" id="returnedon" name="returnedon"
+                [(ngModel)]="returnchallan.returnedon" />
+            </div>
+          </div> -->
+          <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="returnchallan.state ==='APPROVED'">
+            <div class="form-group">
+              <label for="returnreason">Return Reason : </label>
+              <!-- <input type="text" maxlength="510" placeholder="Maximum 510 characters" mutiline class="form-control" id="returnreason" name="returnreason" [(ngModel)]="dept.returnreason" minlength="4"/> -->
+              <textarea *ngIf="isUpdate" type="text" maxlength="100" placeholder="Maximum 100 characters" mutiline
+                class="form-control" id="returnreason" name="returnreason" [(ngModel)]="returnchallan.returnreason"
+                minlength="4">
+              </textarea>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="returnchallan.state ==='REJECTED'">
+            <div class="form-group">
+              <label for="rejectreason">Reject Reason : </label>
+              <!-- <input type="text" maxlength="510" placeholder="Maximum 510 characters" mutiline class="form-control" id="rejectreason" name="rejectreason" [(ngModel)]="dept.rejectreason" minlength="4"/> -->
+              <textarea *ngIf="isUpdate" type="text" maxlength="100" placeholder="Maximum 100 characters" mutiline
+                class="form-control" id="rejectreason" name="rejectreason" [(ngModel)]="returnchallan.rejectreason"
+                minlength="4">
+                </textarea>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="description">Description : </label>
+              <!-- <input type="text" maxlength="510" placeholder="Maximum 510 characters" mutiline class="form-control" id="description" name="description" [(ngModel)]="dept.description" minlength="4"/> -->
+              <textarea type="text" maxlength="100" placeholder="Maximum 100 characters" mutiline class="form-control"
+                id="description" name="description" [(ngModel)]="returnchallan.description" minlength="4">
+                </textarea>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <button *ngIf="this.url == '/addreturnchallan'" type="submit" [disabled]="!form1.valid"
+                class="btn btn-default" (click)="submitData()">Submit</button>
+              <button *ngIf="this.url == '/editreturnchallan/' + this.id" type="submit" [disabled]="!form1.valid"
+                class="btn btn-default" (click)="updateData()">Update</button>
+              <button type="button" class="btn btn-default" (click)="cancel()">Cancel</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  
+    <div class="panel panel-default" *ngIf="isdetails">
+      <div class="panel-heading">
+        <div class="clearfix">
+          <div class="pull-left"> {{title}}</div>
+          <div class="container" class="pull-right">
+            <div class="row">
+              <a [routerLink]="['/managereturnchallan']" title="Manage Return Challan"
+                class="btn btn-info a-btn-slide-text">
+                <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+              </a>
+              <a [routerLink]="['/editreturnchallan', id]" title="Update Return Challan"
+                class="btn btn-info a-btn-slide-text">
+                <i class="glyphicon glyphicon-edit"></i>
+              </a>
+              <a class="btn btn-danger a-btn-slide-text" title="Delete Return Challan" (click)="deleteRole(id)">
+                <span class="glyphicon glyphicon-remove-circle"></span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="panel-body">
+        <form #form1="ngForm">
+          <div class="col-md-12 col-sm-12 col-xs-12 img-thumbnail">
+            <div class="col-sm-12">
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="supplier"> Supplier Name: {{returnchallan?.suppname}}
+                  </label>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="challannum">Challan No :&nbsp;{{returnchallan?.challannum}}
+                  </label>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="estdcarting">Estimate Carting :&nbsp;{{returnchallan?.estdcarting}}
+                  </label>
+                </div>
+              </div>
+  
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="expreturndate"> Expected Reurn Date :&nbsp;{{returnchallan?.expreturndate}}
+                  </label>
+                </div>
+              </div>
+              <!-- <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="vehiclenum"> Returned On :&nbsp;{{returnchallan?.returnedon}}
+                  </label>
+                </div>
+              </div> -->
+  
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="description"> Description :&nbsp;{{returnchallan?.description}}
+                  </label>
+                </div>
+              </div>
+  
+              <div class="col-lg-12 col-md-12 col-sm-12">
+                <hr>
+                <h4>Return Challan Entry:</h4>
+              </div>
+              <!-- <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-group">
+                  <label for="product">Product Name:</label>
+                  <select class="form-control" name="product" required [(ngModel)]="entries.product"
+                    (change)="getproddetails()">
+                    <option required *ngFor="let dep of prodList; let i=index" [value]="dep.id">{{dep.name}}</option>
+                  </select>
+                </div>
+              </div> -->
+  
+              <div class="col-sm-12"
+                style="margin-top: 3px;  border: 1px solid #c5c4c4; min-height: 10px; overflow: auto;">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <!-- <th style="width: 50px;">-</th> -->
+                      <!-- <th>Product</th> -->
+                      <th>Product Name</th>
+                      <th>MFG Date</th>
+                      <!-- <th>Maker Name</th> -->
+                      <th>HSN Code</th>
+                      <!-- <th>VModel</th>
+                      <th>VType</th>
+                      <th>VOption</th>
+                      <th>VColour</th>
+                      <th>Chassis No</th>
+                      <th>Engine No</th> -->
+                      <th>Quantity</th>
+                      <!-- <th>Battery Name</th>
+                      <th>Battry No</th> -->
+                      <th>GST</th>
+                      <th>GST Amt</th>
+                      <th>Amount</th>
+                      <th>Final Amount</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let data of returnchallan.entries; let i=index;">
+                      <td style="width: 50px;" *ngIf="!isUpdate">
+                        <a style="cursor: pointer; color: red;" (click)="onDeleteproduct(i)">
+                          <span class="glyphicon glyphicon-remove-circle"></span>
+                        </a>
+                      </td>
+                      <!-- <td style="width: 50px;" *ngIf="isUpdate">
+                          <a style="cursor: pointer; color: red;" (click)="onDeletelabourfromdb(data.id)">
+                            <span class="glyphicon glyphicon-remove-circle"></span>
+                          </a>
+                        </td> -->
+                      <td>{{data?.pname}}</td>
+                      <th>{{data?.mfgdate | date:'dd/MM/yyyy'}} </th>
+                      <!-- <td>{{data?.makername}}</td> -->
+                      <td>{{data?.hsncode}}</td>
+                      <!-- <td>{{data?.vmodel}}</td>
+                      <td>{{data?.vtype}}</td>
+                      <td>{{data?.voption}}</td>
+                      <td>{{data?.vcolour}}</td>
+                      <td>{{data?.chassisnum}}</td>
+                      <td>{{data?.enginenum}}</td> -->
+                      <td>{{data?.qty}}</td>
+                      <!-- <td>{{data?.batteryname}}</td>
+                      <td>{{data?.batternum}}</td> -->
+                      <td>{{data?.gst}}</td>
+                      <td>{{data?.gstamt}}</td>
+                      <td>{{data?.amount}}</td>
+                      <td>{{data?.finalamt}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="col-lg-12 col-md-12 col-sm-12 ">
+                <hr>
+              </div>
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="finalreturnval">Final Return Value:&nbsp;{{returnchallan?.finalreturnval}}
+                  </label>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="state"> State :&nbsp;{{returnchallan?.state}}
+                  </label>
+                </div>
+              </div>
+              <div class="col-sm-6" *ngIf="returnchallan.state ==='RETURNED'">
+                <div class="form-group">
+                  <label for="returnedon"> Return Reason :&nbsp;{{returnchallan?.returnreason}}
+                  </label>
+                </div>
+              </div>
+              <div class="col-sm-6" *ngIf="returnchallan.state ==='REJECTED'">
+                <div class="form-group">
+                  <label for="rejectreason"> Reject Reason :&nbsp;{{returnchallan?.rejectreason}}
+                  </label>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="totalprods"> Total Vehicles :&nbsp;{{returnchallan?.totalprods}}
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <div [hidden]="!isManageState" class="col-md-12 col-sm-12 col-xs-12 text-capitalize">
+  
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        {{title}}
+        <a [routerLink]="['/addreturnchallan']" title="Add Return Challan" class="pull-right">
+          <span class="glyphicon glyphicon-plus-sign"></span>
+        </a>
+      </div>
+      <div class="panel-body">
+        <div class="table-responsive">
+          <table class="table table-condensed table-striped table-bordered"
+            [mfData]="data | dataFilterPr : filterQuery:'frchallan'" #mf="mfDataTable" [mfRowsOnPage]="rowsOnPage"
+            [(mfSortBy)]="Role" [(mfSortOrder)]="sortOrder">
+            <thead>
+              <tr>
+                <th>SN</th>
+                <th>
+                  <mfDefaultSorter by="role">Supplier Name</mfDefaultSorter>
+                </th>
+                <th>Challan No</th>
+                <th>Generated On</th>
+                <th>State</th>
+                <th>Estimate Carting</th>
+                <th>Delivered By</th>
+                <!-- <th>VOption</th>
+                 <th>VColour</th>
+                <th>Chassis No</th>
+                <th>Engine No</th>
+                <th>Lot No</th>
+                <th>Battery Name</th>
+                <th>Battry No</th>
+                <th>GST</th>
+                <th>GST Amt</th>
+                <th>Amount</th>
+                <th>Final Amount</th> -->
+                <th>Action</th>
+              </tr>
+              <tr>
+                <th colspan="18">
+                  <div id="custom-search-input">
+                    <div class="input-group col-md-12">
+                      <input type="text" class="form-control" placeholder="Search by Supplier name, challan num or state"
+                        [(ngModel)]="filterQuery" />
+                      <span class="input-group-btn">
+                        <button class="btn btn-danger" type="button">
+                          <span class=" glyphicon glyphicon-search"></span>
+                        </button>
+                      </span>
+                    </div>
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of mf.data; let i = index; let last = last;">
+                <td>{{i+1}}</td>
+                <td>{{data?.suppname}}</td>
+                <!-- <th>{{data?.mfgdate | date:'dd/MM/yyyy'}} </th> -->
+                <td>{{data?.challannum}}</td>
+                <td>{{data?.generatedon | date:'dd/MM/yyyy'}}</td>
+                <td>{{data?.state}}</td>
+                <td>{{data?.estdcarting}}</td>
+                <td>{{data?.deliveredby}}</td>
+                <!-- <td>{{data?.vcolour}}</td>
+                <td>{{data?.chassisnum}}</td>
+                <td>{{data?.enginenum}}</td>
+                <td>{{data?.lotno}}</td>
+                <td>{{data?.batteryname}}</td>
+                <td>{{data?.batternum}}</td>
+                <td>{{data?.gst}}</td>
+                <td>{{data?.gstamt}}</td>
+                <td>{{data?.amount}}</td>
+                <td>{{data?.finalamt}}</td> -->
+                <td class="text-right">
+  
+                  <a [routerLink]="['/editreturnchallan/',data.id]" data-toggle="tooltip" title="Update Return Challan">
+                    <button class="btn btn-default btn-sm">
+                      <span class="glyphicon glyphicon-edit"></span>
+                    </button>
+                  </a>
+                  <a [routerLink]="['/detailreturnchallan',data.id]">
+                    <button class="btn btn-info btn-sm" title="Return Challan Detail">
+                      <span class="glyphicon glyphicon-info-sign"></span>
+                    </button>
+                  </a>
+                  <button class="btn btn-danger btn-sm" title="Delete Return Challan" (click)="deleteRole(data.id)">
+                    <span class="glyphicon glyphicon-remove-circle"></span>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="21">
+                  <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+          <div class="col-sm-13 ">
+            <strong> Note: Rows with red color indicates low stock</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

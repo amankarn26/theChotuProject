@@ -1,0 +1,338 @@
+<div class="panel-default" style="padding: 15px;">
+  <div class="row panel-heading">
+      <div class="panel-heading">
+          <h4>Marketing Executive Call History Window</h4>
+          <form #form2="ngForm" >
+              <div class="col-md-12">
+                 
+                </div>
+  
+                <div > 
+  
+              <div class="row">
+
+           
+                  <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="userRole === 'SUPERADMIN' || userRole ==='ADMIN'">
+                      <div class="form-group">
+                        <label for="rm">Relationship Manager: </label>
+                         <input *ngIf="isUpdate" type="text" readonly class="form-control" id="rm" name="rm" [(ngModel)]="rm"
+                        /> 
+                        <select *ngIf="!isUpdate"  class="form-control" id="rm" name="rm" [(ngModel)]="rm" (change)="getrmbyid()">
+                          <option *ngFor="let data of rmList; let i=index" [value]="data.id">{{data.name}}</option>
+                        </select>
+                      </div>
+                    </div>
+      
+      
+                    <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="userRole === 'MARKETING'">
+                      <div class="form-group">
+                        <label for="rm">Relationship Manager: </label>
+                         <input type="text" readonly class="form-control" id="rm" name="rm" [(ngModel)]="rm"
+                        /> 
+                     
+                      </div>
+                    </div>
+                    <button *ngIf="userRole === 'SUPERADMIN' || userRole ==='ADMIN'" class="btn btn-info btn-sm" title="Reset" (click)="refresh()" style="margin-top: 22px;">
+                      <span class="glyphicon glyphicon-refresh"></span>
+                    </button>
+                  </div>
+              
+                  <div class="row" *ngIf="this.rm">
+                    <form #form2="ngForm">
+                    <div class="col-md-1 col-sm-1 col-xs-12" >
+                      <div class="form-group">
+                        <span class="label label-danger">Search By date</span>
+                         <!-- <input type="date"  class="form-control" id="fromdate" name="fromdate" [(ngModel)]="fromdate"   />  -->
+                     
+                      </div>
+                    </div>
+                    <div class="col-md-3 col-sm-3 col-xs-12" >
+                      <div class="form-group">
+                        <label for="rm">From Date : </label>
+                         <input required type="date"  class="form-control" id="fromdate" name="fromdate" [(ngModel)]="this.fromdate"   /> 
+                     
+                      </div>
+                    </div>
+
+                    <div class="col-md-3 col-sm-3 col-xs-12" >
+                      <div class="form-group">
+                        <label for="rm">To Date : </label>
+                         <input required type="date"  class="form-control" id="todate" name="todate" [(ngModel)]="todate"   /> 
+                     
+                      </div>
+                    </div>
+                    <button [disabled]="!form2.valid" type="submit" class="btn btn-info btn-sm" 
+                    (click)="getemptarsaledata()" title="Submit" style=" margin-top: 25px; ">
+                    
+                      Submit
+                    </button> &nbsp;&nbsp;
+
+                    </form>
+
+                    <!-- <button type="submit" class="btn btn-info btn-sm" title="Yesterday" style=" margin-top: 25px; ">
+                    
+                      Yesterday
+                    </button> &nbsp;&nbsp;
+                    <button type="submit" class="btn btn-info btn-sm" title="Yesterday" style=" margin-top: 25px; ">
+                    
+                      Today
+                    </button> &nbsp;&nbsp; -->
+                   </div>
+            
+            
+       
+              </div>
+  
+  
+  
+              
+  
+            
+      
+                    
+  
+  
+  
+              </form>
+        <div class="clearfix">
+          <!-- <div class="pull-left"> {{title}}</div> -->
+          <div class="container" class="pull-right">
+            <div class="row" style="margin-top: -38px; ">
+  
+              <!-- <a [routerLink]="['/managecall']"  class="btn btn-primary a-btn-slide-text" title="Manage Call">
+                <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+                <span></span>
+            </a>
+
+              <a [routerLink]="['/addcall']"  class="btn btn-primary a-btn-slide-text" title="Add Call">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                <span></span>
+            </a>
+              -->
+              
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+</div>
+
+<div *ngIf="rm">
+<div class="col-sm-12" *ngIf="empcalldata" >
+
+  <div class="col-sm-6">
+    <table class="table table-hover table-bordered">
+      <thead>
+        <tr>
+          <th style="text-transform: uppercase;font-size: 14.5px;">
+            <span class="label label-danger">Call Head</span></th> 
+          <th style="text-transform: uppercase;font-size: 14.5px;"> <span class="label label-danger">Target Call</span></th>
+          <th style="text-transform: uppercase;font-size: 14.5px;"><span class="label label-danger">Completed Call</span></th>
+        
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let data of empcalldata">
+          <td>{{data.clienttype}}</td>
+          <td>{{data.calltarget}}</td>
+          <td>{{data.compcall}}</td>
+        </tr>
+     
+        <tr style="background: #ffff006e;font-weight: 700;">
+          <td>Total Call</td>
+
+          <td>{{targetaddition}}</td>
+          <td>{{compaddition}}</td>
+
+        </tr>
+      </tbody>
+
+    </table>
+
+     
+  </div>
+
+
+  <div class="col-sm-4">
+    <table class="table table-hover table-bordered">
+    
+      <tbody>
+        <tr>
+          <td>Total Call Hours</td>
+          <td>{{esaledata?.totalcallhrs}}</td>
+         
+        </tr>
+        <tr>
+          <td>No. Of Orders</td>
+          <td>{{esaledata?.nooforder}}</td>
+        
+        </tr>
+        <tr>
+          <td>Sale</td>
+          <td>{{esaledata?.sale}}</td>
+          
+        </tr>
+        <tr>
+          <td>No. Of Quote</td>
+          <td>{{esaledata?.noofquote}}</td>
+          
+        </tr>
+        <tr  style="background: #ff53536e;font-weight: 700;">
+          <td>Quote Amount</td>
+          <td>{{esaledata?.quoteamt}}</td>
+          
+        </tr>
+       
+    
+      </tbody>
+    </table>
+
+
+     
+  </div>
+
+
+</div>
+
+<div class="col-sm-12" *ngIf="empcalldata===null" >
+  
+  <div class="alert alert-info" *ngIf="userRole==='ADMIN' || userRole==='SUPERADMIN'">
+    <strong>Info!</strong> This RM Dont have any Call Target Data. Please First Assign It From Here <a [routerLink]="['/addtargetcall']"> <span class="label label-danger">(Click Here)</span> </a>
+  </div>
+
+  <div class="alert alert-info"  *ngIf="userRole==='MARKETING'" >
+    <strong>Info!</strong> You Don't Have Any Target Calls Right Now <a [routerLink]="['/addtargetcall']"> <span class="label label-danger">(Click Here)</span> </a>
+  </div>
+
+</div>
+
+
+<div class="col-sm-12">
+
+  
+  <div class="panel panel-default slideLeft">
+    <div class="panel-heading">
+        <div class="clearfix">
+            <div class="pull-left"> Client Call History</div>
+            <div class="container" class="pull-right">
+              <div class="row">
+
+                  <!-- <i class="fa fa-refresh btn  " title="Reload" (click)="getcallList()"></i>
+                  <span></span> -->
+                  <!-- <a [routerLink]="['/viewcall']" class="btn btn-primary a-btn-slide-text" title="Back to call Window">
+                    <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+                    <span></span>
+                </a> 
+                <a [routerLink]="['/addcall']" class="btn btn-primary a-btn-slide-text" title="Add call">
+                      <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                      <span></span>
+                  </a>
+                -->
+                  
+               <!-- <a href="#" class="btn btn-default a-btn-slide-text" title="Edit">
+                      <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                      <span></span>
+                </a>
+                <a href="#" class="btn btn-info a-btn-slide-text" title="View">
+                      <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+                      <span></span>
+                  </a>
+                <a href="#" class="btn btn-danger a-btn-slide-text" title="Delete">
+                      <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                      <span></span>
+                  </a>
+                <a [routerLink]="['/managerole']" title="Manage Role" class="btn btn-info a-btn-slide-text" >
+                    <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span></a>-->
+              </div>
+            </div>
+          </div>
+
+    </div>
+    <div class="panel-body">
+      <div class="col-md-12 col-sm-12 col-xs-12">
+          <div class="table-responsive">
+              <table class="table table-condensed table-striped table-bordered" [mfData]="calldata | dataFilterPr : filterQuery" #mf="mfDataTable"
+                [mfRowsOnPage]="rowsOnPage"  >
+                <thead>
+                  <tr>
+                    <th>SN</th>
+                    <th>Called By Name</th>
+                    <th>Call To Name</th>
+                    <th>Call Notes </th>
+                    <th>Call Time </th>
+
+                    <th>Next Call Remark </th>
+                    <th>Next Call Time </th>
+ 
+
+
+                    <!--  <th>First Name</th>
+                    <th>Last Name</th> -->
+                    <!-- <th class="text-right">Action</th> -->
+                  </tr>
+                  <tr>
+                    <th colspan="5">
+                      <div id="custom-search-input">
+                        <div class="input-group col-md-12">
+                          <!-- <input type="text" class="form-control" placeholder="Search" [(ngModel)]="filterQuery" /> -->
+                          <!-- <select class="form-control" name="category" [(ngModel)]="call.call" (change)="getbycall()" >
+                            <option value="">--Select call--</option>
+                            <option *ngFor="let state of callList; let i=index" [value]="state.call">{{state.call}}</option>
+                          </select> -->
+                          <!-- <span class="input-group-btn">
+                                                  <button class="btn btn-danger" type="button">
+                                                      <span class=" glyphicon glyphicon-search"></span>
+                          </button>
+                          </span> -->
+                        </div>
+                      </div>
+                    </th>
+                  </tr>
+
+            
+
+                </thead>
+                <tbody>
+                  <tr *ngFor="let data of calldata; let i = index; let last = last;">
+                    <td>{{i+1}}</td>
+                    <td>{{data.calledbyname}}</td>
+                    <td>{{data.calltoname}}</td>
+                    <td>{{data.callnotes}}</td>
+                    <td>{{data.calltime | date: 'dd/MM/yyyy hh:mm a'}}</td>
+                    <td>{{data.nextcallremark}}</td>
+                    <td>{{data.nextcalltime | date: 'dd/MM/yyyy hh:mm a'}}</td>
+
+
+
+                    <!-- <td class="text-right" >
+                   
+                      <a [routerLink]="['/updatecall',data.id]" class="btn btn-default a-btn-slide-text" title="Update Call">
+                        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                        <span></span>
+                  </a>
+                      <a class="btn btn-danger a-btn-slide-text" (click)="deletecall(data.id)" title="Delete Call">
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        <span></span>
+                      </a>
+
+                    </td> -->
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colspan="15">
+                      <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+

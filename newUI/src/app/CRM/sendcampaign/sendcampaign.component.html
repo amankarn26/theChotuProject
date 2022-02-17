@@ -1,0 +1,269 @@
+<div>
+  <div class="panel-default" style="padding: 15px;">
+    <div class="row panel-heading">
+        <div class="panel-heading">
+            <h4>Send Campaign To Client</h4>
+            <form #form2="ngForm" >
+                <div class="col-md-12">
+                   
+                  </div>
+    
+                  <div > 
+    
+                
+                    <div class="col-md-4 col-sm-6 col-xs-6" *ngIf="(userRole === 'ADMIN'|| userRole === 'SUPERADMIN') && this.rm ==''" >
+                      <div class="form-group">
+                        <label for="customer">Relationship Manager: </label>
+                         <input *ngIf="isUpdate" type="text" readonly class="form-control" id="rm" name="rm" [(ngModel)]="rm"
+                        /> 
+                        <select *ngIf="!isUpdate"  class="form-control" id="rm" name="rm" [(ngModel)]="rm" (change)="getallcustomerbyrm()">
+                          <option *ngFor="let data of rmList; let i=index" [value]="data.id">{{data.name}}</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="col-md-4 col-sm-6 col-xs-6" *ngIf="(userRole === 'ADMIN'|| userRole === 'SUPERADMIN') && this.rm !==''">
+                      <div class="form-group">
+                        <label for="customer">Relationship Manager: </label>
+                         <input *ngIf="isUpdate" type="text" readonly class="form-control" id="rm" name="rm" [(ngModel)]="rm"
+                        /> 
+                        <select disabled *ngIf="!isUpdate"  class="form-control" id="rm" name="rm" [(ngModel)]="rm" (change)="getallcustomerbyrm()">
+                          <option *ngFor="let data of rmList; let i=index" [value]="data.id">{{data.name}}</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="col-md-4 col-sm-6 col-xs-6" *ngIf="userRole === 'MARKETING'">
+                      <div class="form-group">
+                        <label for="customer">Relationship Manager: </label>
+                         <input type="text" readonly class="form-control" id="rm" name="rm" [(ngModel)]="rm"
+                        /> 
+                     
+                      </div>
+                    </div>
+
+                <!-- <div class="col-md-4 col-sm-6 col-xs-6">
+                    <div class="form-group">
+                      <label for="customer">Customer List: </label>
+                       <input *ngIf="isUpdate" type="text" readonly class="form-control" id="customer" name="customer" [(ngModel)]="customer"
+                      /> 
+                      <select required *ngIf="!isUpdate"  class="form-control" id="customer" name="customer" [(ngModel)]="customer" (change)="getcustomerbyid()">
+                        <option *ngFor="let data of custList; let i=index" [value]="data.id">{{data.name}}</option>
+                      </select>
+                    </div>
+                  </div> -->
+        
+                 <button *ngIf="userRole === 'SUPERADMIN' || userRole ==='ADMIN'"  class="btn btn-info btn-sm" title="Reset" (click)="refresh()" style="margin-top: 22px;">
+                   <span class="glyphicon glyphicon-refresh"></span>
+                 </button>
+         
+                </div>
+    
+    
+    
+                
+    
+              
+        
+                      
+    
+    
+    
+                </form>
+          <!-- <div class="clearfix">
+        
+            <div class="container" class="pull-right">
+              <div class="row" style="margin-top: -38px; ">
+    
+                <a [routerLink]="['/managecall']"  class="btn btn-primary a-btn-slide-text" title="Manage Call">
+                  <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+                  <span></span>
+              </a>
+  
+                <a [routerLink]="['/addcall']"  class="btn btn-primary a-btn-slide-text" title="Add Call">
+                  <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                  <span></span>
+              </a>
+               
+                
+              </div>
+            </div>
+          </div> -->
+        </div>
+    </div>
+  </div>
+  
+  <div class="col-sm-12">
+  <div class="col-sm-6" style=" left: -2.5%;">
+
+    <div class="panel-body no-padding" style="border-radius: 10px;">
+      <div class="table-responsive">
+        <table class="table table-bordered" [mfData]="data | dataFilterPr : filterQuery:'bulkdata'" #mf="mfDataTable"
+          [mfRowsOnPage]="rowsOnPage"  >
+          <thead>
+            <tr>
+             <!-- <td><input type="checkbox" [(ngModel)]="checkbox"  value="employees" (click)="checkall()"></td> -->
+             <th> Select</th>
+              <!-- <th>SN</th> -->
+             <th>
+                <mfDefaultSorter by="id">Name</mfDefaultSorter>
+              </th>
+              <th style="text-transform: uppercase;display: table-caption;font-size: 14.5px;">
+                <span class="label label-danger">Shop Name</span></th> 
+              <!-- <th>State</th> -->
+              <th>City</th>
+
+              <!-- <th>Max Quote Per Day</th>
+              
+              <th>RM</th> -->
+              <th style="text-transform: uppercase;display: table-caption;font-size: 14.5px;">
+                <span class="label label-danger">Rate Label</span></th> 
+              
+            
+             
+              <!-- <th>Role</th>
+              -->
+              <th>Phone No.</th>        
+              <th style="text-transform: uppercase;display: table-caption;font-size: 14.5px;margin-right: -64px">
+                <span class="label label-danger">Email</span></th>           
+             
+              
+              <th></th>
+            </tr>
+            <tr>
+              <th colspan="14">
+                <div id="custom-search-input ">
+                  <div class="input-group col-md-12">
+                    <input type="text" class="form-control" placeholder="Search by Customer Name, Shop Name, State, City or Phone No." [(ngModel)]="filterQuery" />
+                    <span class="input-group-btn">
+                      <button class="btn btn-danger" type="button">
+                        <span class=" glyphicon glyphicon-search"></span>
+                      </button>
+                    </span>
+                  </div>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of mf.data; let i = index; let last = last;" class="animated flipInX">
+             <td><input type="checkbox"  value="employees" (click)="deleteNewsList(data.id,data.login.username)"></td>
+              <!-- <td>{{i+1}}</td> -->
+              <td  >{{data?.fname}}
+           
+              </td>
+              <td style="display: table-caption;font-size: 16.5px;">
+                <span class="label label-primary">{{ data?.shopname}}</span></td>
+              <!-- <td>{{data?.address.states}}</td> -->
+              <td>{{data?.address.city}}</td>
+
+              <!-- <td>{{data?.maxquoteperday}}</td>
+          
+  
+              <td>{{data?.l2details?.relationshipmgrname}}</td> -->
+              <td style="display: table-caption;font-size: 16.5px;" >
+                <span class="label label-success">{{data?.l2details?.ratelabel}}</span></td>
+              
+              
+             
+             
+              <!-- <td>{{data?.role?.role}}</td> -->
+             
+              <td>{{data.phone}}</td>
+              <td style="display: table-caption;font-size: 16.5px;">
+                <span class="label label-warning">{{ data?.login?.username}}</span></td>
+             
+            
+                    <td></td>
+
+                
+                    
+            
+            </tr>
+          </tbody>
+          <tfoot>
+
+            <tr>
+              <td colspan="14">
+                <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+
+
+            <div class="col-md-6">
+              <!-- <div class="thumbnail" >
+                <label for="head">Product Image : </label>
+    
+                <img *ngIf="pimage" src="{{pimage}}" class="img-thumbnail img-responsive" alt="{{pimage}}">
+                <div class="col-md-12 col-sm-12 col-xs-12 loader" *ngIf="!pimage">
+                </div>
+                <div class="caption">
+                  {{this.pdescription}}
+                </div>
+              </div> -->
+              <div class="thumbnail" >
+             
+
+                <div class="panel panel-default">
+                  <div class="panel-heading" style="background-color: #e1eb86 !important">NEW CAMPAIGN</div>
+                  <div class="panel-body" style="background: linear-gradient(to bottom, #33ccff59 0%, #ff99cc94 100%);font-size: 14px;letter-spacing: 1px;margin: 5px;border-radius: 5px;line-height: 1.8;">
+          
+                      Head :  <span class="label label-success">{{campaign?.header}}</span><br>
+                      Total Products : <span class="label label-success">{{campaign?.totalprods}}</span><br>
+                      Regular Amount : <span class="label label-info" *ngIf="campaign?.totalamt">{{campaign?.totalamt}} /-</span><br>
+                      Offer Amount : <span class="label label-info" *ngIf="campaign?.totalofferamt">{{campaign?.totalofferamt}} /-</span><br>
+                      Hurry Up Valid Till :<span class="label label-warning">{{campaign?.uptodate | date : 'dd MMM yyyy hh:mm a'}}</span><br>
+                      Shoot Time: <span class="label label-primary">{{campaign?.shoottime | date : 'dd MMM yyyy hh:mm a'}}</span>
+                      <br><br>
+                      <table class="table table-bordered table-condensed" *ngIf="this.campaign.camp_prods[0]">
+                        <thead>
+                          <tr>
+                            <th style="width: 50px;color: black">-</th>
+                            <th style=" color: black; ">Product</th>
+                            <th style=" color: black; ">Quantity</th>
+                            <th style=" color: black; ">Rateperunit</th>
+                            <th style=" color: black; ">Offer Rate unit</th>
+                            <th style=" color: black; ">Offer Amount</th>
+    
+    
+    
+        
+                            
+        
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let data of this.campaign.camp_prods; let i=index;">
+                            <td style="width: 50px;">
+                            {{i+1}}
+                            </td>
+                            <td>{{data?.pname}}</td>
+                            <td>{{data?.qty}}</td>
+                            <td>{{data?.rateperunit}}</td>
+                            <td>{{data?.offerrateperunit}}</td>
+                            <td>{{data?.offeramt}} /-</td>
+    
+    
+        
+                           
+        
+                          </tr>
+                        </tbody>
+                      </table>
+          
+                      <!-- <button type="button" class="btn btn-primary pull-right" style="margin-bottom: -8px;font-size: 10px;">Add Client</button> -->
+                  </div>
+                 
+              </div>
+            </div>
+
+            <button type="submit" *ngIf="this.empmails[0]" class="btn btn-success animated flipInX" (click)="sendmail()">Send Campaign</button> 
+            </div>
+  
+  </div>
+</div>

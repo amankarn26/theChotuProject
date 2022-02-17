@@ -1,0 +1,272 @@
+<div class="row" *ngIf="productdata" >
+  <div class="col-md-12" *ngIf="this.productdata.length !== 0">
+    <div class="container">
+      <h3>Dish/Drink Summary</h3>
+      <a *ngIf="this.userRole==='SUPERADMIN' && this.userType==='FIRM'" [routerLink]="['/custhomepage']" title="Back"
+        class="pull-right">
+        <span class="glyphicon glyphicon-th-list"></span>
+      </a>
+
+      <a *ngIf="this.userRole==='SUPERADMIN' && this.userType==='FIRM'" (click)="clearFunction()" title="Back"
+        class="pull-right clearButton">
+        Clear Cart
+      </a>
+
+
+      <div class="table-responsive" *ngIf="this.productdata.length !== 0">
+        <table class="table table-striped " style="background-color: whitesmoke;">
+          <thead>
+            <tr>
+              <th scope="col">SN </th>
+              <th scope="col" style="text-align: center;">Dish/Drink</th>
+              <th scope="col" style="text-align: center;">Variant</th>
+
+              <th scope="col" class="text-center">Quantity</th>
+              <th scope="col" class="text-right">Rateper Unit</th>
+              <th scope="col" class="text-right">Total</th>
+              <!-- <th> </th> -->
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let pdata of this.productdata; let i = index; let last = last;">
+              <td>{{i+1}}</td>
+
+              <td style="text-align: center;">
+                <div class="img-thumbnail  " style="margin: auto;">
+                  <img *ngIf="pdata?.image" src="{{docServer}}/{{pdata?.image}}" class="img-circle" alt=""
+                    style="width:100px; height:100px;">
+                  <img *ngIf="!pdata?.image"
+                    src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg" class="img-circle"
+                    alt="" style="width:100px; height:100px;">
+                  <div class="caption text-capitalize text-center"> {{pdata?.dname}}</div>
+                </div>
+              </td>
+
+              <td class="text-right" *ngIf="pdata?.variant" style="margin-left: 50px; text-align: center;">
+                {{pdata?.variant.variant}} &#x20b9;</td>
+              <td class="text-right" *ngIf="!pdata?.variant" style="margin-left: 50px; text-align: center;">--</td>
+
+
+              <td style="text-align: center;">
+                <div class="count">
+                  <span class="item-count" (click)="removeqty(i)" style="border-right: 1px solid;cursor: pointer;">
+                    -
+                  </span>
+                  <span class="item-count show-count" style="  border-right: 1px solid;">
+                    {{pdata?.qty}}
+                  </span>
+                  <span class="item-count" (click)="addqty(i)" style="cursor: pointer;">
+                    +
+                  </span>
+                </div>
+              </td>
+
+
+              <td class="text-right">{{pdata?.rateperunit}} &#x20b9;</td>
+              <td class="text-right">{{pdata?.qty * pdata?.rateperunit | number:'1.2-2'}} &#x20b9;</td>
+
+              <td class="text-right">
+                <!-- (click)="deleteRole(data.id)" -->
+                <button class="btn btn-danger btn-sm" title="Delete" (click)="onDeletePstock(i)">
+                  <span class="glyphicon glyphicon-remove-circle"></span>
+                </button>
+              </td>
+
+            </tr>
+
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td>Total</td>
+              <td class="text-right">{{this.ptotal | number:'1.2-2'}} &#x20b9;</td>
+            </tr>
+
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td>Total items</td>
+              <td class="text-right">{{this.productdata.length}} </td>
+            </tr>
+
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td>Gst</td>
+              <td class="text-right">{{this.gsttotal | number:'1.2-2' }} &#x20b9;</td>
+            </tr>
+
+            <tr *ngIf="isDelivery">
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td>Delivery Charges</td>
+              <td class="text-right">{{this.deliverycharges | number:'1.2-2' }} &#x20b9;</td>
+            </tr>
+
+            <tr *ngIf="isDiscountAvailable">
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td>Discount Amount</td>
+              <td class="text-right">{{this.saved | number:'1.2-2' }} &#x20b9;</td>
+            </tr>
+
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td><strong>Grand Total</strong></td>
+              <td class="text-right" *ngIf="isDiscountAvailable && !isDelivery"><strong>{{(this.grandtotal - this.saved) | number:'1.0-0'}} &#x20b9;</strong></td>
+              <td class="text-right" *ngIf="isDelivery && !isDiscountAvailable"><strong>{{(this.grandtotal + this.deliverycharges) | number:'1.0-0'}} &#x20b9;</strong></td>
+              <td class="text-right" *ngIf="isDelivery && isDiscountAvailable"><strong>{{(this.grandtotal + this.deliverycharges - this.saved) | number:'1.0-0'}} &#x20b9;</strong></td>
+              <td class="text-right" *ngIf="!isDelivery && !isDiscountAvailable"><strong>{{this.grandtotal | number:'1.0-0'}} &#x20b9;</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="table-responsive" *ngIf="this.productdata.length === 0">
+        <div class="alert alert-danger">
+          <strong>INFO!</strong> Your Cart is<strong> Empty</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-12" *ngIf="this.productdata.length !== 0">
+    <div class="container">
+
+      <form #form1="ngForm">
+
+        <!-- <form> -->
+
+        <!-- payment pethod -->
+        <div class="row">
+
+          <div class="col-sm-12">
+
+            <div class="form-group">
+              <label for="ordertype">Order Type :</label>
+              <select class="form-control" name="ordertype" [(ngModel)]="order.ordertype" (change)="changeOrderType()" >
+                <option value="DINE_IN" selected>DINE IN</option> 
+                <option value="PICK_UP">PICK UP</option>
+                <option value="HOME_DELIVERY">HOME DELIVERY</option>
+              </select>
+              <br>
+            </div>
+
+            <div class="form-group" *ngIf="order.ordertype == 'DINE_IN'">
+              <label for="tablenumber">Table Number :</label>
+
+              <input type="text" class="form-control" name="tablenumber" id="tablenumber" required
+                [(ngModel)]="order.tablenumber">
+            </div>
+
+            <div class="form-group">
+              <label for="coupan">Select Coupan :</label>
+              <select class="form-control" name="coupan" [(ngModel)]="coupan" (change)="getcoupon()">
+                <option *ngFor="let offer of offerlist; let i=index"  value="{{offer?.couponcode}}" selected>{{offer?.couponcode}} -- Grab {{offer?.discount}}% OFF</option>
+              </select>
+              <br>
+            </div>
+
+            <div class="form-group" *ngIf="order.adddelivery=='NO'">
+              <label for="name">Select Customer :</label>
+              <select id="customerlist" class="form-control" required name="customerlist" [(ngModel)]="custid"
+                (change)="getcustomerbyid()">
+                <option value="" selected>Select Customer...</option>
+                <option value="{{prop?.id}}" *ngFor="let prop of customerlist; let i=index" [value]="prop?.id">
+                  {{prop?.name}}</option>
+              </select>
+            </div>
+
+            <div class="form-group" *ngIf="order.adddelivery=='YES'">
+              <select id="customerlist" class="form-control" required name="customerlist" [(ngModel)]="custid"
+                (change)="getcustomerbyid()" aria-placeholder="select customer..">
+                <!-- <option value="" selected>select customer`</option> -->
+                <option value="{{prop.id}}" *ngFor="let prop of customerlist; let i=index" [value]="prop.id">
+                  {{prop?.name}}</option>
+              </select>
+            </div>
+
+            <!-- <h3>Payment</h3> -->
+
+            <div class="form-group">
+              <label for="paymentmode">Payment Mode :</label>
+              <select class="form-control" name="paymentmode" [(ngModel)]="order.paymentmode">
+                <option selected>BANK</option>
+                <option value="CASH">CASH</option>
+
+              </select>
+              <br>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- shopping button -->
+        <div class="row">
+          <div class="col-md-6">
+            <input type="submit" [routerLink]="['/custhomepage']" value="Continue Shopping"
+              class="btn btn-primary btn-block">
+          </div>
+
+          <div class="col-md-6">
+            <input type="submit" *ngIf="this.productdata.length !== 0" value="Order Placed"
+              (click)="checkoouttopayment()" class="btn btn-success btn-block">
+            <input type="submit" *ngIf="this.productdata.length === 0" value="Order Placed" style="cursor: not-allowed;"
+              class="btn btn-success btn-block">
+          </div>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+
+
+  <div class="col-md-12" *ngIf="productdata.length == 0" style="height:100vh;transition: all 0.5s ease;">
+    <div class="row">
+      <div class="col-md-12" style="text-align: center;"> 
+        <img src="assets/extra/cart.svg" alt="" style="width:20vw; height:20vw;margin: auto;">
+      </div>
+      <div class="col-md-12" style="text-align: center;font-size: 2em;"> No Item in Cart </div>
+    </div>
+  </div>
+
+  <div class="col-md-12" *ngIf="!productdata" style="height:100vh;transition: all 0.5s ease;">
+    <div class="row">
+      <div class="col-md-12" style="text-align: center;"> 
+        <img src="assets/extra/cart.svg" alt="" style="width:20vw; height:20vw;margin: auto;">
+      </div>
+      <div class="col-md-12" style="text-align: center;font-size: 2em;"> No Item in Cart </div>
+    </div>
+  </div>
+</div>
+<div class="row" *ngIf="!productdata" >
+  <div class="col-md-12" style="height:100vh;transition: all 0.5s ease;">
+    <div class="row">
+      <div class="col-md-12" style="text-align: center;"> 
+        <img src="assets/extra/cart.svg" alt="" style="width:20vw; height:20vw;margin: auto;">
+      </div>
+      <div class="col-md-12" style="text-align: center;font-size: 2em;"> No Item in Cart </div>
+    </div>
+  </div>
+</div>

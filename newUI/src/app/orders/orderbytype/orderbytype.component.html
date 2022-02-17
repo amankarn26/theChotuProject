@@ -1,0 +1,420 @@
+<div class="panel panel-default slideLeft" *ngIf="this.route.url === '/vendor_orderbyid/'+this.routeid">
+  <div class="panel-heading">
+    <div class="clearfix">
+      <div class="pull-left"> {{title}} </div><br>
+
+      <div class="container" class="pull-right">
+        <div class="row">
+
+          <a title="Back" (click)="cancel()" class="btn btn-info a-btn-slide-text btn-sm" style="margin-right: 5px;">
+            <i class="glyphicon glyphicon-th-list"></i>
+          </a>
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div>
+
+    <div id="ALL" class="tab-pane fade in active">
+      <div class="panel-body">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+          <div class="table-responsive">
+            <table class="table table-condensed table-striped table-bordered"
+              [mfData]="data | dataFilterPr : filterQuery:'orders'" #mf="mfDataTable" [mfRowsOnPage]="rowsOnPage">
+              <thead>
+                <tr>
+                  <th colspan="10">
+                    <div id="custom-search-input">
+
+                      <div class="col-sm-12">
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <div class="form-group">
+                            <label for="gender"> Filter by
+                            </label>&nbsp;
+
+                            <input type="radio" value="Customdate" [(ngModel)]="statusselect" name="statusselect">
+                            Status &nbsp;
+
+
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-sm-12" *ngIf="statusselect">
+                        <div class="col-sm-3">
+                          <div class="form-group">
+                            <label for="prodtype"> Status type:
+                            </label>
+                            <select class="form-control" name="orderstatus" [(ngModel)]="orderstatus" required
+                              (change)="getorderbystatus()">
+                              <option value="PLACED">PLACED</option>
+                              <option value="PACKED">PACKED</option>
+                              <option value="PICKED_UP">PICKED_UP</option>
+                              <option value="DELIVERED">DELIVERED</option>
+                              <option value="PAID">PAID</option>
+                              <option value="CANCELLED">CANCELLED</option>
+
+
+                            </select>
+
+                          </div>
+                        </div>
+
+                        <div class="col-sm-3">
+                          <div class="form-group">
+                            <label for="state">Reset :
+                            </label>
+                            <span class="input-group-btn">
+                              <button class="btn btn-info btn-sm" title="Reset" (click)="refreshincall()"
+                                style="font-size: 9px;">
+                                <span class="glyphicon glyphicon-refresh"></span>
+                              </button>
+                            </span>
+                          </div>
+                        </div>
+
+
+
+
+
+                      </div>
+
+                    </div>
+                  </th>
+                </tr>
+                <tr>
+                  <th>Order No.</th>
+                  <th>Product</th>
+                  <th>Order Details</th>
+
+
+                  <th>Customer</th>
+                  <th>Delivery Add.</th>
+                  <th>Branch Details</th>
+                  <th>Payment Details</th>
+                  <th>Status</th>
+
+
+
+
+
+                  <th class="text-right">Action</th>
+                </tr>
+                <tr>
+                  <th colspan="9">
+                    <div id="custom-search-input">
+                      <div class="input-group col-md-12">
+                        <input type="text" class="form-control"
+                          placeholder="Search by Customer Name, Phone, City , Pincode Or Order Number"
+                          [(ngModel)]="filterQuery" />
+                        <span class="input-group-btn">
+                          <button class="btn btn-danger" type="button">
+                            <span class=" glyphicon glyphicon-search"></span>
+                          </button>
+                        </span>
+                      </div>
+                    </div>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let data of mf.data; let i = index; let last = last;">
+                  <td>{{data.invoicenum}}<br>
+                    Total items : {{data.qcost.totalitem}}
+                  </td>
+                  <td>
+                    <div class="img-thumbnail  ">
+                      <img *ngIf="data?.oentry[0]?.photo?.docpath"
+                        src="{{docServer}}/{{data?.oentry[0]?.photo?.docpath}}" class="img-circle" alt=""
+                        style="width:100px; height:100px;">
+                      <img *ngIf="!data?.oentry[0]?.photo?.docpath"
+                        src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg"
+                        class="img-circle" alt="" style="width:100px; height:100px;">
+                      <div class="caption text-capitalize text-center" *ngIf="data.oentry.length<=1; else elseBlock">
+                        {{data.oentry[0]?.pname}}</div>
+                      <ng-template #elseBlock>
+                        <a [routerLink]="['/orderdetails',data.id]">
+                          <div class="caption text-capitalize text-center"> {{data.oentry[0]?.pname}} +
+                            {{data.oentry.length - 1}} Other Items</div>
+                        </a>
+                      </ng-template>
+
+                    </div>
+                  </td>
+                  <td>
+                    <textarea style="margin: 0px; width: 180px; height: 124px;" readonly>{{data.detail}}</textarea>
+                  </td>
+
+
+                  <td>{{data.custname}}<br>
+                    Phone-{{data.custmobile}}</td>
+                  <td>{{data.deliveryaddress.line1}},<br>
+                    {{data.deliveryaddress.city}}- {{data.deliveryaddress.pincode}}<br>
+
+                  </td>
+                  <td>
+                    {{data.firmname}}<br>
+                    {{data.vendaddress.line1}},<br>
+                    {{data.vendaddress.city}}- {{data.vendaddress.pincode}}<br>
+                    Phone-{{data.vendmobile}}
+
+                  </td>
+                  <td>Mode -{{data.paymentmode}}<br>
+                    Txn ID- {{data.transactionid}}
+                    Amount -{{data.qcost.finalamt}}/-<br>
+                    <span class="badge badge-primary">Branch Amount :{{data?.qcost?.transferamt}}/-</span><br>
+                  </td>
+
+                  <td><span class="label label-primary">{{data.status}}</span></td>
+
+
+
+
+
+
+                  <td class="text-right">
+                    <a (click)="orderpacked(data)" *ngIf="data.status==='PLACED'" class="btn btn-default"
+                      title="Order Packed">
+                      <i class="glyphicon glyphicon-inbox"></i>
+                    </a>
+                    <a *ngIf="data.invoice && data.status==='DELIVERED'" href="{{docServer}}/{{data?.invoice?.docpath}}"
+                      target="_blank">
+                      <button class="btn btn-info btn-sm" title="Download Invoice">
+                        <span class="glyphicon glyphicon-cloud-download"></span>
+                      </button>
+                    </a>
+                    <a *ngIf="!data.invoice">
+                      <button disabled class="btn btn-info btn-sm" title="Invoice Not Available ">
+                        <span class="glyphicon glyphicon-cloud-download"></span>
+                      </button>
+                    </a>
+                    <a class="btn btn-danger a-btn-slide-text" title="Delete Order" (click)="delete(data.id)">
+                      <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="9">
+                    <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="panel panel-default slideLeft" *ngIf="this.route.url === '/deliverypool_orderbyid/'+this.routeid">
+  <div class="panel-heading">
+    <div class="clearfix">
+      <div class="pull-left"> {{title}} for <b>{{data[0]?.deliveryperson}}</b></div><br>
+
+      <div class="container" class="pull-right">
+        <div class="row">
+
+          <a title="Back" (click)="cancel()" class="btn btn-info a-btn-slide-text btn-sm" style="margin-right: 5px;">
+            <i class="glyphicon glyphicon-th-list"></i>
+          </a>
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div>
+
+    <div id="ALL" class="tab-pane fade in active">
+      <div class="panel-body">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+          <div class="table-responsive">
+            <table class="table table-condensed table-striped table-bordered"
+              [mfData]="data | dataFilterPr : filterQuery:'orders'" #mf="mfDataTable" [mfRowsOnPage]="rowsOnPage">
+              <thead>
+                <tr>
+                  <th colspan="10">
+                    <div id="custom-search-input">
+
+                      <div class="col-sm-12">
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <div class="form-group">
+                            <label for="gender"> Filter by
+                            </label>&nbsp;
+
+                            <input type="radio" value="Customdate" [(ngModel)]="statusselect" name="statusselect">
+                            Status &nbsp;
+
+
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-sm-12" *ngIf="statusselect">
+                        <div class="col-sm-3">
+                          <div class="form-group">
+                            <label for="prodtype"> Status type:
+                            </label>
+                            <select class="form-control" name="orderstatus" [(ngModel)]="orderstatus" required
+                              (change)="getorderbystatus()">
+                              <option value="PLACED">PLACED</option>
+                              <option value="PACKED">PACKED</option>
+                              <option value="PICKED_UP">PICKED_UP</option>
+                              <option value="DELIVERED">DELIVERED</option>
+                              <option value="PAID">PAID</option>
+                              <!-- <option value="CANCELLED">CANCELLED</option> -->
+
+                            </select>
+
+                          </div>
+                        </div>
+
+                        <div class="col-sm-3">
+                          <div class="form-group">
+                            <label for="state">Reset :
+                            </label>
+                            <span class="input-group-btn">
+                              <button class="btn btn-info btn-sm" title="Reset" (click)="refreshincall()"
+                                style="font-size: 9px;">
+                                <span class="glyphicon glyphicon-refresh"></span>
+                              </button>
+                            </span>
+                          </div>
+                        </div>
+
+                      </div>
+
+                    </div>
+                  </th>
+                </tr>
+                <tr>
+                  <th>Order No.</th>
+                  <th>Dish Name</th>
+                  <th>Order Details</th>
+                  <th>Customer</th>
+                  <th>Delivery Add.</th>
+                  <!-- <th>Branch Details</th> -->
+                  <th>Payment Details</th>
+                  <th>Ordertype</th>
+
+                  <th>Status</th>
+
+                  <th class="text-right">Action</th>
+                </tr>
+                <tr>
+                  <th colspan="9">
+                    <div id="custom-search-input">
+                      <div class="input-group col-md-12">
+                        <input type="text" class="form-control"
+                          placeholder="Search by Customer Name, Phone, City , Pincode Or Order Number"
+                          [(ngModel)]="filterQuery" />
+                        <span class="input-group-btn">
+                          <button class="btn btn-danger" type="button">
+                            <span class=" glyphicon glyphicon-search"></span>
+                          </button>
+                        </span>
+                      </div>
+                    </div>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let data of mf.data; let i = index; let last = last;">
+                  <td>{{data.invoicenum}}<br>
+                    Total items : {{data.qcost.totalitem}}
+                  </td>
+
+                  <td>
+                    <div class="img-thumbnail  ">
+                      <img *ngIf="data?.oentry[0]?.photo?.docpath"
+                        src="{{docServer}}/{{data?.oentry[0]?.photo?.docpath}}" class="img-circle" alt=""
+                        style="width:100px; height:100px;">
+                      <img *ngIf="!data?.oentry[0]?.photo?.docpath"
+                        src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg"
+                        class="img-circle" alt="" style="width:100px; height:100px;">
+                      <div class="caption text-capitalize text-center" *ngIf="data.oentry.length<=1; else elseBlock">
+                        {{data.oentry[0]?.dname}}</div>
+                      <ng-template #elseBlock>
+                        <!-- <a [routerLink]="['/orderdetails',data.id]"> -->
+                          <div class="caption text-capitalize text-center"> {{data.oentry[0]?.dname}} +
+                            {{data.oentry.length - 1}} Other Items</div>
+                        <!-- </a> -->
+                      </ng-template>
+
+                    </div>
+                  </td>
+
+                  <td>
+                    <textarea style="margin: 0px; width: 180px; height: 124px;" readonly>{{data?.detail}}</textarea>
+                  </td>
+
+                  <td>{{data.custname}}<br>
+                    Phone-{{data.custmobile}}
+                  </td>
+
+                  <td>{{data.deliveryaddress.line1}},<br>
+                    {{data.deliveryaddress.city}}- {{data.deliveryaddress.pincode}}<br>
+                  </td>
+                  
+                  <td>Mode -{{data.paymentmode}}<br>
+                    Txn ID- {{data.transactionid}}<br>
+                    Amount -{{data.qcost.finalamt}}/-<br>
+                  </td>
+
+                  <td>
+                    <span class="label label-primary">{{data.ordertype}}</span><br>
+                    <span class="label label-primary">{{data.tablenumber}}</span>
+
+                  </td>
+
+                  <td><span class="label label-primary">{{data.status}}</span></td>
+
+                  <td class="text-right">
+                    <a (click)="orderpacked(data)" *ngIf="data.status==='PLACED'" class="btn btn-default"
+                      title="Order Packed">
+                      <i class="glyphicon glyphicon-inbox"></i>
+                    </a>
+                    <a *ngIf="data.invoice && data.status==='DELIVERED'" href="{{docServer}}/{{data?.invoice?.docpath}}"
+                      target="_blank">
+                      <button class="btn btn-info btn-sm" title="Download Invoice">
+                        <span class="glyphicon glyphicon-cloud-download"></span>
+                      </button>
+                    </a>
+                    <a *ngIf="!data.invoice">
+                      <button disabled class="btn btn-info btn-sm" title="Invoice Not Available ">
+                        <span class="glyphicon glyphicon-cloud-download"></span>
+                      </button>
+                    </a>
+                    <a class="btn btn-danger a-btn-slide-text" title="Delete Order" (click)="delete(data.id)">
+                      <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="9">
+                    <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

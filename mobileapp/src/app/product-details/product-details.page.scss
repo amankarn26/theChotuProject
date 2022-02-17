@@ -1,0 +1,550 @@
+
+// .new-background-color {
+
+//   --background: #ff8008; /* fallback for old browsers */
+//   --background: -webkit-linear-gradient(
+//     to right,
+//     #ffc837,
+//     #ff8008
+//   ); /* Chrome 10-25, Safari 5.1-6 */
+//   --background: linear-gradient(
+//     to right,
+//     #ffc837,
+//     #ff8008
+//   ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+// }
+
+
+// .item-page {
+//   .overlay {
+//     background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4));
+//     display: inline-flex;
+//   }
+//   .slider-img {
+//     height: 220px;
+//     width: 100%;
+//     position: relative;
+//     z-index: -111;
+//   }
+//   .slider-text {
+//     color: #fff;
+//     font-size: 22px;
+//     padding: 5px;
+//     position: absolute;
+//     bottom: 0;
+//     margin: 5px 0px;
+//   }
+// }
+
+.pageheading {
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 150%;
+}
+
+// ion-card-title {
+//   font-size: 16px;
+//   font-family: "Montserrat", sans-serif;
+// }
+
+// .bd {
+//   color: rgb(156, 149, 149);
+
+//   top: 0px;
+//   right: 0px;
+//   border-radius: 100%;
+//   background-color: white;
+// }
+
+// .product-d {
+//   align-items: center;
+
+//   width: 100%;
+//   left: 0px;
+//   top: 338px;
+//   overflow-y: scroll;
+//   border-radius: 25px 25px 0px 0px;
+// }
+
+// .head {
+//   margin-left: 6px;
+//   top: 4px;
+
+//   font-family: Poppins;
+//   color: #ffffff;
+//   font-style: normal;
+//   font-weight: bold;
+//   font-size: 18px;
+//   line-height: 150%;
+
+//   letter-spacing: 0.5px;
+// }
+
+// .product-t {
+//   margin-left: 6px;
+//   top: 4px;
+//   color: #ffffff;
+//   font-family: Poppins;
+//   font-style: normal;
+//   font-weight: bold;
+//   font-size: 18px;
+//   line-height: 150%;
+
+//   letter-spacing: 0.5px;
+
+// }
+
+// .product-p {
+//   text-align: center;
+
+//   font-family: Poppins;
+//   font-style: normal;
+//   font-weight: normal;
+//   font-size: 14px;
+//   line-height: 150%;
+
+//   text-align: center;
+//   letter-spacing: 0.5px;
+
+//   color: #f5f5f5;
+// }
+
+// .product-price {
+
+//   font-family: Poppins;
+//   font-style: normal;
+//   font-weight: 600;
+//   font-size: 16px;
+//   line-height: 150%;
+//   letter-spacing: 0.5px;
+
+//   color: #ec7c7c;
+// }
+
+// .product-list {
+//   width: 100%;
+//   height: 48px;
+//   left: 17px;
+//   top: 70px;
+// }
+
+// .product-m {
+//   width: 100%;
+//   height: 21px;
+//   left: 0px;
+//   top: 14px;
+//   margin-left: 16px;
+//   margin-top: -3px;
+
+//   /* Heading/H5 */
+
+//   font-family: Poppins;
+//   font-style: normal;
+//   font-weight: bold;
+//   font-size: 14px;
+//   line-height: 150%;
+//   /* identical to box height, or 21px */
+
+//   letter-spacing: 0.5px;
+
+//   color: #f9faff;
+// }
+// .product-e {
+//   /* Heading/H5 */
+
+//   font-family: Poppins;
+//   font-style: normal;
+//   font-weight: bold;
+//   font-size: 14px;
+
+//   /* identical to box height, or 21px */
+
+//   letter-spacing: 0.5px;
+//   color: #223263;
+// }
+
+// .variant-box {
+//   background-color: grey;
+//   margin: 0px 7px 0px 6px;
+// }
+
+// .product-l {
+//   width: 100%;
+//   height: 48px;
+//   left: 17px;
+//   top: 124px;
+// }
+
+// .product-add {
+//   display: flex;
+//   flex-direction: row;
+//   align-items: center;
+//   padding: 16px;
+
+//   width: 100%;
+//   height: 57px;
+//   left: calc(50% - 343px / 2);
+//   color: white;
+
+//   /* Primary/Blue */
+
+//   --background: rgb(229, 85, 85);
+//   /* Button Shadow */
+
+//   box-shadow: 0px 10px 30px rgba(64, 191, 255, 0.24);
+//   border-radius: 5px;
+// }
+// .product-add label {
+//   margin: auto;
+// }
+
+// .product-in {
+//   width: 100%;
+//   height: 21px;
+//   left: 0px;
+//   top: 14px;
+//   margin-left: 16px;
+//   margin-top: -3px;
+
+//   /* Heading/H5 */
+
+//   font-family: Poppins;
+//   font-style: normal;
+//   font-weight: bold;
+//   font-size: 14px;
+//   line-height: 150%;
+//   /* identical to box height, or 21px */
+
+//   letter-spacing: 0.5px;
+
+//   color: #f9faff;
+// }
+
+.notification-icon-button {
+  --overflow: visible;
+  ion-badge {
+    position: absolute;
+    color: black;
+    background: #f8e6d4;
+    border-radius: 100%;
+    // opacity: 0.9;
+    // top: 0.0rem;
+    left: 1rem;
+    // size: 10px;
+    top: -10px;
+    // left: -0.5rem;
+    size: 10px;
+  }
+}
+
+// .count-full {
+//   .col {
+//     padding: 5px 5px;
+//   }
+//   .count {
+//     display: inline-flex;
+//     padding: 2px 0px;
+//     margin: 0px;
+//     .item-count {
+//       padding: 8px 22px;
+//       border-radius: 1px;
+//       font-size: 20px;
+//       font-weight: 700;
+//       border: 2px solid #ffffff;
+//       // height: 46px;
+//     }
+//   }
+
+//   .btn-add-to-cart {
+//     background-color: #ffffff;
+//     color: white;
+//     padding: 10px 0px;
+//     box-shadow: none;
+//     font-size: 14px;
+//     // margin: 12px 5px 16px -29px;
+//     height: 42px;
+//   }
+
+//   .cartShowBox {
+//     padding: 5px;
+//     margin: 10px;
+//     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+//     transition: 0.3s;
+//   }
+// }
+
+
+
+
+
+
+
+
+
+
+// .upperBox {
+//   position: absolute;
+//   width: 100%;
+//   height: 50px;
+//   top: 0;left: 0;right: 0;
+//   background: linear-gradient(90deg, rgba(134,75,246,1) 0%, rgba(237,56,51,0.8757878151260504) 50%, rgba(134,75,246,1) 100%);
+// }
+
+// .imageOfLead {
+//   text-align: center;
+//   padding-top:0px;
+//   margin-bottom: 20px;
+//   img {
+//       position: relative;
+//       z-index: 1;
+//       width: 90%;
+//       height: 200px;
+//       margin: auto;
+//       padding: 1px;
+//       overflow: hidden;
+//       border-radius: 5px;
+//       background: #e0e0e0;
+//       box-shadow:  20px 20px 60px #bebebe,
+//                   -20px -20px 60px rgba(135,112,76,1);
+//   }
+// }
+
+// .contain {
+//   text-align: center;
+//   margin-bottom: 50px;
+//   .heading {
+//       color: #43250a;
+//       h1 {
+//           font-size: 2em;
+//       }
+//   }
+//   .salontype {
+//       color: #43250a;
+//       font-size: 0.8em;
+//   }
+// }
+
+
+
+// new Design 29 Apr
+
+.mainBox {
+  width: 100%;
+  position: relative;
+  overflow-y: scroll;
+  --background: #864bf6;
+
+
+  .saprator {
+    width: 100%;
+    height: 40px;
+  }
+
+  .frame1 {
+    height: 60vh;
+    background: #FFFFFF;
+    border-radius: 50px 50px 0px 0px;
+    padding-top: 50px;
+    padding-left: 30px;
+    padding-right: 30px;
+    margin-top: 100vh;
+
+    .productName {
+      font-family: 'Roboto', sans-serif;
+      font-style: normal;
+      font-weight: bold;
+      font-size: 1rem;
+      line-height: 1rem;
+
+      color: #000000;
+
+    }
+
+    .productMenuTye {
+      padding-top: 10px;
+      font-family: 'Roboto', sans-serif;
+      font-style: normal;
+      font-weight: 400;
+      font-size: 0.8rem;
+      line-height: 1rem;
+
+      color: #000000;
+    }
+
+    .imgBox {
+      margin: auto;
+      padding: 20px 0px;
+      filter: drop-shadow(5px 5px 10px rgba(0, 0, 0, 0.25));  
+      
+      .makeSlideBlur {
+        background: transparent !important;
+        border-radius: 10px;
+        overflow: hidden;
+        z-index: 1;
+        height: 25vh;
+  
+        img{
+          width: 100%;
+          height: 25vh;
+        }
+      }
+    }
+  }
+
+  .frame2 {
+    min-height: 70vh;
+    background: #e9ddff;
+    border-radius: 50px 50px 0px 0px;
+    margin-top: 100vh;
+    padding-top: 0px;
+    padding-left: 30px;
+    padding-right: 30px;
+    filter: drop-shadow(0px -13px 20px rgba(0, 0, 0, 0.25)); 
+    // box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.25);
+
+    .productPrice {
+      font-family: 'Roboto', sans-serif;
+      font-style: normal;
+      font-weight: bold;
+      font-size: 2rem;
+      line-height: 2rem;
+      text-align: center;
+
+      color: #7b643e;
+
+      padding: 20px;
+    }
+
+    .showAllVarient {
+      margin: 0px 0px;
+
+      .productVarient {
+        font-family: 'Roboto', sans-serif;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 1rem;
+        line-height: 1rem;
+        text-align: center;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        margin-bottom: 5px;
+  
+        background: #ffd690;
+  
+        color: #5f3b00;
+      }
+
+      .productVarientActive {
+        font-family: 'Roboto', sans-serif;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 1rem;
+        line-height: 1rem;
+        text-align: center;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        margin-bottom: 5px;
+  
+        background: #864bf6;
+  
+        color: #f7efef;
+        filter: drop-shadow(5px 5px 10px rgba(0, 0, 0, 0.25)); 
+      }
+    }
+
+    .addToCartButton {
+      width: 100%;
+      padding: 10px;
+
+      background: #864bf6;
+      border-radius: 10px;
+
+      font-family: 'Roboto', sans-serif;
+      font-style: normal;
+      font-weight: bold;
+      font-size: 1.2rem;
+      line-height: 1.2rem;
+      text-align: center;
+      margin-top: 20px;
+
+      color: #FFFFFF;
+    }
+
+    .headingAbout {
+      font-family: 'Roboto', sans-serif;
+      font-style: normal;
+      font-weight: 800;
+      font-size: 1.2rem;
+      line-height: 2rem;
+
+      color: #7b643e;
+
+      margin-top: 40px;
+    }
+
+    .productAbout {
+      font-family: 'Roboto', sans-serif;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 0.8rem;
+      line-height: 1rem;
+
+      color: #7b643e;
+    }
+
+    .headingRating {
+      font-family: 'Roboto', sans-serif;
+      font-style: normal;
+      font-weight: 800;
+      font-size: 1.2rem;
+      line-height: 2rem;
+
+      color: #7b643e;
+
+      margin-top: 40px;
+    }
+
+    .productRating {
+      position: relative;
+      font-family: 'Roboto', sans-serif;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 1rem;
+      line-height: 1rem;
+
+      margin-top: 20px;
+
+      color: #7b643e;
+
+      .ratingBox {
+        float: right;
+        text-align: right;
+        font-weight: 700;
+        font-size: 1rem;
+      }
+
+      .productRatingDis {
+        margin-top: 5px;
+        font-size: 0.7rem;
+        font-weight: 400;
+        line-height: 0.9rem;
+        text-align: justify;
+      }
+
+      .head {
+        width: 100%;
+        text-align: center;
+        font-weight: 600;
+      }
+
+      .info {
+        width: 100%;
+        padding: 20px 0;
+        font-size: 0.8rem;
+        text-align: justify;
+      }
+    }
+  }
+}

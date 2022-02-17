@@ -1,0 +1,171 @@
+<div [hidden]="isManageState" class="col-md-12 col-sm-12 col-xs-12">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        {{title}}
+        <a   class="pull-right">
+            <button title="View all Servicing Details" (click)="cancel()"> <span class="glyphicon glyphicon-th-list"></span></button>
+            </a>
+      </div>
+      <div class="panel-body" >
+        <form #form1="ngForm">
+         
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="name"> Service Due Date:  </label>
+              <input *ngIf="!isUpdate"  type="date" class="form-control" id="serviceduedate" name="serviceduedate"  [(ngModel)]="servicingdetails.serviceduedate" />
+             
+              <input *ngIf="isUpdate" readonly type="date" class="form-control" id="serviceduedate" name="serviceduedate"  [(ngModel)]="servicingdetails.serviceduedate" />
+             
+              </div>
+          </div>
+        
+         
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="availedon">Servicing Availed On:</label>
+              <input *ngIf="!isUpdate" type="date" class="form-control" id="availedon" name="availedon" required [(ngModel)]="servicingdetails.availedon" />
+              <input readonly *ngIf="isUpdate"  type="date" class="form-control" id="availedon" name="availedon"  [(ngModel)]="servicingdetails.availedon" />
+            </div>
+          </div>
+  
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="nextservicedueon">Next Servicing On</label>
+              <input type="date" class="form-control" id="nextservicedueon" name="nextservicedueon" required [(ngModel)]="servicingdetails.nextservicedueon" />
+            </div>
+          </div>
+          
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="paid">Paid</label>
+              <select  *ngIf="!isUpdate" class="form-control" name="paid" [(ngModel)]="servicingdetails.paid">
+                <option value="YES">YES</option>
+                <option value="NO">NO</option>           
+                 </select> 
+              <input *ngIf="isUpdate" readonly type="text" class="form-control" id="paid" name="paid" required [(ngModel)]="servicingdetails.paid" />
+            </div>
+          </div>
+  
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="amount">Amount:</label>
+              <input type="number" class="form-control"  id="amount" name="amount" required [(ngModel)]="servicingdetails.amount"
+              />
+            </div>
+          </div>
+         
+         
+          <div class="col-md-6">
+            <div class="form-group">
+              <button *ngIf="this.url == '/addservicingdetails/'+ this.id" type="submit" [disabled]="!form1.valid" class="btn btn-default" (click)="submitData()">Submit</button>
+              <button *ngIf="this.url == '/updateservicingdetails/' + this.id" type="submit" [disabled]="!form1.valid" class="btn btn-default" (click)="updateData()">Update</button>
+             <button type="button" class="btn btn-default" (click)="cancel()">Cancel</button>
+            </div>
+          </div>
+        </form>
+  
+      </div>
+    </div>
+</div>
+  
+<div [hidden]="!isManageState" class="col-md-12 col-sm-12 col-xs-12">
+  
+    <div class="panel panel-default">
+      <div class="panel-heading">
+          <div class="clearfix">
+              <div class="pull-left">
+                  {{title}}
+              </div>
+              <div class="container" class="pull-right">
+                  <div class="row">
+                    
+                      <a [routerLink]="['/manageservicing']" title="Manage All Servicing" class="btn btn-info a-btn-slide-text">
+                        <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+                    </a>
+                      
+                    <!-- <a [routerLink]="['/addservicingdetails',this.id]" title="Add Servicing Details" class="btn btn-info a-btn-slide-text">
+                      <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                  </a> -->
+                      
+                      
+                  </div>
+              </div>
+          </div>
+      
+      </div>
+      <div class="panel-body">
+        <div class="table-responsive">
+          <table class="table table-condensed table-striped table-bordered" [mfData]="data | dataFilterPr : filterQuery" #mf="mfDataTable"
+            [mfRowsOnPage]="rowsOnPage" [(mfSortBy)]="Role" [(mfSortOrder)]="sortOrder">
+            <thead>
+              <tr>
+                <th>SN</th>
+                <th>
+                  <mfDefaultSorter by="role">Servicing Due Date</mfDefaultSorter>
+                </th>
+               
+                <th>Availed On</th>
+                <th>Next Service Due On</th>
+                <th>Paid</th>
+                <th>Amount</th>
+  
+                <!-- <th>Action</th> -->
+              </tr>
+              <tr>
+                <th colspan="10">
+                  <!-- <div id="custom-search-input">
+                    <div class="input-group col-md-12">
+                      <input type="text" class="form-control" placeholder="Search by name" [(ngModel)]="filterQuery" />
+                      <span class="input-group-btn">
+                        <button class="btn btn-danger" type="button">
+                          <span class=" glyphicon glyphicon-search"></span>
+                        </button>
+                      </span>
+                    </div>
+                  </div> -->
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of data; let i = index; let last = last;">
+                <td>{{i+1}}</td>
+                <td>{{data?.serviceduedate | date:'dd-MM-yyyy'}}</td>
+                <td>{{data?.availedon | date:'dd-MM-yyyy'}}</td>
+                <td>{{data?.nextservicedueon | date:'dd-MM-yyyy'}}</td>
+                <td>{{data?.paid}}</td>
+                <td>{{data?.amount}}</td>
+                <!-- <td>
+                  {{data?.address.line1}},
+                  <br> {{data?.address.line2}},
+                  <br> {{data?.address.country}},
+                  <br> {{data?.address.states}},{{data?.address.city}},
+                  <br> {{data?.address.pincode}}
+                </td> -->
+                <!-- <td class="text-right"> -->
+                  <!-- <a [routerLink]="['/updateservicingdetails/',data.id]" data-toggle="tooltip" title="Update Servicing" *ngIf="userType == 'ADMIN'">
+                    <button class="btn btn-default btn-sm">
+                      <span class="glyphicon glyphicon-edit"></span>
+                    </button>
+                  </a> -->
+               
+  
+                  <!-- <button  class="btn btn-danger btn-sm" title="Delete Servicing" (click)="deleteRole(data.id)">
+                    <span class="glyphicon glyphicon-remove-circle"></span>
+                  </button> -->
+                
+                 
+                <!-- </td> -->
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="9">
+                  <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+</div>

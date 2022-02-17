@@ -1,0 +1,237 @@
+<div class="panel panel-default slideLeft" *ngIf="flag">
+  <div class="panel-heading">
+    <div class="clearfix">
+      <div class="pull-left"> {{title}}</div>
+      <div class="container" class="pull-right">
+        <div class="row">
+         
+          <a [routerLink]="['/managereferancecall']" title="Manage Reference Calls" class="btn btn-info a-btn-slide-text">
+            <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="panel-body">
+    <form #fname="ngForm">
+
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="Type">Employee Type : </label>
+<!--          
+          <input *ngIf="!isUpdate" type="text"  mutiline class="form-control" id="Type" name="Type" [(ngModel)]="referancecall.type" /> -->
+          <select required *ngIf="!isUpdate" class="form-control" name="Type" [(ngModel)]="referancecall.etype">
+            <option value="REFERENCE">REFERENCE</option>
+            <option value="COLDCALL">COLDCALL</option>
+           
+          </select>
+          
+          <input required *ngIf="isUpdate" type="text" readonly  mutiline class="form-control" id="Type" name="Type" [(ngModel)]="referancecall.etype" />
+         
+        </div>
+      </div>
+
+      <div class="col-md-6 col-sm-6 col-xs-12">
+        <div class="form-group">
+          <label for="refname">Refer Name : </label>
+         
+          <input required type="text"  class="form-control" id="refname" name="refname" [(ngModel)]="referancecall.refname" >
+         
+        </div>
+      </div>
+      <div class="col-md-6 col-sm-6 col-xs-12">
+        <div class="form-group">
+          <label for="city">City : </label>
+         
+          <input required type="text"  class="form-control" id="city" name="city" [(ngModel)]="referancecall.city" >
+         
+        </div>
+      </div>
+      <div class="col-md-6 col-sm-6 col-xs-12">
+        <div class="form-group">
+          <label for="mobile">Mobile Number : </label>
+         
+          <input required type="number" pattern="[0-9]{10}" maxlength=10    class="form-control" id="mobile" name="mobile" [(ngModel)]="referancecall.mobile" >
+         
+        </div>
+      </div>
+
+      <div class="col-md-6 col-sm-6 col-xs-12">
+        <div class="form-group">
+          <label for="email">Email : </label>
+         
+          <input required type="email"  class="form-control" id="email" name="email" [(ngModel)]="referancecall.email" >
+         
+        </div>
+      </div>
+      
+<div *ngIf="this.referancecall.etype==='REFERENCE'">
+    
+   <div class="col-md-6">
+    <div class="form-group">
+      <label for="Type">ReferBy Type: </label>
+<!--          
+      <input *ngIf="!isUpdate" type="text"  mutiline class="form-control" id="Type" name="Type" [(ngModel)]="referancecall.type" /> -->
+      <select required *ngIf="!isUpdate" class="form-control" name="refbytype" [(ngModel)]="referancecall.refbytype"  (change)="passtype()">
+        <option value="EMPLOYEE">EMPLOYEE</option>
+        <option value="CUSTOMER">CUSTOMER</option>
+        <option value="OTHER">OTHER</option>
+
+       
+      </select>
+      
+      <input required *ngIf="isUpdate" type="text" readonly  mutiline class="form-control" id="Type" name="Type" [(ngModel)]="referancecall.refbytype" />
+     
+    </div>
+  </div>
+
+    <div class="col-sm-6" *ngIf="referancecall.refbytype==='EMPLOYEE'">
+        <div class="form-group">
+            <label for="emp">Employee Name:  </label>
+            <select required   class="form-control"  id="refbyname1" name="refbyname1" [(ngModel)]="referancecall.refbyname" >
+              <option *ngFor="let data of empList; let i=index" [value]="data.name">{{data.name}}</option>
+            </select>
+        
+          </div>
+  
+
+   </div>
+   <div class="col-sm-6" *ngIf="referancecall.refbytype==='CUSTOMER'">
+    <div class="form-group">
+        <label for="emp">Customer Name:  </label>
+        <select required   class="form-control"  id="em1p" name="e1mp" [(ngModel)]="refbyname1" >
+          <option *ngFor="let data of custList; let i=index" [value]="data.shopname">{{data.shopname}}</option>
+        </select>
+    
+      </div>
+</div>
+<div class="col-sm-6" *ngIf="referancecall.refbytype==='OTHER'">
+  <div class="form-group">
+      <label for="emp">Customer Name:  </label>
+      <input   type="text"  class="form-control" id="refbynam11e" name="refbynam11e" [(ngModel)]="refbyname2" />
+     
+  
+    </div>
+</div>
+   
+</div>
+     
+    
+
+      <div class="col-md-12">
+        <div class="form-group">
+          <button *ngIf="!isUpdate" type="submit" class="btn btn-default" [disabled]="!fname.valid" (click)="submitData()">Submit</button>
+          <button *ngIf="isUpdate" type="submit" class="btn btn-default" [disabled]="!fname.valid" (click)="updateData()">Update</button>
+          <button type="button" class="btn btn-default" (click)="cancel()">Cancel</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="panel panel-default slideLeft" *ngIf="!flag">
+  <div class="panel-heading">
+    <div class="clearfix">
+      <div class="pull-left"> {{title}}</div>
+      <div class="container" class="pull-right">
+        <div class="row">
+          <a [routerLink]="['/addreferancecall']" class="btn btn-primary a-btn-slide-text" title="Add Reference Call">
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+            <span></span>
+          </a>
+        <!--   <a href="#" class="btn btn-default a-btn-slide-text" title="Edit">
+            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+            <span></span>
+          </a>
+          <a href="#" class="btn btn-info a-btn-slide-text" title="View">
+            <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+            <span></span>
+          </a>
+          <a href="#" class="btn btn-danger a-btn-slide-text" title="Delete">
+            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+            <span></span>
+          </a> -->
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="panel-body">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+      <div class="table-responsive">
+        <table class="table table-condensed table-striped table-bordered" [mfData]="data | dataFilterPr : filterQuery" #mf="mfDataTable"
+          [mfRowsOnPage]="rowsOnPage"  >
+          <thead>
+            <tr>
+              <th>SN</th>
+              <th>Employee Type</th>
+
+              <th>
+                <mfDefaultSorter by="refname">Referance Name</mfDefaultSorter>
+              </th>
+              <th>City</th>
+              <th>Mobile</th>
+              <th>Email</th>
+              <th>Refered By Type</th>
+              <th>Refered By Name</th>
+             
+
+
+              <!--  <th>First Name</th>
+                    <th>Last Name</th> -->
+              <th class="text-right">Action</th>
+            </tr>
+            <tr>
+              <th colspan="14">
+                <div id="custom-search-input">
+                  <div class="input-group col-md-12">
+                    <input type="text" class="form-control" placeholder="Search" [(ngModel)]="filterQuery" />
+                    <span class="input-group-btn">
+                      <button class="btn btn-danger" type="button">
+                        <span class=" glyphicon glyphicon-search"></span>
+                      </button>
+                    </span>
+                  </div>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of data; let i = index; let last = last;">
+              <td>{{i+1}}</td>
+              <td>{{data.etype}}</td>
+
+              <td>{{data.refname}}</td>
+              <td>{{data.city}}</td>
+              <td>{{data.mobile}}</td>
+              <td>{{data.email}}</td>
+              <td>{{data.refbyname}}</td>
+              <td>{{data.refbytype}}</td>
+
+
+              <td class="text-right">
+                <!-- <a [routerLink]="['/updatereferancecall', data.id]" class="btn btn-default" title="Update Target Call" >
+                      <span class="glyphicon glyphicon-edit"></span>
+                </a> -->
+                <a class="btn btn-danger a-btn-slide-text" title="Delete Target Call" (click)="delete(data.id)">
+                  <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                  <span></span>
+                </a>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="14">
+                <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+    </div>
+  </div>
+</div>

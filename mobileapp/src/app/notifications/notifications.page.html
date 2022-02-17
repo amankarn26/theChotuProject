@@ -1,0 +1,53 @@
+<!-- <ion-header>
+  <ion-toolbar>
+    <ion-title>notifications</ion-title>
+  </ion-toolbar>
+</ion-header> -->
+
+
+<ion-header [translucent]="true"    >
+  <ion-toolbar style="--background: rgba(134,75,246,1);">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/tab1" (click)="cancel()" style="color: white;" >
+      </ion-back-button>
+    </ion-buttons>
+
+    <ion-title class="pageheading">
+    <strong> My Notifications</strong>
+    </ion-title>
+
+
+    <ion-buttons class="cartt" slot="end" *ngIf="notificationList"  >
+
+      <ion-button class="cartt" (click)="clear()"  color="danger" >
+      <ion-badge color="danger">Clear All</ion-badge>
+        <!-- <ion-icon name="trash" color="danger" style="font-size: 20px;" slot="start" ></ion-icon>style="--ackground: transparent !important; " -->
+      </ion-button>
+     </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="notificationList" >
+
+
+<br>
+
+
+
+<ion-chip *ngFor="let item of notificationList" color="secondary">
+  <ion-label color="dark">  {{item}}</ion-label>
+</ion-chip>
+
+
+
+
+
+</ion-content>
+
+<ion-content *ngIf="!notificationList">
+  <ion-row>
+    <ion-icon class="empty-cart" name="notifications" style="color: #864bf6;"></ion-icon>
+    <h4 >No More Notifications For you..!</h4>
+  </ion-row>
+
+</ion-content>

@@ -1,0 +1,303 @@
+
+<!-- <div class="row">
+  <div class="col-md-12">
+    <h2>{{title}}</h2>
+
+  </div>
+</div>
+<hr /> -->
+<!--  <popup>
+    Add your custom html elements here
+</popup>  -->
+<!-- Trigger the modal with a button -->
+
+
+<!-- Modal -->
+<!-- <div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Modal Header</h4>
+      </div>
+      <div class="modal-body">
+        <p>Some text in the modal.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div> -->
+
+
+
+<div [hidden]="isManageState" class="col-md-12 col-sm-12 col-xs-12">
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        {{title}}
+        <a [routerLink]="['/manageincharge']" title="Manage Default Incharge" class="pull-right">
+          <span class="glyphicon glyphicon-th-list"></span>
+        </a>
+      </div>
+      <div class="panel-body">
+          <form #form1="ngForm" >
+              <!-- <div class="col-md-6 col-sm-6 col-xs-12">
+                  <div class="form-group">
+                    <label for="categoryType"> Type : </label>
+                    <select class="form-control" *ngIf="isUpdate" id="categoryType" required name="categoryType" [(ngModel)]="categoryType" >
+                      <option value="wholesaler">wholesaler</option>
+                      <option value="retailer">retailer</option>
+                    </select>
+                    <select class="form-control" *ngIf="!isUpdate" id="categoryType" required name="categoryType" [(ngModel)]="categoryType" >
+                      <option value="wholesaler">wholesaler</option>
+                      <option value="retailer">retailer</option>
+                    </select>
+                  </div>
+                </div> -->
+
+              <!-- <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="categoryType==='wholesaler'">
+                  <div class="form-group">
+                    <label for="wholesaler">wholesaler: </label>
+                    <select class="form-control" *ngIf=!isUpdate name="wholesaler" required [(ngModel)]="categoryacct.wholesaler">
+                      <option required *ngFor="let deployacct of depList; let i=index" [value]="deployacct.id">{{deployacct.name}}</option>
+                    </select>
+                    <select class="form-control" *ngIf=isUpdate name="wholesaler" required [(ngModel)]="categoryacct.wholesaler">
+                        <option required *ngFor="let deployacct of depList; let i=index" [value]="deployacct.id">{{deployacct.name}}</option>
+                      </select>
+                  </div>
+                </div> -->
+
+
+
+
+          <!-- <div class="col-sm-6">
+            <div class="form-group">
+              <label for="refname"> Referrer Name:
+                 <span class="m glyphicon glyphicon-asterisk"></span> -->
+              <!-- </label>
+              <input type="text" *ngIf=!isUpdate class="form-control" required name="refname" [(ngModel)]="refer.refname">
+              <input type="text" *ngIf=isUpdate   class="form-control" required name="refname" [(ngModel)]="refer.refname">
+            </div>
+          </div>  -->
+
+
+  <!--
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="refbytype">Referred By Type:
+              </label>
+              <select class="form-control" name="role" *ngIf="!isUpdate" required  (change)="getrefEmployee()" [(ngModel)]="refer.refbytype">
+
+                <option value="EMPLOYEE">EMPLOYEE</option>
+                <option value="CUSTOMER">CUSTOMER</option>
+                <option value="OTHER">OTHER</option>
+
+
+
+              </select>
+              <select class="form-control" name="refbytype" *ngIf="isUpdate" disabled required [(ngModel)]="refer.refbytype" (change)="getrefEmployee()">
+
+                  <option value="EMPLOYEE">EMPLOYEE</option>
+                  <option value="CUSTOMER">CUSTOMER</option>
+                  <option value="OTHER">OTHER</option>
+
+                </select>
+            </div>
+          </div> -->
+
+
+
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="role">Role:
+              </label>
+              <select class="form-control" name="role" *ngIf="!isUpdate" required [(ngModel)]="inc.role">
+                <!-- <option required *ngFor="let rolee of rolelist; let i=index" [value]="rolee.role">{{rolee.name}}</option> -->
+                <option value="WHOLESALER">WHOLESALER</option>
+                <option value="ADMIN">ADMIN</option>
+                <option value="CUSTOMER">CUSTOMER</option>
+                <option value="EMPLOYEE">EMPLOYEE</option>
+                <option value="MARKETING">MARKETING</option>
+                <option value="ORDERPROCESSING">ORDERP ROCESSING</option>
+                <option value="PURCHASEORDER">PURCHASE ORDER PROCESSING</option>
+                <option value="PACKAGING">PACKAGING</option>
+                <option value="DISPATCH">DISPATCH</option>
+                <option value="ACCOUNTING">ACCOUNTING</option>
+                <option value="SUPERADMIN">SUPERADMIN</option>
+              </select>
+              <select class="form-control" name="role" *ngIf="isUpdate" disabled required [(ngModel)]="inc.role">
+                  <!-- <option required *ngFor="let rolee of rolelist; let i=index" [value]="rolee.role">{{rolee.name}}</option> -->
+                  <option value="WHOLESALER">WHOLESALER</option>
+                  <option value="ADMIN">ADMIN</option>
+                  <option value="CUSTOMER">CUSTOMER</option>
+                  <option value="EMPLOYEE">EMPLOYEE</option>
+                  <option value="MARKETING">MARKETING</option>
+                  <option value="ORDERPROCESSING">ORDERP ROCESSING</option>
+                  <option value="PURCHASEORDER">PURCHASE ORDER PROCESSING</option>
+                  <option value="PACKAGING">PACKAGING</option>
+                  <option value="DISPATCH">DISPATCH</option>
+                  <option value="ACCOUNTING">ACCOUNTING</option>
+                  <option value="SUPERADMIN">SUPERADMIN</option>
+                </select>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12"  >
+            <div class="form-group">
+
+              <label for="employee">Employee: </label>
+              <select class="form-control" *ngIf=!isUpdate name="employee" required [(ngModel)]="inc.employee"  (change)="onChangeHandler2($event)">
+                <option required *ngFor="let retailacct of empList; let i=index" [value]="retailacct.id">{{retailacct.name}}</option>
+              </select>
+              <select class="form-control" *ngIf=isUpdate name="employee" required [(ngModel)]="inc.employee"  (change)="onChangeHandler2($event)">
+                  <option required *ngFor="let retailacct of empList; let i=index" [value]="retailacct.id">{{retailacct.name}}</option>
+                </select>
+            </div>
+          </div>
+
+          <!-- <div class="col-md-6 col-sm-6 col-xs-12"  *ngIf="refer.refbytype ==='CUSTOMER'">
+            <div class="form-group">
+              <label for="retailer">Customer: </label>
+
+              <select class="form-control" *ngIf=!isUpdate name="retailer" required [(ngModel)]="refer.retailer">
+                <option required *ngFor="let retailacct of empList; let i=index" [value]="retailacct.id">{{retailacct.name}}</option>
+              </select>
+              <select class="form-control" *ngIf=isUpdate name="retailer" required [(ngModel)]="refer.retailer">
+                  <option required *ngFor="let retailacct of empList; let i=index" [value]="retailacct.id">{{retailacct.name}}</option>
+                </select>
+            </div>
+          </div> -->
+
+
+
+          <!-- <div class="col-sm-6">
+            <div class="form-group">
+              <label for="referredbyname">Referred By Name:
+
+              </label>
+              <input type="text" *ngIf=!isUpdate class="form-control" required name="referredbyname" [(ngModel)]="refer.referredbyname">
+              <input type="text" *ngIf=isUpdate   class="form-control" required name="referredbyname" [(ngModel)]="refer.referredbyname">
+            </div>
+          </div> -->
+          <!-- <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="refcontact">Reference Contact:</label>
+              <input type="number" *ngIf="!isUpdate" required class="form-control" pattern="[0-9]{10}" id="refcontact" name="refcontact" [(ngModel)]="refer.refcontact" />
+              <input type="number" *ngIf="isUpdate" required class="form-control" pattern="[0-9]{10}" id="refcontact" name="refcontact" [(ngModel)]="refer.refcontact" />
+
+            </div>
+          </div>
+
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="refemail">Reference Mail:</label>
+              <input type="email" class="form-control"  *ngIf="!isUpdate"  maxlength="120" placeholder="Maximum 120 characters"  pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" id="refemail" name="refemail" required [(ngModel)]="refer.refemail" />
+              <input type="email" class="form-control" *ngIf="isUpdate" readonly maxlength="120" placeholder="Maximum 120 characters"  pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" id="refemail" name="refemail" required [(ngModel)]="refer.refemail" />
+            </div>
+          </div>
+
+
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+
+              <textarea type="text" maxlength="510" placeholder="Maximum 510 characters" mutiline class="form-control" id="description"
+                name="description" [(ngModel)]="refer.description" minlength="4">
+                </textarea>
+            </div>
+          </div> -->
+
+
+
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <button *ngIf="this.url == '/addincharge'" type="submit" [disabled]="!form1.valid" class="btn btn-default" (click)="submitData()">Submit</button>
+              <button *ngIf="this.url == '/updateincharge/' + this.id" type="submit" [disabled]="!form1.valid" class="btn btn-default" (click)="updateData()">Update</button>
+              <button type="button" class="btn btn-default" (click)="cancel()">Cancel</button>
+
+
+            </div>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+
+  <div [hidden]="!isManageState" class="col-md-12 col-sm-12 col-xs-12">
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        {{title}}
+        <a [routerLink]="['/addincharge']" title="Add Default Incharge" class="pull-right">
+          <span class="glyphicon glyphicon-plus-sign"></span>
+        </a>
+      </div>
+      <div class="panel-body">
+        <div class="table-responsive">
+          <!-- <table class="table table-condensed table-striped table-bordered" [mfData]="data | dataFilterPr : filterQuery" #mf="mfDataTable"
+            [mfRowsOnPage]="rowsOnPage" [(mfSortBy)]="Role" [(mfSortOrder)]="sortOrder">
+            <thead>
+
+
+              <tr>
+                <th>SN</th>
+                <th>Employee Name</th>
+                <th>Role</th>
+
+
+                <th>Action</th>
+              </tr>
+              <tr>
+                <th colspan="5">
+                  <div id="custom-search-input">
+                    <div class="input-group col-md-12">
+                      <input type="text" class="form-control" placeholder="Search" [(ngModel)]="filterQuery" />
+                      <span class="input-group-btn">
+                        <button class="btn btn-danger btn-sm" type="button">
+                          <span class=" glyphicon glyphicon-search"></span>
+                        </button>
+                      </span>
+                    </div>
+                  </div>
+                </th>
+              </tr>
+
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of mf.data; let i = index; let last = last;">
+                <td>{{i+1}}</td>
+                <th>{{data?.name}}</th>
+                <th>{{data?.role.role}}</th>
+
+
+                <td class="text-right">
+                  <a [routerLink]="['/updateincharge/',data.id]" data-toggle="tooltip" title="Edit category" >
+                    <button class="btn btn-default btn-sm">
+                      <span class="glyphicon glyphicon-edit"></span>
+                    </button>
+                  </a>
+                  <button *ngIf="userType == 'ADMIN'" class="btn btn-danger btn-sm" title="Delete Incharge" (click)="deleteRole(data.id)">
+                    <span class="glyphicon glyphicon-remove-circle"></span>
+                  </button>
+                  <button *ngIf="userType !== 'ADMIN'" disabled class="btn btn-danger btn-sm" title="Contact admin for functionality" (click)="deleteRole(data.role)">
+                    <span class="glyphicon glyphicon-remove-circle"></span>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="8">
+                  <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                </td>
+              </tr>
+            </tfoot>
+          </table> -->
+        </div>
+      </div>
+    </div>
+  </div>

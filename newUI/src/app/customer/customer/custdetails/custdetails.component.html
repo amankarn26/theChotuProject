@@ -1,0 +1,76 @@
+<div class="col-md-12 col-sm-12 col-xs-12">
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      {{title}}
+      <a [routerLink]="['/managecustomer']" title="Manage Customer" class="pull-right">
+        <span class="glyphicon glyphicon-th-list"></span>
+      </a>
+    </div>
+    <div class="panel-body">
+      <form #form1="ngForm">
+        <div class="col-md-12 col-sm-12 col-xs-12 img-thumbnail rounded">
+
+          <!-- Personal details: -->
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <h4 style="font-weight: bold;">Personal details:</h4>
+            <div class="col-sm-4">
+              <div class="form-group">
+                Name: {{custdetails?.name}}
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="form-group">
+                Date of Birth: {{custdetails?.dob | date: "dd-MM-yyyy"}}
+              </div>
+            </div>
+          </div>
+          
+          <!-- <div class="col-sm-4">
+            <div class="form-group">
+              <label for="name">Gender: {{custdetails?.gender}} </label>
+            </div>
+          </div> -->
+
+          <!-- Profile details: -->
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <h4 style="font-weight: bold;">Profile details:</h4>
+
+            <div class="col-sm-4">
+              <!-- <div class="form-group"> -->
+              User Name: {{custdetails?.login?.username}}
+              <!-- </div> -->
+            </div>
+
+            <div class="col-sm-4">
+              <div class="form-group">
+                Email: {{custdetails?.email}}
+              </div>
+            </div>
+
+            <div class="col-sm-4">
+              <div class="form-group">
+                Phone: {{custdetails?.phone}}
+              </div>
+            </div>
+          </div>
+
+          <!-- Address -->
+          <div class="col-md-12 col-sm-12 col-xs-12" *ngIf="custdetails">
+            <h4 style="font-weight: bold;">Address:</h4>
+            <div class="col-sm-4">
+
+              {{custdetails?.address.line1}}
+              <br *ngIf="custdetails.address.line2"> {{custdetails?.address.line2}}
+              <br> {{custdetails?.address.city}}, {{custdetails?.address.states}}
+              <br> {{custdetails?.address.country}}
+              <br> {{custdetails?.address.pincode}}
+              </div>
+          </div>
+
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>

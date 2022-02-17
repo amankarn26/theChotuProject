@@ -1,0 +1,556 @@
+<div class="sidebar" data-color="purple" data-image="assets/img/sidebar-6.jpg">
+    <!--
+data-image="assets/img/sidebar-5.jpg"
+        Tip 1: you can change the color of the sidebar using: data-color="blue | azure | green | orange | red | purple"
+        Tip 2: you can also add an image using data-image tag
+
+    -->
+    <div class="sidebar-wrapper">
+        <div class="logo">
+            <a class="simple-text" style="font-family:monospace; text-align: center;">
+                AAI
+            </a>
+        </div>
+
+        <div class="logo">
+            <img src="assets/img/logo.png" alt=""
+                style="width:120px; height:120px; margin-left: 50px;border-radius: 20px; border: 4px solid #804d00;">
+        </div>
+
+        <ul class="nav">
+            <!-- customer menu -->
+            <li class="active" *ngIf="userRole==='CUSTOMER' && userType==='CUSTOMER'">
+                <a [routerLink]="['/custhomepage']">
+                    <i class="pe-7s-graph"></i>
+                    <p>Home</p>
+                </a>
+            </li>
+
+            <li class="nav-item " *ngIf="userRole==='CUSTOMER' && userType==='CUSTOMER'">
+                <a class="nav-link" [routerLink]="['/all_products']">
+                    <span class="sidebar-mini"></span>
+                    <span class="sidebar-normal">View All Products</span>
+                </a>
+            </li>
+
+            <li class="nav-item "
+                *ngIf="(userRole==='CUSTOMER' && userType==='CUSTOMER') && this.route.url === '/custhomepage'">
+                <a class="nav-link" href="#pshops">
+                    <span class="sidebar-mini"></span>
+                    <span class="sidebar-normal">Shop By Branch</span>
+                </a>
+            </li>
+
+            <li class="nav-item "
+                *ngIf="(userRole==='CUSTOMER' && userType==='CUSTOMER') && this.route.url === '/custhomepage'">
+                <a class="nav-link" href="#pcategory">
+                    <span class="sidebar-mini"></span>
+                    <span class="sidebar-normal">Shop By Category</span>
+                </a>
+            </li>
+
+            <li class="nav-item "
+                *ngIf="(userRole==='CUSTOMER' && userType==='CUSTOMER') && this.route.url === '/custhomepage'">
+                <a class="nav-link" href="#product">
+                    <span class="sidebar-mini"></span>
+                    <span class="sidebar-normal">Shop By Popular Product</span>
+                </a>
+            </li>
+            <li class="nav-item" *ngIf="userType==='FIRM' && userRole==='SUPERADMIN' ">
+                <a class="nav-link" data-toggle="collapse" [routerLink]="['/custhomepage']">
+                    <i class="pe-7s-door-lock"></i>
+                    <p>
+                        Place Order
+                    </p>
+                </a>
+            </li>
+
+            <li class="nav-item" *ngIf="userRole==='SUPERADMIN'">
+                <a class="nav-link" data-toggle="collapse" href="#Customerm">
+                    <i class="pe-7s-door-lock"></i>
+                    <p>
+                        Customer
+                        <b class="caret"></b>
+                    </p>
+                </a>
+
+                <div class="collapse " id="Customerm">
+                    <ul class="nav">
+
+                        <li class="nav-item ">
+                            <a class="nav-link" [routerLink]="['/managecustomer']">
+                                <span class="sidebar-mini">C</span>
+                                <span class="sidebar-normal">Customer</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item ">
+                            <a class="nav-link" [routerLink]="['/customer_orders']">
+                                <span class="sidebar-mini">C</span>
+                                <span class="sidebar-normal">Customer Orders</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+
+            <li class="nav-item" *ngIf="userType==='FIRM' && userRole==='SUPERADMIN' ">
+                <a class="nav-link" data-toggle="collapse" href="#masterdata">
+                    <i class="pe-7s-door-lock"></i>
+                    <p>
+                        Master Data
+                        <b class="caret"></b>
+                    </p>
+                </a>
+
+                <div class="collapse " id="masterdata">
+                    <ul class="nav">
+<!-- 
+                        <li class="nav-item ">
+                            <a class="nav-link" [routerLink]="['/managerole']">
+                                <span class="sidebar-mini">R</span>
+                                <span class="sidebar-normal">Role</span>
+                            </a>
+                        </li> -->
+
+                        <!-- <li class="nav-item ">
+                            <a class="nav-link" [routerLink]="['/managecategory']">
+                                <span class="sidebar-mini">C</span>
+                                <span class="sidebar-normal">Category</span>
+                            </a>
+                        </li> -->
+
+                        <li class="nav-item ">
+                            <a class="nav-link" [routerLink]="['/manageprodtype']">
+                                <span class="sidebar-mini">M</span>
+                                <span class="sidebar-normal">Menu</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item ">
+                            <a class="nav-link" [routerLink]="['/manageproduct']">
+                                <span class="sidebar-mini">D</span>
+                                <span class="sidebar-normal">Dish / Drink</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+
+            <li class="nav-item" *ngIf="userType==='FIRM' && userRole==='SUPERADMIN' ">
+                <a class="nav-link" data-toggle="collapse" href="#DELIVERY_POOL">
+                    <i class="pe-7s-door-lock"></i>
+                    <p>
+                        Delivery Pool
+                        <b class="caret"></b>
+                    </p>
+                </a>
+
+                <div class="collapse " id="DELIVERY_POOL">
+                    <ul class="nav">
+
+                        <li class="nav-item ">
+                            <a class="nav-link" [routerLink]="['/managedeliverypool']">
+                                <span class="sidebar-mini">DP</span>
+                                <span class="sidebar-normal"> Delivery Pool</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item ">
+                            <a class="nav-link" [routerLink]="['/manage_deliverypoolarea']">
+                                <span class="sidebar-mini">DA</span>
+                                <span class="sidebar-normal">Delivery Pool Area</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item ">
+                            <a class="nav-link" [routerLink]="['/manage_deliverycharge']">
+                                <span class="sidebar-mini">DC</span>
+                                <span class="sidebar-normal">Delivery Charges</span>
+                            </a>
+                        </li>
+
+                    </ul>
+                </div>
+            </li>
+
+            <li class="nav-item" *ngIf="userRole==='SUPERADMIN'">
+                <a class="nav-link" data-toggle="collapse" href="#Settlement">
+                    <i class="pe-7s-door-lock"></i>
+                    <p>
+                        Settlement
+                        <b class="caret"></b>
+                    </p>
+                </a>
+                <div class="collapse " id="Settlement">
+                    <ul class="nav">
+
+                        <li class="nav-item ">
+                            <a class="nav-link" [routerLink]="['/delivery_settlement']">
+                                <span class="sidebar-mini">D</span>
+                                <span class="sidebar-normal">Delivery Settlement</span>
+                            </a>
+                        </li>
+
+                        <!-- <li class="nav-item ">
+                            <a class="nav-link" [routerLink]="['/invoice_management']">
+                                <span class="sidebar-mini">I</span>
+                                <span class="sidebar-normal">Invoice Management</span>
+                            </a>
+                        </li> -->
+                    </ul>
+                </div>
+            </li>
+
+            <!-- Branch menu -->
+            <li class="nav-item" *ngIf="userType==='BRANCH' && userRole==='BRANCH' ">
+                <a class="nav-link" data-toggle="collapse" href="#masterdata">
+                    <i class="pe-7s-door-lock"></i>
+                    <p>
+                        Master Data
+                        <b class="caret"></b>
+                    </p>
+                </a>
+                <div class="collapse " id="masterdata">
+                    <ul class="nav">
+                        <li class="nav-item ">
+                            <a class="nav-link" [routerLink]="['/manageproduct']">
+                                <span class="sidebar-mini">P</span>
+                                <span class="sidebar-normal">Product</span>
+                            </a>
+                        </li>
+                        <li class="nav-item ">
+                            <a class="nav-link" [routerLink]="['/manageprodtype']">
+                                <span class="sidebar-mini">PT</span>
+                                <span class="sidebar-normal">Product Type</span>
+                            </a>
+                        </li>
+
+                    </ul>
+                </div>
+            </li>
+
+            <li class="nav-item" *ngIf="userType==='BRANCH' && userRole==='BRANCH' ">
+                <a class="nav-link" data-toggle="collapse" href="#Orders">
+                    <i class="pe-7s-door-lock"></i>
+                    <p>
+                        Orders
+                        <b class="caret"></b>
+                    </p>
+                </a>
+
+                <div class="collapse " id="Orders">
+                    <ul class="nav">
+
+                        <li class="nav-item ">
+                            <a class="nav-link" [routerLink]="['/active_orders']">
+                                <span class="sidebar-mini">AO</span>
+                                <span class="sidebar-normal">Active Orders</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item ">
+                            <a class="nav-link" [routerLink]="['/closed_orders']">
+                                <span class="sidebar-mini">CO</span>
+                                <span class="sidebar-normal">Closed Orders</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item ">
+                            <a class="nav-link" [routerLink]="['/cancelled_orders']">
+                                <span class="sidebar-mini">CO</span>
+                                <span class="sidebar-normal">Cancelled Orders</span>
+                            </a>
+                        </li>
+
+                    </ul>
+                </div>
+            </li>
+
+            <li class="nav-item" *ngIf="userType==='BRANCH'">
+                <a class="nav-link" data-toggle="collapse" [routerLink]="['/myprofile']">
+                    <i class="pe-7s-door-lock"></i>
+                    <p>
+                        My Profile
+                    </p>
+                </a>
+            </li>
+
+            <li class="nav-item" *ngIf="userType==='BRANCH' && userRole==='BRANCH' ">
+                <a class="nav-link" data-toggle="collapse" [routerLink]="['/vendorhomepage']">
+                    <i class="pe-7s-door-lock"></i>
+                    <p>Homepage</p>
+                </a>
+            </li>
+
+            <!-- added by manoj -->
+            <li class="nav-item" *ngIf="userType==='BRANCH' && userRole==='BRANCH' ">
+                <a class="nav-link" data-toggle="collapse" [routerLink]="['/custhomepage']">
+                    <i class="pe-7s-door-lock"></i>
+                    <p>Place Order</p>
+                </a>
+            </li>
+
+            <li class="nav-item" *ngIf="userType==='BRANCH' && userRole==='BRANCH' ">
+                <a class="nav-link" data-toggle="collapse" [routerLink]="['/managecustomer']">
+                    <i class="pe-7s-door-lock"></i>
+                    <p>Customer</p>
+                </a>
+            </li>
+
+
+            <!-- Firm menu -->
+            <li class="nav-item" *ngIf="userType==='FIRM' && userRole==='FIRM' ">
+                <a class="nav-link" data-toggle="collapse" href="#masterdata">
+                    <i class="pe-7s-door-lock"></i>
+                    <p>Master Data
+                        <b class="caret"></b>
+                    </p>
+                </a>
+
+                <div class="collapse " id="masterdata">
+                    <ul class="nav">
+                        <li class="nav-item ">
+                            <a class="nav-link" [routerLink]="['/manageproduct']">
+                                <span class="sidebar-mini">P</span>
+                                <span class="sidebar-normal">Product</span>
+                            </a>
+                        </li>
+                        <li class="nav-item ">
+                            <a class="nav-link" [routerLink]="['/manageprodtype']">
+                                <span class="sidebar-mini">PT</span>
+                                <span class="sidebar-normal">Product Type</span>
+                            </a>
+                        </li>
+
+                    </ul>
+                </div>
+            </li>
+
+            <li class="nav-item" *ngIf="userRole==='SUPERADMIN' || userRole==='FIRM' ">
+                <a class="nav-link" data-toggle="collapse" href="#Orders">
+                    <i class="pe-7s-door-lock"></i>
+                    <p>Orders
+                        <b class="caret"></b>
+                    </p>
+                </a>
+
+                <div class="collapse " id="Orders">
+                    <ul class="nav">
+
+                        <li class="nav-item ">
+                            <a class="nav-link" [routerLink]="['/active_orders']">
+                                <span class="sidebar-mini">AO</span>
+                                <span class="sidebar-normal">Active Orders</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item ">
+                            <a class="nav-link" [routerLink]="['/all_delivered_orders']">
+                                <span class="sidebar-mini">D</span>
+                                <span class="sidebar-normal">Delivered Orders</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item ">
+                            <a class="nav-link" [routerLink]="['/closed_orders']">
+                                <span class="sidebar-mini">CO</span>
+                                <span class="sidebar-normal">Closed Orders</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+
+            <li class="nav-item" *ngIf="userType==='FIRM' && userRole==='FIRM' ">
+                <a class="nav-link" data-toggle="collapse" href="#Accounts">
+                    <i class="pe-7s-door-lock"></i>
+                    <p>Accounts
+                        <b class="caret"></b>
+                    </p>
+                </a>
+
+                <div class="collapse " id="Accounts">
+                    <ul class="nav">
+
+                        <li class="nav-item ">
+                            <a class="nav-link" [routerLink]="['/manage_amountpayable']">
+                                <span class="sidebar-mini">AP</span>
+                                <span class="sidebar-normal">Amount Payable</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item ">
+                            <a class="nav-link" [routerLink]="['/manage_amountreceived']">
+                                <span class="sidebar-mini">AR</span>
+                                <span class="sidebar-normal">Amount Recieved</span>
+                            </a>
+                        </li>
+
+                    </ul>
+                </div>
+            </li>
+
+            
+
+            <li class="nav-item" *ngIf="userType==='FIRM' && userRole==='FIRM' ">
+                <a class="nav-link" data-toggle="collapse" [routerLink]="['/vendorhomepage']">
+                    <i class="pe-7s-door-lock"></i>
+                    <p>
+                        Homepage
+                    </p>
+                </a>
+            </li>
+
+            <!-- added by manoj -->
+            <li class="nav-item" *ngIf="userType==='FIRM' && userRole==='FIRM' ">
+                <a class="nav-link" data-toggle="collapse" [routerLink]="['/custhomepage']">
+                    <i class="pe-7s-door-lock"></i>
+                    <p>
+                        Place Order
+                    </p>
+                </a>
+            </li>
+
+            <li class="nav-item" *ngIf="userType==='FIRM' && userRole==='FIRM' ">
+                <a class="nav-link" data-toggle="collapse" [routerLink]="['/managecustomer']">
+                    <i class="pe-7s-door-lock"></i>
+                    <p>
+                        Customer
+                    </p>
+                </a>
+            </li>
+
+            <li class="nav-item" *ngIf="userType==='FIRM' && userRole==='SUPERADMIN'">
+                <a class="nav-link" data-toggle="collapse" [routerLink]="['/manageslider']">
+                    <i class="pe-7s-door-lock"></i>
+                    <p>
+                        Restaurant Images Slider
+                    </p>
+                </a>
+
+            </li>l
+
+            <li class="nav-item" *ngIf="userType==='FIRM' && userRole==='SUPERADMIN'">
+                <a class="nav-link" data-toggle="collapse" [routerLink]="['/manageevent']">
+                    <i class="pe-7s-door-lock"></i>
+                    <p>
+                        Event Management
+
+                    </p>
+                </a>
+
+            </li>
+
+            <li class="nav-item" *ngIf="userType==='FIRM' && userRole==='SUPERADMIN'">
+                <a class="nav-link" data-toggle="collapse" [routerLink]="['/managediscount']">
+                    <i class="pe-7s-door-lock"></i>
+                    <p>
+                        Discount
+
+                    </p>
+                </a>
+
+            </li>
+
+            <li class="nav-item" *ngIf="userType==='FIRM'">
+                <a class="nav-link" data-toggle="collapse" [routerLink]="['/myprofile']">
+                    <i class="pe-7s-door-lock"></i>
+                    <p>My Profile</p>
+                </a>
+            </li>
+            <!-- delivery person -->
+            <li class="nav-item" *ngIf="userType==='DELIVERY_PERSON' && userRole==='DELIVERY_PERSON' ">
+                <a class="nav-link" data-toggle="collapse" [routerLink]="['/delivery_dashboard']">
+                    <i class="pe-7s-door-lock"></i>
+                    <p>
+                        Homepage
+
+                    </p>
+                </a>
+
+            </li>
+
+            <li class="nav-item" *ngIf="userType==='DELIVERY_PERSON' && userRole==='DELIVERY_PERSON' ">
+                <a class="nav-link" data-toggle="collapse" href="#Orders">
+                    <i class="pe-7s-door-lock"></i>
+                    <p>
+                        Orders
+                        <b class="caret"></b>
+                    </p>
+                </a>
+                <div class="collapse " id="Orders">
+                    <ul class="nav">
+
+
+                        <li class="nav-item ">
+                            <a class="nav-link" [routerLink]="['/placed_orders']">
+                                <span class="sidebar-mini">PO</span>
+                                <span class="sidebar-normal">Placed Orders</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item ">
+                            <a class="nav-link" [routerLink]="['/packed_orders']">
+                                <span class="sidebar-mini">PO</span>
+                                <span class="sidebar-normal">Packed Orders</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item ">
+                            <a class="nav-link" [routerLink]="['/pickup_orders']">
+                                <span class="sidebar-mini">DO</span>
+                                <span class="sidebar-normal">Picked Up Orders</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item ">
+                            <a class="nav-link" [routerLink]="['/delivered_orders']">
+                                <span class="sidebar-mini">DO</span>
+                                <span class="sidebar-normal">Delivered Orders</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+
+            <li class="nav-item" *ngIf="userType==='DELIVERY_PERSON' && userRole==='DELIVERY_PERSON' ">
+                <a class="nav-link" data-toggle="collapse" href="#Accounts">
+                    <i class="pe-7s-door-lock"></i>
+                    <p>
+                        Accounts
+                        <b class="caret"></b>
+                    </p>
+                </a>
+                <div class="collapse " id="Accounts">
+                    <ul class="nav">
+                        <li class="nav-item ">
+                            <a class="nav-link" [routerLink]="['/manage_amountpayable_delivery']">
+                                <span class="sidebar-mini">AP</span>
+                                <span class="sidebar-normal">Amount Payable</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item ">
+                            <a class="nav-link" [routerLink]="['/manage_amountreceived_delivery']">
+                                <span class="sidebar-mini">AR</span>
+                                <span class="sidebar-normal">Amount Recieved</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+
+            <li class="nav-item" *ngIf="userType==='DELIVERY_PERSON'">
+                <a class="nav-link" data-toggle="collapse" [routerLink]="['/myprofile']">
+                    <i class="pe-7s-door-lock"></i>
+                    <p>
+                        My Profile
+
+                    </p>
+                </a>
+
+            </li>
+        </ul>
+    </div>
+</div>

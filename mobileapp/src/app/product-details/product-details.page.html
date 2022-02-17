@@ -1,0 +1,91 @@
+<ion-header>
+  <ion-toolbar
+    style="--background: rgba(134,75,246,1);">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/tab1" (click)="cancel()" id="back" style>
+      </ion-back-button>
+    </ion-buttons>
+    <ion-title class="pageheading"> <strong>Details</strong></ion-title>
+    <ion-buttons slot="end" (click)="openCart()" class="notification-icon-button"
+      style=" font-size: 31px;color:#f8e6d4;">
+      <ion-badge class="notification-badge" *ngIf="cart.length">{{cart?.length}}</ion-badge>
+      <!-- <ion-icon slot="icon-only" name="cart" ></ion-icon> -->
+      <ion-icon name="cart-outline"></ion-icon>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="mainBox">
+
+  <!-- New Design 29 Apr -->
+  <div class="saprator"></div>
+
+  <div class="frame1" #frame1>
+    <div class="productName">{{product.name}}</div>
+    <div class="productMenuTye">{{product.menutype}}</div>
+
+    <div class="imgBox">
+      <!-- Remove Pager If you are getting any kind of error will running the app -->
+      <ion-slides [options]="slideOptsOne" pager="md">
+        <ion-slide *ngFor="let item of product.photos">
+          <div class="makeSlideBlur"><img src="{{docServer}}/{{item?.docpath}}" width="100%" height="135px"
+              alt="Image Static"></div>
+        </ion-slide>
+      </ion-slides>
+    </div>
+  </div>
+
+  <div class="frame2" #frame2>
+    <div class="productPrice" *ngIf="product.hasvariant === 'YES' && product.variants.length > 0">{{product.price}} &#8377;</div>
+    <div class="productPrice" *ngIf="product.hasvariant === 'YES' && product.variants.length == 0">Comming Soon</div>
+    <div class="productPrice" *ngIf="product.hasvariant != 'YES' " >{{product.price}} &#8377;</div>
+    <div class="showAllVarient" *ngIf="product.variants.length > 0">
+      <ion-row>
+        <ion-col size="4" *ngFor="let item of product.variants; let i = index">
+          <div class="productVarientActive" *ngIf="selectedVarient.id === item.id">{{item.variant}}</div>
+          <div class="productVarient" *ngIf="selectedVarient.id != item.id" (click)="changeVarient(i)" >{{item.variant}}</div>
+        </ion-col>
+      </ion-row>
+    </div>
+    
+    <div class="addToCartButton" (click)="pushToCart()" >Add to cart</div>
+
+    <div class="saprator"></div>
+
+    <div class="headingAbout" *ngIf="product.description">About Dish</div>
+    <div class="productAbout" *ngIf="product.description">{{product.description}}</div>
+
+    <div class="clearfix"></div>
+
+    <div *ngIf="reviewLoaded">
+      <div class="headingRating">Rating</div>
+
+      <div *ngIf="reviewlist.length > 0">
+        <div class="productRating" *ngFor="let item of reviewlist">
+          <ion-row >
+            <ion-col size="9">
+              <span>
+                <!-- <ion-icon name="person-circle"></ion-icon>  -->
+                {{item.addedbyname}}
+              </span>
+            </ion-col>
+            <ion-col size="3">
+              <span class="ratingBox">
+                {{item.rating}}
+                <ion-icon name="star"></ion-icon>
+              </span>
+            </ion-col>
+          </ion-row>
+          <div class="productRatingDis"> {{item.review}}</div>
+        </div>
+      </div>
+
+      <div class="productRating" *ngIf="reviewlist.length == 0 || !reviewlist">
+        <div class="head">No customer reviews yet</div>
+        <div class="info">Book this order, Share your thoughts with other customers</div>
+      </div>
+
+    </div>
+
+
+  </div>
+</ion-content>

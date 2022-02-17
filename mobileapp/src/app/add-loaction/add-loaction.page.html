@@ -1,0 +1,51 @@
+<ion-header>
+  <ion-toolbar style="--background: rgba(134,75,246,1); color: #FFFFFF;">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/tab1" (click)="cancel()">
+
+      </ion-back-button>
+    </ion-buttons>
+    <ion-title>Add New Location</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="!ismapShow">
+  <div class="mainBox">
+    <div class="inputBox">
+      <input type="text" class="input" [(ngModel)]="address.line1" name="line1" placeholder="Line 1">
+    </div>
+    <div class="inputBox">
+      <input type="text" class="input" [(ngModel)]="address.line2" name="line2" placeholder="Line 2">
+    </div>
+    <div class="inputBox">
+      <input type="number" class="input" [(ngModel)]="address.pincode" name="pincode" placeholder="Pincode" (change)="getState($event)" >
+    </div>
+    <div class="inputBox">
+      <input type="text" class="input" [(ngModel)]="address.city" name="city" placeholder="City">
+    </div>
+    <div class="inputBox">
+      <input type="text" class="input" [(ngModel)]="address.states" name="states" placeholder="State">
+    </div>
+  </div>
+  <div class="buttonBox">
+    <div class="buttons" *ngIf="!isMapSet">
+      <div class="button" (click)="addLocation()">Choose Location</div>
+    </div>
+    <div class="buttons" *ngIf="isMapSet">
+      <div class="button" (click)="submitData()">Add Address</div>
+    </div>
+    <div class="buttons">
+      <div class="button hide" (click)="close()">Close</div>
+    </div>
+  </div>
+  
+</ion-content>
+
+<ion-content class="mapBox" [ngClass]="{'visible': ismapShow}">
+  <div id="mapcontainer">
+    <div id="map"></div>
+  </div>
+  <div class="buttons">
+    <div class="proceed" (click)="stopMap()">Select this location</div>
+  </div>
+</ion-content>

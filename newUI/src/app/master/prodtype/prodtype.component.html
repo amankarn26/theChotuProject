@@ -1,0 +1,326 @@
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Modal Header</h4>
+      </div>
+      <div class="modal-body">
+        <p>Some text in the modal.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- <div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="header">
+
+                        <h4 class="title"> {{title}}</h4>
+                        <a [routerLink]="['/managecategory']" title="Manage Category" class="pull-right">
+                            <span class="glyphicon glyphicon-th-list"></span>
+                        </a>
+                    </div>
+                    <div class="content">
+                        <form #form1="ngForm">
+                            <div class="row">
+
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="name"> Name:
+                                            <span class="m glyphicon glyphicon-asterisk"></span>
+                                        </label>
+                                        <input type="text" *ngIf=!isUpdate class="form-control" required name="name"
+                                            [(ngModel)]="category.name">
+                                        <input type="text" *ngIf=isUpdate readonly class="form-control" required
+                                            name="name" [(ngModel)]="category.name">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="description"> Description:</label>
+                                        <input type="text" class="form-control" *ngIf=!isUpdate name="description"
+                                            [(ngModel)]="category.description">
+                                        <input type="text" class="form-control" *ngIf=isUpdate name="description"
+                                            [(ngModel)]="category.description">
+
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <button *ngIf="this.url == '/addcategory'" type="submit"
+                                            [disabled]="!form1.valid" class="btn btn-default"
+                                            (click)="submitData()">Submit</button>
+                                        <button *ngIf="this.url == '/editcategory/' + this.id" type="submit"
+                                            [disabled]="!form1.valid" class="btn btn-default"
+                                            (click)="updateData()">Update</button>
+                                        <button type="button" class="btn btn-default" (click)="cancel()">Cancel</button>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div> -->
+
+<!-- Add menu type -->
+<div [hidden]="isManageState" class="col-md-12 col-sm-12 col-xs-12">
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      {{title}}
+      <a [routerLink]="['/manageprodtype']" title="Manage Menus" class="pull-right">
+        <span class="glyphicon glyphicon-th-list"></span>
+      </a>
+    </div>
+    <div class="panel-body">
+      <form #form1="ngForm">
+
+
+        <div class="col-sm-6">
+          <div class="form-group">
+            <label for="category"> Menu Category: </label>
+
+            <input type="text" *ngIf=isUpdate class="form-control" required name="category"
+              [(ngModel)]="category.category" readonly>
+
+            <select *ngIf="!isUpdate" class="form-control" name="category" [(ngModel)]="category.category"
+              required>
+              <option required *ngFor="let data of categorydata; let i=index" [value]="data.name">
+                {{data.name}}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="col-sm-6">
+          <div class="form-group">
+            <label for="name"> Menu: </label>
+            <input type="text" maxlength="32" *ngIf=!isUpdate class="form-control" required name="name"
+              [(ngModel)]="category.name">
+            <input type="text" maxlength="32" *ngIf=isUpdate class="form-control" required name="name"
+              [(ngModel)]="category.name">
+          </div>
+        </div>
+
+        <div class="col-sm-6 ">
+          <div class="form-group">
+            <label for="priority">Priority : </label>
+            <input *ngIf="!isUpdate" type="number" mutiline class="form-control" id="priority" name="priority"
+              [(ngModel)]="category.priority" required />
+            <input *ngIf="isUpdate" type="number" mutiline class="form-control" id="priority" name="priority"
+              [(ngModel)]="category.priority" />
+          </div>
+        </div>
+ 
+        <div class="col-sm-12">
+          <div class="form-group">
+            <label for="description"> Description:</label>
+            <input type="text" class="form-control" *ngIf=!isUpdate name="description"
+              [(ngModel)]="category.description">
+            <input type="text" class="form-control" *ngIf=isUpdate name="description"
+              [(ngModel)]="category.description">
+
+          </div>
+        </div>
+
+        <div class="col-md-12 col-sm-12 col-xs-12 ">
+          <hr>
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <h4>Photo:</h4>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label>Photo (Maximum size 500Kb):</label>
+              <input required type="file" (change)="fileEvent($event)" *ngIf=!isUpdate name="document"
+                [(ngModel)]="document" />
+              <input type="file" (change)="fileEvent($event)" *ngIf=isUpdate name="document" [(ngModel)]="document" />
+
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <img [src]="docurll" style="height:200px; width:200px;" class="thumbnail">
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="form-group">
+            <button *ngIf="this.url == '/addprodtype'" type="submit" [disabled]="!form1.valid" class="btn btn-default"
+              (click)="submitData()" style="margin-right: 10px;">Submit</button>
+
+            <button *ngIf="this.url == '/editprodtype/' + this.id" type="submit" [disabled]="!form1.valid"
+              class="btn btn-default" (click)="updateData()" style="margin-right: 10px;">Update</button>
+
+            <button type="button" class="btn btn-default" (click)="cancel()">Cancel</button>
+
+          </div>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+
+<!-- Manage menu type -->
+<div [hidden]="!isManageState" class="col-md-12 col-sm-12 col-xs-12">
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      {{title}}
+      <a [routerLink]="['/addprodtype']" title="Add Menu" class="pull-right"
+        *ngIf="this.userRole==='SUPERADMIN' || this.userType==='BRANCH'">
+        <span class="glyphicon glyphicon-plus-sign"></span>
+      </a>
+    </div>
+    <div class="panel-body">
+      <div class="table-responsive">
+        <table class="table table-condensed table-striped table-bordered"
+          [mfData]="data | dataFilterPr  : filterQuery:'name'" #mf="mfDataTable" [mfRowsOnPage]="rowsOnPage">
+
+          <!-- <table class="table table-condensed table-striped table-bordered" [mfData]="data | dataFilterPr : filterQuery:'firm'" #mf="mfDataTable"
+            [mfRowsOnPage]="rowsOnPage"  > -->
+
+          <!-- <table class="table table-condensed table-striped table-bordered" > -->
+          <thead>
+            <tr *ngIf="this.userRole==='SUPERADMIN'">
+              <th colspan="10">
+                <div id="custom-search-input">
+
+                  <div class="col-sm-12">
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                      <div class="form-group">
+                        <label for="gender"> Search by
+                        </label>&nbsp;
+
+                        <input type="radio" value="Customdate" [(ngModel)]="categoryselect" name="categoryselect">
+                        Dish Category &nbsp;
+
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-sm-12" *ngIf="categoryselect">
+                    <div class="col-sm-3">
+                      <div class="form-group">
+                        <label for="prodtype"> Category:
+                        </label>
+                        <select *ngIf="!isUpdate" class="form-control" name="category.category"
+                          [(ngModel)]="category.category" required (change)="getprodtypebycat()">
+                          <option required *ngFor="let data of categorydata; let i=index" [value]="data.name">
+                            {{data.name}}</option>
+                        </select>
+
+                      </div>
+                    </div>
+
+                    <div class="col-sm-3">
+                      <div class="form-group">
+                        <label for="state">Reset :
+                        </label>
+                        <span class="input-group-btn">
+                          <button class="btn btn-info btn-sm" title="Reset" (click)="refreshincall()"
+                            style="font-size: 9px;">
+                            <span class="glyphicon glyphicon-refresh"></span>
+                          </button>
+                        </span>
+                      </div>
+                    </div>
+
+                  </div>
+
+                </div>
+              </th>
+            </tr>
+            <tr>
+              <th>SN</th>
+              <th>Name</th>
+              <th>Category</th>
+              <th>Priority</th>
+              <th>Description</th>
+              <!-- <th>For Sale</th> -->
+              <th *ngIf="this.userRole==='SUPERADMIN'">Action</th>
+            </tr>
+            <tr>
+              <th colspan="8">
+                <div id="custom-search-input">
+                  <div class="input-group col-md-12">
+                    <input type="text" class="form-control" placeholder="Search by Menu" [(ngModel)]="filterQuery" />
+                    <span class="input-group-btn">
+                      <button class="btn btn-danger btn-sm" type="button">
+                        <span class=" glyphicon glyphicon-search"></span>
+                      </button>
+                    </span>
+                  </div>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of mf.data; let i = index; let last = last;">
+              <td>{{i+1}}</td>
+              <td>
+                <div class="img-thumbnail">
+                  <img *ngIf="data?.photo?.docpath" src="{{docServer}}/{{data?.photo?.docpath}}" class="img-circle"
+                    alt="" style="width:100px; height:100px;">
+                  <img *ngIf="!data?.photo?.docpath"
+                    src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg" class="img-circle"
+                    alt="" style="width:100px; height:100px;">
+
+                  <div class="caption text-capitalize text-center"> {{data?.name}}</div>
+                </div>
+              </td>
+              <td>{{data?.category}}</td>
+              <td>{{data?.priority}}</td>
+
+              <td>{{data?.description}}</td>
+              <!-- <td>{{data?.forsale}}</td> -->
+
+              <td *ngIf="this.userRole==='SUPERADMIN'" class="text-right">
+                <a [routerLink]="['/editprodtype/',data.id]" data-toggle="tooltip" *ngIf="this.userRole==='SUPERADMIN'"
+                  title="Update Menutype">
+                  <button class="btn btn-default btn-sm">
+                    <span class="glyphicon glyphicon-edit"></span>
+                  </button>
+                </a>
+                <button class="btn btn-danger btn-sm" title="Delete Menutype"
+                  *ngIf="this.userRole==='SUPERADMIN' && this.userType==='FIRM'" (click)="deleteRole(data.id)">
+                  <span class="glyphicon glyphicon-remove-circle"></span>
+                </button>
+                <!-- <button *ngIf="userType !== 'ADMIN'" disabled class="btn btn-danger btn-sm" title="Contact admin for functionality" (click)="deleteRole(data.role)">
+                    <span class="glyphicon glyphicon-remove-circle"></span>
+                  </button> -->
+              </td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="8">
+                <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

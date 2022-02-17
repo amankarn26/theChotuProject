@@ -1,0 +1,256 @@
+
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Modal Header</h4>
+            </div>
+            <div class="modal-body">
+                <p>Some text in the modal.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- add event -->
+<div [hidden]="isManageState" class="col-md-12 col-sm-12 col-xs-12">
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            {{title}}
+            <a [routerLink]="['/manageevent']" title="Manage Hotdeals" class="pull-right">
+                <span class="glyphicon glyphicon-th-list"></span>
+            </a>
+        </div>
+        
+        <div class="panel-body">
+            <form #form1="ngForm">
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="name"> Name:
+                            <!-- <span class="m glyphicon glyphicon-asterisk"></span> -->
+                        </label>
+                        <input type="text" *ngIf=!isUpdate class="form-control" required name="name"
+                            [(ngModel)]="event.name">
+                        <input type="text" *ngIf=isUpdate class="form-control" readonly required name="name"
+                            [(ngModel)]="event.name">
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="description"> Description:
+                            <!-- <span class="m glyphicon glyphicon-asterisk"></span> -->
+                        </label>
+                        <input type="text" *ngIf=!isUpdate class="form-control" required name="description"
+                            [(ngModel)]="event.description">
+                        <input type="text" *ngIf=isUpdate class="form-control" required name="description"
+                            [(ngModel)]="event.description">
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="location"> Location:
+                            <!-- <span class="m glyphicon glyphicon-asterisk"></span> -->
+                        </label>
+                        <input type="text" *ngIf=!isUpdate class="form-control" required name="location"
+                            [(ngModel)]="event.location">
+                        <input type="text" *ngIf=isUpdate class="form-control" required name="location"
+                            [(ngModel)]="event.location">
+                    </div>
+                </div>
+
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="fromdate"> Starting Date:
+                            <!-- <span class="m glyphicon glyphicon-asterisk"></span> -->
+                        </label>
+                        <input type="date" *ngIf=!isUpdate class="form-control" required name="fromdate"
+                            [(ngModel)]="event.fromdate">
+                        <input type="date" *ngIf=isUpdate class="form-control" required name="fromdate"
+                            [valueAsDate]="setFromDate" (change)="updateFromDate($event)">
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="fromtime"> Starting Time:
+                            <!-- <span class="m glyphicon glyphicon-asterisk"></span> -->
+                        </label>
+                        <input type="time" class="form-control" required name="fromtime"
+                            [(ngModel)]="extraInfo.fromtime">
+                    </div>
+                </div>
+
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="todate"> Upto Date:
+                            <!-- <span class="m glyphicon glyphicon-asterisk"></span> -->
+                        </label>
+                        <input type="date" *ngIf=!isUpdate class="form-control" required name="todate"
+                            [(ngModel)]="event.todate">
+                        <input type="date" *ngIf=isUpdate class="form-control" required name="todate"
+                            [valueAsDate]="setToDate" (change)="updateToDate($event)">
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="totime"> Upto Time:
+                            <!-- <span class="m glyphicon glyphicon-asterisk"></span> -->
+                        </label>
+                        <input type="time" class="form-control" required name="totime"
+                            [(ngModel)]="extraInfo.totime">
+                    </div>
+                </div>
+
+                <div class="col-md-12 col-sm-12 col-xs-12 ">
+                    <hr>
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <h4 for="photo">Photo:</h4>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <div class="form-group">
+                            <label>Photo (Maximum size 500Kb):</label>
+                            <input required type="file" (change)="fileEvent($event)" *ngIf=!isUpdate name="document"
+                                [(ngModel)]="document" />
+                            <input type="file" (change)="fileEvent($event)" *ngIf=isUpdate name="document"
+                                [(ngModel)]="document" />
+
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <img [src]="docurll" style="height:200px; width:200px;" class="thumbnail">
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <button *ngIf="this.url == '/addevent'"  type="submit" [disabled]="!form1.valid"
+                            class="btn btn-default" (click)="submitData()" style="margin-right: 10px;">Submit</button>
+
+                        <button *ngIf="this.url == '/editevent/' + this.id"  type="submit" [disabled]="!form1.valid"
+                            class="btn btn-default" (click)="updateData()" style="margin-right: 10px;">Update</button>
+
+                        <button type="button" class="btn btn-default" (click)="cancel()">Cancel</button>
+
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<!-- manage event -->
+<div [hidden]="!isManageState" class="col-md-12 col-sm-12 col-xs-12">
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            {{title}}
+            <!-- Button for Add Category -->
+            <a [routerLink]="['/addevent']" title="Add Event" class="pull-right" *ngIf="this.userRole == 'SUPERADMIN' && this.userType == 'FIRM'">
+                  <span class="glyphicon glyphicon-plus-sign"></span>
+              </a>
+        </div>
+
+        <div class="panel-body">
+            <div class="table-responsive">
+                <table class="table table-condensed table-striped table-bordered"
+                    [mfData]="data | dataFilterPr : filterQuery: 'manageevent'" #mf="mfDataTable"
+                    [mfRowsOnPage]="rowsOnPage" [(mfSortBy)]="Role" [(mfSortOrder)]="sortOrder">
+                    <thead>
+                        <tr>
+                            <th>SN</th>
+                            <th>
+                                <mfDefaultSorter by="role">Name</mfDefaultSorter>
+                            </th>
+                            <th>
+                                <mfDefaultSorter by="role">Location</mfDefaultSorter>
+                            </th>
+                            <th>
+                                <mfDefaultSorter by="role">From Date</mfDefaultSorter>
+                            </th>
+                            <th>
+                                <mfDefaultSorter by="role">To Date</mfDefaultSorter>
+                            </th>
+                            <th>
+                                <mfDefaultSorter by="role">Description</mfDefaultSorter>
+                            </th>
+                            <!-- <th>Description</th> -->
+                            <th *ngIf="this.userRole==='SUPERADMIN' && this.userType==='FIRM'"
+                                (click)="deleteRole(data.id)">Action
+                            </th>
+                        </tr>
+                        <tr>
+                            <th colspan="8">
+                                <div id="custom-search-input">
+                                    <div class="input-group col-md-12">
+                                        <input type="text" class="form-control" placeholder="Search By Name"
+                                            [(ngModel)]="filterQuery" />
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-danger btn-sm" type="button">
+                                                <span class=" glyphicon glyphicon-search"></span>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let data of mf.data; let i = index; let last = last;">
+                            <td>{{i+1}}</td>
+                            <td style="text-align: center;">
+                                <div class="img-thumbnail" style="margin: auto;">
+                                    <img  src="{{docServer}}/{{data?.photo?.docpath}}"
+                                        class="img-circle" alt="" style="width:100px; height:100px;">
+                                    <img *ngIf="!data?.photo?.docpath"
+                                        src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg"
+                                        class="img-circle" alt="" style="width:100px; height:100px;">
+
+                                    <div class="caption text-capitalize text-center"> {{data?.name}}</div>
+                                </div>
+                            </td>
+                            <td>{{data?.location}}</td>
+                            <td>{{data?.fromdate | date:'medium'}} </td>
+                            <td>{{data?.todate | date:'medium'}} </td>
+                            <td>{{data?.description}}</td>
+
+                            <!-- <td>{{data?.description}}</td> -->
+
+                            <td class="text-right" *ngIf="this.userRole==='SUPERADMIN' && this.userType==='FIRM'"
+                                (click)="deleteRole(data.id)">
+                                <a [routerLink]="['/editevent/',data.id]" data-toggle="tooltip"
+                                    title="Update Event ">
+                                    <button class="btn btn-default btn-sm">
+                                        <span class="glyphicon glyphicon-edit"></span>
+                                    </button>
+                                </a>
+                                <button class="btn btn-danger btn-sm" title="Delete Event"
+                                    *ngIf="this.userRole==='SUPERADMIN' && this.userType==='FIRM'"
+                                    (click)="deleteRole(data.id)">
+                                    <span class="glyphicon glyphicon-remove-circle"></span>
+                                </button>
+
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="8">
+                                <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

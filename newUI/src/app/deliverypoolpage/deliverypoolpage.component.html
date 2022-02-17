@@ -1,0 +1,1417 @@
+<div class="content" *ngIf="this.route.url === '/delivery_dashboard'" style="background-color: #945c0757;">
+  <div class="" *ngIf="userRole === 'SUPERADMIN'">
+    <!-- <h2>Panel Heading</h2> -->
+    <div class="panel panel-info" style="background-color: #945c0757;">
+      <div class="panel-heading"  style="background-color: #945c0757; color: white;">
+        &nbsp;&nbsp;&nbsp;
+        <div class="col-md-6 col-sm-6 col-xs-12">
+          <div class="form-group">
+            <label for="gender" style='color: white;'>Select Dashboard for</label>&nbsp;
+            <input type="radio" value="Cmonth" name="cmonth" (click)="adminstats()"> Admin &nbsp;
+            <!-- <input type="radio" value="Lmonth" name="cmonth"     (change)="getallfirm()" > Vendor &nbsp; -->
+            <input type="radio" value="Pmonth" name="cmonth" checked (change)="getalldp()"> Delivery Person &nbsp;
+          </div>
+        </div>
+      </div>
+      <div class="panel-body">
+        <!-- <div class="col-sm-3">
+            <div class="form-group" *ngIf="vendorselect">
+              <label>Select Firm</label>
+              <select  disabled class="form-control" id="firm" name="firm" [(ngModel)]="selectfirm" (change)="vendorstatdataseleted(selectfirm,$event)">
+                <option *ngFor="let data of firmlist; let i=index" [value]="data.id">{{data.name}}</option>
+              </select>
+            </div>
+    </div> -->
+        <div class="col-sm-3" *ngIf="deliveryselect">
+          <div class="form-group">
+            <label>Select Delivery Person</label>
+            <select disabled class="form-control" id="firm" name="firm" [(ngModel)]="selectdelivery"
+              (change)="getamountpayablemonth()">
+              <option *ngFor="let data of firmlist; let i=index" [value]="data.id">{{data.name}}</option>
+            </select>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid">
+
+    <div class="row">
+
+
+      <div class="col-md-6">
+        <div class="card " style=" background: aliceblue; ">
+          <div class="header">
+            <h4 class="title"> <b>{{username}}</b> Order Statistics </h4>
+            <p class="category">Report</p>
+          </div>
+          <div class="content">
+            <div class="table-full-width">
+              <table class="table">
+                <tbody>
+                  <tr>
+                    <td><b>Total Orders</b> </td>
+                    <td class="">
+                      <p><span class="label label-success">{{vendorstatsdata?.totalOrders}} </span></p>
+                    </td>
+                  </tr>
+                  <!-- <tr>
+                                      <td><b>Total Orders Placed</b> </td>
+                                      <td class="">
+                                          <p><span class="label label-success">{{vendorstatsdata?.totalPlaced}} </span></p>
+                                      </td>
+                                  </tr>  -->
+
+                  <tr>
+                    <td><b>Total Orders Packed</b> </td>
+                    <td class="">
+                      <p><span class="label label-success">{{vendorstatsdata?.totalPacked}} </span></p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><b>Total Orders Picked Up</b> </td>
+                    <td class="">
+                      <p><span class="label label-success">{{vendorstatsdata?.totalPickedup}} </span></p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><b>Total Orders Delivered</b> </td>
+                    <td class="">
+                      <p><span class="label label-success">{{vendorstatsdata?.totalDelivered}} </span></p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><b>Total Orders Paid</b> </td>
+                    <td class="">
+                      <p><span class="label label-success">{{vendorstatsdata?.totalPaid}} </span></p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><b>Total Cancelled Orders</b> </td>
+                    <td class="">
+                      <p><span class="label label-success">{{vendorstatsdata?.totalCancelled}} </span></p>
+                    </td>
+                  </tr>
+
+                </tbody>
+              </table>
+            </div>
+
+            <!-- <div class="footer">
+                          <hr>
+                          <div class="stats">
+                              <i class="fa fa-history"></i> Updated 3 minutes ago
+                          </div>
+                      </div> -->
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card " style=" background: #fcfce1; ">
+          <div class="header">
+            <h4 class="title"> <b>{{username}}</b> Orders Sales </h4>
+            <p class="category">Report</p>
+          </div>
+          <div class="content">
+            <div class="table-full-width">
+              <table class="table">
+                <tbody>
+                  <tr>
+                    <td><b>Last Month Orders</b> </td>
+                    <td class="">
+                      <p><span class="label label-success">{{vendorstatsdata?.lastmonthOrder}} Orders</span></p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><b>Current Month Orders</b> </td>
+                    <td class="">
+                      <p><span class="label label-success">{{vendorstatsdata?.currentmonthOrder}} Orders</span></p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><b>Last Month Sales</b> </td>
+                    <td class="">
+                      <p><span class="label label-success">{{vendorstatsdata?.lastmonthAmount}} / -</span></p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><b>Current Month Sales</b> </td>
+                    <td class="">
+                      <p><span class="label label-success">{{vendorstatsdata?.currentmonthAmount | number}} / -</span>
+                      </p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><b>Todays Orders</b> </td>
+                    <td class="">
+                      <p><span class="label label-success">{{vendorstatsdata?.todayOrder}} Orders</span></p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><b>Todays Sales</b> </td>
+                    <td class="">
+                      <p><span class="label label-success">{{vendorstatsdata?.todayAmount}} / -</span></p>
+                    </td>
+                  </tr>
+
+
+                </tbody>
+              </table>
+            </div>
+
+            <!-- <div class="footer">
+                          <hr>
+                          <div class="stats">
+                              <i class="fa fa-history"></i> Updated 3 minutes ago
+                          </div>
+                      </div> -->
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card ">
+          <div class="header">
+            <h4 class="title">2020 <b>{{username}}</b> Orders</h4>
+            <p class="category">All Dishes including Taxes</p>
+          </div>
+          <div class="content">
+            <div>
+              <div style="display: block">
+                <canvas id="barchart1" baseChart [datasets]="barChartData1" [labels]="barChartLabels1"
+                  [options]="barChartOptions" [legend]="barChartLegend" [chartType]="barChartType"
+                  (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)"
+                  style="font-size:5px;"></canvas>
+
+              </div>
+            </div>
+
+            <div class="footer">
+              <div class="legend">
+                <i class="fa fa-circle" style="color:#ffa1b5"></i> Orders
+                <!-- <i class="fa fa-circle text-danger"></i> Cancelled Orders -->
+              </div>
+              <hr>
+              <!-- <div class="stats">
+                              <i class="fa fa-check"></i> Data information certified
+                          </div> -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card ">
+          <div class="header">
+            <h4 class="title">2020 <b>{{username}}</b> Sales</h4>
+            <p class="category">All Dishes including Taxes</p>
+          </div>
+          <div class="content">
+            <div>
+              <div style="display: block">
+                <canvas id="barchart2" baseChart [datasets]="barChartData2" [colors]="barChartColors"
+                  [labels]="barChartLabels1" [options]="barChartOptions" [legend]="barChartLegend"
+                  [chartType]="barChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)"
+                  style="font-size:5px;"></canvas>
+
+              </div>
+            </div>
+
+            <div class="footer">
+              <div class="legend">
+                <i class="fa fa-circle" style="color:lightblue"></i> Sales for the particular month
+                <!-- <i class="fa fa-circle text-danger"></i> Cancelled Orders -->
+              </div>
+              <hr>
+              <!-- <div class="stats">
+                              <i class="fa fa-check"></i> Data information certified
+                          </div> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <div class="card ">
+          <div class="header">
+            <h4 class="title"><b>{{username}}'s</b> Top <b>Selling</b> Dishes</h4>
+            <!-- <p class="category">All products including Taxes</p> -->
+          </div>
+          <div class="content">
+            <div>
+              <div style="display: block; background-color: white; border-radius: 10px;">
+                <!--[options]="doughnutChartOptions"-->
+                <canvas class="pie" baseChart [data]="doughnutChartData" [colors]="doughnutChartColours"
+                  [labels]="doughnutChartLabels" [chartType]="doughnutChartType" (chartHover)="chartHovered($event)"
+                  (chartClick)="chartClicked($event)">
+                </canvas>
+              </div>
+            </div>
+
+            <div class="footer">
+              <div class="legend">
+                <i class="fa fa-circle" style="color:#ffa1b5"></i> Dishes Pie Chart
+                <!-- <i class="fa fa-circle text-danger"></i> Cancelled Orders -->
+              </div>
+              <hr>
+              <!-- <div class="stats">
+                              <i class="fa fa-check"></i> Data information certified
+                          </div> -->
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- <div class="col-md-6">
+        <div class="card ">
+          <div class="header">
+            <h4 class="title"> Top Branchs</h4>
+          </div>
+          <div class="content">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>BranchName</th>
+                  <th>Orders</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let data of this.toprevenue.topvendor">
+                  <td>{{data.name}}</td>
+                  <td>{{data.count}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div> -->
+
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="card ">
+          <div class="header">
+            <h4 class="title"> Top Customers</h4>
+            <!-- <p class="category">All products including Taxes</p> -->
+          </div>
+          <div class="content">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>Customer Name</th>
+                  <th>Orders</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let data of this.toprevenue.topcustomer">
+                  <td>{{data.name}}</td>
+                  <td>{{data.count}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+  </div>
+</div>
+
+<div class="content" *ngIf="this.route.url === '/delivery_dashboard' && userRole !== 'SUPERADMIN'" style="background-color: #945c0757;">
+  <div class="container-fluid">
+    <div class="card ">
+      <div class="header">
+        <h4 class="title">Calender View For Active Orders</h4>
+
+      </div>
+      <br>
+      <br>
+      <div class="col-md-6 col-sm-12 col-xs-12 " style="height:auto;">
+
+        <!-- <angular2-fullcalendar id="myCalendar" [options]="calendarOptions"></angular2-fullcalendar>   -->
+        <div class="row text-center">
+          <div class="col-md-6">
+            <div class="btn-group">
+              <div class="btn btn-primary" mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate"
+                (viewDateChange)="closeOpenMonthViewDay()">
+                Previous
+              </div>
+              <div class="btn btn-outline-secondary" style="border-color: #337ab7;" mwlCalendarToday
+                [(viewDate)]="viewDate">
+                Today
+              </div>
+              <div class="btn btn-primary" mwlCalendarNextView [view]="view" [(viewDate)]="viewDate"
+                (viewDateChange)="closeOpenMonthViewDay()">
+                Next
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
+          </div>
+          <!-- <div class="col-md-4">
+            <div class="btn-group">
+              <div
+                class="btn btn-primary"
+                (click)="setView(CalendarView.Month)"
+                [class.active]="view === CalendarView.Month"
+              >
+                Month
+              </div>
+              <div
+                class="btn btn-primary"
+                (click)="setView(CalendarView.Week)"
+                [class.active]="view === CalendarView.Week"
+              >
+                Week
+              </div>
+              <div
+                class="btn btn-primary"
+                (click)="setView(CalendarView.Day)"
+                [class.active]="view === CalendarView.Day"
+              >
+                Day
+              </div>
+            </div>
+          </div> -->
+        </div>
+        <br />
+        <div [ngSwitch]="view">
+          <mwl-calendar-month-view *ngSwitchCase="CalendarView.Month" [viewDate]="viewDate" [events]="events"
+            [refresh]="refresh" [activeDayIsOpen]="activeDayIsOpen" (dayClicked)="dayClicked($event.day)"
+            (eventClicked)="handleEvent('Clicked', $event.event)" (eventTimesChanged)="eventTimesChanged($event)">
+          </mwl-calendar-month-view>
+          <mwl-calendar-week-view *ngSwitchCase="CalendarView.Week" [viewDate]="viewDate" [events]="events"
+            [refresh]="refresh" (eventClicked)="handleEvent('Clicked', $event.event)"
+            (eventTimesChanged)="eventTimesChanged($event)">
+          </mwl-calendar-week-view>
+          <mwl-calendar-day-view *ngSwitchCase="CalendarView.Day" [viewDate]="viewDate" [events]="events"
+            [refresh]="refresh" (eventClicked)="handleEvent('Clicked', $event.event)"
+            (eventTimesChanged)="eventTimesChanged($event)">
+          </mwl-calendar-day-view>
+        </div>
+
+
+
+      </div>
+      <div class="col-md-6">
+
+        <div class="header">
+          <h4 class="title">Upcoming Orders</h4>
+
+        </div>
+        <br> <br>
+
+        <span *ngFor="let entry of allorders | keyValue">
+          Date : <span class="badge badge-info" style="font-size: 14px;"> {{entry| date}} </span> <br><br>
+          <span *ngFor="let e of allorders[entry]">
+            <!-- <span class="well well-sm" [style.background-color: cyan ]="e.payment ==='STOP' ? 'red' : 'green'" > -->
+            <!-- <span class="billno"  [ngStyle]="e.status=='PACKED'?{'background-color':'red'} : {'background-color': 'green'}" >
+                  <a [routerLink]="['/orderdetails',entry.id]"> 
+         
+            </a>
+          </span> -->
+            <a [routerLink]="['/orderdetails',e.id]">
+              <span class="badge badge-primary" style="height: 80px;width: 100px;margin: 2px;"
+                [ngStyle]="e.status !=='PLACED'?{'background-color':'#ff00008a'} : {'background-color': '#00800082'}">
+                <p style="font-size: 11px; "> {{e.orderno}} </p>
+                <p style="font-size: 11px; "> {{e.status}} </p>
+              </span>
+            </a>
+          </span>
+          <hr>
+          <!-- {{entry.key}}<br>       -->
+          <!-- Key: {{entry.key}}, value: {{entry.value}} -->
+        </span>
+
+
+
+        <!-- 
+     <div class="col-md-3" *ngFor="let entry of allorders">
+      
+      <a  [routerLink]="['/orderdetails',entry.id]">
+      <div class="spaaan" [ngStyle]="entry.status !=='PAID'?{'background-color':'#ff00008a'} : {'background-color': '#00800082'}"style="margin-top: 11px;" >
+       
+        <p style=" margin: 8px; ">Order ID: {{entry.invoicenum}} </p>
+        <p style=" margin: 8px; ">Status: {{entry.status}} </p>
+     
+      </div>
+    </a>
+     </div>
+     <br>  <br>  -->
+
+        <!-- 
+     <div class="col-md-3" *ngFor="let entry of allorders">
+      
+      <a  [routerLink]="['/orderdetails',entry.id]">
+      <div class="spaaan" [ngStyle]="entry.status !=='PAID'?{'background-color':'#ff00008a'} : {'background-color': '#00800082'}"style="margin-top: 11px;" >
+       
+        <p style=" margin: 8px; ">Order ID: {{entry.invoicenum}} </p>
+        <p style=" margin: 8px; ">Status: {{entry.status}} </p>
+     
+      </div>
+    </a>
+     </div>
+     <br>  <br>  -->
+
+
+      </div>
+    </div>
+
+    <br> <br>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="card ">
+          <div class="header">
+            <h4 class="title">Ready For Pickup Orders</h4>
+
+          </div>
+          <br>
+          <div class="table-responsive">
+            <table class="table table-condensed table-striped table-bordered"
+              [mfData]="packedorders | dataFilterPr : filterQuery1:'orders'" #mfff="mfDataTable"
+              [mfRowsOnPage]="rowsOnPage">
+              <thead>
+                <tr>
+                  <th>Product</th>
+
+
+                  <!-- <th>Customer</th> -->
+                  <th>Delivery Add.</th>
+                  <th>Branch Address</th>
+                  <th>Payment Details</th>
+                  <!-- <th>Status</th> -->
+
+
+
+
+
+                  <th class="text-right">Action</th>
+                </tr>
+                <tr>
+                  <th colspan="9">
+                    <div id="custom-search-input">
+                      <div class="input-group col-md-12">
+                        <input type="text" class="form-control"
+                          placeholder="Search by Customer Name, Phone, City , Pincode Or Order Number"
+                          [(ngModel)]="filterQuery1" />
+                        <span class="input-group-btn">
+                          <button class="btn btn-danger" type="button">
+                            <span class=" glyphicon glyphicon-search"></span>
+                          </button>
+                        </span>
+                      </div>
+                    </div>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let data of mfff.data; let i = index; let last = last;">
+                  <td>
+                    <div class="img-thumbnail  ">
+                      <img *ngIf="data?.oentry[0]?.photo?.docpath"
+                        src="{{docServer}}/{{data?.oentry[0]?.photo?.docpath}}" class="img-circle" alt=""
+                        style="width:100px; height:100px;">
+                      <img *ngIf="!data?.oentry[0]?.photo?.docpath"
+                        src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg"
+                        class="img-circle" alt="" style="width:100px; height:100px;">
+                      <div class="caption text-capitalize text-center" *ngIf="data.oentry.length<=1; else elseBlock">
+                        {{data.oentry[0]?.pname}}</div>
+                      <ng-template #elseBlock>
+                        <a [routerLink]="['/orderdetails',data.id]">
+                          <div class="caption text-capitalize text-center"> {{data.oentry[0]?.pname}} +
+                            {{data.oentry.length - 1}} Other Items</div>
+                        </a>
+                      </ng-template>
+
+                    </div>
+                  </td>
+
+                  <!-- <td>{{data.custname}}<br>
+                                  Phone-{{data.custmobile}}<br>
+                                Expected Delivery :{{data.expdelivery | date}}<br></td> -->
+                  <td>{{data.custname}}<br>
+
+                    {{data.deliveryaddress.line1}},<br>
+                    {{data.deliveryaddress.city}}- {{data.deliveryaddress.pincode}}<br>
+                    Phone-{{data.custmobile}}<br>
+                    Expected Delivery :{{data.expdelivery | date}}<br>
+                  </td>
+
+
+                  <td>
+                    {{data.firmname}}<br>
+                    {{data.vendaddress.line1}},<br>
+                    {{data.vendaddress.city}}- {{data.vendaddress.pincode}}<br>
+                    Phone-{{data.vendmobile}}
+
+                  </td>
+                  <td>Mode -{{data.paymentmode}}<br>
+                    Txn ID - <br>{{data.transactionid}}<br>
+                    Amount -{{data.qcost.finalamt}}/-<br>
+                    <span class="badge badge-dark">Delivery Amount</span>: <span
+                      class="badge badge-dark">{{data?.qcost?.delivery}}/-</span><br>
+                  </td>
+                  <!-- <td><span class="label label-primary">{{data.status}}</span></td> -->
+
+
+
+
+
+
+                  <td class="text-right">
+                    <a *ngIf="data.status==='PACKED' && data.isdeliveryaccept === 'NO'">
+                      <button (click)="acceptOrder(data.id)" class="btn btn-warning btn-sm" title="Accept Order">
+                        <span class="glyphicon glyphicon glyphicon-ok"></span>
+                      </button>
+                    </a>
+
+                    <a *ngIf="data.status==='PACKED' && data.isdeliveryaccept === 'NO'">
+                      <button (click)="RejectOrder(data)" class="btn btn-danger btn-sm" title="Reject Order">
+                        <span class="glyphicon glyphicon glyphicon-remove"></span>
+                      </button>
+                    </a>
+
+                    <a *ngIf="data.status==='PACKED' && data.isdeliveryaccept === 'YES'" (click)="orderpickedup(data)"
+                      class="btn btn-default" title="Order Picked Up">
+                      <i class="glyphicon glyphicon-check"></i>
+                    </a>
+
+                  </td>
+                  <!-- <td>Order Delivered</td> -->
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="9">
+                    <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card ">
+          <div class="header">
+            <h4 class="title">Out For Delivery Orders</h4>
+
+          </div>
+          <br>
+          <div class="table-responsive">
+            <table class="table table-condensed table-striped table-bordered"
+              [mfData]="pickuporders | dataFilterPr : filterQuery2:'orders'" #mff="mfDataTable"
+              [mfRowsOnPage]="rowsOnPage">
+              <thead>
+                <tr>
+                  <th>Product</th>
+
+
+                  <!-- <th>Customer</th> -->
+                  <th>Delivery Add.</th>
+                  <th>Branch Address</th>
+                  <th>Payment Mode</th>
+                  <!-- <th>Status</th> -->
+
+
+
+
+
+                  <th class="text-right">Action</th>
+                </tr>
+                <tr>
+                  <th colspan="9">
+                    <div id="custom-search-input">
+                      <div class="input-group col-md-12">
+                        <input type="text" class="form-control"
+                          placeholder="Search by Customer Name, Phone, City , Pincode Or Order Number"
+                          [(ngModel)]="filterQuery2" />
+                        <span class="input-group-btn">
+                          <button class="btn btn-danger" type="button">
+                            <span class=" glyphicon glyphicon-search"></span>
+                          </button>
+                        </span>
+                      </div>
+                    </div>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let data of mff.data; let i = index; let last = last;">
+                  <td>
+                    <div class="img-thumbnail  ">
+                      <img *ngIf="data?.oentry[0]?.photo?.docpath"
+                        src="{{docServer}}/{{data?.oentry[0]?.photo?.docpath}}" class="img-circle" alt=""
+                        style="width:100px; height:100px;">
+                      <img *ngIf="!data?.oentry[0]?.photo?.docpath"
+                        src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg"
+                        class="img-circle" alt="" style="width:100px; height:100px;">
+                      <div class="caption text-capitalize text-center" *ngIf="data.oentry.length<=1; else elseBlock">
+                        {{data.oentry[0]?.pname}}</div>
+                      <ng-template #elseBlock>
+                        <a [routerLink]="['/orderdetails',data.id]">
+                          <div class="caption text-capitalize text-center"> {{data.oentry[0]?.pname}} +
+                            {{data.oentry.length - 1}} Other Items</div>
+                        </a>
+                      </ng-template>
+
+                    </div>
+                  </td>
+
+
+                  <!-- <td>{{data.custname}}<br>
+                                  Phone-{{data.custmobile}}<br>
+                                Expected Delivery :{{data.expdelivery | date}}<br></td> -->
+                  <td>{{data.custname}}<br>
+
+                    {{data.deliveryaddress.line1}},<br>
+                    {{data.deliveryaddress.city}}- {{data.deliveryaddress.pincode}}<br>
+                    Phone-{{data.custmobile}}<br>
+                    Expected Delivery :{{data.expdelivery | date}}<br>
+                  </td>
+
+
+                  <td>
+                    {{data.firmname}}<br>
+                    {{data.vendaddress.line1}},<br>
+                    {{data.vendaddress.city}}- {{data.vendaddress.pincode}}<br>
+                    Phone-{{data.vendmobile}}
+
+                  </td>
+                  <td>Mode -{{data.paymentmode}}<br>
+                    Txn ID - <br>{{data.transactionid}}<br>
+                    Amount -{{data.qcost.finalamt}}/-<br>
+                    <span class="badge badge-dark">Delivery Amount</span>: <span
+                      class="badge badge-dark">{{data?.qcost?.delivery}}/-</span><br>
+                  </td>
+                  <!-- <td><span class="label label-primary">{{data.status}}</span></td> -->
+
+
+
+
+
+
+                  <!-- <td class="text-right">
+                                <a (click)="orderpacked(data)" class="btn btn-default" title="Order Delivered" >
+                                  <i class="glyphicon glyphicon-check"></i>
+                                </a>
+                    
+                              </td> -->
+                  <td class="text-right">
+                    <a (click)="setreason(data)" class="btn btn-success" title="Order Delivered">
+                      <i class="glyphicon glyphicon-export"></i>
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="9">
+                    <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card ">
+          <div class="header">
+            <h4 class="title">Last 5 Delivered Orders</h4>
+
+          </div>
+          <br>
+          <div class="table-responsive">
+            <table class="table table-condensed table-striped table-bordered"
+              [mfData]="deliveredorders | dataFilterPr : filterQuery:'orders'" #mf="mfDataTable"
+              [mfRowsOnPage]="rowsOnPage">
+              <thead>
+                <tr>
+                  <th>Product</th>
+
+
+                  <!-- <th>Customer</th> -->
+                  <th>Delivery Add.</th>
+                  <th>Branch Address</th>
+                  <th>Payment Mode</th>
+                  <!-- <th>Status</th> -->
+
+
+
+
+
+                  <th class="text-right">Action</th>
+                </tr>
+                <tr>
+                  <th colspan="9">
+                    <div id="custom-search-input">
+                      <div class="input-group col-md-12">
+                        <input type="text" class="form-control"
+                          placeholder="Search by Customer Name, Phone, City , Pincode Or Order Number"
+                          [(ngModel)]="filterQuery" />
+                        <span class="input-group-btn">
+                          <button class="btn btn-danger" type="button">
+                            <span class=" glyphicon glyphicon-search"></span>
+                          </button>
+                        </span>
+                      </div>
+                    </div>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let data of mf.data; let i = index; let last = last;">
+                  <td>
+                    <div class="img-thumbnail  ">
+                      <img *ngIf="data?.oentry[0]?.photo?.docpath"
+                        src="{{docServer}}/{{data?.oentry[0]?.photo?.docpath}}" class="img-circle" alt=""
+                        style="width:100px; height:100px;">
+                      <img *ngIf="!data?.oentry[0]?.photo?.docpath"
+                        src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg"
+                        class="img-circle" alt="" style="width:100px; height:100px;">
+                      <div class="caption text-capitalize text-center" *ngIf="data.oentry.length<=1; else elseBlock">
+                        {{data.oentry[0]?.pname}}</div>
+                      <ng-template #elseBlock>
+                        <a [routerLink]="['/orderdetails',data.id]">
+                          <div class="caption text-capitalize text-center"> {{data.oentry[0]?.pname}} +
+                            {{data.oentry.length - 1}} Other Items</div>
+                        </a>
+                      </ng-template>
+
+                    </div>
+                  </td>
+
+                  <!-- <td>{{data.custname}}<br>
+                                Phone-{{data.custmobile}}<br>
+                              Expected Delivery :{{data.expdelivery | date}}<br></td> -->
+                  <td>{{data.custname}}<br>
+
+                    {{data.deliveryaddress.line1}},<br>
+                    {{data.deliveryaddress.city}}- {{data.deliveryaddress.pincode}}<br>
+                    Phone-{{data.custmobile}}<br>
+                    Expected Delivery :{{data.expdelivery | date}}<br>
+                  </td>
+
+
+                  <td>
+                    {{data.firmname}}<br>
+                    {{data.vendaddress.line1}},<br>
+                    {{data.vendaddress.city}}- {{data.vendaddress.pincode}}<br>
+                    Phone-{{data.vendmobile}}
+
+                  </td>
+                  <td>Mode -{{data.paymentmode}}<br>
+                    Txn ID - <br>{{data.transactionid}}<br>
+                    Amount -{{data.qcost.finalamt}}/-<br>
+                    <span class="badge badge-dark">Delivery Amount</span>: <span
+                      class="badge badge-dark">{{data?.qcost?.delivery}}/-</span><br>
+                  </td>
+                  <!-- <td><span class="label label-primary">{{data.status}}</span></td> -->
+
+
+
+
+
+
+                  <!-- <td class="text-right">
+                              <a (click)="orderpacked(data)" class="btn btn-default" title="Order Delivered" >
+                                <i class="glyphicon glyphicon-check"></i>
+                              </a>
+                  
+                            </td> -->
+                  <td> Order Delivered</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="9">
+                    <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
+
+
+  </div>
+</div>
+
+<div class="panel panel-default slideLeft" *ngIf="this.route.url === '/placed_orders'" style="background-color: #945c0757;">
+  <div class="panel-heading">
+    <div class="clearfix">
+      <div class="pull-left">Placed Orders</div>
+      <div class="container" class="pull-right">
+        <div class="row">
+
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="panel-body">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+      <div class="table-responsive">
+        <table class="table table-condensed table-striped table-bordered"
+          [mfData]="placedorders | dataFilterPr : filterQuery:'orders'" #mff="mfDataTable" [mfRowsOnPage]="rowsOnPage">
+          <thead>
+            <tr>
+              <th>Order No.</th>
+              <th>Product</th>
+
+
+              <th>Customer</th>
+              <th>Delivery Add.</th>
+              <th>Branch Address</th>
+              <th>Payment Details</th>
+              <th>Status</th>
+
+
+
+
+
+              <th class="text-right">Action</th>
+            </tr>
+            <tr>
+              <th colspan="9">
+                <div id="custom-search-input">
+                  <div class="input-group col-md-12">
+                    <input type="text" class="form-control"
+                      placeholder="Search by Customer Name, Phone, City , Pincode Or Order Number"
+                      [(ngModel)]="filterQuery" />
+                    <span class="input-group-btn">
+                      <button class="btn btn-danger" type="button">
+                        <span class=" glyphicon glyphicon-search"></span>
+                      </button>
+                    </span>
+                  </div>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of mff.data; let i = index; let last = last;">
+              <td>{{data.invoicenum}}<br>
+                Total items : {{data.qcost.totalitem}}
+              </td>
+              <td>
+                <div class="img-thumbnail  ">
+                  <img *ngIf="data?.oentry[0]?.photo?.docpath" src="{{docServer}}/{{data?.oentry[0]?.photo?.docpath}}"
+                    class="img-circle" alt="" style="width:100px; height:100px;">
+                  <img *ngIf="!data?.oentry[0]?.photo?.docpath"
+                    src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg" class="img-circle"
+                    alt="" style="width:100px; height:100px;">
+                  <div class="caption text-capitalize text-center" *ngIf="data.oentry.length<=1; else elseBlock">
+                    {{data.oentry[0]?.pname}}</div>
+                  <ng-template #elseBlock>
+                    <a [routerLink]="['/orderdetails',data.id]">
+                      <div class="caption text-capitalize text-center"> {{data.oentry[0]?.pname}} + {{data.oentry.length
+                        - 1}} Other Items</div>
+                    </a>
+                  </ng-template>
+
+                </div>
+              </td>
+
+
+              <td>{{data.custname}}<br>
+                Phone-{{data.custmobile}}<br>
+                Expected Delivery :{{data.expdelivery | date}}<br></td>
+              <td>{{data.deliveryaddress.line1}},<br>
+                {{data.deliveryaddress.city}}- {{data.deliveryaddress.pincode}}<br>
+
+              </td>
+
+              <td>
+                {{data.firmname}}<br>
+                {{data.vendaddress.line1}},<br>
+                {{data.vendaddress.city}}- {{data.vendaddress.pincode}}<br>
+                Phone-{{data.vendmobile}}
+
+              </td>
+              <td>Mode -{{data.paymentmode}}<br>
+                Txn ID - <br>{{data.transactionid}}<br>
+                Amount -{{data.qcost.finalamt}}/-<br>
+                <span class="badge badge-dark">Delivery Amount</span>: <span
+                  class="badge badge-dark">{{data?.qcost?.delivery}}/-</span><br>
+              </td>
+              <td><span class="label label-primary">{{data.status}}</span></td>
+
+
+
+
+
+
+              <td class="text-right">
+                You will be notify when order is Packed and Ready for Pickup
+              </td>
+              <!-- <td>Order Delivered </td> -->
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="9">
+                <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="panel panel-default slideLeft" *ngIf="this.route.url === '/packed_orders'" style="background-color: #945c0757;">
+  <div class="panel-heading">
+    <div class="clearfix">
+      <div class="pull-left"> Packed Orders</div>
+      <div class="container" class="pull-right">
+        <div class="row">
+
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="panel-body">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+      <div class="table-responsive">
+        <table class="table table-condensed table-striped table-bordered"
+          [mfData]="packedorders | dataFilterPr : filterQuery:'orders'" #mff="mfDataTable" [mfRowsOnPage]="rowsOnPage">
+          <thead>
+            <tr>
+              <th>Order No.</th>
+              <th>Product</th>
+
+
+              <th>Customer</th>
+              <th>Delivery Add.</th>
+              <th>Branch Address</th>
+              <th>Payment Details</th>
+              <th>Status</th>
+
+
+
+
+
+              <th class="text-right">Action</th>
+            </tr>
+            <tr>
+              <th colspan="9">
+                <div id="custom-search-input">
+                  <div class="input-group col-md-12">
+                    <input type="text" class="form-control"
+                      placeholder="Search by Customer Name, Phone, City , Pincode Or Order Number"
+                      [(ngModel)]="filterQuery" />
+                    <span class="input-group-btn">
+                      <button class="btn btn-danger" type="button">
+                        <span class=" glyphicon glyphicon-search"></span>
+                      </button>
+                    </span>
+                  </div>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of mff.data; let i = index; let last = last;">
+              <td>{{data.invoicenum}}<br>
+                Total items : {{data.qcost.totalitem}}
+              </td>
+              <td>
+                <div class="img-thumbnail  ">
+                  <img *ngIf="data?.oentry[0]?.photo?.docpath" src="{{docServer}}/{{data?.oentry[0]?.photo?.docpath}}"
+                    class="img-circle" alt="" style="width:100px; height:100px;">
+                  <img *ngIf="!data?.oentry[0]?.photo?.docpath"
+                    src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg" class="img-circle"
+                    alt="" style="width:100px; height:100px;">
+                  <div class="caption text-capitalize text-center" *ngIf="data.oentry.length<=1; else elseBlock">
+                    {{data.oentry[0]?.pname}}</div>
+                  <ng-template #elseBlock>
+                    <a [routerLink]="['/orderdetails',data.id]">
+                      <div class="caption text-capitalize text-center"> {{data.oentry[0]?.pname}} + {{data.oentry.length
+                        - 1}} Other Items</div>
+                    </a>
+                  </ng-template>
+
+                </div>
+              </td>
+
+
+              <td>{{data.custname}}<br>
+                Phone-{{data.custmobile}}<br>
+                Expected Delivery :{{data.expdelivery | date}}<br></td>
+              <td>{{data.deliveryaddress.line1}},<br>
+                {{data.deliveryaddress.city}}- {{data.deliveryaddress.pincode}}<br>
+
+              </td>
+
+              <td>
+                {{data.firmname}}<br>
+                {{data.vendaddress.line1}},<br>
+                {{data.vendaddress.city}}- {{data.vendaddress.pincode}}<br>
+                Phone-{{data.vendmobile}}
+
+              </td>
+              <td>Mode -{{data.paymentmode}}<br>
+                Txn ID - <br>{{data.transactionid}}<br>
+                Amount -{{data.qcost.finalamt}}/-<br>
+                <span class="badge badge-dark">Delivery Amount</span>: <span
+                  class="badge badge-dark">{{data?.qcost?.delivery}}/-</span><br>
+              </td>
+              <td><span class="label label-primary">{{data.status}}</span></td>
+
+
+
+
+
+
+              <td class="text-right">
+
+                <a *ngIf="data.status==='PACKED' && data.isdeliveryaccept === 'NO'">
+                  <button (click)="acceptOrder(data.id)" class="btn btn-warning btn-sm" title="Accept Order">
+                    <span class="glyphicon glyphicon glyphicon-ok"></span>
+                  </button>
+                </a>
+
+                <a *ngIf="data.status==='PACKED' && data.isdeliveryaccept === 'NO'">
+                  <button (click)="RejectOrder(data)" class="btn btn-danger btn-sm" title="Reject Order">
+                    <span class="glyphicon glyphicon glyphicon-remove"></span>
+                  </button>
+                </a>
+
+                <a *ngIf="data.status==='PACKED' && data.isdeliveryaccept === 'YES'" (click)="orderpickedup(data)"
+                  class="btn btn-default" title="Order Picked Up">
+                  <i class="glyphicon glyphicon-check"></i>
+                </a>
+                <!-- <a class="btn btn-danger a-btn-slide-text" title="Delete Order" (click)="delete(data.id)">
+                      <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                      <span></span>
+                    </a> -->
+              </td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="9">
+                <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="panel panel-default slideLeft" *ngIf="this.route.url === '/delivered_orders'" style="background-color: #945c0757;">
+  <div class="panel-heading">
+    <div class="clearfix">
+      <div class="pull-left">Delivered Orders</div>
+      <div class="container" class="pull-right">
+        <div class="row">
+          <!-- <a [routerLink]="['/addorders']" class="btn btn-primary a-btn-slide-text" title="Add Rate Label">
+              <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+              <span></span>
+            </a> -->
+          <!-- <a href="#" class="btn btn-default a-btn-slide-text" title="Edit">
+              <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+              <span></span>
+            </a>
+            <a href="#" class="btn btn-info a-btn-slide-text" title="View">
+              <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+              <span></span>
+            </a>
+            <a href="#" class="btn btn-danger a-btn-slide-text" title="Delete">
+              <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+              <span></span>
+            </a>-->
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="panel-body">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+      <div class="table-responsive">
+        <table class="table table-condensed table-striped table-bordered"
+          [mfData]="deliveredorders | dataFilterPr : filterQuery:'orders'" #mff="mfDataTable"
+          [mfRowsOnPage]="rowsOnPage">
+          <thead>
+            <tr>
+              <th>Order No.</th>
+              <th>Product</th>
+
+
+              <th>Customer</th>
+              <th>Delivery Add.</th>
+              <th>Branch Address</th>
+              <th>Payment Details</th>
+              <th>Status</th>
+
+
+
+
+
+              <th class="text-right">Action</th>
+            </tr>
+            <tr>
+              <th colspan="9">
+                <div id="custom-search-input">
+                  <div class="input-group col-md-12">
+                    <input type="text" class="form-control"
+                      placeholder="Search by Customer Name, Phone, City , Pincode Or Order Number"
+                      [(ngModel)]="filterQuery" />
+                    <span class="input-group-btn">
+                      <button class="btn btn-danger" type="button">
+                        <span class=" glyphicon glyphicon-search"></span>
+                      </button>
+                    </span>
+                  </div>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of mff.data; let i = index; let last = last;">
+              <td>{{data.invoicenum}}<br>
+                Total items : {{data.qcost.totalitem}}
+              </td>
+              <td>
+                <div class="img-thumbnail  ">
+                  <img *ngIf="data?.oentry[0]?.photo?.docpath" src="{{docServer}}/{{data?.oentry[0]?.photo?.docpath}}"
+                    class="img-circle" alt="" style="width:100px; height:100px;">
+                  <img *ngIf="!data?.oentry[0]?.photo?.docpath"
+                    src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg" class="img-circle"
+                    alt="" style="width:100px; height:100px;">
+                  <div class="caption text-capitalize text-center" *ngIf="data.oentry.length<=1; else elseBlock">
+                    {{data.oentry[0]?.pname}}</div>
+                  <ng-template #elseBlock>
+                    <a [routerLink]="['/orderdetails',data.id]">
+                      <div class="caption text-capitalize text-center"> {{data.oentry[0]?.pname}} + {{data.oentry.length
+                        - 1}} Other Items</div>
+                    </a>
+                  </ng-template>
+
+                </div>
+              </td>
+
+
+              <td>{{data.custname}}<br>
+                Phone-{{data.custmobile}}<br>
+                Expected Delivery :{{data.expdelivery | date}}<br></td>
+              <td>{{data.deliveryaddress.line1}},<br>
+                {{data.deliveryaddress.city}}- {{data.deliveryaddress.pincode}}<br>
+
+              </td>
+
+              <td>
+                {{data.firmname}}<br>
+                {{data.vendaddress.line1}},<br>
+                {{data.vendaddress.city}}- {{data.vendaddress.pincode}}<br>
+                Phone-{{data.vendmobile}}
+
+              </td>
+              <td>Mode -{{data.paymentmode}}<br>
+                Txn ID - <br>{{data.transactionid}}<br>
+                Amount -{{data.qcost.finalamt}}/-<br>
+                <span class="badge badge-dark">Delivery Amount</span>: <span
+                  class="badge badge-dark">{{data?.qcost?.delivery}}/-</span><br>
+              </td>
+              <td><span class="label label-primary">{{data.status}}</span></td>
+
+
+
+
+
+
+              <!-- <td class="text-right">
+                    <a (click)="orderpacked(data)" class="btn btn-default" title="Order Delivered" >
+                      <i class="glyphicon glyphicon-check"></i>
+                    </a>
+                    <a class="btn btn-danger a-btn-slide-text" title="Delete Order" (click)="delete(data.id)">
+                      <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                      <span></span>
+                    </a>
+                  </td> -->
+              <td>Order Delivered </td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="9">
+                <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="panel panel-default slideLeft" *ngIf="this.route.url === '/pickup_orders'" style="background-color: #945c0757;">
+  <div class="panel-heading">
+    <div class="clearfix">
+      <div class="pull-left">Pickup Orders</div>
+      <div class="container" class="pull-right">
+        <div class="row">
+          <!-- <a [routerLink]="['/addorders']" class="btn btn-primary a-btn-slide-text" title="Add Rate Label">
+              <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+              <span></span>
+            </a> -->
+          <!-- <a href="#" class="btn btn-default a-btn-slide-text" title="Edit">
+              <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+              <span></span>
+            </a>
+            <a href="#" class="btn btn-info a-btn-slide-text" title="View">
+              <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+              <span></span>
+            </a>
+            <a href="#" class="btn btn-danger a-btn-slide-text" title="Delete">
+              <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+              <span></span>
+            </a>-->
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="panel-body">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+      <div class="table-responsive">
+        <table class="table table-condensed table-striped table-bordered"
+          [mfData]="pickuporders | dataFilterPr : filterQuery:'orders'" #mff="mfDataTable" [mfRowsOnPage]="rowsOnPage">
+          <thead>
+            <tr>
+              <th>Order No.</th>
+              <th>Product</th>
+
+
+              <th>Customer</th>
+              <th>Delivery Add.</th>
+              <th>Branch Address</th>
+              <th>Payment Details</th>
+              <th>Status</th>
+
+
+
+
+
+              <th class="text-right">Action</th>
+            </tr>
+            <tr>
+              <th colspan="9">
+                <div id="custom-search-input">
+                  <div class="input-group col-md-12">
+                    <input type="text" class="form-control"
+                      placeholder="Search by Customer Name, Phone, City , Pincode Or Order Number"
+                      [(ngModel)]="filterQuery" />
+                    <span class="input-group-btn">
+                      <button class="btn btn-danger" type="button">
+                        <span class=" glyphicon glyphicon-search"></span>
+                      </button>
+                    </span>
+                  </div>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of mff.data; let i = index; let last = last;">
+              <td>{{data.invoicenum}}<br>
+                Total items : {{data.qcost.totalitem}}
+              </td>
+              <td>
+                <div class="img-thumbnail  ">
+                  <img *ngIf="data?.oentry[0]?.photo?.docpath" src="{{docServer}}/{{data?.oentry[0]?.photo?.docpath}}"
+                    class="img-circle" alt="" style="width:100px; height:100px;">
+                  <img *ngIf="!data?.oentry[0]?.photo?.docpath"
+                    src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg" class="img-circle"
+                    alt="" style="width:100px; height:100px;">
+                  <div class="caption text-capitalize text-center" *ngIf="data.oentry.length<=1; else elseBlock">
+                    {{data.oentry[0]?.pname}}</div>
+                  <ng-template #elseBlock>
+                    <a [routerLink]="['/orderdetails',data.id]">
+                      <div class="caption text-capitalize text-center"> {{data.oentry[0]?.pname}} + {{data.oentry.length
+                        - 1}} Other Items</div>
+                    </a>
+                  </ng-template>
+
+                </div>
+              </td>
+
+
+              <td>{{data.custname}}<br>
+                Phone-{{data.custmobile}}<br>
+                Expected Delivery :{{data.expdelivery | date}}<br></td>
+              <td>{{data.deliveryaddress.line1}},<br>
+                {{data.deliveryaddress.city}}- {{data.deliveryaddress.pincode}}<br>
+
+              </td>
+
+              <td>
+                {{data.firmname}}<br>
+                {{data.vendaddress.line1}},<br>
+                {{data.vendaddress.city}}- {{data.vendaddress.pincode}}<br>
+                Phone-{{data.vendmobile}}
+
+              </td>
+              <td>Mode -{{data.paymentmode}}<br>
+                Txn ID - <br>{{data.transactionid}}<br>
+                Amount -{{data.qcost.finalamt}}/-<br>
+                <span class="badge badge-dark">Delivery Amount</span>: <span
+                  class="badge badge-dark">{{data?.qcost?.delivery}}/-</span><br>
+              </td>
+              <td><span class="label label-primary">{{data.status}}</span></td>
+
+
+
+
+
+
+              <td class="text-right">
+                <a (click)="setreason(data)" class="btn btn-success" title="Order Delivered">
+                  <i class="glyphicon glyphicon-export"></i>
+                </a>
+              </td>
+              <!-- <td>Order Delivered </td> -->
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="9">
+                <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+    </div>
+  </div>
+</div>

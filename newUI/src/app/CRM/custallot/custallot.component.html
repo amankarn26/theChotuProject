@@ -1,0 +1,375 @@
+<!-- <div class="row animated bounceInDown">
+  <div class="col-md-12">
+    <h2>{{title}} </h2>
+    <h5>{{subtitle}}</h5>
+  </div>
+</div>
+<hr /> -->
+
+
+<div class="col-md-12 col-sm-12 col-xs-12" *ngIf="flag">
+  <div class="panel panel-default">
+
+
+    <div class="panel-heading">
+      <div class="clearfix">
+        <div class="pull-left"> {{title}}</div>
+        <div class="container" class="pull-right">
+          <div class="row">
+         
+            <a [routerLink]="['/managebulkcust']" title="Manage Bulk Customers" class="btn btn-info a-btn-slide-text">
+              <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="panel-body">
+
+       <form #form1="ngForm" >
+       
+
+          <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="ratelabel">Rate Label : </label>
+                 <input *ngIf="isUpdate" type="text" readonly class="form-control" id="ratelabel" name="ratelabel" [(ngModel)]="ratelabel"
+                /> 
+                <select *ngIf="!isUpdate"  class="form-control" id="ratelabel" name="ratelabel" 
+                [(ngModel)]="leveltwo.ratelabel">
+                  <option *ngFor="let state of ratelabelList; let i=index" [value]="state.label">{{state.label}}</option>
+                </select>
+              </div>
+            </div>
+               
+
+
+
+
+
+
+
+
+
+
+
+
+       
+        <!-- <div class="col-md-6">
+          <div class="form-group">
+            <label for="maxquoteperday">Max Quote Per Day:
+
+            </label>
+            <input type="number" class="form-control" id="balance" name="balance" [(ngModel)]="maxquoteperday" required />
+          </div>
+        </div>
+        -->
+
+        
+
+       
+       
+        
+        
+      <div class="col-md-12">
+          <div class="form-group">
+            <button type="submit" class="btn btn-default" [disabled]="!form1.valid" (click)="submitData()">Submit</button>
+            <!-- <button type="button" class="btn btn-default" (click)="cancel()">Cancel</button> -->
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="col-md-12 col-sm-12 col-xs-12" style="padding: 0px;" *ngIf="!flag">
+  <!-- <div class="col-sm-12" style="padding-left: 0px !important;" id="demo" class="collapse"> -->
+
+   
+  <!-- </div> -->
+  <div class="panel panel-default">
+    <div class="panel-heading">
+        <h4> ALLOT NEW CLIENT TO RM</h4>
+        <form #form2="ngForm" >
+            <!-- <div class="col-md-12">
+                <div class="form-group">
+                  <label for="ltype"> &nbsp;&nbsp;&nbsp;&nbsp;
+                  </label>
+              
+              
+                  <input type="radio" value="RatelabelFlag" name="gender" ngModel [(ngModel)]="atten"> Ratelabel&nbsp;&nbsp;&nbsp;&nbsp;
+                  <input type="radio" value="MaxQuoteFlag" name="gender" ngModel [(ngModel)]="atten">Max Quote&nbsp;&nbsp;&nbsp;&nbsp;
+                  <input type="radio" value="RMflag" name="gender" checked  [(ngModel)]="atten">Relationship Manager &nbsp;&nbsp;&nbsp;&nbsp;
+              
+                </div>
+              </div> -->
+
+       
+
+
+
+         
+
+              <div> 
+
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                      <div class="form-group">
+                        <label for="relationshipmgrname1"> Relationship Manager: </label>
+          
+                        <select class="form-control" name="relationshipmgr1"
+                          [(ngModel)]="relationshipmgr1" (change)="onChangeRM($event)">
+                          <option required *ngFor="let relationshipmgrname of rmList; let i=index"
+                            [value]="relationshipmgrname.id">{{relationshipmgrname.name}}</option>
+                        </select>
+                       
+                      </div>
+                    </div>
+        
+                   
+          
+                          
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                      <button type="submit" class="btn btn-default" [disabled]="!form2.valid" (click)="submitMultiple2()">Update</button>
+                      <!-- <button type="button" class="btn btn-default" href="#demo" data-toggle="collapse">Cancel</button> -->
+                    </div>
+                  </div>
+                  </div>
+    
+                  
+
+
+
+            </form>
+          <hr>
+      <div class="clearfix">
+        <!-- <div class="pull-left"> {{title}}</div> -->
+        <div class="container" class="pull-right">
+          <div class="row">
+
+          
+           
+            
+          </div>
+        </div>
+        <ul  class="nav nav-tabs">
+          <li class="active"><a data-toggle="tab" href="#assigned" id="a">Assigned Customers</a></li>
+          <li><a data-toggle="tab" href="#unassigned" id="b">Unassigned Customers</a></li>
+         
+  
+  
+  
+        </ul>
+      </div>
+    </div>
+    <div class="tab-content">
+      <div id="assigned" class="tab-pane fade in active">
+    <div class="panel-body no-padding">
+        <div class="table-responsive">
+          <table class="table table-bordered " [mfData]="data | dataFilterPr : filterQuery:'bulkdata'" #mf="mfDataTable"
+            [mfRowsOnPage]="rowsOnPage"  >
+            <thead>
+              <tr>
+                <th>Select</th>
+                <th>SN</th>
+               <th>
+                  <mfDefaultSorter by="id">Name</mfDefaultSorter>
+                </th>
+                <th>Shop Name</th>
+                <th>State</th>
+                <th>City</th>
+
+                <!-- <th>Max Quote Per Day</th> -->
+                
+                <th style="text-transform: uppercase;display: table-caption;font-size: 14.5px;">
+                  <span class="label label-warning">Relationship Manager</span></th>
+                <th>Ratelabel</th>
+                
+              
+               
+                <!-- <th>Role</th> -->
+               
+                <th>Phone No.</th>                   
+               
+                
+                <!-- <th>Action</th> -->
+              </tr>
+              <tr>
+                <th colspan="14">
+                  <div id="custom-search-input ">
+                    <div class="input-group col-md-12">
+                      <input type="text" class="form-control" placeholder="Search by Customer Name, Shop Name, State, City or Phone No." [(ngModel)]="filterQuery" />
+                      <span class="input-group-btn">
+                        <button class="btn btn-danger" type="button">
+                          <span class=" glyphicon glyphicon-search"></span>
+                        </button>
+                      </span>
+                    </div>
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of mf.data; let i = index; let last = last;" class="animated flipInX">
+               <td><input type="checkbox" value="employees" (click)="deleteNewsList(data.id)"></td>
+                <td>{{i+1}}</td>
+                <td  >{{data?.fname}}
+                  <!-- <div class="img-thumbnail  ">
+                    <img *ngIf="data?.photo?.docpath" src="{{docServer}}/{{data?.photo?.docpath}}" class="img-circle" alt="" style="width:100px; height:100px;">
+                    <img *ngIf="!data?.photo?.docpath" src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg" class="img-circle" alt="" style="width:100px; height:100px;">
+  
+                    <div class="caption text-capitalize text-center"> {{data.fname}}</div>
+                  </div>
+   -->
+                </td>
+                <td>{{data?.shopname}}</td>
+                <td>{{data?.address.states}}</td>
+                <td>{{data?.address.city}}</td>
+
+                <!-- <td>{{data?.maxquoteperday}}</td> -->
+            
+    
+                <td style="text-transform: uppercase;display: table-caption;font-size: 14.5px;">
+                  <span class="label label-danger">{{data?.l2details?.relationshipmgrname}}</span>
+                </td>
+
+                <td>{{data?.l2details?.ratelabel}}</td>
+                
+                
+               
+               
+                <!-- <td>{{data?.role?.role}}</td> -->
+               
+                <td>{{data.phone}}</td>
+               
+               
+            
+                      
+  
+                      <!-- <a [routerLink]="['/addleavebal',data.id]">
+                        <button class="btn  btn-sm" title="Add Leave Balance" style="background-color: #f1f180 !important;">
+                          <span class="glyphicon glyphicon-plus"></span>
+                        </button>
+                      </a> -->
+                      <!-- <a [routerLink]="['/leavebalanceinfo', data.id]">
+                        <button class="btn  btn-sm" title="Leave Balance Details" style="background-color: #f1f180 !important;">
+                          <span class="glyphicon glyphicon-check"></span>
+                        </button>
+                      </a>    -->
+                      
+                      <!-- <a [routerLink]="['/updateemployee',data.id]" *ngIf="userRole==='HR'" >
+                        <button class="btn btn-info btn-sm" title="Update Employee">
+                          <i class="glyphicon glyphicon-edit"></i>
+                        </button>
+                      </a> -->
+                      
+              
+              </tr>
+            </tbody>
+            <tfoot>
+  
+              <tr>
+                <td colspan="14">
+                  <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+      </div>
+
+      <div id="unassigned" class="tab-pane fade">
+        <div class="panel-body no-padding">
+            <div class="table-responsive">
+              <table class="table table-bordered" [mfData]="unassigneddata | dataFilterPr : filterQuery:'bulkdata'"
+               #mff="mfDataTable"
+                [mfRowsOnPage]="rowsOnPage"  >
+                <thead>
+                  <tr>
+                    <th>Select</th>
+                    <th>SN</th>
+                   <th>
+                      <mfDefaultSorter by="id">Name</mfDefaultSorter>
+                    </th>
+                    <th>Shop Name</th>
+                    <th>State</th>
+                    <th>City</th>
+<!--     
+                    <th>Max Quote Per Day</th> -->
+                    
+                    <th style="text-transform: uppercase;display: table-caption;font-size: 14.5px;">
+                      <span class="label label-warning">Relationship Manager</span></th>
+                    <th>Ratelabel</th>
+                    
+                  
+                   
+                    <!-- <th>Role</th> -->
+                   
+                    <th>Phone No.</th>                   
+                   
+                    
+               
+                  </tr>
+                  <tr>
+                    <th colspan="14">
+                      <div id="custom-search-input ">
+                        <div class="input-group col-md-12">
+                          <input type="text" class="form-control" placeholder="Search by Customer Name, Shop Name, State, City or Phone No." [(ngModel)]="filterQuery" />
+                          <span class="input-group-btn">
+                            <button class="btn btn-danger" type="button">
+                              <span class=" glyphicon glyphicon-search"></span>
+                            </button>
+                          </span>
+                        </div>
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let data of mff.data; let i = index; let last = last;" class="animated flipInX">
+                   <td><input type="checkbox" value="employees" (click)="deleteNewsList(data.id)"></td>
+                    <td>{{i+1}}</td>
+                    <td  >{{data?.fname}}
+                     
+                    </td>
+                    <td>{{data?.shopname}}</td>
+                    <td>{{data?.address.states}}</td>
+                    <td>{{data?.address.city}}</td>
+    
+                    <!-- <td>{{data?.maxquoteperday}}</td> -->
+                
+        
+                    <td style="text-transform: uppercase;display: table-caption;font-size: 14.5px;">
+                      <span class="label label-danger">{{data?.l2details?.relationshipmgrname}}</span>
+                    </td>
+                    
+                    <td>{{data?.l2details?.ratelabel}}</td>
+                
+                   
+                   
+                    <!-- <td>{{data?.role?.role}}</td> -->
+                   
+                    <td>{{data.phone}}</td>
+                   
+                   
+               
+                  </tr>
+                </tbody>
+                <tfoot>
+      
+                  <tr>
+                    <td colspan="14">
+                      <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+          </div>
+      </div>
+  </div>
+</div>
+

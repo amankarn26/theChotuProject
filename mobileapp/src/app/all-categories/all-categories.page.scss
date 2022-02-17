@@ -1,0 +1,43 @@
+.searchBox{
+    
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 12px 16px;
+  
+    border: 1px solid #EBF0FF;
+    box-sizing: border-box;
+    border-radius: 3px;
+}
+
+.pageheading{
+    font-family: Poppins;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 150%;
+  
+
+}
+
+
+.cartt{
+    text-align: end;
+  }
+  
+  .notification-icon-button {
+    --overflow: visible;    
+    ion-badge {
+      position: absolute;
+      color: black;
+      background: #f8e6d4;
+      border-radius: 100%;
+      // opacity: 0.9;
+      // top: 0.0rem;
+      left: 1.5rem;
+      // size: 10px;
+      top: -1px;
+      // left: -0.5rem;
+      size: 10px;
+    } 
+  }

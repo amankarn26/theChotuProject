@@ -1,0 +1,848 @@
+<div class="" *ngIf="userRole === 'SUPERADMIN'">
+  <!-- <h2>Panel Heading</h2> -->
+  <div class="panel panel-info">
+    <div class="panel-heading">
+      &nbsp;&nbsp;&nbsp;
+        <div class="col-md-6 col-sm-6 col-xs-12">
+          <div class="form-group" >
+            <label for="gender">Select Dashboard for
+            </label>&nbsp;
+            <input type="radio" value="Cmonth" name="cmonth"    (click)="adminstats()" > Admin &nbsp;
+            <input type="radio" value="Lmonth" name="cmonth"  checked   (change)="getallfirm()" > Branch &nbsp;
+            <!-- <input type="radio" value="Pmonth" name="cmonth" [(ngModel)]="deliveryselect"   (change)="getalldp()"> Delivery Person &nbsp; -->
+          </div>
+        </div>
+    </div>
+    
+    <div class="panel-body">
+      <div class="col-sm-3">
+          <div class="form-group" *ngIf="vendorselect">
+            <label>Select Firm</label>
+            <select  disabled class="form-control" id="firm" name="firm" [(ngModel)]="selectfirm" (change)="vendorstatdataseleted(selectfirm,$event)">
+              <option *ngFor="let data of firmlist; let i=index" [value]="data.id">{{data.name}}</option>
+            </select>
+          </div>
+  </div>
+  <div class="col-sm-3" *ngIf="deliveryselect">
+      <div class="form-group">
+          <label>Select Delivery Person</label>
+          <select   class="form-control" id="firm" name="firm" [(ngModel)]="selectdelivery" (change)="getamountpayablemonth()">
+            <option *ngFor="let data of firmlist; let i=index" [value]="data.id">{{data.name}}</option>
+          </select>
+        </div>
+</div>
+
+    </div>
+  </div>
+</div>
+
+<div class="content">
+    <div class="container-fluid">      
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card " style=" background: aliceblue; ">
+                    <div class="header">
+                        <h4 class="title"> <b>{{username}}</b> Order Statistics </h4>
+                        <p class="category">Report</p>
+                    </div>
+                    <div class="content">
+                        <div class="table-full-width">
+                            <table class="table">
+                                <tbody>
+                                    <tr>
+                                        <td><b>Total Orders</b> </td>
+                                        <td class="">
+                                            <p><span class="label label-success">{{vendorstatsdata?.totalOrders}} </span></p>
+                                        </td>
+                                    </tr> 
+                                    <tr>
+                                        <td><b>Orders Placed</b> </td>
+                                        <td class="">
+                                            <p><span class="label label-success">{{vendorstatsdata?.totalPlaced}} </span></p>
+                                        </td>
+                                    </tr> 
+                                    <tr>
+                                        <td><b>Orders Packed</b> </td>
+                                        <td class="">
+                                            <p><span class="label label-success">{{vendorstatsdata?.totalPacked}} </span></p>
+                                        </td>
+                                    </tr> 
+                                    <tr>
+                                        <td><b>Orders Delivered</b> </td>
+                                        <td class="">
+                                            <p><span class="label label-success">{{vendorstatsdata?.totalDelivered}} </span></p>
+                                        </td>
+                                    </tr> 
+                                    <tr>
+                                        <td><b>Orders Paid</b> </td>
+                                        <td class="">
+                                            <p><span class="label label-success">{{vendorstatsdata?.totalPaid}} </span></p>
+                                        </td>
+                                    </tr> 
+                                    <tr>
+                                        <td><b>Cancelled Orders</b> </td>
+                                        <td class="">
+                                            <p><span class="label label-success">{{vendorstatsdata?.totalCancelled}} </span></p>
+                                        </td>
+                                    </tr> 
+                                 
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- <div class="footer">
+                            <hr>
+                            <div class="stats">
+                                <i class="fa fa-history"></i> Updated 3 minutes ago
+                            </div>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card " style=" background: #fcfce1; ">
+                    <div class="header">
+                        <h4 class="title"> <b>{{username}}</b> Orders Sales </h4>
+                        <p class="category">Report</p>
+                    </div>
+                    <div class="content">
+                        <div class="table-full-width">
+                            <table class="table">
+                                <tbody>
+                                    <tr>
+                                        <td><b>Last Month Orders</b> </td>
+                                        <td class="">
+                                            <p><span class="label label-success">{{vendorstatsdata?.lastmonthOrder}}  Orders</span></p>
+                                        </td>
+                                    </tr> 
+                                    <tr>
+                                        <td><b>Current Month Orders</b> </td>
+                                        <td class="">
+                                            <p><span class="label label-success">{{vendorstatsdata?.currentmonthOrder}} Orders</span></p>
+                                        </td>
+                                    </tr> 
+                                    <tr>
+                                        <td><b>Last Month Sales</b> </td>
+                                        <td class="">
+                                            <p><span class="label label-success">{{vendorstatsdata?.lastmonthAmount}} / -</span></p>
+                                        </td>
+                                    </tr> 
+                                    <tr>
+                                        <td><b>Current Month Sales</b> </td>
+                                        <td class="">
+                                            <p><span class="label label-success">{{vendorstatsdata?.currentmonthAmount | number}} / -</span></p>
+                                        </td>
+                                    </tr> 
+                                    <tr>
+                                        <td><b>Todays Orders</b> </td>
+                                        <td class="">
+                                            <p><span class="label label-success">{{vendorstatsdata?.todayOrder}}  Orders</span></p>
+                                        </td>
+                                    </tr> 
+                                    <tr>
+                                        <td><b>Todays Sales</b> </td>
+                                        <td class="">
+                                            <p><span class="label label-success">{{vendorstatsdata?.todayAmount}} / -</span></p>
+                                        </td>
+                                    </tr> 
+
+                                 
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- <div class="footer">
+                            <hr>
+                            <div class="stats">
+                                <i class="fa fa-history"></i> Updated 3 minutes ago
+                            </div>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card ">
+                    <div class="header">
+                        <h4 class="title">2020 <b>{{username}}</b> Orders</h4>
+                        <p class="category">All products including Taxes</p>
+                    </div>
+                    <div class="content">
+                        <div>
+                            <div style="display: block">
+                                <canvas id="barchart1" baseChart [datasets]="barChartData1" [labels]="barChartLabels1" [options]="barChartOptions" [legend]="barChartLegend"
+                                [chartType]="barChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)" style="font-size:5px;"></canvas>
+                      
+                            </div>
+                          </div>
+
+                        <div class="footer">
+                            <div class="legend">
+                                <i class="fa fa-circle" style="color:#ffa1b5"></i> Orders
+                                <!-- <i class="fa fa-circle text-danger"></i> Cancelled Orders -->
+                            </div>
+                            <hr>
+                            <!-- <div class="stats">
+                                <i class="fa fa-check"></i> Data information certified
+                            </div> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card ">
+                    <div class="header">
+                        <h4 class="title">2020 <b>{{username}}</b> Sales</h4>
+                        <p class="category">All products including Taxes</p>
+                    </div>
+                    <div class="content">
+                        <div>
+                            <div style="display: block">
+                                <canvas id="barchart2" baseChart [datasets]="barChartData2"  [colors]="barChartColors" [labels]="barChartLabels1" [options]="barChartOptions" [legend]="barChartLegend"
+                                [chartType]="barChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)" style="font-size:5px;"></canvas>
+                      
+                            </div>
+                          </div>
+
+                        <div class="footer">
+                            <div class="legend">
+                                <i class="fa fa-circle" style="color:lightblue"></i> Sales for the particular month
+                                <!-- <i class="fa fa-circle text-danger"></i> Cancelled Orders -->
+                            </div>
+                            <hr>
+                            <!-- <div class="stats">
+                                <i class="fa fa-check"></i> Data information certified
+                            </div> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card ">
+                    <div class="header">
+                        <h4 class="title"><b>{{username}}'s</b> Top <b>Selling</b> Products</h4>
+                        <!-- <p class="category">All products including Taxes</p> -->
+                    </div>
+                    <div class="content">
+                        <div>
+                            <div style="display: block; background-color: white; border-radius: 10px;" >
+                                <!--[options]="doughnutChartOptions"-->
+                                    <canvas class="pie"
+                                            baseChart [data]="doughnutChartData"
+                                            [colors]="doughnutChartColours"
+                                            [labels]="doughnutChartLabels"
+                                            [chartType]="doughnutChartType"
+                                            (chartHover)="chartHovered($event)"
+                                            (chartClick)="chartClicked($event)">
+                                   </canvas>
+                               </div>
+                          </div>
+
+                        <div class="footer">
+                            <div class="legend">
+                                <i class="fa fa-circle" style="color:#ffa1b5"></i> Products Pie Chart
+                                <!-- <i class="fa fa-circle text-danger"></i> Cancelled Orders -->
+                            </div>
+                            <hr>
+                            <!-- <div class="stats">
+                                <i class="fa fa-check"></i> Data information certified
+                            </div> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card ">
+                    <div class="header">
+                        <h4 class="title"> Top Products</h4>
+                        <!-- <p class="category">All products including Taxes</p> -->
+                    </div>
+                    <div class="content">
+                        <table class="table table-bordered">
+                            <thead>
+                              <tr>
+                                <th>Product Name</th>
+                                <th>Orders</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr *ngFor="let data of this.toprevenue.topproduct">
+                                <td>{{data.name}}</td>
+                                <td>{{data.count}}</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card ">
+                    <div class="header">
+                        <h4 class="title"> Top Customers</h4>
+                        <!-- <p class="category">All products including Taxes</p> -->
+                    </div>
+                    <div class="content">
+                        <table class="table table-bordered">
+                            <thead>
+                              <tr>
+                                <th>Customer Name</th>
+                                <th>Orders</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr *ngFor="let data of this.toprevenue.topcustomer">
+                                <td>{{data.name}}</td>
+                                <td>{{data.count}}</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                    </div>
+                </div>
+            </div>
+        </div>   
+    </div>
+</div>
+
+<div class="content" *ngIf="userRole !== 'SUPERADMIN'">
+    <div class="container-fluid">    
+        <div class="row">
+
+            <div class="col-md-6">
+                <div class="card ">
+                    <div class="header">
+                        <h4 class="title">Placed Orders</h4>
+                     
+                    </div>
+                    <br>
+                    <div class="table-responsive">
+                        <table class="table table-condensed table-striped table-bordered" 
+                        [mfData]="placedorders | dataFilterPr : filterQuery1:'orders'" #mff="mfDataTable"
+                          [mfRowsOnPage]="rowsOnPage"  >
+                          <thead>
+                            <tr>
+                              <th>Product</th>
+                           
+                              
+                              <!-- <th>Customer</th> -->
+                              <th>Delivery Add.</th>
+                              <th>Expected Delivery</th>
+                              <th>Payment Details</th>
+                              <!-- <th>Status</th> -->
+              
+                             
+                      
+                
+                
+                              <th class="text-right">Action</th>
+                            </tr>
+                           <tr>
+                              <th colspan="9">
+                                <div id="custom-search-input">
+                                  <div class="input-group col-md-12">
+                                    <input type="text" class="form-control" placeholder="Search by Customer Name, Phone, City , Pincode Or Order Number" [(ngModel)]="filterQuery1" />
+                                    <span class="input-group-btn">
+                                      <button class="btn btn-danger" type="button">
+                                        <span class=" glyphicon glyphicon-search"></span>
+                                      </button>
+                                    </span>
+                                  </div>
+                                </div>
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let data of mff.data; let i = index; let last = last;">
+                              <td>  <div class="img-thumbnail  ">
+                                <img *ngIf="data?.oentry[0]?.photo?.docpath" src="{{docServer}}/{{data?.oentry[0]?.photo?.docpath}}" class="img-circle" alt="" style="width:100px; height:100px;">
+                                <img *ngIf="!data?.oentry[0]?.photo?.docpath" src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg" class="img-circle" alt="" style="width:100px; height:100px;">     
+                                <div class="caption text-capitalize text-center" *ngIf="data.oentry.length<=1; else elseBlock"> {{data.oentry[0]?.pname}}</div>
+                                <ng-template #elseBlock>
+                                <a [routerLink]="['/orderdetails',data.id]"><div class="caption text-capitalize text-center"> {{data.oentry[0]?.pname}} + {{data.oentry.length - 1}} Other Items</div></a>  
+                                </ng-template>
+            
+                              </div></td>
+                           
+              
+                              <!-- <td>{{data.custname}}<br>
+                                  Phone-{{data.custmobile}}</td> -->
+                              <td>{{data.custname}}<br>
+                                
+                                  {{data.deliveryaddress.line1}},<br>
+                                  {{data.deliveryaddress.city}}- {{data.deliveryaddress.pincode}}<br>
+                                  Phone-{{data.custmobile}}
+                              </td>
+
+                              <td>{{data.expdelivery | date}}<br>
+                                  
+                              </td>
+                              <td>Mode -{{data.paymentmode}}<br>
+                                Txn ID - <br>{{data.transactionid}}<br>
+                               Amount -{{data.qcost.finalamt}}/-<br>
+                               <span class="badge badge-primary">Branch Amount :{{data?.qcost?.transferamt}}/-</span><br></td>
+                              <!-- <td><span class="label label-primary">{{data.status}}</span></td> -->
+              
+              
+                             
+                                           
+                              
+                             
+                              <td class="text-right">
+                                <a *ngIf="data.status==='PLACED' && data.isvendoraccept === 'NO'">
+                                    <button (click)="acceptOrder(data.id)" class="btn btn-warning btn-sm" title="Accept Order">
+                                      <span  class="glyphicon glyphicon glyphicon-ok"></span>
+                                    </button>
+                                  </a>
+                
+                                   <a *ngIf="data.status==='PLACED' && data.isvendoraccept === 'NO'">
+                                    <button (click)="RejectOrder(data)" class="btn btn-danger btn-sm" title="Reject Order">
+                                      <span  class="glyphicon glyphicon glyphicon-remove"></span>
+                                    </button>
+                                  </a>
+                
+                                  <a (click)="orderpacked(data)" *ngIf="data.status==='PLACED' && data.isvendoraccept === 'YES'" class="btn btn-default" title="Order Packed" >
+                                    <i class="glyphicon glyphicon-inbox"></i>
+                                  </a>
+                    
+                              </td>
+                            </tr>
+                          </tbody>
+                          <tfoot>
+                            <tr>
+                              <td colspan="9">
+                                <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                              </td>
+                            </tr>
+                          </tfoot>
+                        </table>
+                      </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card ">
+                    <div class="header">
+                        <h4 class="title">Packed Orders</h4>
+                     
+                    </div>
+                    <br>
+                    <div class="table-responsive">
+                        <table class="table table-condensed table-striped table-bordered" 
+                        [mfData]="packedorders | dataFilterPr : filterQuery:'orders'" #mf="mfDataTable"
+                          [mfRowsOnPage]="rowsOnPage"  >
+                          <thead>
+                            <tr>
+                              <th>Product</th>
+                           
+                              
+                              <!-- <th>Customer</th> -->
+                              <th>Delivery Add.</th>
+                              <th>Expected Delivery</th>
+                              <th>Payment Mode</th>
+                              <!-- <th>Status</th> -->
+              
+                             
+                      
+                
+                
+                              <th class="text-right">Action</th>
+                            </tr>
+                           <tr>
+                              <th colspan="9">
+                                <div id="custom-search-input">
+                                  <div class="input-group col-md-12">
+                                    <input type="text" class="form-control" placeholder="Search by Customer Name, Phone, City , Pincode Or Order Number" [(ngModel)]="filterQuery" />
+                                    <span class="input-group-btn">
+                                      <button class="btn btn-danger" type="button">
+                                        <span class=" glyphicon glyphicon-search"></span>
+                                      </button>
+                                    </span>
+                                  </div>
+                                </div>
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let data of mf.data; let i = index; let last = last;">
+                              <td>  <div class="img-thumbnail  ">
+                                <img *ngIf="data?.oentry[0]?.photo?.docpath" src="{{docServer}}/{{data?.oentry[0]?.photo?.docpath}}" class="img-circle" alt="" style="width:100px; height:100px;">
+                                <img *ngIf="!data?.oentry[0]?.photo?.docpath" src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg" class="img-circle" alt="" style="width:100px; height:100px;">     
+                                <div class="caption text-capitalize text-center" *ngIf="data.oentry.length<=1; else elseBlock"> {{data.oentry[0]?.pname}}</div>
+                                <ng-template #elseBlock>
+                                <a [routerLink]="['/orderdetails',data.id]"><div class="caption text-capitalize text-center"> {{data.oentry[0]?.pname}} + {{data.oentry.length - 1}} Other Items</div></a>  
+                                </ng-template>
+            
+                              </div></td>
+                           
+              
+                              <!-- <td>{{data.custname}}<br>
+                                  Phone-{{data.custmobile}}</td> -->
+                              <td>{{data.custname}}<br>
+                                
+                                  {{data.deliveryaddress.line1}},<br>
+                                  {{data.deliveryaddress.city}}- {{data.deliveryaddress.pincode}}<br>
+                                  Phone-{{data.custmobile}}
+                              </td>
+
+                              <td>{{data.expdelivery | date}}<br>
+                                  
+                              </td>
+                              <td>Mode -{{data.paymentmode}}<br>
+                                Txn ID - <br>{{data.transactionid}}<br>
+                               Amount -{{data.qcost.finalamt}}/-<br>
+                               <span class="badge badge-primary">Branch Amount :{{data?.qcost?.transferamt}}/-</span><br></td>
+                              <!-- <td><span class="label label-primary">{{data.status}}</span></td> -->
+              
+              
+                             
+                                           
+                              
+                             
+                              <!-- <td class="text-right">
+                                <a (click)="orderpacked(data)" class="btn btn-default" title="Order Packed" >
+                                  <i class="glyphicon glyphicon-inbox"></i>
+                                </a>
+                    
+                              </td> -->
+                              <td> Ready For Pickup</td>
+                            </tr>
+                          </tbody>
+                          <tfoot>
+                            <tr>
+                              <td colspan="9">
+                                <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                              </td>
+                            </tr>
+                          </tfoot>
+                        </table>
+                      </div>
+                   
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card ">
+                    <div class="header">
+                        <h4 class="title">Pick Up Orders</h4>
+                     
+                    </div>
+                    <br>
+                    <div class="table-responsive">
+                        <table class="table table-condensed table-striped table-bordered" 
+                        [mfData]="pickuporders | dataFilterPr : filterQuery:'orders'" #mfff="mfDataTable"
+                          [mfRowsOnPage]="rowsOnPage"  >
+                          <thead>
+                            <tr>
+                              <th>Product</th>
+                           
+                              
+                              <!-- <th>Customer</th> -->
+                              <th>Delivery Add.</th>
+                              <th>Expected Delivery</th>
+                              <th>Payment Mode</th>
+                              <!-- <th>Status</th> -->
+              
+                             
+                      
+                
+                
+                              <th class="text-right">Action</th>
+                            </tr>
+                           <tr>
+                              <th colspan="9">
+                                <div id="custom-search-input">
+                                  <div class="input-group col-md-12">
+                                    <input type="text" class="form-control" placeholder="Search by Customer Name, Phone, City , Pincode Or Order Number" [(ngModel)]="filterQuery" />
+                                    <span class="input-group-btn">
+                                      <button class="btn btn-danger" type="button">
+                                        <span class=" glyphicon glyphicon-search"></span>
+                                      </button>
+                                    </span>
+                                  </div>
+                                </div>
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let data of mfff.data; let i = index; let last = last;">
+                              <td>  <div class="img-thumbnail  ">
+                                <img *ngIf="data?.oentry[0]?.photo?.docpath" src="{{docServer}}/{{data?.oentry[0]?.photo?.docpath}}" class="img-circle" alt="" style="width:100px; height:100px;">
+                                <img *ngIf="!data?.oentry[0]?.photo?.docpath" src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg" class="img-circle" alt="" style="width:100px; height:100px;">     
+                                <div class="caption text-capitalize text-center" *ngIf="data.oentry.length<=1; else elseBlock"> {{data.oentry[0]?.pname}}</div>
+                                <ng-template #elseBlock>
+                                <a [routerLink]="['/orderdetails',data.id]"><div class="caption text-capitalize text-center"> {{data.oentry[0]?.pname}} + {{data.oentry.length - 1}} Other Items</div></a>  
+                                </ng-template>
+            
+                              </div></td>
+              
+                              <!-- <td>{{data.custname}}<br>
+                                  Phone-{{data.custmobile}}</td> -->
+                              <td>{{data.custname}}<br>
+                                
+                                  {{data.deliveryaddress.line1}},<br>
+                                  {{data.deliveryaddress.city}}- {{data.deliveryaddress.pincode}}<br>
+                                  Phone-{{data.custmobile}}
+                              </td>
+
+                              <td>{{data.expdelivery | date}}<br>
+                                  
+                              </td>
+                              <td>Mode -{{data.paymentmode}}<br>
+                                Txn ID - <br>{{data.transactionid}}<br>
+                               Amount -{{data.qcost.finalamt}}/-<br>
+                               <span class="badge badge-primary">Branch Amount :{{data?.qcost?.transferamt}}/-</span><br></td>
+                              <!-- <td><span class="label label-primary">{{data.status}}</span></td> -->
+              
+              
+                             
+                                           
+                              
+                             
+                              <!-- <td class="text-right">
+                                <a (click)="orderpacked(data)" class="btn btn-default" title="Order Packed" >
+                                  <i class="glyphicon glyphicon-inbox"></i>
+                                </a>
+                    
+                              </td> -->
+                              <td> <span class="badge badge-success">Out for Delivery</span></td>
+
+                            </tr>
+                          </tbody>
+                          <tfoot>
+                            <tr>
+                              <td colspan="9">
+                                <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                              </td>
+                            </tr>
+                          </tfoot>
+                        </table>
+                      </div>
+                   
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card ">
+                    <div class="header">
+                        <h4 class="title">Delivered Orders</h4>
+                     
+                    </div>
+                    <br>
+                    <div class="table-responsive">
+                        <table class="table table-condensed table-striped table-bordered" 
+                        [mfData]="deliveredorders | dataFilterPr : filterQuery:'orders'" #mffff="mfDataTable"
+                          [mfRowsOnPage]="rowsOnPage"  >
+                          <thead>
+                            <tr>
+                              <th>Product</th>
+                           
+                              
+                              <!-- <th>Customer</th> -->
+                              <th>Delivery Add.</th>
+                              <th>Expected Delivery</th>
+                              <th>Payment Mode</th>
+                              <!-- <th>Status</th> -->
+              
+                             
+                      
+                
+                
+                              <th class="text-right">Action</th>
+                            </tr>
+                           <tr>
+                              <th colspan="9">
+                                <div id="custom-search-input">
+                                  <div class="input-group col-md-12">
+                                    <input type="text" class="form-control" placeholder="Search by Customer Name, Phone, City , Pincode Or Order Number" [(ngModel)]="filterQuery" />
+                                    <span class="input-group-btn">
+                                      <button class="btn btn-danger" type="button">
+                                        <span class=" glyphicon glyphicon-search"></span>
+                                      </button>
+                                    </span>
+                                  </div>
+                                </div>
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let data of mffff.data; let i = index; let last = last;">
+                              <td>  <div class="img-thumbnail  ">
+                                <img *ngIf="data?.oentry[0]?.photo?.docpath" src="{{docServer}}/{{data?.oentry[0]?.photo?.docpath}}" class="img-circle" alt="" style="width:100px; height:100px;">
+                                <img *ngIf="!data?.oentry[0]?.photo?.docpath" src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg" class="img-circle" alt="" style="width:100px; height:100px;">     
+                                <div class="caption text-capitalize text-center" *ngIf="data.oentry.length<=1; else elseBlock"> {{data.oentry[0]?.pname}}</div>
+                                <ng-template #elseBlock>
+                                <a [routerLink]="['/orderdetails',data.id]"><div class="caption text-capitalize text-center"> {{data.oentry[0]?.pname}} + {{data.oentry.length - 1}} Other Items</div></a>  
+                                </ng-template>
+            
+                              </div></td>
+              
+                              <!-- <td>{{data.custname}}<br>
+                                  Phone-{{data.custmobile}}</td> -->
+                              <td>{{data.custname}}<br>
+                                
+                                  {{data.deliveryaddress.line1}},<br>
+                                  {{data.deliveryaddress.city}}- {{data.deliveryaddress.pincode}}<br>
+                                  Phone-{{data.custmobile}}
+                              </td>
+
+                              <td>{{data.expdelivery | date}}<br>
+                                  
+                              </td>
+                              <td>Mode -{{data.paymentmode}}<br>
+                                Txn ID - <br>{{data.transactionid}}<br>
+                               Amount -{{data.qcost.finalamt}}/-<br>
+                               <span class="badge badge-primary">Branch Amount :{{data?.qcost?.transferamt}}/-</span><br></td>
+                              <!-- <td><span class="label label-primary">{{data.status}}</span></td> -->
+              
+              
+                             
+                                           
+                              
+                             
+                            
+                              <td> <span class="badge badge-success">Order Delivered</span></td>
+                            </tr>
+                          </tbody>
+                          <tfoot>
+                            <tr>
+                              <td colspan="9">
+                                <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                              </td>
+                            </tr>
+                          </tfoot>
+                        </table>
+                      </div>
+                   
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+              <div class="card">
+                <div class="header">
+                        <h4 class="title">Popular Products</h4>
+                        <!-- <p class="category">Last 10 Orders For Products</p> -->
+                </div>
+
+                <div class="content">
+                        <div  class="carousel slide hidden-xs" >
+                            <!-- Wrapper for slides -->
+                            <div class="carousel-inner">
+                                <div class="item active">
+                                    <div class="row">
+                                        <div class="col-sm-3" *ngFor="let data of this.popularproducts">
+                                            <div class="col-item" style="
+                                            height: 311.56%;
+                                        ">
+                                                <div class="photo">
+                                                    <img *ngIf="data?.path" src="{{docServer}}/{{data?.path}}" class="img-responsive" alt="a" style=" height: 220px; width: 80%; "  />
+                                                    <img *ngIf="!data?.path" src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg" class="img-responsive" alt="a" style=" height: 220px; width: 80%; " />
+
+                                                </div>
+                                                <div class="info">
+                                                    <div class="row">
+                                                        <div class="price col-md-6">
+                                                            <h5>
+                                                                {{data?.name}}</h5>
+                                                            
+                                                        </div>
+                                                        <div class="rating hidden-sm col-md-6">
+                                                            <i class="price-text-color fa fa-star"></i><i class="price-text-color fa fa-star">
+                                                            </i><i class="price-text-color fa fa-star"></i><i class="price-text-color fa fa-star">
+                                                            </i><i class="fa fa-star"></i>
+                                                        </div>
+                                                    </div>
+                                                    <!-- <div class="separator clear-left">
+                                                        <p class="btn-add">
+                                                            <i class="fa fa-shopping-cart"></i><a href="http://www.jquery2dotnet.com" class="hidden-sm">Add to cart</a></p>
+                                                        <p class="btn-details">
+                                                            <i class="fa fa-list"></i><a href="http://www.jquery2dotnet.com" class="hidden-sm">More details</a></p>
+                                                    </div> -->
+                                                    <div class="clearfix">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                               
+                                  
+                                    </div>
+                                </div>
+                           
+                            </div>
+                        </div>
+
+                </div>
+              </div>
+            </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
+              <div class="card">
+                <div class="header">
+                      <h4 class="title">Frequently Ordered</h4>
+                      <!-- <p class="category">Last 10 Orders For Products</p> -->
+                </div>
+
+                <div class="content">
+                      <div  class="carousel slide hidden-xs" >
+                          <!-- Wrapper for slides -->
+                          <div class="carousel-inner">
+                              <div class="item active">
+                                  <div class="row">
+                                      <div class="col-sm-3" *ngFor="let data of this.freqdata">
+                                          <div class="col-item" style="height: 311.56%;">
+                                              <div class="photo">
+                                                  <img *ngIf="data?.path" src="{{docServer}}/{{data?.path}}" class="img-responsive" alt="a" style=" height: 220px; width: 80%; "  />
+                                                  <img *ngIf="!data?.path" src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg" class="img-responsive" alt="a" style=" height: 220px; width: 80%; " />
+
+                                              </div>
+                                              <div class="info">
+                                                  <div class="row">
+                                                      <div class="price col-md-6">
+                                                          <h5>
+                                                              {{data?.name}}</h5>
+                                                          
+                                                      </div>
+                                                      <div class="rating hidden-sm col-md-6">
+                                                          <i class="price-text-color fa fa-star"></i><i class="price-text-color fa fa-star">
+                                                          </i><i class="price-text-color fa fa-star"></i><i class="price-text-color fa fa-star">
+                                                          </i><i class="fa fa-star"></i>
+                                                      </div>
+                                                  </div>
+                                                  <!-- <div class="separator clear-left">
+                                                      <p class="btn-add">
+                                                          <i class="fa fa-shopping-cart"></i><a href="http://www.jquery2dotnet.com" class="hidden-sm">Add to cart</a></p>
+                                                      <p class="btn-details">
+                                                          <i class="fa fa-list"></i><a href="http://www.jquery2dotnet.com" class="hidden-sm">More details</a></p>
+                                                  </div> -->
+                                                  <div class="clearfix">
+                                                  </div>
+                                              </div>
+                                          </div>
+                                      </div>
+                             
+                                
+                                  </div>
+                              </div>
+                         
+                          </div>
+                      </div>
+
+                </div>
+              </div>
+          </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,104 @@
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ * Put style rules here that you want to apply globally. These styles are for
+ * the entire app and not just one component. Additionally, this file can be
+ * used as an entry point to import other CSS/Sass files to be included in the
+ * output CSS.
+ * For more information on global stylesheets, visit the documentation:
+ * https://ionicframework.com/docs/layout/global-stylesheets
+ */
+
+/* Core CSS required for Ionic components to work properly */
+@import "~@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "~@ionic/angular/css/normalize.css";
+@import "~@ionic/angular/css/structure.css";
+@import "~@ionic/angular/css/typography.css";
+@import '~@ionic/angular/css/display.css';
+
+/* Optional CSS utils that can be commented out */
+@import "~@ionic/angular/css/padding.css";
+@import "~@ionic/angular/css/float-elements.css";
+@import "~@ionic/angular/css/text-alignment.css";
+@import "~@ionic/angular/css/text-transformation.css";
+@import "~@ionic/angular/css/flex-utils.css";
+
+
+/* DOES NOT WORK - not specific enough */
+.alert-wrapper {
+    background: #e5e5e5;
+  }
+
+  /* Works - pass "my-custom-class" in cssClass to increase specificity */
+  .my-custom-class .alert-wrapper {
+    --background: #864bf6;
+    border-radius: 10px;
+  }
+
+  .my-custom-class .alert-message {
+    color: white;
+  }
+
+  .my-custom-class .alert-button-inner {
+    color: white;
+  }
+
+  .my-custom-class .alert-title {
+    color: #fff1db;
+  }
+
+
+  ion-card-title{
+    font-size: 12px;
+    font-family: 'Montserrat', sans-serif;
+  }
+
+  .category-banner{
+    font-size: 16px;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: bold !important;
+  }
+
+
+  .cartt{
+    --background-activated: none;
+      --background-focused: none;
+      --background-hover: none;
+      --background-activated-opacity: 1;
+      --background-focused-opacity: 1;
+      --background-hover-opacity: 1;
+      --background: none;
+      --font-size: 14px ;
+      padding: 0px;
+  }
+
+  .pageheading{
+    font-size: 14px ;
+    font-family: 'Montserrat', sans-serif !important;
+    font-style: oblique;
+   // text-align: left;
+    padding: 0px 0px 5px 2px !important;
+  }
+
+  .bd{
+    font-size: 10px !important;
+  }
+
+  .new-background-color{
+    // --background: #54d61c;
+    --background: #FF8008;  /* fallback for old browsers */
+    --background: -webkit-linear-gradient(to right, #FFC837, #FF8008);  /* Chrome 10-25, Safari 5.1-6 */
+    --background: linear-gradient(to right, #FFC837, #FF8008); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+   }
+  //  ion-row{
+  //    padding: 0px !important;
+  //  }
+
+  ion-select{
+    max-width: 100% !important;
+  }
+
+

@@ -1,0 +1,1335 @@
+<div class="col-md-12 col-sm-12 col-xs-12" *ngIf="!isManageState && !isdetails && !isinvoice">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        {{title}}
+        <!-- <a class="pull-right">
+          <button title="View all Servicing Job" (click)="cancel()"> <span
+              class="glyphicon glyphicon-th-list"></span></button>
+        </a> -->
+        <!-- <a [routerLink]="['/viewinvoiceservicing/', data.id]" title="Manage All Servicing" class="pull-right">
+          <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+        </a> -->
+         <a [routerLink]="['/manageservicing']" title="Manage All Servicing" class="pull-right">
+          <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+        </a>
+      </div>
+      <div class="panel-body">
+        <form #form1="ngForm">
+  
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="name"> Invoice No </label>
+  
+              <input readonly type="text" class="form-control" id="invoicenum" name="invoicenum"
+                [(ngModel)]="servicingjob.invoicenum" />
+  
+            </div>
+          </div>
+  
+  
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="invoicedate">Invoice Date</label>
+              <input *ngIf="!isUpdate" type="text" readonly class="form-control" id="invoicedate" name="invoicedate" required
+                [(ngModel)]="todaysdateandtime" />
+              <input *ngIf="isUpdate" type="text" readonly class="form-control" id="invoicedate" name="invoicedate"
+                [(ngModel)]="todaysdateandtime" />
+            </div>
+          </div>
+  
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="mechanic">Mechanic Name</label>
+              <select class="form-control" name="mechanic" required [(ngModel)]="servicingjob.mechanic"
+                (change)="pasmechanicname($event)">
+                <option required *ngFor="let dep of empList; let i=index" [value]="dep.id">{{dep.name}}</option>
+                <option value="OTHER">OTHER</option>
+              </select>
+              <!-- <input *ngIf="isUpdate" readonly type="text" class="form-control" id="mechanic" name="mechanic"  [(ngModel)]="servicingjob.mechanicname" />
+                    -->
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="servicingjob.mechanic==='OTHER'">
+              <div class="form-group">
+                <label for="oMechanic">Other Mechanic Name</label>
+                <input *ngIf="!isUpdate" type="text" required class="form-control" id="oMechanic" name="oMechanic"
+                  [(ngModel)]="servicingjob.mechanicname" />
+                <input *ngIf="isUpdate" readonly type="text" class="form-control" id="oMechanic" name="oMechanic"
+                  [(ngModel)]="servicingjob.mechanicname" />
+              </div>
+            </div>
+  
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="jobcardno">Jobcard No</label>
+              <input *ngIf="!isUpdate" type="text" class="form-control" id="jobcardno" name="jobcardno" required
+                readonly [(ngModel)]="servicingjob1.jobcardno" />
+              <input *ngIf="isUpdate" readonly type="text" class="form-control" id="jobcardno" name="jobcardno" required
+                [(ngModel)]="servicingjob1.jobcardno" />
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="supervisor">Supervisor Name</label>
+              <select class="form-control" name="supervisor" disabled required [(ngModel)]="servicingjob1.supervisor"
+                (change)="passupervisorname($event)">
+                <option required *ngFor="let dep of empList; let i=index" [value]="dep.id">{{dep.name}}</option>
+  
+              </select>
+            </div>
+          </div>
+  
+  
+  
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="servicetype">Service Type</label>
+              <select *ngIf="!isUpdate" class="form-control" disabled required name="servicetype" [(ngModel)]="servicingjob1.servicetype">
+                <option value="ACCIDENT_WORK">ACCIDENT_WORK</option>
+                <option value="REGULAR">REGULAR</option>
+                <option value="FREE_SERVICING">FREE_SERVICING</option>
+              </select>
+              <input *ngIf="isUpdate" readonly type="text" class="form-control" id="servicetype" name="servicetype"
+                required [(ngModel)]="servicingjob1.servicetype" />
+            </div>
+          </div>
+  
+          <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="advname">Senior Advisor Name</label>
+                <input *ngIf="!isUpdate" type="text" class="form-control" id="advname" name="advname"
+                  [(ngModel)]="servicingjob.advname" />
+                <input *ngIf="isUpdate" readonly type="text" class="form-control" id="advname" name="advname"
+                  [(ngModel)]="servicingjob.advname" />
+              </div>
+            </div>
+  
+          <div class="col-lg-12 col-md-12 col-sm-12 ">
+            <hr>
+          </div>
+  
+          <!-- <div class="col-lg-12 col-md-12 col-sm-12">
+            <h4>Vehicle Detail:</h4>
+          </div>
+  
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="vmodel">Vehicle Model</label>
+              <input type="text" class="form-control" id="vmodel" name="vmodel" required readonly
+                [(ngModel)]="servicingjob1.vmodel" />
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="chassisnum">Chassis No</label>
+              <input type="text" class="form-control" id="chassisnum" name="chassisnum" required readonly
+                [(ngModel)]="servicingjob1.chassisnum" />
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="enginenum">Engine No</label>
+              <input type="text" class="form-control" id="enginenum" name="enginenum" required readonly
+                [(ngModel)]="servicingjob1.enginenum" />
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="kmscoverage">KMS Cover</label>
+                <input type="number" class="form-control" id="kmscoverage" name="kmscoverage" required readonly
+                  [(ngModel)]="servicingjob1.kmscoverage" />
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-group">
+                  <label for="vregno">Vehicle Registry Number</label>
+                  <input type="text" class="form-control" id="vregno" name="vregno" required readonly
+                    [(ngModel)]="servicingjob1.vregno" />
+                </div>
+              </div>
+   -->
+  
+          <div class="col-lg-12 col-md-12 col-sm-12 ">
+            <hr>
+          </div>
+          <form #form2="ngForm">
+            <div class="col-lg-12 img-thumbnail rounded" style="padding:0px;">
+              <div class="col-lg-12 col-md-12 col-sm-12">
+                <h4>Labour Detail:</h4>
+              </div>
+  
+  
+  
+              <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-group">
+                  <label for="labourname">Labour Name </label>
+                  <input type="text" class="form-control" id="labourname" name="labourname" required
+                    [(ngModel)]="labourdetails.labourname" />
+                </div>
+              </div>
+  
+              <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-group">
+                  <label for="labourdetails">Labour Detail </label>
+                  <input type="text" class="form-control" id="labourdetails" name="labourdetails" required
+                    [(ngModel)]="labourdetails.labourdetails" />
+                </div>
+              </div>
+              <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-group">
+                  <label for="hsncode">HSN code </label>
+                  <input type="number" class="form-control" id="hsncode" name="hsncode"
+                    [(ngModel)]="labourdetails.hsncode" />
+                </div>
+              </div>
+              <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-group">
+                  <label for="qty1">Quantity </label>
+                  <input type="number" class="form-control" (change)="labourtotal()" id="qty1" name="qty1" required
+                    [(ngModel)]="labourdetails.qty" />
+                </div>
+              </div>
+              <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-group">
+                  <label for="rateperunit">Rate per Unit </label>
+                  <input type="number" class="form-control" id="rateperunit" name="rateperunit" (change)="labourtotal()"
+                    required [(ngModel)]="labourdetails.rateperunit" />
+                </div>
+              </div>
+              <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-group">
+                  <label for="total">Total </label>
+                  <input type="number" class="form-control" readonly id="total" name="total" required
+                    [(ngModel)]="labourdetails.total" />
+                </div>
+              </div>
+  
+  
+  
+  
+              <div class="col-md-6 col-sm-6 col-xs-12">
+                  <div class="form-group">
+                    <label for="taxableval">Taxable Value </label>
+                    <input type="number" class="form-control" id="taxableval" (change)="gstlabour()" name="taxableval"
+                      required [(ngModel)]="labourdetails.taxableval" />
+                  </div>
+                </div>
+  
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="gst"> GST Percent:
+                  </label>
+                  <input *ngIf="!isUpdate" required type="number" class="form-control" (change)="gstlabour()" name="gst"
+                    [(ngModel)]="labourdetails.gst">
+                  <input *ngIf="isUpdate" required type="number" class="form-control" (change)="gstlabour()" name="gst"
+                    [(ngModel)]="labourdetails.gst">
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="gstamt"> GST Amount:
+                  </label>
+                  <input *ngIf="!isUpdate" readonly type="number" class="form-control" required name="gstamt"
+                    [(ngModel)]="labourdetails.gstamt">
+                  <input *ngIf="isUpdate" readonly type="number" class="form-control" required name="gstamt"
+                    [(ngModel)]="labourdetails.gstamt">
+                </div>
+              </div>
+  
+  
+              <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-group">
+                  <label for="discount">Discount </label>
+                  <input type="number" class="form-control" id="discount" (change)="gstlabour()" name="discount"
+                    [(ngModel)]="labourdetails.discount" />
+                </div>
+              </div>
+  
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="expktweight">Total Amount:
+                  </label>
+                  <input *ngIf="!isUpdate" type="number" readonly class="form-control" required name="expktweight"
+                    [(ngModel)]="labourdetails.finalamt">
+                  <input *ngIf="isUpdate" type="number" readonly class="form-control" required name="expktweight"
+                    [(ngModel)]="labourdetails.finalamt">
+                </div>
+              </div>
+  
+            </div>
+          </form>
+          <div class="col-sm-12">
+  
+            <div>
+              <div>
+                <br>
+                <form name="form2">
+                  <button class="btn btn-info btn-sm" [disabled]="!form2.valid" (click)="push()">
+                    <span class="glyphicon glyphicon-plus"></span>
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+          <hr>
+          <div class="col-sm-12 img-thumbnail rounded"
+            style="margin-top: 3px;  border: 1px solid #c5c4c4; min-height: 10px; overflow: auto;">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th style="width: 50px;">-</th>
+  
+                  <th>Labour Name</th>
+                  <th>Labour Details</th>
+                  <th>HSN</th>
+                  <th>Quantity</th>
+                  <th>Rate Per Unit</th>
+                  <th>GST Amount</th>
+                  <th>Total Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let data of servicingjob.labourdetails; let i=index;">
+                  <td style="width: 50px;">
+                    <a style="cursor: pointer; color: red;" (click)="onDeleteproduct(i)">
+                      <span class="glyphicon glyphicon-remove-circle"></span>
+                    </a>
+  
+                  </td>
+                  <!-- <td style="width: 50px;" *ngIf="isUpdate">
+                    <a style="cursor: pointer; color: red;" (click)="onDeletelabourfromdb(data.id)">
+                      <span class="glyphicon glyphicon-remove-circle"></span>
+                    </a>
+  
+                  </td> -->
+  
+                  <td>{{data?.labourname}}</td>
+                  <td>{{data?.labourdetails}}</td>
+                  <td>{{data?.hsncode}}</td>
+                  <td>{{data?.qty}}</td>
+                  <td>{{data?.rateperunit}}</td>
+                  <td>{{data?.gstamt}}</td>
+                  <td>{{data?.finalamt}}</td>
+  
+                </tr>
+  
+              </tbody>
+            </table>
+  
+          </div>
+  
+  
+  
+   
+  
+          <div class="col-lg-12 col-md-12 col-sm-12 ">
+            <hr>
+          </div>
+  
+          <div class="col-lg-12 col-md-12 col-sm-12">
+            <h4>Charges:</h4>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="partstotal">Part Total </label>
+              <input type="number" readonly class="form-control" id="partstotal" name="partstotal" required
+                [(ngModel)]="servicingjob.partstotal" />
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="labourtotal">Labour Total </label>
+              <input *ngIf="isUpdate" readonly type="number" class="form-control" id="labourtotal" name="labourtotal"
+                required [(ngModel)]="servicingjob.labourtotal" />
+              <input *ngIf="!isUpdate" readonly type="number" class="form-control" id="labourtotal" name="labourtotal"
+                required [(ngModel)]="servicingjob.labourtotal" />
+  
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="othercharges">Other Charge </label>
+              <input type="number" class="form-control" id="othercharges" (change)="othercharges()" name="othercharges"
+                required [(ngModel)]="servicingjob.othercharges" />
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="finalamt">Final Amount </label>
+              <input type="number" readonly class="form-control" id="finalamt" name="finalamt" required
+                [(ngModel)]="servicingjob.finalamt" />
+            </div>
+          </div>
+  
+          <div class="col-lg-12 col-md-12 col-sm-12 ">
+              <hr>
+            </div>
+  
+            <div class="col-lg-12 col-md-12 col-sm-12">
+              <h4>Servicing Details:</h4>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-group">
+                    <label for="name"> Service Due Date:  </label>
+                    <input *ngIf="!isUpdate"  required type="date" class="form-control" id="serviceduedate" name="serviceduedate"  [(ngModel)]="servicingdetails.serviceduedate" />
+  
+                    <input *ngIf="isUpdate" required type="date" class="form-control" id="serviceduedate" name="serviceduedate"  [(ngModel)]="servicingdetails.serviceduedate" />
+  
+                    </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-group">
+                    <label for="availedon">Servicing Availed On:</label>
+                    <input *ngIf="!isUpdate" type="date" class="form-control" id="availedon" name="availedon" required [(ngModel)]="servicingdetails.availedon" />
+                    <input  *ngIf="isUpdate"  type="date" class="form-control" id="availedon" name="availedon"  [(ngModel)]="servicingdetails.availedon" />
+                  </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-group">
+                    <label for="nextservicedueon">Next Servicing On</label>
+                    <input type="date" class="form-control" id="myDate" min="{{servicingdetails.availedon}}" name="nextservicedueon" required [(ngModel)]="servicingdetails.nextservicedueon" />
+                  </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-group">
+                    <label for="paid">Paid</label>
+                    <select required  class="form-control" name="paid" [(ngModel)]="servicingdetails.paid" (change)="getservicingByid()">
+                      <option value="YES">YES</option>
+                      <option value="NO">NO</option>
+                       </select>
+                    <!-- <input *ngIf="isUpdate"  type="text" class="form-control" id="paid" name="paid" required [(ngModel)]="servicingdetails.paid" /> -->
+                  </div>
+            </div>
+  
+            <!-- <p *ngIf="this.servicingg>0"> You Have Left
+              {{servicingg}} Free Servicing You Can Availed It.</p> -->
+  
+  
+            <!-- <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-group">
+                  <label for="amount">Amount:</label>
+                  <input type="number" readonly class="form-control"  id="amount" name="amount" required [(ngModel)]="servicingdetails.amount"
+                  />
+                </div>
+              </div> -->
+  
+              <div class="col-lg-12 col-md-12 col-sm-12 ">
+                  <hr>
+                </div>
+  
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                  <h4>Billing Detail:</h4>
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="isUpdate" >
+                  <div class="form-group">
+                    <label for="billto">Bill To </label>
+                    <select class="form-control" name="billto"  disabled
+                    [(ngModel)]="servicingjob.billto" (change)="getservicingByid()">
+  
+                    <option value="INSURER" selected>INSURER</option>
+                  </select>
+  
+                  </div>
+                </div>
+  
+  
+                <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="servicingjob.billto === 'INSURER'">
+                    <div class="form-group">
+                      <label for="insurer">Insurer </label>
+                        <select required class="form-control" name="insurer" required [(ngModel)]="servicingjob.insurer" (change)="passinsurername($event)" >
+                        <option  *ngFor="let dataa of insurerlist; let i=index" [value]="dataa.id">{{dataa.name}}</option>
+  
+                      </select>
+                      </div>
+                  </div>
+  
+  
+                  <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="servicingjob.billto === 'CUSTOMER'">
+                      <div class="form-group">
+                        <label for="CUSTOMER">Customer Name </label>
+                          <input readonly type="text" class="form-control" name="custnamee" [(ngModel)]="custname" >
+                        </div>
+                    </div>
+  
+  
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                      <div class="form-group">
+                        <label for="billto">Payment Mode </label>
+                        <select class="form-control" name="paymentmode"
+                        required [(ngModel)]="servicingjob.paymentmode" >
+                        <option value="CASH" selected>CASH</option>
+                        <option value="BANK">BANK</option>
+                      </select>
+  
+                      </div>
+                    </div>
+  
+  
+                    <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="!isUpdate">
+                      <div class="form-group">
+                        <label for="billto">Is Insured ?</label>
+                        <select required class="form-control" name="isinsured"
+                        [(ngModel)]="isinsured" >
+                        <option value="YES">YES</option>
+                        <option value="NO">NO</option>
+                      </select>
+                      <br>
+                      <div class="form-group"  *ngIf="servicingjob.servicetype==='ACCIDENT_WORK' && isinsured==='NO'">
+                        <label style="color:red">Note : Are You Sure Don't Want to Insured it? Beacuse Servicing Type is ACCIDENT_WORK ! </label>
+  
+                     </div>
+                    </div>
+                    </div>
+              <!-- <div class="col-sm-12">
+  
+                  <div>
+                    <div>
+                      <br>
+                      <form name="form4">
+                        <button [disabled]="!form4.valid" class="btn btn-info btn-sm" (click)="pushservdetails()">
+                          <span class="glyphicon glyphicon-plus"></span>
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+                <hr>
+                <div class="col-sm-12 img-thumbnail"
+                  style="margin-top: 3px;  border: 1px solid #c5c4c4; min-height: 10px; overflow: auto;">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th style="width: 50px;">-</th>
+  
+                        <th>Servicing Due Date</th>
+                        <th>Availed On</th>
+                        <th>Next Service Due On</th>
+                        <th>Paid</th>
+                        <th>Amount</th>
+  
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let data of servicingdetails1; let i=index;">
+                        <td style="width: 50px;" *ngIf="!isUpdate">
+                          <a style="cursor: pointer; color: red;" (click)="onDeleteservdetails(i)">
+                            <span class="glyphicon glyphicon-remove-circle"></span>
+                          </a>
+  
+                        </td>
+                        <td style="width: 50px;" *ngIf="isUpdate">
+                          <a style="cursor: pointer; color: red;" (click)="onDeleteservdetailsfromdb(data.id)">
+                            <span class="glyphicon glyphicon-remove-circle"></span>
+                          </a>
+  
+                        </td>
+  
+  
+                        <td>{{data?.serviceduedate | date:'dd-MM-yyyy'}}</td>
+                        <td>{{data?.availedon | date:'dd-MM-yyyy'}}</td>
+                        <td>{{data?.nextservicedueon | date:'dd-MM-yyyy'}}</td>
+                        <td>{{data?.paid}}/-</td>
+                        <td>{{data?.amount}}/-</td>
+  
+  
+                      </tr>
+  
+                    </tbody>
+                  </table>
+  
+                </div> -->
+  
+  
+          <div class="col-md-12">
+            <div class="form-group">
+              <button *ngIf="this.url == '/addservicingjob/'+ this.id" type="submit" [disabled]="!form1.valid"
+                class="btn btn-default" (click)="submitData()">Submit</button>
+              <button *ngIf="this.url == '/updateservicingjob/' + this.id" type="submit" [disabled]="!form1.valid"
+                class="btn btn-default" (click)="updateData()">Submit</button>
+              <button type="button" class="btn btn-default" (click)="cancel()">Cancel</button>
+            </div>
+          </div>
+  
+        </form>
+      </div>
+    </div>
+</div>
+  
+<div class="col-md-12 col-sm-12 col-xs-12" *ngIf="isManageState && !isdetails && !isinvoice">
+  
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <div class="clearfix">
+          <div class="pull-left">
+              Manage Servicing Job for {{custname}}
+          </div>
+          <div class="container" class="pull-right">
+            <div class="row">
+  
+              <a [routerLink]="['/manageservicing']" title="Manage All Servicing" class="btn btn-info a-btn-slide-text">
+                <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+              </a>
+  
+              <a [routerLink]="['/addservicingjob',this.id]" title="Add Servicing Job Details"
+                class="btn btn-info a-btn-slide-text">
+                <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+              </a>
+            </div>
+          </div>
+        </div>
+  
+      </div>
+      <div class="panel-body">
+        <div class="table-responsive">
+          <table class="table table-condensed table-striped table-bordered" [mfData]="data | dataFilterPr : filterQuery:'servicingjob'"
+            #mf="mfDataTable" [mfRowsOnPage]="rowsOnPage" [(mfSortBy)]="Role" [(mfSortOrder)]="sortOrder">
+            <thead>
+              <tr>
+                <th>SN</th>
+                <th>
+                  <mfDefaultSorter by="role">Mechanic Name</mfDefaultSorter>
+                </th>
+  
+                <th>Jobcard No</th>
+                <th>Reg No</th>
+                <th>Service Type</th>
+                <th>Model</th>
+                <th>Engine No</th>
+                <th>Chassis No</th>
+                <th>Insurer</th>
+                <th>Invoice No</th>
+                <th>Final Amount</th>
+  
+                <th>Action</th>
+              </tr>
+              <tr>
+                <th colspan="13">
+                  <div id="custom-search-input">
+                    <div class="input-group col-md-12">
+                      <input type="text" class="form-control" placeholder="Search by Mechanic name, Reg No Or Model name" [(ngModel)]="filterQuery" />
+                      <span class="input-group-btn">
+                        <button class="btn btn-danger" type="button">
+                          <span class=" glyphicon glyphicon-search"></span>
+                        </button>
+                      </span>
+                    </div>
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of mf.data; let i = index; let last = last;">
+                <td>{{i+1}}</td>
+                <td>{{data?.mechanicname}}</td>
+                <td>{{data?.jobcardno}}</td>
+                <td>{{data?.vregno}}</td>
+                <td>{{data?.servicetype}}</td>
+                <td>{{data?.vmodel}}</td>
+                <td>{{data?.enginenum}}</td>
+                <td>{{data?.chassisnum}}</td>
+  
+                <td>{{data?.insurer}}</td>
+                <td>{{data?.invoicenum}}</td>
+  
+                <td>{{data?.finalamt}}</td>
+                <!-- <td>
+                    {{data?.address.line1}},
+                    <br> {{data?.address.line2}},
+                    <br> {{data?.address.country}},
+                    <br> {{data?.address.states}},{{data?.address.city}},
+                    <br> {{data?.address.pincode}}
+                  </td> -->
+                <td class="text-right">
+                  <!-- <a [routerLink]="['/updateservicingjob/',data.id]" data-toggle="tooltip" title="Update Servicing"
+                    *ngIf="userType == 'ADMIN' || userType == 'SUPERADMIN'">
+                    <button class="btn btn-default btn-sm">
+                      <span class="glyphicon glyphicon-edit"></span>
+                    </button>
+                  </a> -->
+  
+                  <a [routerLink]="['/detailservicingjob/',data.id]" data-toggle="tooltip" title="Details Servicing"
+                    *ngIf="userType == 'ADMIN' || userType == 'SUPERADMIN'">
+                    <button class="btn btn-primary btn-sm">
+                      <span class="glyphicon glyphicon-info-sign"></span>
+                    </button>
+                  </a>
+                  <a [routerLink]="['/viewinvoiceservicing/',data.id]" data-toggle="tooltip" title=" Servicing Invoice"
+                    *ngIf="userType == 'ADMIN' || userType == 'SUPERADMIN'">
+                    <button class="btn btn-sm btn-info">
+                      <span class="glyphicon glyphicon-print"></span>
+                    </button>
+                  </a>
+  
+                  <!-- <a  title="Download Invoice" class="btn btn-info a-btn-slide-text" (click)="generatePdf()">
+                      <i class="glyphicon glyphicon-download-alt"></i>
+                    </a> -->
+  
+                  <!-- <button class="btn btn-danger btn-sm" title="Delete Servicing" (click)="deleteRole(data.id)">
+                    <span class="glyphicon glyphicon-remove-circle"></span>
+                  </button> -->
+  
+  
+                </td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="13">
+                  <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+</div>
+  
+  
+<div class="col-md-12 col-sm-12 col-xs-12" *ngIf="isdetails">
+  
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <div class="clearfix">
+          <div class="pull-left"> {{title}}</div>
+          <div class="container" class="pull-right">
+            <div class="row">
+              <a class="pull-right">
+                <button title="View all Servicing Job" (click)="cancel()"> <span
+                    class="glyphicon glyphicon-th-list"></span></button>
+              </a>
+              <!-- <a title="Download" class="btn btn-info a-btn-slide-text" (click)="generatePdf()">
+                <i class="glyphicon glyphicon-download-alt"></i>
+              </a> -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="panel-body" id="content" #content>
+  
+        <form #form1="ngForm">
+          <div class="col-md-12 col-sm-12 col-xs-12 ">
+  
+            <div class="col-md-12 col-sm-12 col-xs-12">
+              <!-- <h4>Mechanic Details:</h4> -->
+            </div>
+  
+            <div class="col-md-12 col-sm-12 col-xs-12 ">
+              <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-group">
+                  <label for="mechanicname">Mechanic Name : {{servicingjob.mechanicname}}</label>
+                </div>
+              </div>
+              <!-- <div class="col-md-12 col-sm-12 col-xs-12">
+                      <div class="form-group">
+                        <label for="role">LogIN Role: {{emp.role.role}}
+  
+                      </div>
+                    </div> -->
+              <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-group">
+                  <label for="supervisorname">Supervisor Name : {{servicingjob1.supervisorname}}</label>
+                </div>
+              </div>
+              <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-group">
+                  <label for="jobcardno">JobCard No: {{servicingjob1.jobcardno}}</label>
+                </div>
+              </div>
+              <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-group">
+                  <label for="invoicenum">Invoice No: {{servicingjob.invoicenum}}</label>
+                </div>
+              </div>
+              <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-group">
+                  <label for="invoicedate">Invoice Date: {{servicingjob.invoicedate |date: 'dd-MM-yyyy hh:MM a'}}</label>
+                </div>
+              </div>
+              <div class="col-md-6 col-sm-6 col-xs-12">
+                  <div class="form-group">
+                    <label for="invoicenum">Service Type: {{servicingjob1.servicetype}}</label>
+                  </div>
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="form-group">
+                      <label for="invoicenum">S.Adv Name {{servicingjob.advname}}</label>
+                    </div>
+                  </div>
+            </div>
+          </div>
+          <div class="col-md-12 col-sm-12 col-xs-12 ">
+            <hr>
+            <div class="col-md-12 col-sm-12 col-xs-12">
+              <h4>Vehicle Detail:&nbsp;</h4>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="vmodel">Vehicle Model : {{servicingjob1.vmodel}}</label>
+  
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="enginenum">Engine No : {{servicingjob1.enginenum}}</label>
+  
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="chassisnum">Chassis No : {{servicingjob1.chassisnum}}</label>
+  
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-group">
+                  <label for="chassisnum">Registry No : {{servicingjob1.vregno}}</label>
+  
+                </div>
+              </div>
+              <div class="col-md-6 col-sm-6 col-xs-12">
+                  <div class="form-group">
+                    <label for="chassisnum">KMS Covered: {{servicingjob1.kmscoverage}}</label>
+  
+                  </div>
+                </div>
+            <!-- <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="insurer">Insurer Name : {{servicingjob.insurer}}</label>
+  
+              </div>
+            </div> -->
+  
+            <!-- <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="form-group">
+                      <label for="dob">Date Of Birth:&nbsp;{{emp.dob|date: 'dd-MM-yyyy'}}
+  
+  
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="form-group">
+                      <label for="gender">Gender:&nbsp;{{emp.gender}}
+                    &nbsp;
+                    </div>
+                  </div> -->
+  
+          </div>
+  
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <hr>
+            <div class="col-md-12 col-sm-12 col-xs-12">
+              <h4>Labour Job Detail:</h4>
+            </div>
+            <div class="col-sm-12 img-thumbnail rounded"
+  
+              style="margin-top: 3px;  border: 1px solid #c5c4c4; min-height: 10px; overflow: auto;">
+  
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 50px;">-</th>
+  
+                    <th>Labour Name</th>
+                    <th>HSN Code</th>
+                    <th>Labour Detail</th>
+  
+                    <th>Rate Per Unit</th>
+                    <th>GST</th>
+                    <th>Gst Amount</th>
+                    <th>Quantity</th>
+  
+                    <th>Total</th>
+  
+                    <th>Discount</th>
+                    <th>Subtotal</th>
+  
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let data of labourarray; let i=index;">
+                    <td style="width: 50px;">
+                    </td>
+  
+                    <td>{{data?.labourname}}</td>
+                    <td>{{data?.hsncode}}</td>
+                    <td>{{data?.labourdetails}}</td>
+                    <td>{{data?.rateperunit}}/-</td>
+                    <td>{{data?.gst}}%</td>
+                    <td>{{data?.gstamt}}/-</td>
+                    <td>{{data?.qty}}</td>
+                    <td>{{data?.total}}/-</td>
+  
+                    <td>{{data?.discount}}/-</td>
+                    <td>{{data?.finalamt}}/-</td>
+  
+                  </tr>
+  
+                </tbody>
+              </table>
+            </div>
+          </div>
+  
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <hr>
+            <!-- <div class="col-md-12 col-sm-12 col-xs-12">
+              <h4>Sparepart Detail:</h4>
+            </div>
+            <div class="col-sm-12 img-thumbnail rounded"
+              style="margin-top: 3px;  border: 1px solid #c5c4c4; min-height: 10px; overflow: auto;">
+  
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 50px;">-</th>
+  
+                    <th>Sparepart Name</th>
+                    <th>HSN Code</th>
+  
+  
+                    <th>Rate Per Unit</th>
+                    <th>GST</th>
+                    <th>Gst Amount</th>
+                    <th>Quantity</th>
+  
+                    <th>Total</th>
+  
+                    <th>Discount</th>
+                    <th>Subtotal</th>
+  
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let data of sparearray; let i=index;">
+                    <td style="width: 50px;">
+                    </td>
+  
+                    <td>{{data?.pname}}</td>
+                    <td>{{data?.hsncode}}</td>
+  
+                    <td>{{data?.rateperunit}}/-</td>
+                    <td>{{data?.gst}}%</td>
+                    <td>{{data?.gstamt}}/-</td>
+                    <td>{{data?.qty}}</td>
+                    <td>{{data?.amount}}/-</td>
+  
+                    <td>{{data?.discount}}/-</td>
+                    <td>{{data?.finalamt}}/-</td>
+  
+                  </tr>
+  
+                </tbody>
+              </table>
+            </div> -->
+          </div>
+  
+  
+          <div class="col-md-12 col-sm-12 col-xs-12 ">
+            <hr>
+            <div class="col-md-12 col-sm-12 col-xs-12">
+              <h4>Charges :&nbsp;</h4>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="labourtotal">Labour Charges : {{servicingjob.labourtotal}}/-</label>
+  
+  
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="partstotal">Sparepart Charges: {{servicingjob.partstotal}}/-</label>
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="othercharges">Other Charge : {{servicingjob.othercharges}}/-</label>
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="finalamt">Final Amt : {{servicingjob.finalamt}}/-</label>
+  
+  
+  
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-group">
+                  <label for="finalamt">Bill To : {{servicingjob.billto}}/-</label>
+  
+  
+  
+                </div>
+              </div>
+              <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-group">
+                  <label for="finalamt">Payment Mode: {{servicingjob.paymentmode}}</label>
+  
+  
+  
+                </div>
+              </div>
+              <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="servicingjob.billto==='INSURER'">
+                  <div class="form-group">
+                    <label for="finalamt">Insurer Name : {{servicingjob.insurername}}</label>
+  
+  
+  
+                  </div>
+                </div>
+  
+          </div>
+  
+  
+  
+  
+  
+        </form>
+  
+      </div>
+  
+    </div>
+</div>
+  
+<div class="col-md-12 col-sm-12 col-xs-12" *ngIf="isinvoice" style="padding:0px; margin:0px;">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <div class="clearfix">
+          <div class="pull-left"> {{title}} &nbsp; &nbsp;
+            <!-- <input type="month" id="payslipdate" name="payslipdate"   [(ngModel)]="payslipdate" required (change)="getdays()" />
+                           -->
+  
+  
+          </div>
+          <div class="container" class="pull-right">
+            <div class="row">
+  
+              <a title="Download" class="btn btn-info a-btn-slide-text" (click)="generatePdf()">
+                <i class="glyphicon glyphicon-download-alt"></i>
+              </a>
+  
+              <a [routerLink]="['/manageservicing']" title="Manage All Servicing" class="btn btn-info a-btn-slide-text">
+                <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+              </a>
+  
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <div class="panel-body text-capitalize" style="padding: 20px 0px;" id="content" #content>
+        <div class="col-md-12 col-sm-12 col-xs-12" style="padding: 0px 0px; margin: 0px; ">
+  
+          <div class="col-sm-12 col-md-12 col-xs-12 img-thumbnail center-block" >
+            <table class="table table-bordered">
+              <!-- <thead>
+                        <tr>
+                          <th>Firstname</th>
+                          <th>Lastname</th>
+                          <th>Email</th>
+                        </tr>
+                      </thead> -->
+              <thead>
+  
+                <tr>
+                  <th colspan="2" class="text-center">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="col-md-1" *ngIf="url">
+                          <img [src]="urls" style="height:80px; width:100px; vertical-align:middle;" *ngIf="urls">
+                        </div>
+  
+                        <div class="col-md-11">
+                          <h5> WORKSHOP BILL</h5>
+                          <h3 style="color: blue;"> {{firmdata?.name}} - {{firmdata?.code}}</h3>
+                          <span>{{firmdata?.address?.line1}}
+                            {{firmdata?.address.line2}} <br>
+                            {{firmdata?.address?.city}}, {{firmdata?.address?.states}}-{{firmdata?.address?.pincode}}
+                          </span>
+  
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <h6 class="text-left">PH: {{firmdata?.phone}}</h6>
+                    </div>
+                    <div class="col-md-6">
+                      <h6 class="text-right" style="text-transform: lowercase;">Email: {{firmdata?.email}}</h6>
+                    </div>
+                  </th>
+                </tr>
+                <tr>
+                  <th colspan="2 " class="">
+                    <div class="row">
+                      <div class="col-md-4" style="text-transform: uppercase;font-weight: 700;">
+                        GSTIN :&nbsp;&nbsp;&nbsp;&nbsp;{{firmdata?.gstin}} <br>
+                        PAN :&nbsp;&nbsp;&nbsp;&nbsp;{{firmdata?.pannum}}  <br>
+                        Invoice No :&nbsp;&nbsp;&nbsp;&nbsp;{{servicingjob?.invoicenum}} <br>
+                        Invoice Dt/Time :&nbsp;&nbsp;&nbsp;&nbsp;{{servicingjob?.invoicedate|date:'dd/MM/yyyy hh:mm a'}} <br>
+  
+  
+                      </div>
+                      <div class="col-md-4" style="text-transform: uppercase;font-weight: 700;">
+                        Product Name :&nbsp;&nbsp;&nbsp;&nbsp;{{jobcarddata?.prodname}} <br>
+                        Product Details :&nbsp;&nbsp;&nbsp;&nbsp;{{jobcarddata?.details}} <br>
+
+                        Jobcard No :&nbsp;&nbsp;&nbsp;&nbsp;{{jobcarddata?.jobcardno}} <br>
+                        <!-- Chassis No :&nbsp;&nbsp;&nbsp;&nbsp;{{jobcarddata?.chassisnum}} <br>
+                        Engine No :&nbsp;&nbsp;&nbsp;&nbsp;{{jobcarddata?.enginenum}} <br> -->
+                        SrvType :&nbsp;&nbsp;&nbsp;&nbsp;{{jobcarddata?.servicetype}} <br>
+                        <!-- Model Name :&nbsp;&nbsp;&nbsp;&nbsp;{{jobcarddata?.vmodel}} <br> -->
+                        Supv Name :&nbsp;&nbsp;&nbsp;&nbsp;{{jobcarddata?.supervisorname}} <br>
+  
+                      </div>
+                      <div class="col-md-4" style="text-transform: uppercase;font-weight: 700;">
+                        <!-- KMS Cov :&nbsp;&nbsp;&nbsp;&nbsp;{{jobcarddata?.kmscoverage}} <br> -->
+                        <!-- Reg. No :&nbsp;&nbsp;&nbsp;&nbsp;{{jobcarddata?.vregno}} <br> -->
+                        Mech Name :&nbsp;&nbsp;&nbsp;&nbsp;{{servicingjob?.mechanicname}} <br>
+                        <!-- Department :&nbsp;&nbsp;&nbsp;&nbsp;{{servicingjob?.depname}} <br> -->
+                        S.Adv Name :&nbsp;&nbsp;&nbsp;&nbsp;{{servicingjob?.advname}} <br>
+                        Status :&nbsp;&nbsp;&nbsp;&nbsp;{{jobcarddata?.status}} <br>
+  
+                      </div>
+                    </div>
+                    <h6 *ngIf="this.servicingjob.billto === 'INSURER'"><b>Insurer Name</b>: {{insurerdetails?.name}} </h6>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th> Details Of Receiver (Billed To)</th>
+                  <th> Details Of Consignee(Shipped To)</th>
+  
+                </tr>
+                <tr>
+  
+                  <td *ngIf="this.servicingjob.billto === 'INSURER'" style="text-transform: uppercase;font-weight: 700;">
+                    Name :&nbsp;&nbsp;&nbsp;&nbsp;{{insurerdetails?.name}} <br>
+                    Address :&nbsp;&nbsp;&nbsp;&nbsp;{{insurerdetails?.address?.line1}} ,{{insurerdetails?.address.line2}} <br>
+                    City:&nbsp;&nbsp;&nbsp;&nbsp;{{insurerdetails?.address?.city }} <br>
+                    Pincode :&nbsp;&nbsp;&nbsp;&nbsp;{{insurerdetails?.address?.pincode}} <br>
+                    Mobile :&nbsp;&nbsp;&nbsp;&nbsp;{{insurerdetails?.phone}} <br>
+                    GSTIN :&nbsp;&nbsp;&nbsp;&nbsp;{{insurerdetails?.gstno}} <br>
+                    <h6 style="margin-top: 3px;font-weight: 700;text-transform: none;">Email:&nbsp;&nbsp;&nbsp;&nbsp;{{insurerdetails?.email}}</h6> <br>
+                   </td>
+                   <td *ngIf="this.servicingjob.billto === 'CUSTOMER'" style="text-transform: uppercase;font-weight: 700;">
+                      Name :&nbsp;&nbsp;&nbsp;&nbsp;{{customerdata?.name}} <br>
+                      Address :&nbsp;&nbsp;&nbsp;&nbsp;{{customerdata?.address?.line1}} ,{{customerdata?.address.line2}} <br>
+                      City :&nbsp;&nbsp;&nbsp;&nbsp;{{customerdata?.address?.city}} <br>
+                      Pincode :&nbsp;&nbsp;&nbsp;&nbsp;{{customerdata?.address?.pincode}} <br>
+                      Mobile :&nbsp;&nbsp;&nbsp;&nbsp;{{customerdata?.phone}} <br>
+                      GSTIN :&nbsp;&nbsp;&nbsp;&nbsp;{{customerdata?.gst}} <br>
+                      PAN :&nbsp;&nbsp;&nbsp;&nbsp;{{customerdata?.pan}} <br>
+                      <h6 style="margin-top: 3px;font-weight: 700;text-transform: none;">Email:&nbsp;&nbsp;&nbsp;&nbsp;{{customerdata?.email}}</h6> <br>
+                  </td>
+                  <td style="text-transform: uppercase;font-weight: 700;">
+                      Name :&nbsp;&nbsp;&nbsp;&nbsp;{{customerdata?.name}} <br>
+                      Address :&nbsp;&nbsp;&nbsp;&nbsp;{{customerdata?.address?.line1}} ,{{customerdata?.address.line2}} <br>
+                      City :&nbsp;&nbsp;&nbsp;&nbsp;{{customerdata?.address?.city}} <br>
+                      Pincode :&nbsp;&nbsp;&nbsp;&nbsp;{{customerdata?.address?.pincode}} <br>
+                      Mobile :&nbsp;&nbsp;&nbsp;&nbsp;{{customerdata?.phone}} <br>
+                      GSTIN :&nbsp;&nbsp;&nbsp;&nbsp;{{customerdata?.gst}} <br>
+                      PAN :&nbsp;&nbsp;&nbsp;&nbsp;{{customerdata?.pan}} <br>
+                      <h6 style="margin-top: 3px;font-weight: 700;text-transform: none;">Email :&nbsp;&nbsp;&nbsp;&nbsp;{{customerdata?.email}}</h6> <br>
+                  </td>
+                </tr>
+                <td colspan="2">
+  
+                  <table class="table table-bordered">
+                    <tbody>
+                      <tr>
+                        <th> SN</th>
+                        <th> Particulars</th>
+                        <th> HSN/SAC Code</th>
+                        <th> QTY.</th>
+                        <th> MRP</th>
+                        <th> Discount</th>
+                        <th> Taxable Value</th>
+                        <th> GST %</th>
+                        <th> GST Amount</th>
+                        <th> Amount</th>
+  
+                      </tr>
+                      <!-- <tr>
+                        <th>A</th>
+                        <th colspan="22"> Parts:</th>
+                      </tr>
+                      <tr *ngFor="let data of sparearray; let i = index;">
+                        <th>{{i+1}}</th>
+                        <th>{{data?.pname}}</th>
+                        <th> {{data?.hsncode}}</th>
+                        <th> {{data?.qty}}</th>
+                        <th> {{data?.rateperunit}}</th>
+                        <th> {{data?.discount}}</th>
+                        <th> {{data?.taxableval}}</th>
+                        <th> {{data?.gst}}</th>
+  
+                        <th> {{data?.gstamt}}</th>
+                        <th> {{data?.finalamt}}</th>
+  
+                      </tr> -->
+                      <tr>
+                        <th>A</th>
+                        <th colspan="22"> Labour Details & Charges:</th>
+                      </tr>
+                      <tr *ngFor="let data of labourarray; let i = index;">
+                          <th>{{i+1}}</th>
+                          <th>{{data?.labourdetails}}</th>
+                          <th> {{data?.hsncode}}</th>
+                          <th> {{data?.qty}}</th>
+                          <th> {{data?.rateperunit}}</th>
+                          <th> {{data?.discount}}</th>
+                          <th> {{data?.taxableval}}</th>
+                          <th> {{data?.gst}}</th>
+  
+                          <th> {{data?.gstamt}}</th>
+                          <th> {{data?.finalamt}}</th>
+  
+                        </tr>
+  
+                      <!-- <tr>
+                                <th></th>
+                                <th></th>
+                                <th colspan="2"> Parts:</th>
+                                </tr> -->
+                      <tr>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th> {{alltotal.qty}}</th>
+                        <th> {{alltotal.mrp}}</th>
+                        <th> {{alltotal.discount}}</th>
+                        <th> {{alltotal.taxableval}}</th>
+                        <th> </th>
+                        <th> {{alltotal.gstamt}}</th>
+                        <th> {{alltotal.amount}}</th>
+                      </tr>
+                      <tr>
+                        <th colspan="24"></th>
+                      </tr>
+                      <tr>
+                        <th>Particulars</th>
+                        <th>Value</th>
+                        <th>Discount</th>
+                        <th>Taxable Value</th>
+                        <th>Gst Amount</th>
+                        <th>Total</th>
+                        <th colspan="4"></th>
+  
+                      </tr>
+                      <tr>
+                        <th>Part Total:</th>
+                        <th>{{alltotal.pmrp}}</th>
+                        <th>{{alltotal.pdiscount}}</th>
+                        <th>{{alltotal.ptaxable}}</th>
+                        <th>{{alltotal.pgst}}</th>
+                        <th>{{alltotal.ptotal}}</th>
+                        <th rowspan="4" colspan="5"></th>
+  
+                      </tr>
+                      <tr>
+                        <th>Labour Total:</th>
+                        <th>{{alltotal.lmrp}}</th>
+                        <th>{{alltotal.ldiscount}}</th>
+                        <th>{{alltotal.ltaxable}}</th>
+                        <th>{{alltotal.lgst}}</th>
+                        <th>{{alltotal.ltotal}}</th>
+  
+  
+                      </tr>
+                      <tr>
+                        <th>Other Total:</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th>{{servicingjob.othercharges}}</th>
+  
+  
+                      </tr>
+                      <tr>
+                        <th>Round Off:</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th>0.00</th>
+  
+  
+                      </tr>
+                      <tr>
+                        <th colspan="6">Invoice Total (In Words) : {{alltotal.inwords}}</th>
+                        <th colspan="4" style="text-align: -webkit-center;"> Invoice Total:{{servicingjob.finalamt}}/-</th>
+  
+  
+  
+  
+                      </tr>
+  
+  
+  
+  
+  
+  
+  
+                          <td colspan="6">
+                              <div class="row">
+                                <!-- text-transform: uppercase; -->
+                                  <div class="col-md-8" style="font-weight: 500;">
+                                    <br>
+                                    <b>Note :</b>I/We hereby certify that my/our registration certificate under the maharashtra value
+                                    Added Tax Act, 2002 is in force on the date on which the sale of the goods specified in this tax
+                                    invoice is made by me/us and that the transaction of sale covered by this
+                                    tax invoice has been effected by me/us  and it shall be accounted for in the turnover of sales while
+                                    filling of return and the due tax, if any, payable on the sale has been paid or shall be paid.
+                                  </div>
+                                  <div class="row">
+  
+                                      <div class="col-md-8">
+                                          <br><br><br><br>
+                                    <b style="margin: 63px;">Customer Signature</b>
+                                  </div>
+                                  </div>
+                                  <br>
+  
+                                 <b style="margin: 19px; letter-spacing: 2px;">Note: DO NEXT SERVICING BEFORE {{nextservicing | date : 'dd/MM/yyyy'}}</b>
+  
+                                </div>
+                          </td>
+                         <td  colspan="8">
+                           <br><br>
+                            <div class="col-md-12">
+                              <br><br>
+                                 <b>For {{firmdata?.name}} - {{firmdata?.code}}</b>
+                              </div>
+  
+                                  <div class="row">
+                                      <br><br><br><br><br><br><br>
+                                    <div class="col-md-8">
+                                      <b style="margin: 10px;">Authorised Signatory</b>
+                                    </div>
+                                  </div>
+                         </td>
+  
+                    </tbody>
+  
+  
+                  </table>
+  
+  
+                </td>
+  
+  
+  
+  
+              </tbody>
+  
+            </table>
+            <!-- <div class="text-center">This is system generated payslip and does not require signature</div> -->
+          </div>
+        </div>
+  
+      </div>
+    </div>
+</div>

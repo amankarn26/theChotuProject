@@ -1,0 +1,25 @@
+
+.ng-valid[required], .ng-valid.required  {
+    border-left: 5px solid #42A948; /* green */
+  }
+
+  .ng-invalid:not(form)  {
+    border-left: 5px solid #a94442; /* red */
+  }
+
+
+  .panel-default>.panel-heading {
+    color: #fbfbfb;
+    background-color: #8c6932;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.panel-default>.panel-body  {
+    color: #000000;
+    background-color: #945c0757;
+}
+
+.table > thead > tr > th {
+    color: #000000;
+}

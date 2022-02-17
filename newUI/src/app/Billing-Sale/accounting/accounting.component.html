@@ -1,0 +1,144 @@
+<div class="panel panel-default" *ngIf="flag">
+  <div class="panel-heading">
+
+    <div class="clearfix">
+      <div class="pull-left"> {{title}}</div>
+      <div class="container" class="pull-right">
+        <div class="row">
+
+          <a [routerLink]="['/manageaccount']" title="Manage Account" class="btn btn-info btn-sm a-btn-slide-text">
+                <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel-body">
+    <form>
+
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="name">Account Name: </label>
+              <input type="text" class="form-control" required name="name" [(ngModel)]="account.name">
+            </div>
+          </div>
+          <div class="col-sm-6">
+              <div class="form-group">
+                <label for="accountType">Account Type:
+                </label>
+                <select class="form-control"  *ngIf="!isUpdate" id="atype"  disabled  required name="atype" [(ngModel)]="account.atype">
+                  <!-- <option value="BANK">BANK</option>
+                  <option value="CASH">CASH</option>
+                  <option value="CREDITOR">CREDITOR</option>
+                  <option value="DEBITOR">DEBITOR</option>
+                  <option value="ELECTRICITY">ELECTRICITY</option>
+                  <option value="PURCHASE">PURCHASE</option>
+                  <option value="SALE">SALE</option>
+                  <option value="SALARY">SALARY</option>
+                  <option value="STOCK">STOCK</option>
+                  <option value="TEA">TEA</option> -->
+                  <option value="OTHEREXPENSES">OTHER EXPENSES</option>
+                  <!-- <option value="NONE">NONE</option> -->
+                </select>
+
+                <select class="form-control" id="atype" *ngIf="isUpdate" readonly required name="atype" [(ngModel)]="account.atype">
+                  <!-- <option value="BANK">BANK</option>
+                  <option value="CASH">CASH</option>
+                  <option value="CREDITOR">CREDITOR</option>
+                  <option value="DEBITOR">DEBITOR</option>
+                  <option value="ELECTRICITY">ELECTRICITY</option>
+                  <option value="PURCHASE">PURCHASE</option>
+                  <option value="SALE">SALE</option>
+                  <option value="SALARY">SALARY</option>
+                  <option value="STOCK">STOCK</option>
+                  <option value="TEA">TEA</option> -->
+                  <option value="OTHEREXPENSES">OTHER EXPENSES</option>
+                  <!-- <option value="NONE">NONE</option> -->
+                </select>
+              </div>
+          </div>
+
+          <div class="col-sm-6">
+              <div class="form-group">
+                <label for="baseType"> Base Type:
+                </label>
+                <select class="form-control"  *ngIf="! isUpdate" id="basetype"   required name="basetype" [(ngModel)]="account.basetype">
+                  <option value="NOMINAL">NOMINAL</option>
+                  <option value="PERSONAL">PERSONAL</option>
+                  <option value="REAL">REAL</option>
+                  <!-- <option value="NONE">NONE</option> -->
+                </select>
+
+                <select class="form-control" id="basetype" *ngIf="isUpdate" readonly required name="basetype" [(ngModel)]="account.basetype">
+                  <option value="NOMINAL">NOMINAL</option>
+                  <option value="PERSONAL">PERSONAL</option>
+                  <option value="REAL">REAL</option>
+                </select>
+              </div>
+          </div>
+
+      <div class="col-md-12">
+        <div class="form-group">
+          <button type="submit" *ngIf="!isUpdate" class="btn btn-default" (click)="submitData()">Submit</button>
+          <button type="submit" *ngIf="isUpdate" class="btn btn-default" (click)="updateData()">Update</button>
+          <button type="button" class="btn btn-default" (click)="cancel()">Cancel</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="panel panel-default" *ngIf="!flag">
+  <div class="panel-heading">
+
+    <div class="clearfix">
+      <div class="pull-left"> Manage Account</div>
+      <div class="container" class="pull-right">
+        <div class="row">
+          <a [routerLink]="['/addacount']"  title="Add Account">
+            <span class="glyphicon glyphicon-plus-sign"></span>
+                    <span></span>
+                </a>
+
+               
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="panel-body">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+      <div class="table-responsive">
+
+          <table class="table table-condensed table-striped table-bordered" [mfData]="data | dataFilterPr : filterQuery" #mf="mfDataTable"
+            [mfRowsOnPage]="rowsOnPage" [(mfSortBy)]="Role" [(mfSortOrder)]="sortOrder">
+          <thead>
+            <tr>
+              <th >Sr.No.</th>
+              <th >Code</th>
+              <th >Name</th>
+              <th >Account Type</th>
+              <th >Base Type</th>
+            </tr>
+
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of this.data; let i = index; let last = last;">
+              <td>{{i+1}}</td>
+              <td>{{data.code}}</td>
+                <td>{{data.name}}</td>
+                <td>{{data.atype}}</td>
+                <td>{{data.basetype}}</td>
+            </tr>
+          </tbody>
+
+          <tfoot>
+            <tr>
+
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+    </div>
+  </div>
+</div>

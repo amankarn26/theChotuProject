@@ -1,0 +1,17 @@
+<nav class="navbar navbar-default" style=" width: 84%; margin-left: 112px; ">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#">Just Go Local</a>
+      </div>
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="#">Home</a></li>
+        <li><a href="#">My Profile</a></li>
+        <li><a href="#">My Orders</a></li>
+        <li>  <a [routerLink]="['/mycart']" class="btn btn-success btn-sm ml-3" style="font-size: 20px;color: white;left: 700%;">
+          <i class="fa fa-shopping-cart"></i> 
+          <span class="badge badge-light">{{this.items.length}}</span>
+        </a>
+</li>
+      </ul>
+    </div>
+</nav> &nbsp;

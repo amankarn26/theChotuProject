@@ -1,0 +1,156 @@
+<div [hidden]="isManageState" class="col-md-12 col-sm-12 col-xs-12 text-capitalize">
+  <div class="panel panel-default" *ngIf="!detailFlag">
+    <div class="panel panel-default">
+      <div class="panel-heading"> {{title}}
+        <div class="pull-right">
+          <a [routerLink]="['/managefollowup']" class="pull-right">
+            <!-- <span class="glyphicon glyphicon-th-list"></span> -->
+          </a> &nbsp;
+          <!-- <span class="glyphicon glyphicon-import alert-info" title="Import SheetCount"
+            (click)="import_client()"></span>&nbsp; -->
+        </div>
+        <h5>Add Follow Up</h5>
+      </div>
+      <div class="panel-body">
+        <form #fname="ngForm">
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="updatedon">Date & Time </label>
+              <input type="text" readonly class="form-control" id="updatedon" name="updatedon"
+                [(ngModel)]="followup.updatedon" required maxlength="20" />
+              <!-- <input *ngIf="isUpdate" type="text" readonly class="form-control" id="updatedon" name="callnotes" [(ngModel)]="followup.updatedon"/> -->
+            </div>
+          </div>
+          <!-- <div class="col-md-6 col-sm-6 col-xs-12"  >
+            <div class="form-group">
+              <label for="label">Called By </label>
+              <input  type="text"  class="form-control" id="calledby" name="calledby" [(ngModel)]="followup.calledby"/>
+              <input *ngIf="isUpdate" type="text" readonly class="form-control" id="label" name="label" [(ngModel)]="followup.calledbyname"/>
+            </div>
+          </div> -->
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="label">Called By Name </label>
+              <input type="text" class="form-control" id="calledbyname" name="calledbyname"
+                [(ngModel)]="followup.calledbyname" />
+              <!-- <input *ngIf="isUpdate" type="text" readonly class="form-control" id="label" name="label" [(ngModel)]="followup.calledbyname"/> -->
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="label">Conversation Short Notes </label>
+              <input type="text" class="form-control" id="callnotes" name="callnotes" [(ngModel)]="followup.callnotes"
+                required maxlength="200" />
+              <!-- <input *ngIf="isUpdate" type="text" readonly class="form-control" id="label" name="label" [(ngModel)]="followup.callnotes"/> -->
+            </div>
+          </div>
+          <div class=" col-sm-6 col-md-6 col-xs-6 ">
+            <div class="form-group">
+              <label for="qconvtype">Convertability </label>
+              <select class="form-control" id="qconvtype" name="qconvtype" [(ngModel)]="followup.qconvtype" required>
+                <option value="NOT_SET">--NOT SET--</option>
+                <option value="CONVERTIBLE">CONVERTIBLE</option>
+                <option value="NON_CONVERTIBLE">NOT CONVERTIBLE</option>
+              </select>
+              <!-- <select *ngIf="isUpdate" class="form-control" id="urgent" name="urgent" [(ngModel)]="followup.qconvtype" required>
+                <option value="">--Select--</option>
+                <option value="YES">YES</option>
+                <option value="NO">NO</option>
+              </select> -->
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="nextcallremark">Next Call Remark</label>
+              <input type="text" class="form-control" id="nextcallremark" name="nextcallremark"
+                [(ngModel)]="followup.nextcallremark" required maxlength="20" />
+              <!-- <input *ngIf="isUpdate" type="text" readonly class="form-control" id="label" name="label" [(ngModel)]="followup.nextcallremark"/> -->
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="nextcalltime">New Call Date and Time </label>
+              <input type="datetime-local" class="form-control" id="nextcalltime" name="nextcalltime"
+                [(ngModel)]="followup.nextcalltime" />
+              <!-- <input *ngIf="isUpdate" type="date"  class="form-control" id="description" name="description" [(ngModel)]="followup.nextcalltime"/> -->
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="form-group">
+              <button type="submit" class="btn btn-default" [disabled]="!fname.valid"
+                (click)="submitData()">Submit</button>
+              <!-- <button *ngIf="isUpdate" type="submit" class="btn btn-default" [disabled]="!fname.valid" (click)="updateData()">Update</button> -->
+              <button type="button" class="btn btn-default" (click)="cancel()">Cancel</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div [hidden]="isManageState" class="panel panel-default" *ngIf="followup.sale_lead">
+  <div class="panel-heading">{{title}}
+    <h5>Manage Follow Up</h5>
+  </div>
+  <div class="panel-body">
+    <div class="table-responsive">
+      <!-- <table class="table table-condensed table-striped table-bordered" [mfData]="datalist | dataFilterPr : filterQuery"
+        #mf="mfDataTable" [mfRowsOnPage]="rowsOnPage" [(mfSortBy)]="Role" [(mfSortOrder)]="sortOrder">
+        <thead>
+          <tr>
+            <th>SN</th>
+            <th>Date & Time</th>
+            <th>Call by Name</th>
+            <th>Conversation Call Notes</th>
+            <th>Next Call Remark</th>
+            <th>Next Call Time</th>
+            <th>Convertability</th>
+            <th>Action</th>
+          </tr>
+          <tr>
+            <th colspan="16">
+              <div id="custom-search-input">
+                <div class="input-group col-md-12">
+                  <input type="text" class="form-control" placeholder="Search by name" [(ngModel)]="filterQuery" />
+                  <span class="input-group-btn">
+                    <button class="btn btn-danger btn-sm" type="button">
+                      <span class=" glyphicon glyphicon-search"></span>
+                    </button>
+                  </span>
+                </div>
+              </div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          [ngStyle]="data.reorderlevel<=data.unitsinstock?{'background-color':'none'} : {'background-color': 'rgb(245, 194, 194)'}"
+          <tr *ngFor="let data of mf.data; let i = index; let last = last;">
+            <td>{{i+1}}</td>
+            <td>{{data?.updatedon|date: 'dd/MM/yyyy'}}</td>
+            <td>{{data?.calledbyname}}</td>
+            <td>{{data?.callnotes}}</td>
+            <td>{{data?.nextcallremark}}</td>
+            <td>{{data?.nextcalltime |date: 'dd/MM/yyyy'}}</td>
+            <td>{{data?.qconvtype}}</td>
+            <td>
+              <button class="btn btn-danger btn-sm" title="Delete Follow-up" (click)="deletef(data.id)">
+                <span class="glyphicon glyphicon-remove-circle"></span>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="20">
+              <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+            </td>
+          </tr>
+        </tfoot>
+      </table> -->
+      <div class="col-sm-12 ">
+        <strong> Note: Rows with red color indicates low stock</strong>
+      </div>
+    </div>
+  </div>
+</div>

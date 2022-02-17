@@ -1,0 +1,773 @@
+<div [hidden]="isManageState" class="col-md-12 col-sm-12 col-xs-12">
+
+  <div class="col-md-12 col-sm-12 col-xs-12 loader" *ngIf="!detailFlag && isLoader">
+
+  </div>
+
+  <div class="panel panel-default" *ngIf="!detailFlag && !isLoader">
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+
+        <div class="clearfix">
+          <div class="pull-left">
+            Add Packing
+            <!-- <h5>  Add Packing For Order Number : <strong>{{quotenum}}</strong></h5> -->
+          </div>
+          <div class="pull-right">
+            <a [routerLink]="['/managepacking']" title="Manage Packing" class="pull-right">
+              <span class="glyphicon glyphicon-th-list"></span>
+            </a>
+
+          </div>
+
+
+        </div>
+
+      </div>
+
+
+      <div class="panel-body" style=" padding: 0px; margin:10px 10px 0px 0px; ">
+        <form #form1="ngForm">
+          <div class=" col-sm-12 bgcol " style=" padding: 0px; margin: 0px;">
+            <!-- <h4></h4> -->
+            <!-- (change)="onChangeDept($event)" -->
+            <mark class="bg-color:info">
+              Package Number : <strong>{{ this.packageno}}</strong>
+            </mark>
+            <div class="table-responsive" style="padding: 0px; margin: 0px;">
+              <table class="table table-condensed " style="background:whitesmoke">
+                <!-- <thead>
+                <tr>
+
+                  <th colspan="1">
+                    <h5>  Order Number : <strong>{{ this.quotenum}}</strong></h5>
+                         </th>
+                         <th></th>
+                  <th colspan="3">
+
+                  </th>
+                </tr>
+              </thead> -->
+                <tbody>
+                  <tr>
+                    <th>Order Number</th>
+                    <td class="text-left">{{quotenum}}</td>
+                    <th colspan="2">Customer</th>
+                    <td class="text-left">{{this.packing?.custname}}</td>
+                  <tr>
+                    <th>Order Date</th>
+                    <td>{{ this.packing?.orderdate }}</td>
+                    <th>Expected Delivery Date</th>
+                    <td colspan="2" class="text-left">{{ this.packing?.deliverytime| date:"dd-MM-yyy hh-mm-ss a" }}</td>
+                  </tr>
+                  <tr>
+                    <th>Consignee Name</th>
+                    <td colspan="4">{{ this.consignee }}</td>
+                  </tr>
+                  <tr>
+                    <th>Address</th>
+                    <td colspan="4">
+                      {{custData?.address?.line1}}
+                      {{custData?.address.line2}},<br>
+                      {{custData?.address?.states}}<br>
+                      {{custData?.address?.city}}<br>
+                      {{custData?.address?.pincode}}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+
+
+
+            </div>
+
+
+
+
+
+
+          </div>
+          <div class="col-lg-12 col-md-12 col-sm-12 ">
+            <hr>
+          </div>
+
+          <div class="col-sm-12">
+            <table class="table table-condensed table-bordered text-capitalize  " style="background:whitesmoke;
+                border-spacing: 10px; border-collapse: separate;">
+
+
+              <thead>
+                <tr>
+                  <th style="width: 50px;" class="thbg">-</th>
+                  <th class="thbg">Product</th>
+                  <th class="thbg">Code</th>
+                  <th class="thbg">Quantity</th>
+                  <!-- <th>Rate unit</th> -->
+                  <th class="thbg">Rate Per Unit</th>
+                  <th class="thbg"> GST (%) </th>
+                  <th class="thbg">Amount</th>
+                  <th class="thbg">GST Amount</th>
+                  <th class="thbg">Final Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let data of qsentry; let i=index;">
+                  <td>
+                    <a *ngIf="i===0" style="cursor: pointer;font-size: 20px;" (click)="getstockbyProduct(data, i)">
+                      <span class="glyphicon glyphicon-circle-arrow-down"></span>
+                    </a>
+                  </td>
+                  <td>{{data?.pname}}</td>
+                  <td>{{data?.hsncode}}</td>
+                  <td>{{data?.qty}}</td>
+                  <!-- <td>{{data?.rateunit}}</td> -->
+                  <td>{{data?.rateperunit}}</td>
+                  <td>{{data?.gst}}</td>
+                  <td>{{data?.amount}}</td>
+                  <td>{{data?.gstamt}}</td>
+                  <td>{{data?.finalamt}}</td>
+                </tr>
+              </tbody>
+            </table>
+
+          </div>
+
+
+          <div class="col-lg-12 col-md-12 col-sm-12 ">
+            <h4>Packing Details :</h4>
+          </div>
+
+
+          <div class="col-sm-12" *ngFor="let data of this.packing.pdetails; let i=index;">
+            <mark class="bg-yellow">{{data.packageno}}</mark>
+            <table class="table table-condensed text-capitalize " style="background:whitesmoke">
+              <thead>
+                <tr>
+                  <th style="width: 50px;">-</th>
+                  <th>Product</th>
+                  <th>Lot No.</th>
+                  <th>Packed Qty.</th>
+                  <th>Packed Wt.</th>
+                  <!-- <th> GST (%) </th> -->
+                  <th>Manifacturer</th>
+                  <th>Expiry</th>
+                  <th>Manifacturing</th>
+                </tr>
+
+              </thead>
+              <tbody>
+                <tr *ngFor="let data of data.pstock; let i=index;">
+                  <td>
+                    <!-- <a style="cursor: pointer;font-size: 20px;" (click)="getstockbyProduct(data, i)">
+                            <span class="glyphicon glyphicon-circle-arrow-down"></span>
+                          </a> -->
+                    {{i+1}}
+                  </td>
+                  <td>{{data?.pname}}</td>
+                  <td>{{data?.lotno}}</td>
+                  <td>{{data?.packedqty}}</td>
+                  <td>{{data?.packedwt}}</td>
+                  <td>{{data?.mfg}}</td>
+                  <td>{{data?.expiry | date:'dd/MM/yyyy'}}</td>
+                  <td>{{data?.mfgdate  | date:'dd/MM/yyyy'}}</td>
+                </tr>
+              </tbody>
+            </table>
+
+          </div>
+
+
+
+
+
+
+
+
+
+          <div class="col-lg-12 col-md-12 col-sm-12 ">
+            <hr>
+          </div>
+
+
+
+          <!-- start: transport detatil ************************************************************-->
+          <!-- <div class="col-lg-12 col-md-12 col-sm-12 bgcol ">
+            <div class="col-lg-12 col-md-12 col-sm-12 ">
+              <h4>Transport Details:</h4>
+            </div>
+
+            <div class="col-sm-3">
+              <div class="form-group">
+                <label for="deliverydays">Delivery Days:
+                </label>
+                <input type="number" maxlength="120" required placeholder="Maximum 120 characters" class="form-control" id="deliverydays"
+                  name="deliverydays" [(ngModel)]="packing.qtransport.deliverydays" (change)="wtofParcel()" />
+              </div>
+            </div>
+
+            <div class="col-sm-3">
+              <div class="form-group">
+                <label for="deliverytime">Del. Date and Time :
+                </label>
+                datetime-local
+                <input type="date" id="deliverytime" name="deliverytime" [(ngModel)]="packing.qtransport.deliverytime" maxlength="120"
+                  required placeholder="Maximum 120 characters" class="form-control" (change)="wtofParcel()" />
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="form-group">
+                <label for="delvalidtime">Valid Date and Time :
+                </label>
+                <input type="date" id="delvalidtime" name="delvalidtime" [(ngModel)]="packing.qtransport.delvalidtime" maxlength="120"
+                  required placeholder="Maximum 120 characters" class="form-control" (change)="wtofParcel()" />
+              </div>
+            </div>
+
+            <div class="col-sm-3">
+              <div class="form-group">
+                <label for="totalweight">Total Weight:</label>
+                <input type="text" class="form-control" name="totalweight" required [(ngModel)]="packing.qtransport.totalweight" (change)="getTravelrate()">
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="form-group">
+                <label for="numbundles">No. of bundle:</label>
+                <input type="text" class="form-control" name="numbundles"  [(ngModel)]="packing.qtransport.numbundles">
+              </div>
+            </div>
+
+
+
+
+
+
+            <div class="col-sm-3">
+              <div class="form-group">
+                <label for="travelType">Travel Type : </label>
+                <input *ngIf="isUpdate" readonly class="form-control" name="travelType" [(ngModel)]="travelType" />
+                <select class="form-control" *ngIf="!isUpdate" id="travelType" required name="travelType" [(ngModel)]="travelType" (change)="getptravelvendor()">
+                  <option value="Preffered">Preffered</option>
+                  <option value="Temporary">Temporary</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-sm-12 img-thumbnail" *ngIf="travelType === 'Preffered' ">
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label for="ptravelvendor">Preffered Delivery:
+                  </label>
+                  <input type="text"  [(ngModel)]="packing.qtransport.preftravel.name" class="form-control" name="ptravelvendor" (change)="getptravelvendor($event)"  />
+
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label for="states">State:&nbsp; </label>
+                  <input type="text"  [(ngModel)]="packing.qtransport.preftravel.address.states" class="form-control" name="pstates" (change)="wtofParcel()" />
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label for="city">City:&nbsp;
+                  </label>
+                  <input type="text"  name="pcitiName" class="form-control" [(ngModel)]="packing.qtransport.preftravel.city"
+                    (change)="wtofParcel()" />
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label for="pamount">Parcel amount:</label>
+                  <input type="text" class="form-control" name="pamount" [(ngModel)]="packing.qtransport.preftravel.parcelamt">
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-12 img-thumbnail" *ngIf="travelType === 'Temporary' ">
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label for="temptravel">Temporary Delivery:
+                  </label>
+                  <select class="form-control" name="temptravel" required [(ngModel)]="packing.qtransport.temptravel.name" (change)="getvendor($event)" >
+                    <option *ngFor="let temptravel of transvendList; let i=index" [value]="temptravel.name">{{temptravel.name}}</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label for="tstates">State:&nbsp;
+                  </label>
+                  <input *ngIf="isUpdate" readonly class="form-control" name="tstates" />
+                  <select *ngIf="!isUpdate" class="form-control" name="tstates" [(ngModel)]="packing.qtransport.temptravel.address.states" required (change)="onChangeState2($event)">
+                    <option *ngFor="let state of statelist; let i=index" [value]="state">{{state}}</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label for="city">City:&nbsp;
+                  </label>
+                  <input *ngIf="isUpdate" readonly name="tcitiName" class="form-control" [(ngModel)]="packing.qtransport.temptravel.address.city" />
+                  <select *ngIf="!isUpdate" (ngModel)="tcitiName" name="tcitiName" required class="form-control" [(ngModel)]="quotation.qtransport.temptravel.address.city"
+                    (change)="wtofParcel()">
+                    <option *ngFor="let city of citylist2; let i=index" [value]="city">{{city}}</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label for="tpamount">Parcel amount:</label>
+                  <input type="text" class="form-control" name="tpamount" [(ngModel)]="packing.qtransport.temptravel.parcelamt">
+                </div>
+              </div>
+
+
+            </div>
+          </div> -->
+          <!-- end: transport detatil ************************************************************-->
+          <!-- my start -->
+
+          <div class="col-lg-12 col-md-12 col-sm-12 ">
+            <!-- <div class="col-lg-12 col-md-12 col-sm-12 ">
+                   <hr>
+                  </div>
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label for="estdweight">Estimated Weight:</label>
+                  <input type="text" class="form-control" name="estdweight" (change)="calwt()" [(ngModel)]="packing.estdweight">
+                </div>
+              </div>
+
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label for="actualweight">Actual Weight:</label>
+                  <input type="number" class="form-control" readonly name="actualweight" [(ngModel)]="packing.actualweight">
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label for="diffweight">Diff.Weight:</label>
+                  <input type="text" class="form-control" readonly name="diffweight" [(ngModel)]="packing.diffweight">
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label for="totalpkts">Total Packets:</label>
+                  <input type="text" class="form-control" readonly name="totalpkts" [(ngModel)]="packing.totalpkts">
+                </div>
+              </div> -->
+            <!-- <div class=" col-sm-3 " *ngIf="!isEnquiry">
+                <div class="form-group">
+                    <label for="packingincharge">Packing Incharge :
+
+                    </label>
+                    <input *ngIf="isUpdate" readonly class="form-control" name="packingincharge" [(ngModel)]="packing.packingincharge" />
+                    <select *ngIf="!isUpdate" class="form-control" disabled name="packingincharge" [(ngModel)]="packing.packingincharge" required >
+                        <option required *ngFor="let emp of empList; let i=index" [value]="emp.id">{{emp.name}}</option>
+                    </select>
+                </div>
+            </div> -->
+            <!-- <div class=" col-sm-3 " *ngIf="!isEnquiry">
+              <div class="form-group">
+                  <label for="deliveryincharge">Delivery Incharge :
+                  </label>
+                  <input *ngIf="isUpdate" readonly class="form-control" name="deliveryincharge" [(ngModel)]="packing.deliveryincharge" />
+                  <select *ngIf="!isUpdate" class="form-control" disabled name="packingincharge" [(ngModel)]="packing.deliveryincharge" required >
+                      <option required *ngFor="let emp of empList; let i=index" [value]="emp.id">{{emp.name}}</option>
+                  </select>
+              </div>
+          </div> -->
+
+
+          </div>
+
+
+          <!-- my end -->
+
+
+
+
+          <div class="col-lg-12 col-md-12 col-sm-12  ">
+            <hr>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <!-- *ngIf="this.url == '/addpacking'" type="submit"  -->
+              <!-- <button [disabled]="!form1.valid" class="btn btn-default" id="openModalButton"  data-toggle="modal" data-target="#csvImport"
+               >Submit</button> -->
+
+              <button [disabled]="!form1.valid" class="btn btn-default" (click)="submitData()">Submit</button>
+
+
+              <!-- (click)="submitData()" -->
+              <button *ngIf="this.url == '/editpacking/' + this.id" type="submit" [disabled]="!form1.valid"
+                class="btn btn-default" (click)="submitData()">Update</button>
+              <!-- <button *ngIf="this.url == '/generateretailorder/' + this.id" type="submit" [disabled]="!form1.valid" class="btn btn-default"
+                (click)="generaterorder()">GenerateRetailOrder</button> -->
+              <button type="button" class="btn btn-default" (click)="cancel()">Cancel</button>
+
+
+            </div>
+          </div>
+        </form>
+      </div>
+
+    </div>
+
+
+  </div>
+  <div class="panel panel-default" *ngIf="detailFlag">
+    <div class="panel-heading">
+      <div class="clearfix">
+        <div class="pull-left"> {{title}}</div>
+        <div class="container" class="pull-right">
+          <div class="row">
+            <a [routerLink]="['/managepacking']" title="Manage Packing" class="btn btn-info btn-sm a-btn-slide-text">
+              <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+            </a>
+
+            <!-- <a [routerLink]="['/editpacking', id]" title="clone quotation" class="btn btn-info btn-sm a-btn-slide-text">
+
+            <i class="glyphicon glyphicon-edit"></i>
+
+          </a> -->
+            <!-- <a class="btn btn-danger a-btn-slide-text btn-sm" (click)="deleteEmployee(id)">
+            <span class="glyphicon glyphicon-remove-circle"></span>
+          </a> -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="panel-body" style=" padding: 0px; margin:10px 10px 0px 0px; ">
+
+      <form #form1="ngForm">
+        <div class=" col-sm-12 bgcol " style=" padding: 0px; margin: 0px;">
+          <mark class="bg-color:info">
+            Invoice Number : <strong>{{packing?.invoicenum}}</strong>
+          </mark>
+          <div class="table-responsive" style="padding: 0px; margin: 0px;">
+            <table class="table table-condensed " style="background:whitesmoke">
+              <!-- <thead>
+            <tr>
+
+              <th colspan="1">
+                <h5>  Order Number : <strong>{{ this.quotenum}}</strong></h5>
+                     </th>
+                     <th></th>
+              <th colspan="3">
+
+              </th>
+            </tr>
+          </thead> -->
+              <tbody>
+                <tr>
+                  <th>Order Number</th>
+                  <td class="text-left">{{packing?.quotesale}}</td>
+                  <th colspan="2">Customer</th>
+                  <td class="text-left">{{this.packing?.custname}}</td>
+                <tr>
+                  <th>Order Date</th>
+                  <td>{{ this.packing?.orderdate |date:'dd/MM/yyyy' }}</td>
+                  <th>Expected Delivery Date</th>
+                  <td colspan="2" class="text-left">{{ this.packing?.deliverytime| date:"dd-MM-yyy hh-mm-ss a" }}</td>
+                </tr>
+                <tr>
+                  <th>Consignee Name</th>
+                  <td colspan="4">
+
+                    {{ this.consignee }}
+
+                  </td>
+                </tr>
+                <tr>
+                  <th>Address</th>
+                  <td colspan="4">
+                    {{custData?.address?.line1}}
+                    {{custData?.address.line2}},<br>
+                    {{custData?.address?.states}}<br>
+                    {{custData?.address?.city}}<br>
+                    {{custData?.address?.pincode}}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="col-sm-12 " >
+          <h4>Package Stock Details:</h4>
+
+          <span *ngFor="let data of packing.pdetails; let i=index;">
+
+
+            <table class="table table-condensed table-bordered text-capitalize " style="background:whitesmoke">
+              <thead>
+                <tr>
+                  <!-- <mark class="bg-yellow">{{data?.packageno}}</mark> -->
+                  <th colspan="9" style="padding: 0px;" >
+                    <!-- Package No:{{data?.packageno}} -->
+                    <mark class="bg-yellow"> Package No:{{data?.packageno}}</mark>
+
+                  </th>
+                </tr>
+                <tr>
+                  <th style="width: 50px;" class="thbg">-</th>
+                  <th class="thbg">Product</th>
+                  <th class="thbg">Stock</th>
+                  <!-- <th class="thbg">Wt</th> -->
+                  <th class="thbg">Mfg</th>
+                  <th class="thbg">Mfg Date</th>
+                  <th class="thbg">Exp Date</th>
+                  <th class="thbg">Lot No</th>
+                  <th class="thbg">Qty</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let data of data.pstock; let i=index;">
+                  <td> {{i+1}} </td>
+                  <td>{{data?.pname}}</td>
+                  <td>{{data?.prod_stock}}</td>
+                  <!-- <td>{{data?.packedwt}}</td> -->
+                  <td>{{data?.mfg}}</td>
+                  <td>{{data?.mfgdate| date: 'dd-MM-yyyy'}}</td>
+                  <td>{{data?.expiry| date: 'dd-MM-yyyy'}}</td>
+                  <td>{{data?.lotno}}</td>
+                  <td>{{data?.packedqty}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </span>
+
+        </div>
+      </form>
+
+    </div>
+  </div>
+  <!-- End details -->
+</div>
+<div [hidden]="!isManageState" class="col-md-12 col-sm-12 col-xs-12">
+  <div class="col-md-12 col-sm-12 col-xs-12 loader" *ngIf="isLoader">
+
+  </div>
+
+  <div class="panel panel-default" *ngIf="!isLoader">
+    <div class="panel-heading">
+      {{title}}
+      <!-- <a [routerLink]="['/addpacking']" title="Add Packing" class="pull-right">
+        <span class="glyphicon glyphicon-plus-sign"></span>
+      </a> -->
+      <a [routerLink]="['/managequote']" title="Manage Qutesale" class="btn btn-info btn-sm a-btn-slide-text pull-right">
+        <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+      </a>
+    </div>
+    <div class="panel-body">
+      <div class="table-responsive">
+
+        <table class="table table-condensed table-striped table-bordered text-capitalize"
+          [mfData]="data | dataFilterPr : filterQuery:'packingentry'" #mf="mfDataTable" [mfRowsOnPage]="rowsOnPage"
+          [(mfSortBy)]="Role" [(mfSortOrder)]="sortOrder">
+
+          <thead>
+            <tr>
+              <th>SN</th>
+              <th>Order No</th>
+              <th>Customer,City</th>
+              <th>Invoicenum</th>
+
+              <th>Total packets</th>
+
+              <!-- <th>Transport</th> -->
+              <th>Packed On</th>
+              <th>Delivered Schedule On</th>
+              <!-- <th>Estimated Weight</th>
+              <th>Actual Weight</th> -->
+              <th>Status</th>
+
+              <th>Action</th>
+            </tr>
+            <tr>
+              <th colspan="12">
+                <div id="custom-search-input">
+                  <div class="input-group col-md-12">
+                    <input type="text" class="form-control" placeholder="Search by name" [(ngModel)]="filterQuery" />
+                    <span class="input-group-btn">
+                      <button class="btn btn-danger btn-sm" type="button">
+                        <span class=" glyphicon glyphicon-search"></span>
+                      </button>
+                    </span>
+                  </div>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of mf.data; let i = index; let last = last;" >
+              <td>{{i+1}}</td>
+              <td>{{data?.quotesale}}</td>
+              <td>{{data?.custname}},{{data?.qtraveldetail?.city}}</td>
+              <td>{{data?.invoicenum}}</td>
+              <td>{{data?.totalpkts}}</td>
+
+              <!-- <td>{{data?.qtraveldetail?.name}}</td> -->
+              <td>{{data?.packedon | date: "dd-MM-yyyy"}}</td>
+              <td>{{data?.deliverytime | date: "dd-MM-yyyy"}}</td>
+              <!-- <td>{{data?.estdweight}}</td>
+              <td>{{data?.actualweight}}</td> -->
+              <td>{{data?.status}}</td>
+
+
+              <td class="text-right">
+
+
+                <a [routerLink]="['/detailpacking',data.id]">
+                  <button class="btn btn-info btn-sm" title="Packing Details">
+                    <span class="glyphicon glyphicon-info-sign"></span>
+                  </button>
+                </a>
+
+                <button class="btn btn-danger btn-sm" title="Delete Packing"
+                  (click)="delete(data.id)">
+                  <span class="glyphicon glyphicon-remove-circle"></span>
+                </button>
+
+                <!-- <a [routerLink]="['/adddispatch',data.id]">
+                  <button class="btn btn- btn-sm" title="Add Dispatch">
+                    <span class="glyphicon glyphicon-plane"></span>
+                  </button>
+                </a> -->
+
+              </td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="12">
+                <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal -->
+<!-- <button id="openModalButton" [hidden]="true" data-toggle="modal" data-target="#csvImport">Open Modal</button> -->
+<!-- <button id="openModalButton"  data-toggle="modal" data-target="#csvImport">Open Modal</button>
+ -->
+
+<div id="csvImport" class="modal fade" role="dialog">
+
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Packing Details</h4>
+      </div>
+      <div class="modal-body loader" *ngIf="isLoader">
+
+      </div>
+      <div class="modal-body" id="print-section" *ngIf="!isLoader">
+
+
+        <span>
+          <span class="clearfix">
+            <span class="pull-left ">
+              <strong>
+                <h3> Amazon</h3>
+              </strong>
+            </span>
+            <span class="pull-right text-bold ">
+              <strong> Tax Invoice/Bill of Supply/Cash Memo<br>
+                (Original for Recipient)</strong>
+            </span>
+          </span>
+        </span>
+
+        <!-- <table class="table table-condensed table-sm" style="font-size:16px;">
+               <tr>
+                 <td align="left">
+                  <strong>  Sold By :</strong><br>
+                    {{this.wdata?.name}}<br>
+                    {{this.wdata?.address?.line1}}<br>
+                    {{this.wdata?.address?.city}}<br>
+                    {{this.wdata?.address?.pincode}}<br>
+                    {{this.wdata?.address?.states}}<br>
+                    {{this.wdata?.address?.country}}<br>
+                 </td>
+                 <td align="right">
+                 </td>
+               </tr>
+               <tr>
+                 <td align="left">
+                  <strong>  PAN No:</strong> {{this.wdata?.panno}}<br>
+                  <strong>    GST Registration No: </strong> {{this.wdata?.gstno}}<br>
+                 </td>
+                 <td align="right">
+                    <strong>   Shipping Address :</strong><br>
+                    {{this.packing?.retailername}}<br>
+                    {{this.packing?.qtraveldetail?.address?.line1}}       {{this.packing?.qtraveldetail?.address.line2}}<br>
+
+
+                      {{packing?.qtraveldetail?.address?.city}},  {{packing?.qtraveldetail?.address?.states}}<br>
+                      {{packing?.qtraveldetail?.address?.country}}
+
+
+                 </td>
+              </tr>
+
+              <tr>
+                  <td align="left">
+                   <strong>Order Number:</strong> {{id}} <br>
+                   <strong>Order Date:</strong>  3.12.2019  <br>
+                  </td>
+                  <td align="right">
+                      <strong>  Invoice Number: </strong>HYD8-15916454<br>
+                      <strong>  Invoice Date: </strong>{{todaydate}}<br>
+                  </td>
+               </tr>
+          </table> -->
+
+
+        <!-- <table class="table table-condensed table-bordered text-capitalize "    bgcolor="#FFFFFF" cellspacing="0" cellpadding="10" border="1" width="100%" style="border:1px solid #093f56;" >
+            <thead>
+              <tr style="background-color:#D3D3D3;">
+                <th style="width: 50px;">-</th>
+                <th>Product</th>
+                <th>Unit Price </th>
+                <th>Qty</th>
+                <th>Net Amount</th>
+                <th>GST Type</th>
+                <th>GST</th>
+                <th>Total Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let data of rorderdetails1; let i=index;">
+                    <td>{{i+1}}</td>
+                    <td>{{data?.pname}}</td>
+                    <td>{{data?.rateperunit}}</td>
+                    <td>{{data?.totalqty}}</td>
+                    <td>{{data?.rateperunit}}</td>
+                    <td>{{data?.gsttype}}</td>
+                    <td>{{data?.gstamt}}</td>
+                    <td>{{data?.amount}}</td>
+                    </tr>
+            </tbody>
+          </table> -->
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" (click)="print()">Print</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="submitData()"> OK</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--End Modal-->

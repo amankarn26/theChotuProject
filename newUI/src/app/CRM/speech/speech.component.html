@@ -1,0 +1,169 @@
+<div class="panel panel-default slideLeft" *ngIf="flag">
+  <div class="panel-heading">
+    <div class="clearfix">
+      <div class="pull-left"> {{title}}</div>
+      <div class="container" class="pull-right">
+        <div class="row">
+          <!-- <a [routerLink]="['/addrole']" class="btn btn-primary a-btn-slide-text" title="Add Role">
+                      <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                      <span></span>
+                  </a>
+                <a href="#" class="btn btn-default a-btn-slide-text" title="Edit">
+                      <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                      <span></span>
+                  </a>
+                <a href="#" class="btn btn-info a-btn-slide-text" title="View">
+                      <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+                      <span></span>
+                  </a>
+                <a href="#" class="btn btn-danger a-btn-slide-text" title="Delete">
+                      <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                      <span></span>
+                  </a>-->
+          <a [routerLink]="['/managespeech']" title="Manage speech" class="btn btn-info a-btn-slide-text">
+            <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="panel-body">
+    <form #fname="ngForm">
+     
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="Type">Speech Type : </label>
+<!--          
+          <input *ngIf="!isUpdate" type="text"  mutiline class="form-control" id="Type" name="Type" [(ngModel)]="speech.type" /> -->
+          <select required *ngIf="!isUpdate" class="form-control" name="Type" [(ngModel)]="speech.type">
+            <option value="INTRODUCTION">INTRODUCTION</option>
+            <option value="FOLLOW_UP">FOLLOW_UP</option>
+            <option value="ORDER_CONFIRM">ORDER_CONFIRM</option>
+            <option value="PAYMENT_RECOVERY">PAYMENT_RECOVERY</option>
+          </select>
+          
+          <input required *ngIf="isUpdate" type="text" readonly  mutiline class="form-control" id="Type" name="Type" [(ngModel)]="speech.type" />
+         
+        </div>
+      </div>
+      
+      <!-- <div class="col-md-6 col-sm-6 col-xs-12">
+        <div class="form-group">
+          <label for="Language">Language : </label>
+          <select required class="form-control" name="language" [(ngModel)]="speech.language">
+            <option value="HINDI">HINDI</option>
+            <option selected value="ENGLISH">ENGLISH</option>
+          
+          </select>
+        </div>
+      </div> -->
+      <div class="col-md-6 col-sm-6 col-xs-12">
+        <div class="form-group">
+          <label for="speech">Speech : </label>
+         
+          <textarea required type="text" maxlength="510" placeholder="Maximum 510 characters" mutiline class="form-control" id="speech" name="speech" [(ngModel)]="speech.speech" minlength="4">
+            </textarea>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="form-group">
+          <button *ngIf="!isUpdate" type="submit" class="btn btn-default" [disabled]="!fname.valid" (click)="submitData()">Submit</button>
+          <button *ngIf="isUpdate" type="submit" class="btn btn-default" [disabled]="!fname.valid" (click)="updateData()">Update</button>
+          <button type="button" class="btn btn-default" (click)="cancel()">Cancel</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="panel panel-default slideLeft" *ngIf="!flag">
+  <div class="panel-heading">
+    <div class="clearfix">
+      <div class="pull-left"> {{title}}</div>
+      <div class="container" class="pull-right">
+        <div class="row">
+          <a [routerLink]="['/addspeech']" class="btn btn-primary a-btn-slide-text" title="Add Speech">
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+            <span></span>
+          </a>
+        <!--   <a href="#" class="btn btn-default a-btn-slide-text" title="Edit">
+            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+            <span></span>
+          </a>
+          <a href="#" class="btn btn-info a-btn-slide-text" title="View">
+            <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+            <span></span>
+          </a>
+          <a href="#" class="btn btn-danger a-btn-slide-text" title="Delete">
+            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+            <span></span>
+          </a> -->
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+  
+  <div class="panel-body">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+      <div class="table-responsive">
+        <table class="table table-condensed table-striped table-bordered" [mfData]="data | dataFilterPr : filterQuery:'managespeech'"  #mf="mfDataTable"
+          [mfRowsOnPage]="rowsOnPage"  >
+          <thead>
+            <tr>
+              <th>SN</th>
+              <th>
+                <mfDefaultSorter by="Type">Type</mfDefaultSorter>
+              </th>
+              <th>Speech</th>
+              <!--  <th>First Name</th>
+                    <th>Last Name</th> -->
+              <th class="text-right">Action</th>
+            </tr>
+            <tr>
+              <th colspan="4">
+                <div id="custom-search-input">
+                  <div class="input-group col-md-12">
+                    <input type="text" class="form-control" placeholder="Search" [(ngModel)]="filterQuery" />
+                    <span class="input-group-btn">
+                      <button class="btn btn-danger" type="button">
+                        <span class=" glyphicon glyphicon-search"></span>
+                      </button>
+                    </span>
+                  </div>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of mf.data; let i = index; let last = last;">
+              <td>{{i+1}}</td>
+              <td>{{data.type}}</td>
+              <td>{{data.speech}}</td>
+              <td class="text-right">
+                <a [routerLink]="['/updatespeech', data.id]" class="btn btn-default" title="Update Speech" >
+                      <span class="glyphicon glyphicon-edit"></span>
+                </a>
+                <a class="btn btn-danger a-btn-slide-text" title="Delete Speech" (click)="delete(data.id)">
+                  <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                  <span></span>
+                </a>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="4">
+                <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+    </div>
+  </div>
+</div>

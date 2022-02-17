@@ -1,0 +1,739 @@
+<div [hidden]="isManageState" class="col-md-12 col-sm-12 col-xs-12">
+  <div class="panel panel-default" *ngIf="!detailFlag">
+    <div class="panel panel-default">
+      <div class="panel-heading thbg">
+        {{title}} for Dispatch No.<mark class="bg-yellow"><strong> {{packing?.dispatchno}}</strong></mark>
+        <a [routerLink]="['/managedispatch']" title="View all Dispatch Entry" class="pull-right">
+          <span class="glyphicon glyphicon-th-list"></span>
+        </a>
+      </div>
+      <div class="panel-body">
+        <form #form1="ngForm">
+          <!-- <div class="col-sm-3">
+            <div class="form-group">
+              <label for="dispatchno">Dispatch No.:
+              </label>
+              <input type="text" required  class="form-control" id="dispatchno"
+                name="dispatchno" [(ngModel)]="packing.dispatchno"  disabled />
+            </div>
+          </div>
+          <div class="col-lg-12 col-md-12 col-sm-12 ">
+            <hr>
+          </div> -->
+          <div class=" col-sm-12 bgcol ">
+
+            <h4>Transport Details:</h4>
+          </div>
+
+          <div class="col-md-4 col-sm-4 col-xs-12">
+            <div class="form-group">
+              <label for="transtype">Transport Type:
+              </label>
+              <select class="form-control" *ngIf="!isUpdate" name="transtype" required
+                [(ngModel)]="packing.transport.transtype">
+
+                <option value="INHOUSE">INHOUSE</option>
+                <option value="RETAILER">RETAILER</option>
+
+              </select>
+              <select class="form-control" name="transtype" *ngIf="isUpdate" required
+                [(ngModel)]="packing.transport.transtype">
+
+                <option value="INHOUSE">INHOUSE</option>
+                <option value="RETAILER">RETAILER</option>
+
+              </select>
+
+            </div>
+          </div>
+
+          <div class="col-sm-4">
+            <div class="form-group">
+              <label for="vehicleno">Vehicle No.:
+              </label>
+              <input type="text" class="form-control" id="vehicleno" name="vehicleno" required
+                [(ngModel)]="packing.transport.vehicleno" onkeyup="this.value = this.value.toUpperCase();" />
+            </div>
+          </div>
+
+
+
+          <div class="col-sm-4">
+            <div class="form-group">
+              <label for="vehicletype">Vehicle Type:</label>
+              <input type="text" class="form-control" name="vehicletype" required
+                [(ngModel)]="packing.transport.vehicletype">
+            </div>
+          </div>
+
+          <div class="col-sm-4">
+            <div class="form-group">
+              <label for="drivername">Driver Name:</label>
+              <input type="text" class="form-control" name="drivername" required
+                [(ngModel)]="packing.transport.drivername">
+            </div>
+          </div>
+
+          <div class="col-sm-4">
+            <div class="form-group">
+              <label for="helpername">Helper Name:</label>
+              <input type="text" class="form-control" name="helpername" [(ngModel)]="packing.transport.helpername">
+            </div>
+          </div>
+
+
+
+          <div class="col-md-4 col-sm-4 col-xs-12 ">
+            <div class="form-group">
+              <label for="dispatch_scheduledate">Dispatch Schedule Date </label>
+              <input type="date" class="form-control" id="dispatch_scheduledate" name="dispatch_scheduledate"
+                [(ngModel)]="disentry.dispatch_scheduledate" />
+            </div>
+          </div>
+
+
+          <div class="col-sm-4">
+            <div class="form-group">
+              <label for="fromplace">From Place:</label>
+              <input type="text" class="form-control" name="fromplace" [(ngModel)]="packing.fromplace">
+            </div>
+          </div>
+
+          <div class="col-sm-4">
+            <div class="form-group">
+              <label for="toplace">To Place:</label>
+              <input type="text" class="form-control" name="toplace" [(ngModel)]="packing.toplace">
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="form-group">
+              <label for="estdtime">Estimated Time: </label>
+              <input type="time" class="form-control" id="estdtime" name="estdtime" [(ngModel)]="packing.estdtime"
+                required />
+            </div>
+          </div>
+
+
+          <div class="col-sm-4">
+            <div class="form-group">
+              <label for="supervisedby">Supervised By:</label>
+              <input type="text" class="form-control" name="supervisedby" [(ngModel)]="packing.supervisedby" disabled>
+            </div>
+          </div>
+
+          <div class="col-md-4 col-sm-4 col-xs-12 ">
+            <div class="form-group">
+              <label for="dispatchedon">Dispatched On: </label>
+              <input type="date" class="form-control" id="dispatchedon" name="dispatchedon"
+                [(ngModel)]="packing.dispatchedon" />
+            </div>
+          </div>
+
+          <div class="col-lg-12 col-md-12 col-sm-12 ">
+            <hr>
+          </div>
+
+          <div class="col-sm-12">
+            <h4>Packing Ready To Dispatch</h4>
+            <table class="table table-condensed table-bordered text-capitalize  " style="background:whitesmoke;
+                border-spacing: 5px; border-collapse: separate;">
+
+
+              <thead>
+                <tr>
+                  <th style="width: 50px;" class="thbg">-</th>
+                  <!-- <th class="thbg">Order</th> -->
+                  <th class="thbg">Customer</th>
+                  <th class="thbg">Order date</th>
+                  <!-- <th>Rate unit</th> -->
+
+                  <th class="thbg">Invoice No</th>
+                  <th class="thbg">Packed on</th>
+                  <th class="thbg">Packets</th>
+                  <th class="thbg">Status</th>
+                  <!-- <th class="thbg">Final Amount</th> -->
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let data of packingList; let i=index;">
+                  <td style="padding: 0px;" align="center">
+                    <a *ngIf="i===0" style="cursor: pointer;font-size: 20px;" (click)="pushtoDispatch(data, i)">
+                      <span class="glyphicon glyphicon-circle-arrow-down"></span>
+                    </a>
+                  </td>
+                  <!-- <td>{{data?.quotesale}}</td> -->
+                  <td class="text-capitalize">{{data?.custname}}</td>
+                  <td>{{data?.orderdate | date:"dd-MM-yyyy"}}</td>
+                  <!-- <td>{{data?.rateunit}}</td> -->
+
+                  <td>{{data?.invoicenum}}</td>
+
+                  <td>{{data?.packedon | date:"dd-MM-yyyy"}}</td>
+                  <td>{{data?.totalpkts}}</td>
+                  <td>{{data?.status}}</td>
+                  <!--   <td>{{data?.finalamt}}</td> -->
+                </tr>
+              </tbody>
+            </table>
+
+          </div>
+
+          <div class=" col-sm-12 bgcol ">
+
+
+            <!--
+            <div class=" col-sm-4 ">
+              <div class="form-group">
+                <label for="retailorder"> Retail Order:
+                </label>
+                <input *ngIf="isUpdate" readonly class="form-control" name="retailorder"
+                  [(ngModel)]="disentry1.retailorder" />
+                <select class="form-control" name="retailorder" required [(ngModel)]="disentry1.retailorder"
+                  (change)="getretaillist() ">
+                  <option *ngFor="let r of retllist; let i=index" [value]="r.id">{{r.id}}
+                  </option>
+                </select>
+
+
+              </div>
+            </div> -->
+            <!-- <div class=" col-sm-4 ">
+              <div class="form-group">
+                <label for="retailername">Customer :
+
+                </label>
+                <input *ngIf="isUpdate" readonly class="form-control" name="retailername"
+                  [(ngModel)]="disentry1.retailer" />
+                <select class="form-control" name="retailername" [(ngModel)]="disentry1.retailer" required>
+                  <option required *ngFor="let retailer of retlList; let i=index" [value]="retailer.id">
+                    {{retailer.name}}</option>
+                </select>
+              </div>
+            </div> -->
+            <!-- <div class="col-sm-3">
+              <div class="form-group">
+                <label for="dispatchno">Dispatch No.:
+                </label>
+                <input type="text" required class="form-control" id="dispatchno" name="dispatchno"
+                  [(ngModel)]="disentry1.dispatchno" disabled />
+              </div>
+            </div> -->
+            <!-- <div class=" col-sm-4 ">
+              <div class="form-group">
+                <label for="orderdate"> Order date:
+                </label>
+                <input type="date" class="form-control" name="orderdate"
+                  [ngModel]="disentry1.orderdate | date:'yyyy-MM-dd'" (ngModelChange)="disentry1.orderdate = $event"
+                  disabled />
+
+
+              </div>
+            </div> -->
+          </div>
+
+          <!-- <div class="col-lg-12 col-md-12 col-sm-12">
+            <h4>Dispatch Entry Details:</h4>
+          </div> -->
+
+
+
+
+          <div class="col-lg-12 col-md-12 col-sm-12 ">
+            <hr>
+          </div>
+          <div class="col-lg-12 col-md-12 col-sm-12">
+            <h4>Shipping Details:</h4>
+
+          </div>
+
+          <div class="col-lg-12 col-md-12 col-sm-12" *ngIf="custData">
+            <!-- style="border:solid black 4px;" -->
+            <div class="col-lg-12 col-md-12 col-sm-12 img-thumbnail" id="print-section">
+
+              <h4>Dispatch NO: {{packing?.dispatchno}}</h4>
+              <hr style=" border: 2px solid black;
+            border-radius: 2px;">
+
+
+              <table width="100%" class="lctable">
+                <tr>
+                  <td>
+                    <h5> <strong>SHIP FROM</strong> </h5>
+
+                    <address>
+                      {{firmData?.name}}<br>
+                      {{firmData?.address?.line1}}<br *ngIf="firmData.address.line2">
+                      {{firmData?.address.line2}}<br>
+                      {{firmData?.address?.states}}, {{firmData?.address?.city}}<br>
+                      {{firmData?.address?.pincode}}
+
+
+                    </address>
+                  </td>
+                  <td>
+                    <h5><strong>SHIP TO</strong></h5>
+
+                    <address>
+                      {{custData?.name}}<br>
+                      {{custData?.address?.line1}}<br *ngIf="custData.address.line2">
+                      {{custData?.address.line2}}<br>
+                      {{custData?.address?.states}}, {{custData?.address?.city}}<br>
+                      {{firmData?.address?.pincode}}
+                    </address>
+                  </td>
+                </tr>
+              </table>
+
+
+              <!-- <table class="table table-condensed table-bordered " style="background:whitesmoke">
+              <tr>
+                <th>Name: </th>
+                <td>{{disentry1?.qtraveldetail?.name}}</td>
+              <tr>
+              <tr>
+                <th>Address </th>
+                <td>
+                  {{disentry1?.qtraveldetail?.address?.line1}} <br>{{disentry1?.qtraveldetail?.address.line2}}<br>
+
+                  {{disentry1?.qtraveldetail?.address?.states}}<br>
+                  {{disentry1?.qtraveldetail?.address?.city}}
+
+                </td>
+              </tr>
+            </table> -->
+            </div>
+            <!-- <button (click)="print()">print</button> -->
+
+
+            <button [printStyle]="{div :
+              {
+              'border': 'thin solid #333333',
+              'text-align':'center',
+              'direction':'rtl',
+              'border-radius': '10px',
+              'padding': '10px',
+              'line-height': '30px',
+              'font-weight': 'bold',
+              'font-size': 'x-large',
+              'font-family': 'monospace',
+              'width': '206px'
+              },
+              h4: {'font-size': '16pt'},
+              h5: {'font-size': '14pt'},
+              table:{'border':'solid black 2px;'},
+              td:{'border':'solid black 2px;'},
+              td:{'padding-left':'5px;'}
+
+            }" printSectionId="print-section" ngxPrint>print</button>
+
+          </div>
+
+
+
+          <div class="col-lg-12 col-md-12 col-sm-12 bgcol ">
+
+          </div>
+
+
+          <div class="col-lg-12 col-md-12 col-sm-12 ">
+            <div class="col-lg-12 col-md-12 col-sm-12 ">
+              <hr>
+            </div>
+            <!-- <div class="col-sm-4">
+              <div class="form-group">
+                <label for="totalpkts">Total Packets:</label>
+                <input type="number" class="form-control" name="totalpkts" [(ngModel)]="disentry1.totalpkts" readonly>
+              </div>
+            </div> -->
+            <!-- <div class="col-sm-4">
+              <div class="form-group">
+                <label for="estdweight">Estimated weight:</label>
+                <input type="text" class="form-control" name="estdweight" [(ngModel)]="disentry1.estdweight" readonly>
+              </div>
+            </div>
+
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label for="actualweight">Actual weight:</label>
+                <input type="number" class="form-control" name="actualweight" [(ngModel)]="disentry1.actualweight"
+                  readonly>
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label for="diffweight">Diff weight:</label>
+                <input type="text" class="form-control" name="diffweight" [(ngModel)]="disentry1.diffweight" readonly>
+              </div>
+            </div> -->
+
+            <!-- <div class=" col-sm-4" *ngIf="!isEnquiry">
+              <div class="form-group">
+                <label for="packingincharge">Packing incharge :
+
+                </label>
+                <select class="form-control" name="packingincharge" [(ngModel)]="disentry1.packingincharge" required>
+                  <option required *ngFor="let emp of empList; let i=index" [value]="emp.id">{{emp.name}}</option>
+                </select>
+              </div>
+            </div> -->
+            <div class=" col-sm-4" *ngIf="!isEnquiry">
+              <div class="form-group">
+                <label for="deliveryincharge">Delivery incharge :
+
+                </label>
+                <select class="form-control" name="packingincharge" [(ngModel)]="disentry.deliveryincharge" required>
+                  <option required *ngFor="let emp of empList; let i=index" [value]="emp.id">{{emp.name}}</option>
+                </select>
+              </div>
+            </div>
+
+
+
+
+
+            <div class="col-sm-12">
+              <div>
+                <div>
+                  <br>
+                  <form name="form1">
+                    <button class="btn btn-info btn-sm" [disabled]="!form1.valid" (click)="pushDispatch()">
+                      <span class="glyphicon glyphicon-plus"></span>
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+
+          </div>
+
+          <div class="col-sm-12">
+            <table class="table table-condensed table-bordered text-capitalize  " style="background:whitesmoke;
+            border-spacing: 5px; border-collapse: separate;">
+              <thead>
+                <tr>
+
+
+
+<!--
+                  <th class="thbg">Customer</th>
+                  <th class="thbg">Order date</th>
+
+                  <th class="thbg"> Invoice No</th>
+                  <th class="thbg">Packed on</th>
+                  <th class="thbg">Packets</th>
+                  <th class="thbg">Status</th>
+
+ -->
+
+
+
+                  <th style="width: 50px;" class="thbg">-</th>
+                  <th class="thbg">Customer</th>
+                  <th class="thbg">Dispatch No</th>
+                  <th class="thbg">Order Date</th>
+                  <th class="thbg">Total Packets</th>
+                  <th class="thbg">Packed On</th>
+                  <th class="thbg">Dispatched On</th>
+
+
+                  <!-- <th>Estd. Weight</th>
+                  <th>Actual Weight</th>
+                  <th>Diff. Weight</th> -->
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let data of packing.disentry; let i=index;">
+                  <td style="width: 20px;">
+                    {{i+1}}
+                    <!-- <a style="cursor: pointer; color: red;" (click)="onDeleteDispatch(i)">
+                      <span class="glyphicon glyphicon-remove-circle"></span>
+                    </a> -->
+                  </td>
+                  <td>{{data?.custname}}</td>
+                  <td>{{data?.dispatchno}}</td>
+
+                  <td>{{data?.orderdate| date:'dd-MM-yyyy'}}</td>
+                  <td>{{data?.totalpkts}}</td>
+                  <td>{{data?.packedon}}</td>
+                  <td>{{data?.dispatchedon}}</td>
+                  <!-- <td>{{data?.diffweight}}</td> -->
+                </tr>
+              </tbody>
+            </table>
+
+          </div>
+
+
+          <!-- my end -->
+
+
+
+
+          <div class="col-lg-12 col-md-12 col-sm-12  ">
+            <hr>
+          </div>
+
+
+          <div class="col-md-6 col-sm-6 col-xs-6">
+            <div class="form-group">
+              <button *ngIf="this.url == '/adddispatch'" type="submit" class="btn btn-default"
+                (click)="submitData()">Submit</button>
+              <button *ngIf="this.url == '/editdispatch/' + this.id" type="submit" [disabled]="!form1.valid"
+                class="btn btn-default" (click)="submitData()">Update</button>
+              <button type="button" class="btn btn-default" (click)="cancel()">Cancel</button>
+
+
+            </div>
+          </div>
+        </form>
+      </div>
+
+
+
+
+
+    </div>
+
+
+  </div>
+
+
+
+
+  <div class="panel panel-default" *ngIf="detailFlag">
+    <div class="panel-heading">
+      <div class="clearfix">
+        <div class="pull-left"> {{title}}-</div>
+        <div class="container" class="pull-right">
+          <div class="row">
+            <a [routerLink]="['/managedispatch']" title="Manage Dispatch" class="btn btn-info btn-sm a-btn-slide-text">
+              <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+            </a>
+
+            <a *ngIf="userType==='ADMIN' || userrole ==='DISPATCH' " [routerLink]="['/editpacking', id]"
+              title="Update Dispatch Details" class="btn btn-info btn-sm a-btn-slide-text">
+
+              <i class="glyphicon glyphicon-edit"></i>
+
+            </a>
+            <a *ngIf="userType==='ADMIN' || userrole ==='DISPATCH' " class="btn btn-danger a-btn-slide-text btn-sm"
+              (click)="deleteEmployee(id)">
+              <span class="glyphicon glyphicon-remove-circle"></span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="panel-body text-capitalize">
+
+      <form #form1="ngForm">
+
+
+        <div class="col-sm-12">
+
+          <div class="col-sm-12 ">
+            <div class="col-sm-12" *ngIf="dispatchData">
+              <div class="col-sm-12" *ngFor="let data of dispatchData.disentry">
+                <div class=" col-sm-4 ">
+                  <div class="form-group">
+                    <label for="retailorder"> Dispatc no: {{data?.dispatchno}}
+                    </label></div>
+                </div>
+                <div class=" col-sm-4 ">
+                  <div class="form-group">
+                    <label for="retailorder"> Retail order:{{data?.retailorder}}
+                    </label></div>
+                </div>
+                <div class=" col-sm-4 ">
+                  <div class="form-group">
+                    <label for="retailorder"> retailer name:{{data?.retailername}}
+                    </label></div>
+                </div>
+                <div class=" col-sm-4 ">
+                  <div class="form-group">
+                    <label for="retailorder"> order date:{{data?.orderdate | date:'dd-MM-yyyy'}}
+                    </label></div>
+                </div>
+                <div class=" col-sm-12">
+                  <hr>
+                  <h4>Transport Details</h4>
+                </div>
+
+
+
+                <div class=" col-sm-4 ">
+                  <div class="form-group">
+                    <label for="retailorder"> Dispatch Schedule Date: {{data?.dispatch_scheduledate| date:'dd-MM-yyyy'}}
+                    </label></div>
+                </div>
+                <div class=" col-sm-4 ">
+                  <div class="form-group">
+                    <label for="retailorder"> Dispatch Scheduledon: {{data?.dispatch_scheduledon| date:'dd-MM-yyyy'}}
+                    </label></div>
+                </div>
+                <div class=" col-sm-4 ">
+                  <div class="form-group">
+                    <label for="retailorder">Total Weight: {{data?.estdweight}}
+                    </label></div>
+                </div>
+
+                <div class="col-sm-12 img-thumbnail">
+                  <div class=" col-sm-3 ">
+                    <div class="form-group">
+                      <label for="retailorder">Traveller: {{data?.qtraveldetail?.name}}
+                      </label></div>
+                  </div>
+                  <div class=" col-sm-3 ">
+                    <div class="form-group">
+                      <label for="retailorder">State: {{data?.qtraveldetail?.address?.states}}
+                      </label></div>
+                  </div>
+                  <div class=" col-sm-3 ">
+                    <div class="form-group">
+                      <label for="retailorder">City: {{data?.qtraveldetail?.address?.city}}
+                      </label></div>
+                  </div>
+                  <div class=" col-sm-3 ">
+                    <div class="form-group">
+                      <label for="retailorder">Parcel Amount: {{data?.qtraveldetail?.parcelamt}}
+                      </label></div>
+                  </div>
+                </div>
+
+
+                <div class=" col-sm-4 ">
+                  <div class="form-group">
+                    <label for="status">status:{{data?.status}}
+                    </label></div>
+                </div>
+                <div class=" col-sm-4 ">
+                  <div class="form-group">
+                    <label for="paystatus">payment status:{{data?.paystatus}}
+                    </label></div>
+                </div>
+                <div class=" col-sm-4 ">
+                  <div class="form-group">
+                    <label for="paystatus">total pkts:{{data?.totalpkts}}
+                    </label></div>
+                </div>
+                <div class=" col-sm-4 ">
+                  <div class="form-group">
+                    <label for="estdweight">estimated weight:{{data?.estdweight}}
+                    </label></div>
+                </div>
+                <div class=" col-sm-4 ">
+                  <div class="form-group">
+                    <label for="estdweight">Actual weight:{{data?.actualweight}}
+                    </label></div>
+                </div>
+                <div class=" col-sm-4 ">
+                  <div class="form-group">
+                    <label for="estdweight">weight difference:{{data?.diffweight}}
+                    </label></div>
+                </div>
+                <div class=" col-sm-4 ">
+                  <div class="form-group">
+                    <label for="estdweight">packing incharge:{{data?.packingincharge}}
+                    </label></div>
+                </div>
+                <div class=" col-sm-4 ">
+                  <div class="form-group">
+                    <label for="estdweight">packed on:{{data?.packedon|date:'dd-MM-yyyy'}}
+                    </label></div>
+                </div>
+
+                <div class=" col-sm-4 ">
+                  <div class="form-group">
+                    <label for="deliveryincharge">delivery incharge:{{data?.deliveryincharge|date:'dd-MM-yyyy'}}
+                    </label></div>
+                </div>
+
+
+
+
+              </div>
+
+            </div>
+
+
+
+            <div class="col-sm-12 img-thumbnail">
+              <div class=" col-sm-3 ">
+                <div class="form-group">
+                  <label for="retailorder">from place :{{dispatchData?.fromplace}}
+                  </label></div>
+              </div>
+              <div class=" col-sm-3 ">
+                <div class="form-group">
+                  <label for="retailorder">to place :{{dispatchData?.toplace}}
+                  </label></div>
+              </div>
+              <div class=" col-sm-3 ">
+                <div class="form-group">
+                  <label for="retailorder">Transport type: {{dispatchData?.transport?.transtype}}
+                  </label></div>
+              </div>
+              <div class=" col-sm-3 ">
+                <div class="form-group">
+                  <label for="retailorder">Supervisedby: {{dispatchData?.supervisedby}}
+                  </label></div>
+              </div>
+            </div>
+
+
+          </div>
+
+        </div>
+
+
+
+      </form>
+
+    </div>
+  </div>
+
+</div>
+
+
+
+
+<div [hidden]="!isManageState" class="col-md-12 col-sm-12 col-xs-12">
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <div class="clearfix">
+        <div class="pull-left">{{title}}
+          <input type="month" id="payslipdate" name="payslipdate" [(ngModel)]="payslipdate" required
+            (change)="getdays()" />
+
+        </div>
+        <div class="pull-right">
+          <a *ngIf="userType==='ADMIN' || userrole ==='DISPATCH' " [routerLink]="['/adddispatch']" title="Add Dispatch"
+            class="pull-right">
+            <span class="glyphicon glyphicon-plus-sign"></span>
+          </a>
+        </div>
+      </div>
+
+
+    </div>
+    <!-- <div class="panel-body">
+
+
+      <span *ngFor="let entry of data | keyValue">
+          {{entry| slice:0:9}}  <br><br>
+          <span *ngFor="let e of data[entry]" >
+                <span class="billno"  [ngStyle]="e.payment=='STOP'?{'background-color':'red'} : {'background-color': 'green'}" >
+                    <a [routerLink]="['/detaildispatch',e.dispatch]">
+              {{e.orderno}}
+              </a>
+            </span>
+           </span>
+           <hr>
+        </span>
+
+    </div> -->
+
+  </div>
+</div>

@@ -1,0 +1,163 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+      <div class="clearfix">
+        <div class="pull-left">Shop By Category : <b>{{routecategory}}</b></div>
+        <div class="container" class="pull-right">
+          <div class="row">
+
+            <a  title="Home" [routerLink]="['/custhomepage']"   class="btn btn-info a-btn-slide-text">
+              <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+            </a>
+            <a [routerLink]="['/mycart']" class="btn btn-success btn-sm ml-3" style="font-size: 15px;color: white;left: 650%;">
+              <i class="fa fa-shopping-cart"></i> &nbsp;
+              <span class="badge badge-light">{{this.items.length}}</span>
+            </a>&nbsp;
+            <a (click)="cancel()" title="Back" class="btn btn-info a-btn-slide-text">
+              <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="panel-body">
+
+      <form #form1="ngForm">
+        <div class="col-md-12 col-sm-12 col-xs-12 ">
+
+          <!-- <div class="col-md-12 col-sm-12 col-xs-12">
+            <h4>Product Details:</h4>
+          </div> -->
+          <form #formbook="ngForm" style="padding: 0px;" >
+        
+            <div class="form-group" style="padding: 0px;">
+              <div class="row" style="padding: 0px;">
+                <div class="col-sm-3" style="padding-bottom: 0px;" >
+                  <div class="form-group">
+                    <label for="name">Select Shop :
+                    </label>
+                
+
+              
+                    <select id="firmname" class="form-control" required name="firmname" [(ngModel)]="firmname" (change)="getproductdatalist()">
+                    <option value="{{prop.id}}" *ngFor="let prop of firmlist">{{prop?.name}}</option>
+                  </select>
+                  </div>
+                </div>
+
+                <div class="col-sm-3" style="padding-bottom: 0px;" *ngIf="firmname" >
+                  <div class="form-group">
+                    <label for="name">Select Product Type :
+                    </label>
+                
+
+              
+                    <select *ngIf="producttypedata.length" id="producttype" class="form-control" required name="producttype" [(ngModel)]="producttype" (change)="getstockdetails()">
+                    <option value="{{prop.prodtype}}" *ngFor="let prop of producttypedata">{{prop?.prodtype}}</option>
+                  </select>
+                  <select disabled *ngIf="!producttypedata.length" id="producttype" class="form-control" required name="producttype">
+                    <option value="Data not available" >Data not available for this shop</option>
+                  </select>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          
+              <div class="alert alert-danger" *ngIf="!firmname">
+                <strong>INFO!</strong> No Shop is <strong>Selected</strong>
+              </div>
+
+
+              <!-- <div class="alert alert-danger" *ngIf="productdata.length === 0">
+                <strong>INFO!</strong> No Products are available For this Shop <strong>Selected</strong>
+              </div> -->
+           
+          </form>
+
+          <div class="col-sm-12 img-thumbnail" *ngIf="producttype">
+            <div class="col-sm-12">
+
+          
+
+                <div class="text-capitalize" >    
+                    <!-- <h3>Shop By Product</h3> -->
+                    <br>
+                    <div class="col-sm-4"  *ngFor="let data of productdata; let i = index; let last = last;">
+                      <div class="panel panel-warning">
+                        <div class="panel-heading text-center">
+                          <p *ngIf="data.rateunit==='RATEPERKG'">Rate Per KG</p>
+                            <p *ngIf="data.rateunit==='RATEPERPRODUCT'">Rate Per Product</p>
+                           <p *ngIf="data.rateunit==='RATEPERDOZEN'">Rate Per Dozen</p>
+              <p *ngIf="data.rateunit==='RATE_PER_PKT'">Rate Per Packet</p>
+              <p *ngIf="data.rateunit==='RATE_PER_CRATE'">Rate Per Crate</p>
+              <p *ngIf="data.rateunit==='RATE_PER_LITRE'">Rate Per Litre</p>
+                          </div>
+                        <div class="panel-body">
+                          <img *ngIf="data?.image" src="{{docServer}}/{{data?.image}}" class="img-responsive" style="width:100%; height:200px" alt="Image">
+                          <img *ngIf="!data?.image"  src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg" class="img-responsive" style="width:100%; height:200px" alt="Image"></div>
+                  
+                          <!-- <img src="https://placehold.it/150x80?text=IMAGE" class="img-responsive" style="width:100%" alt="Image"></div> -->
+                        
+                  
+                        <div class="panel-footer">
+                          <div class="row">
+                            <div class="col-md-8 pull-left" style=" font-weight: bold; ">
+                            {{data?.name}}
+                              </div>
+                              <div class="col-md-4" style=" font-weight: bold; color: coral; " *ngIf="data?.rateperunit">
+                                {{data?.rateperunit}} ₹
+                              </div>
+                              </div>
+                              
+                          
+                         </div>
+                        <div class="panel-footer">
+                            <div class="row">
+                              <div class="col-md-3">
+                                <label for="Variant">Variant:</label>
+                              </div>
+                              <div class="col-md-9" *ngIf="data.pstock.length === 0">
+                                <select class="form-control" disabled name="varientname1" > 
+                                  <option  value="">Stock not available</option>
+
+                                  </select>
+                            </div>
+                                <div class="col-md-9" *ngIf="data.pstock.length !== 0">
+                                    <select class="form-control" name="varientname" [(ngModel)]="varientname" (change)="getstockbyid(i)"> 
+                                      <option required *ngFor="let dataa of data.pstock; let i=index" [value]="dataa.id">{{dataa.mfg}}</option>
+
+                                      </select>
+                                </div>
+                                <!-- <div class="col-md-6">
+                                    <input type="number" placeholder="Quantity" class="form-control" name="prodquantity" [(ngModel)]="prodquantity">
+                                </div> -->
+                            </div>
+                           
+                            
+                            </div>
+                            
+                            <a *ngIf="data.pstock.length === 0"> <div class="panel-footer text-center" style=" color: #e60000; font-weight: bold; cursor:not-allowed;"><i class="glyphicon glyphicon-shopping-cart"  aria-hidden="true"></i> &nbsp;Out Of Stock</div></a>
+                         
+                            <a *ngIf="data.pstock.length !== 0" (click)="setquantity()"> <div class="panel-footer text-center" style="cursor: pointer;"><i class="glyphicon glyphicon-shopping-cart"  aria-hidden="true"></i> &nbsp;Add to Cart</div></a>
+
+                      </div>
+                    </div><br>
+                  </div>
+       
+            </div>
+          </div>
+
+
+         
+        </div>
+
+
+
+
+
+
+      </form>
+
+    </div>
+  </div>

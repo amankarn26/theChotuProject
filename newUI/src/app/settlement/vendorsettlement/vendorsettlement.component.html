@@ -1,0 +1,1168 @@
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<div class="panel panel-default slideLeft" *ngIf="this.tab1===false">
+    <div class="panel-heading">
+      <div class="clearfix">
+        <div class="pull-left"> Branch Settlement</div><br>
+
+        <div class="container" class="pull-right">
+          <div class="row">
+
+            <a  (click)="DownloadExcel()" title="Download Excel" class="btn btn-info btn-sm a-btn-slide-text">
+              <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
+            </a>
+          </div>
+        </div>
+      </div>
+  
+    </div>
+    <div>
+    <ul  class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#cancelled" id="a">Payable Amount</a></li>
+        <li><a data-toggle="tab" href="#Refund" id="b">Settled Amount</a></li>
+        <!-- <li><a data-toggle="tab" href="#CashP" id="b">Cash Payable</a></li>
+        <li><a data-toggle="tab" href="#CashR" id="b">Cash Settled</a></li>
+        <li><a data-toggle="tab" href="#earnings" id="b">Earnings</a></li> -->
+
+        
+
+
+
+
+      </ul>
+      <div class="tab-content">
+        <div id="cancelled" class="tab-pane fade in active">
+    <div class="panel-body" >
+      <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="table-responsive">
+          <table  class="table table-condensed table-striped table-bordered" [mfData]="todayspayableorders | dataFilterPr : filterQuery:'vendor_search'" #mf="mfDataTable"
+            [mfRowsOnPage]="rowsOnPage"  >
+            <thead>
+                <tr>
+                    <th colspan="10">
+                      <div id="custom-search-input">
+  
+                          <div class="col-sm-12">
+                              <div class="col-md-6 col-sm-6 col-xs-12">
+                                  <div class="form-group" >
+                                    <label for="gender">
+                                    </label>&nbsp;
+                                    <input type="radio" value="Pmonth" name="ccmonth" (click)="getyestspayable()"> Yesterday &nbsp;
+                                    <input checked type="radio" value="Pmonth" name="ccmonth" (click)="gettodayspayable()"> Today &nbsp;
+                                    <input type="radio" value="Customdate" [(ngModel)]="customdate"  name="ccmonth" (click)="gettodaysdate()" > Custom Date &nbsp;
+
+
+                                    <!-- <input type="radio" value="Nmonth" name="cmonth" ngModel [(ngModel)]="month"(change)="changemonth('n')"> Next Month -->
+                                  </div>
+                                </div>
+                                <div class="col-md-3 pull-right">
+                                  <div class="form-group" >
+                                    <label for="gender">Total Payable Amount:
+                                    </label>&nbsp;
+                                    <input class="form-control" id="totalpayamount" disabled [(ngModel)]="totalpayamount" name="totalpayamount" type="text">
+                                  </div>
+                                </div>
+                          </div>
+  
+                          <div class="col-sm-12">
+                              <div class="col-sm-3"  *ngIf="customdate">
+                                      <div class="form-group">
+                                        <label for="fromDate">From Date:
+                                        </label>
+                                        <input type="date" class="form-control" id="fromDatee" name="fromDatee" [(ngModel)]="fromDatee" required />
+                                      </div>
+                              </div>
+                              <div class="col-sm-3"  *ngIf="customdate">
+                                  <div class="form-group">
+                                    <label for="toDate">To Date:
+                                    </label>
+                                    <input type="date" class="form-control" id="toDatee" name="toDatee"  required [(ngModel)]="toDatee"  />
+                                  </div>
+                              </div>
+  
+                          
+  
+                              <div class="col-sm-3"  *ngIf="customdate">
+                                  <div class="form-group">
+                                    <label for="state">Search:
+                                    </label>
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-danger" type="button" (click)="searchdayspayable()">
+                                          <span class=" glyphicon glyphicon-search"></span>
+                                        </button>
+                                      </span>
+                                  </div>
+                              </div>
+  
+               
+  
+                            </div>
+                      
+                      </div>
+                    </th>
+                  </tr>
+              <tr>
+                <!-- <th>Select</th> -->
+                <th>Branch</th>
+                 <th>Account Details</th>
+                <th>Orders ids</th>
+                <th>Amount</th>
+                
+
+               
+        
+  
+  
+                <th class="text-right">Action</th>
+              </tr>
+             <tr>
+                <th colspan="9">
+                  <div id="custom-search-input">
+                    <div class="input-group col-md-12">
+                      <input type="text" class="form-control"  placeholder="Search by Branch" [(ngModel)]="filterQuery" />
+                      <span class="input-group-btn">
+                        <button class="btn btn-danger" type="button">
+                          <span class=" glyphicon glyphicon-search"></span>
+                        </button>
+                      </span>
+                    </div>
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of mf.data; let i = index; let last = last;">
+             
+     
+               
+                <td>{{data.name}}</td>
+                <td>
+                  <ul>
+                  <li>Account Type: {{data.atype}}</li>
+                  <li>Account Name: {{data.bankname}}</li>
+                  <li>Account No. : {{data.account}}</li>
+                  <li>Account Branch: {{data.branch}}</li>
+                  <li>IFSC code : {{data.ifsccode}}</li>
+                </ul>  
+                 </td>
+                <td *ngIf="data.oids.length>0"><a style="cursor: pointer;color: blue;" (click)="getvendororders(data.oids)">Order list</a></td>
+                <td *ngIf="!data.oids.length>0">No order Found</td>
+
+                
+                
+
+
+            
+               
+                <td><span class="label label-danger" style="font-size: 12px;">{{data.amount}} /-</span></td>
+
+
+               
+                             
+                
+               
+                <td class="text-right">
+                  <!-- <a [routerLink]="['/all_orders']" title="Order Details" class="btn btn-info btn-sm a-btn-slide-text">
+                    <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span></a> -->
+
+               <button *ngIf="data.oids.length>0" (click)="vendorpaidorders(data.oids)" class="btn btn-warning a-btn-slide-text  btn-sm" title="Set Vendor Paid" style="  font-size: 14px; "> 
+                ₹  </button>
+
+                <button *ngIf="!data.oids.length>0" class="btn btn-warning a-btn-slide-text  btn-sm" title="No order are there to paid" style="  font-size: 14px;cursor:not-allowed; "> 
+                  ₹  </button>
+                  
+                </td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="9">
+                  <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+  
+      </div>
+    </div>
+    </div>
+    <div id="Refund" class="tab-pane fade">
+        <div class="panel-body">
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="table-responsive">
+                <table id="myTable" class="table table-condensed table-striped table-bordered" [mfData]="todaysreceivedorders | dataFilterPr : filterQuery1:'vendor_search'" #mff="mfDataTable"
+                [mfRowsOnPage]="rowsOnPage"  >
+                <thead>
+                    <tr>
+                        <th colspan="10">
+                          <div id="custom-search-input">
+      
+                              <div class="col-sm-12">
+                                  <div class="col-md-6 col-sm-6 col-xs-12">
+                                      <div class="form-group" >
+                                        <label for="gender">
+                                        </label>&nbsp;
+                                        <input type="radio" value="Pmonth" name="cmonth" (click)="getyestreceieved()"> Yesterday &nbsp;
+
+                                        <input checked type="radio" value="Pmonth" name="cmonth" (click)="gettodaysreceived()"> Today &nbsp;
+                                        <input type="radio" value="Customdate" [(ngModel)]="customdate1"  name="cmonth" (click)="gettodaysdate()" > Custom Date &nbsp;
+    
+    
+                                        <!-- <input type="radio" value="Nmonth" name="cmonth" ngModel [(ngModel)]="month"(change)="changemonth('n')"> Next Month -->
+                                      </div>
+                                    </div>
+                                    <div class="col-md-3 pull-right">
+                                      <div class="form-group" >
+                                        <label for="gender">Total Settled Amount:
+                                        </label>&nbsp;
+                                        <input class="form-control" id="totalrecamount" disabled [(ngModel)]="totalrecamount" name="totalrecamount" type="text">
+                                      </div>
+                                    </div>
+                              </div>
+      
+                              <div class="col-sm-12">
+                                  <div class="col-sm-3"  *ngIf="customdate1">
+                                          <div class="form-group">
+                                            <label for="fromDate">From Date:
+                                            </label>
+                                            <input type="date" class="form-control" id="fromDatee" name="fromDatee" [(ngModel)]="fromDatee" required />
+                                          </div>
+                                  </div>
+                                  <div class="col-sm-3"  *ngIf="customdate1">
+                                      <div class="form-group">
+                                        <label for="toDate">To Date:
+                                        </label>
+                                        <input type="date" class="form-control" id="toDatee" name="toDatee"  required [(ngModel)]="toDatee"  />
+                                      </div>
+                                  </div>
+      
+                              
+      
+                                  <div class="col-sm-3"  *ngIf="customdate1">
+                                      <div class="form-group">
+                                        <label for="state">Search:
+                                        </label>
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-danger" type="button" (click)="searchdaysreceived()">
+                                              <span class=" glyphicon glyphicon-search"></span>
+                                            </button>
+                                          </span>
+                                      </div>
+                                  </div>
+      
+                   
+      
+                                </div>
+                          
+                          </div>
+                        </th>
+                      </tr>
+                  <tr>
+                    <!-- <th>Select</th> -->
+                    <th>Branch</th>
+                    <th>Account Details</th>
+                   <th>Orders ids</th>
+                   <th>Amount</th>
+                   
+                    
+    
+                   
+            
+      
+      
+                    <th class="text-right">Action</th>
+                  </tr>
+                 <tr>
+                    <th colspan="9">
+                      <div id="custom-search-input">
+                        <div class="input-group col-md-12">
+                          <input type="text" class="form-control" (keyup)="searchFunction()" id="myInput" placeholder="Search by Branch" [(ngModel)]="filterQuery1" />
+                          <span class="input-group-btn">
+                            <button class="btn btn-danger" type="button">
+                              <span class=" glyphicon glyphicon-search"></span>
+                            </button>
+                          </span>
+                        </div>
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let data of mff.data; let i = index; let last = last;">
+                    <!-- <td> <input type="checkbox" value="employees" (click)="deleteNewsList(data.id)"></td> -->
+         
+                   
+                    <td>{{data.name}}</td>
+                    <td>
+                      <ul>
+                      <li>Account Type: {{data.atype}}</li>
+                      <li>Account Name: {{data.bankname}}</li>
+                      <li>Account No. : {{data.account}}</li>
+                      <li>Account Branch: {{data.branch}}</li>
+                      <li>IFSC code : {{data.ifsccode}}</li>
+                    </ul>  
+                     </td>
+                    <td *ngIf="data.oids.length>0"><a style="cursor: pointer;color: blue;" (click)="getvendororders(data.oids)">Order list</a></td>
+                    <td *ngIf="!data.oids.length>0">No order Found</td>
+    
+                    
+    
+    
+                
+                   
+                    <td><span class="label label-success" style="font-size: 12px;">{{data.amount}} /-</span></td>
+    
+    
+                   
+                                 
+                    
+                   
+                    <td class="text-right">
+                     
+                      <!-- <a *ngIf="data.oids.length>0"  class="btn btn-success a-btn-slide-text  btn-sm" title="Change Order Status" (click)="changestatus(data.oids)">
+                      <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
+                        <span></span>
+                      </a> -->
+
+
+                      <button *ngIf="data.oids.length>0" (click)="changestatus(data.oids)" class="btn btn-success a-btn-slide-text  btn-sm" title="Order Settled" style="  font-size: 14px; "> 
+                        P  </button>
+
+                        
+                      <button  *ngIf="!data.oids.length>0"  class="btn btn-success a-btn-slide-text  btn-sm" title="No Orders Found" style="  font-size: 14px; cursor: not-allowed; "> 
+                        P  </button>
+        
+
+                    </td>
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colspan="9">
+                      <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+      
+          </div>
+        </div>
+        </div>
+        <div id="CashP" class="tab-pane fade">
+          <div class="panel-body">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+              <div class="table-responsive">
+                  <table id="myTable" class="table table-condensed table-striped table-bordered" [mfData]="cashpayableorders | dataFilterPr : filterQuery2:'vendor_search'" #mffff="mfDataTable"
+                  [mfRowsOnPage]="rowsOnPage"  >
+                  <thead>
+                    <tr>
+                      <th colspan="10">
+                        <div id="custom-search-input">
+    
+                            <div class="col-sm-12">
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <div class="form-group" >
+                                      <label for="gender">
+                                      </label>&nbsp;
+                                      <input type="radio" value="Pmonth" name="cashpmonth" (click)="getcashpayableDay('MONDAY')"> MONDAY &nbsp;
+
+                                      <input checked type="radio" value="Pmonth" name="cashpmonth" (click)="getcashpayableDay('THURSDAY')"> THURSDAY &nbsp;
+                                      <input type="radio" value="Customdate" [(ngModel)]="customdate4"  name="cashpmonth" (click)="gettodaysdate()" > Custom Date &nbsp;
+  
+  
+                                      <!-- <input type="radio" value="Nmonth" name="cmonth" ngModel [(ngModel)]="month"(change)="changemonth('n')"> Next Month -->
+                                    </div>
+                                  </div>
+                                  <div class="col-md-3 pull-right">
+                                    <div class="form-group" >
+                                      <label for="gender">Total Cash Payable:
+                                      </label>&nbsp;
+                                      <input class="form-control" id="Cashtotalpayamount" disabled [(ngModel)]="Cashtotalpayamount" name="Cashtotalpayamount" type="text">
+                                    </div>
+                                  </div>
+                            </div>
+    
+                            <div class="col-sm-12">
+                                <div class="col-sm-3"  *ngIf="customdate4">
+                                        <div class="form-group">
+                                          <label for="fromDate">From Date:
+                                          </label>
+                                          <input type="date" class="form-control" id="fromDatee" name="fromDatee" [(ngModel)]="fromDatee" required />
+                                        </div>
+                                </div>
+                                <div class="col-sm-3"  *ngIf="customdate4">
+                                    <div class="form-group">
+                                      <label for="toDate">To Date:
+                                      </label>
+                                      <input type="date" class="form-control" id="toDatee" name="toDatee"  required [(ngModel)]="toDatee"  />
+                                    </div>
+                                </div>
+    
+                            
+    
+                                <div class="col-sm-3"  *ngIf="customdate4">
+                                    <div class="form-group">
+                                      <label for="state">Search:
+                                      </label>
+                                      <span class="input-group-btn">
+                                          <button class="btn btn-danger" type="button" (click)="getcashpayablebydate()">
+                                            <span class=" glyphicon glyphicon-search"></span>
+                                          </button>
+                                        </span>
+                                    </div>
+                                </div>
+    
+                 
+    
+                              </div>
+                        
+                        </div>
+                      </th>
+                    </tr>
+                      <tr>
+                          <th colspan="10">
+                            <div id="custom-search-input">
+        
+                                <div class="col-sm-12">
+                                    <!-- <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <div class="form-group" >
+                                          <label for="gender">
+                                          </label>&nbsp;
+                                          <input type="radio" value="Pmonth" name="cmonth" (click)="getyestreceieved()"> Yesterday &nbsp;
+  
+                                          <input checked type="radio" value="Pmonth" name="cmonth" (click)="gettodaysreceived()"> Today &nbsp;
+                                          <input type="radio" value="Customdate" [(ngModel)]="customdate"  name="cmonth" (click)="gettodaysdate()" > Custom Date &nbsp;
+      
+      
+                                        </div>
+                                      </div> -->
+                                      <!-- <div class="col-md-3">
+                                        <div class="form-group" >
+                                          <label for="gender">Total Cash Payable:
+                                          </label>&nbsp;
+                                          <input class="form-control" id="Cashtotalpayamount" disabled [(ngModel)]="Cashtotalpayamount" name="Cashtotalpayamount" type="text">
+                                        </div>
+                                      </div> -->
+                                </div>
+        
+                                <!-- <div class="col-sm-12">
+                                    <div class="col-sm-3"  *ngIf="customdate">
+                                            <div class="form-group">
+                                              <label for="fromDate">From Date:
+                                              </label>
+                                              <input type="date" class="form-control" id="fromDatee" name="fromDatee" [(ngModel)]="fromDatee" required />
+                                            </div>
+                                    </div>
+                                    <div class="col-sm-3"  *ngIf="customdate">
+                                        <div class="form-group">
+                                          <label for="toDate">To Date:
+                                          </label>
+                                          <input type="date" class="form-control" id="toDatee" name="toDatee"  required [(ngModel)]="toDatee"  />
+                                        </div>
+                                    </div>
+        
+                                
+        
+                                    <div class="col-sm-3"  *ngIf="customdate">
+                                        <div class="form-group">
+                                          <label for="state">Search:
+                                          </label>
+                                          <span class="input-group-btn">
+                                              <button class="btn btn-danger" type="button" (click)="searchdaysreceived()">
+                                                <span class=" glyphicon glyphicon-search"></span>
+                                              </button>
+                                            </span>
+                                        </div>
+                                    </div>
+        
+                     
+        
+                                  </div> -->
+                            
+                            </div>
+                          </th>
+                        </tr>
+                    <tr>
+                      <!-- <th>Select</th> -->
+                      <th>Branch</th>
+                      <th>Account type</th>
+                      <!-- <th>Account type</th>
+                     <th>Account No.</th> -->
+                     <th>Orders ids</th>
+                     <th>Amount</th>
+                     
+                      
+      
+                     
+              
+        
+        
+                      <th class="text-right">Action</th>
+                    </tr>
+                   <tr>
+                      <th colspan="9">
+                        <div id="custom-search-input">
+                          <div class="input-group col-md-12">
+                            <input type="text" class="form-control" (keyup)="searchFunction()" id="myInput" placeholder="Search by Branch" [(ngModel)]="filterQuery2" />
+                            <span class="input-group-btn">
+                              <button class="btn btn-danger" type="button">
+                                <span class=" glyphicon glyphicon-search"></span>
+                              </button>
+                            </span>
+                          </div>
+                        </div>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let data of mffff.data; let i = index; let last = last;">
+                      <!-- <td> <input type="checkbox" value="employees" (click)="deleteNewsList(data.id)"></td> -->
+           
+                     
+                      <td>{{data.name}}</td>
+                      <td>CASH</td>
+
+                      <!-- <td>{{data.atype}}</td>
+                      <td>{{data.account}}</td> -->
+                      <td *ngIf="data.oids.length>0"><a style="cursor: pointer;color: blue;" (click)="getvendororders(data.oids)">Order list</a></td>
+                      <td *ngIf="!data.oids.length>0">No order Found</td>
+      
+                      
+      
+      
+                  
+                     
+                      <td><span class="label label-danger" style="font-size: 12px;">{{data.amount}} /-</span></td>
+      
+      
+                     
+                                   
+                      
+                     
+                      <td class="text-right">
+                       
+                        <!-- <a *ngIf="data.oids.length>0"  class="btn btn-success a-btn-slide-text  btn-sm" title="Change Order Status" (click)="changestatus(data.oids)">
+                        <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
+                          <span></span>
+                        </a> -->
+  
+                        <button *ngIf="data.oids.length>0" (click)="vendorpaidorders(data.oids)" class="btn btn-warning a-btn-slide-text  btn-sm" title="Set Vendor Paid" style="  font-size: 14px; "> 
+                          ₹  </button>
+          
+                          <button *ngIf="!data.oids.length>0" class="btn btn-warning a-btn-slide-text  btn-sm" title="No order are there to paid" style="  font-size: 14px;cursor:not-allowed; "> 
+                            ₹  </button>
+          
+  
+                      </td>
+                    </tr>
+                  </tbody>
+                  <tfoot>
+                    <tr>
+                      <td colspan="9">
+                        <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+        
+            </div>
+          </div>
+          </div>
+
+          <div id="CashR" class="tab-pane fade">
+            <div class="panel-body">
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="table-responsive">
+                    <table id="myTable" class="table table-condensed table-striped table-bordered" [mfData]="cashreceivedorders | dataFilterPr : filterQuery3:'vendor_search'" #mfffff="mfDataTable"
+                    [mfRowsOnPage]="rowsOnPage"  >
+                    <thead>
+                      <tr>
+                        <th colspan="10">
+                          <div id="custom-search-input">
+      
+                              <div class="col-sm-12">
+                                  <div class="col-md-6 col-sm-6 col-xs-12">
+                                      <div class="form-group" >
+                                        <label for="gender">
+                                        </label>&nbsp;
+                                        <input type="radio" value="Pmonth" name="cashpmonthR" (click)="getcashreceivedDay('MONDAY')"> MONDAY &nbsp;
+  
+                                        <input checked type="radio" value="Pmonth" name="cashpmonthR" (click)="getcashreceivedDay('THURSDAY')"> THURSDAY &nbsp;
+                                        <input type="radio" value="Customdate" [(ngModel)]="customdate5"  name="cashpmonthR" (click)="gettodaysdate()" > Custom Date &nbsp;
+    
+    
+                                        <!-- <input type="radio" value="Nmonth" name="cmonth" ngModel [(ngModel)]="month"(change)="changemonth('n')"> Next Month -->
+                                      </div>
+                                    </div>
+                                    <div class="col-md-3 pull-right">
+                                      <div class="form-group" >
+                                        <label for="gender">Total Cash Settled:
+                                        </label>&nbsp;
+                                        <input class="form-control" id="Cashtotalrecamount" disabled [(ngModel)]="Cashtotalrecamount" name="Cashtotalrecamount" type="text">
+                                      </div>
+                                    </div>
+                              </div>
+      
+                              <div class="col-sm-12">
+                                  <div class="col-sm-3"  *ngIf="customdate5">
+                                          <div class="form-group">
+                                            <label for="fromDate">From Date:
+                                            </label>
+                                            <input type="date" class="form-control" id="fromDatee" name="fromDatee" [(ngModel)]="fromDatee" required />
+                                          </div>
+                                  </div>
+                                  <div class="col-sm-3"  *ngIf="customdate5">
+                                      <div class="form-group">
+                                        <label for="toDate">To Date:
+                                        </label>
+                                        <input type="date" class="form-control" id="toDatee" name="toDatee"  required [(ngModel)]="toDatee"  />
+                                      </div>
+                                  </div>
+      
+                              
+      
+                                  <div class="col-sm-3"  *ngIf="customdate5">
+                                      <div class="form-group">
+                                        <label for="state">Search:
+                                        </label>
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-danger" type="button" (click)="getcashreceivebydate()">
+                                              <span class=" glyphicon glyphicon-search"></span>
+                                            </button>
+                                          </span>
+                                      </div>
+                                  </div>
+      
+                   
+      
+                                </div>
+                          
+                          </div>
+                        </th>
+                      </tr>
+                        <tr>
+                            <th colspan="10">
+                              <div id="custom-search-input">
+          
+                                  <div class="col-sm-12">
+                                      <!-- <div class="col-md-6 col-sm-6 col-xs-12">
+                                          <div class="form-group" >
+                                            <label for="gender">
+                                            </label>&nbsp;
+                                            <input type="radio" value="Pmonth" name="cmonth" (click)="getyestreceieved()"> Yesterday &nbsp;
+    
+                                            <input checked type="radio" value="Pmonth" name="cmonth" (click)="gettodaysreceived()"> Today &nbsp;
+                                            <input type="radio" value="Customdate" [(ngModel)]="customdate"  name="cmonth" (click)="gettodaysdate()" > Custom Date &nbsp;
+        
+        
+                                          </div>
+                                        </div> -->
+                                        <!-- <div class="col-md-3">
+                                          <div class="form-group" >
+                                            <label for="gender">Total Cash Settled:
+                                            </label>&nbsp;
+                                            <input class="form-control" id="Cashtotalrecamount" disabled [(ngModel)]="Cashtotalrecamount" name="Cashtotalrecamount" type="text">
+                                          </div>
+                                        </div> -->
+                                  </div>
+          
+                                  <!-- <div class="col-sm-12">
+                                      <div class="col-sm-3"  *ngIf="customdate">
+                                              <div class="form-group">
+                                                <label for="fromDate">From Date:
+                                                </label>
+                                                <input type="date" class="form-control" id="fromDatee" name="fromDatee" [(ngModel)]="fromDatee" required />
+                                              </div>
+                                      </div>
+                                      <div class="col-sm-3"  *ngIf="customdate">
+                                          <div class="form-group">
+                                            <label for="toDate">To Date:
+                                            </label>
+                                            <input type="date" class="form-control" id="toDatee" name="toDatee"  required [(ngModel)]="toDatee"  />
+                                          </div>
+                                      </div>
+          
+                                  
+          
+                                      <div class="col-sm-3"  *ngIf="customdate">
+                                          <div class="form-group">
+                                            <label for="state">Search:
+                                            </label>
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-danger" type="button" (click)="searchdaysreceived()">
+                                                  <span class=" glyphicon glyphicon-search"></span>
+                                                </button>
+                                              </span>
+                                          </div>
+                                      </div>
+          
+                       
+          
+                                    </div> -->
+                              
+                              </div>
+                            </th>
+                          </tr>
+                      <tr>
+                        <!-- <th>Select</th> -->
+                        <th>Branch</th>
+                      <th>Account type</th>
+
+                        <!-- <th>Account type</th>
+                       <th>Account No.</th> -->
+                       <th>Orders ids</th>
+                       <th>Amount</th>
+                       
+                        
+        
+                       
+                
+          
+          
+                        <th class="text-right">Action</th>
+                      </tr>
+                     <tr>
+                        <th colspan="9">
+                          <div id="custom-search-input">
+                            <div class="input-group col-md-12">
+                              <input type="text" class="form-control" (keyup)="searchFunction()" id="myInput" placeholder="Search by Branch" [(ngModel)]="filterQuery3" />
+                              <span class="input-group-btn">
+                                <button class="btn btn-danger" type="button">
+                                  <span class=" glyphicon glyphicon-search"></span>
+                                </button>
+                              </span>
+                            </div>
+                          </div>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let data of mfffff.data; let i = index; let last = last;">
+                        <!-- <td> <input type="checkbox" value="employees" (click)="deleteNewsList(data.id)"></td> -->
+             
+                       
+                        <td>{{data.name}}</td>
+                        <td>CASH</td>
+
+                        <!-- <td>{{data.atype}}</td>
+                        <td>{{data.account}}</td> -->
+                        <td *ngIf="data.oids.length>0"><a style="cursor: pointer;color: blue;" (click)="getvendororders(data.oids)">Order list</a></td>
+                        <td *ngIf="!data.oids.length>0">No order Found</td>
+        
+                        
+        
+        
+                    
+                       
+                        <td><span class="label label-success" style="font-size: 12px;">{{data.amount}} /-</span></td>
+        
+        
+                       
+                                     
+                        
+                       
+                        <td class="text-right">
+                         
+                          <!-- <a *ngIf="data.oids.length>0"  class="btn btn-success a-btn-slide-text  btn-sm" title="Change Order Status" (click)="changestatus(data.oids)">
+                          <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
+                            <span></span>
+                          </a> -->
+    
+    
+                          <button *ngIf="data.oids.length>0" (click)="changestatus(data.oids)" class="btn btn-success a-btn-slide-text  btn-sm" title="Order Settled" style="  font-size: 14px; "> 
+                            P  </button>
+    
+                            
+                          <button  *ngIf="!data.oids.length>0"  class="btn btn-success a-btn-slide-text  btn-sm" title="No Orders Found" style="  font-size: 14px; cursor: not-allowed; "> 
+                            P  </button>
+            
+    
+                        </td>
+                      </tr>
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <td colspan="9">
+                          <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                        </td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+          
+              </div>
+            </div>
+            </div>
+  
+
+        <div id="earnings" class="tab-pane fade">
+          <div class="panel-body">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+              <div class="table-responsive">
+                  <table id="myTable" class="table table-condensed table-striped table-bordered"
+                   [mfData]="todaysearningorders | dataFilterPr : filterQuery4:'vendor_search'" #mfff="mfDataTable"
+                  [mfRowsOnPage]="rowsOnPage"  >
+                  <thead>
+                      <tr>
+                          <th colspan="10">
+                            <div id="custom-search-input">
+        
+                                <div class="col-sm-12">
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <div class="form-group" >
+                                          <label for="gender">
+                                          </label>&nbsp;
+                                          <input type="radio" value="Pmonth" name="cccmonth" (click)="getyestreceievedearnings()"> Yesterday &nbsp;
+  
+                                          <input checked type="radio" value="Pmonth" name="cccmonth" (click)="gettodaysreceivedearnings()"> Today &nbsp;
+                                          <input type="radio" value="Customdate" [(ngModel)]="customdate2"  name="cccmonth" (click)="gettodaysdate()" > Custom Date &nbsp;
+      
+      
+                                          <!-- <input type="radio" value="Nmonth" name="cmonth" ngModel [(ngModel)]="month"(change)="changemonth('n')"> Next Month -->
+                                        </div>
+                                      </div>
+                                      <div class="col-md-3 pull-right">
+                                        <div class="form-group" >
+                                          <label for="gender">Total Earnings Settled:
+                                          </label>&nbsp;
+                                          <input class="form-control" id="totalearnamount" disabled [(ngModel)]="totalearnamount" name="totalearnamount" type="text">
+                                        </div>
+                                      </div>
+                                </div>
+        
+                                <div class="col-sm-12">
+                                    <div class="col-sm-3"  *ngIf="customdate2">
+                                            <div class="form-group">
+                                              <label for="fromDate">From Date:
+                                              </label>
+                                              <input type="date" class="form-control" id="fromDatee" name="fromDatee" [(ngModel)]="fromDatee" required />
+                                            </div>
+                                    </div>
+                                    <div class="col-sm-3"  *ngIf="customdate2">
+                                        <div class="form-group">
+                                          <label for="toDate">To Date:
+                                          </label>
+                                          <input type="date" class="form-control" id="toDatee" name="toDatee"  required [(ngModel)]="toDatee"  />
+                                        </div>
+                                    </div>
+        
+                                
+        
+                                    <div class="col-sm-3"  *ngIf="customdate2">
+                                        <div class="form-group">
+                                          <label for="state">Search:
+                                          </label>
+                                          <span class="input-group-btn">
+                                              <button class="btn btn-danger" type="button" (click)="searchdaysreceivedeanings()">
+                                                <span class=" glyphicon glyphicon-search"></span>
+                                              </button>
+                                            </span>
+                                        </div>
+                                    </div>
+        
+                     
+        
+                                  </div>
+                            
+                            </div>
+                          </th>
+                        </tr>
+                    <tr>
+                      <!-- <th>Select</th> -->
+                      <!-- <th>Vendor</th>
+                      <th>Account type</th>
+                     <th>Account No.</th> -->
+                     <th>Orders ids</th>
+                     <th>Amount</th>
+                     
+                      
+      
+                     
+              
+        
+        
+                      <!-- <th class="text-right">Action</th> -->
+                    </tr>
+                   <tr>
+                      <th colspan="9">
+                        <!-- <div id="custom-search-input">
+                          <div class="input-group col-md-12">
+                            <input type="text" class="form-control" (keyup)="searchFunction()" id="myInput" placeholder="Search by Vendor" [(ngModel)]="filterQuery4" />
+                            <span class="input-group-btn">
+                              <button class="btn btn-danger" type="button">
+                                <span class=" glyphicon glyphicon-search"></span>
+                              </button>
+                            </span>
+                          </div>
+                        </div> -->
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let data of mfff.data; let i = index; let last = last;">
+                      <!-- <td> <input type="checkbox" value="employees" (click)="deleteNewsList(data.id)"></td> -->
+           
+                     
+                      <!-- <td>{{data.name}}</td>
+                      <td>{{data.atype}}</td>
+                      <td>{{data.account}}</td> -->
+                      <td *ngIf="data.oids.length>0"><a style="cursor: pointer;color: blue;" (click)="getvendororders(data.oids)">Order list</a></td>
+                      <td *ngIf="!data.oids.length>0">No order Found</td>
+      
+                      
+      
+      
+                  
+                     
+                      <td><span class="label label-success" style="font-size: 12px;">{{data.amount}} /-</span></td>
+      
+      
+                     
+                                   
+                      
+                     
+                      <!-- <td class="text-right"> -->
+                       
+                        <!-- <a *ngIf="data.oids.length>0"  class="btn btn-success a-btn-slide-text  btn-sm" title="Change Order Status" (click)="changestatus(data.oids)">
+                        <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
+                          <span></span>
+                        </a> -->
+  
+  
+                        <!-- <button *ngIf="data.oids.length>0" (click)="changestatus(data.oids)" class="btn btn-success a-btn-slide-text  btn-sm" title="Order Settled" style="  font-size: 14px; "> 
+                          P  </button>
+  
+                          
+                        <button  *ngIf="!data.oids.length>0"  class="btn btn-success a-btn-slide-text  btn-sm" title="No Orders Found" style="  font-size: 14px; cursor: not-allowed; "> 
+                          P  </button>
+          
+   -->
+                      <!-- </td> -->
+                    </tr>
+                  </tbody>
+                  <tfoot>
+                    <tr>
+                      <td colspan="9">
+                        <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+        
+            </div>
+          </div>
+          </div>
+
+        
+  <!-- <h2>W3.CSS Modal</h2> -->
+  <button (click)="clickmodal()" style="display: none;" [hidden]="true" class="w3-button w3-black">Open Modal</button>
+
+
+  <div id="id01" class="w3-modal" >
+    <div class="w3-modal-content w3-animate-top w3-card-4">
+      <header class="w3-container w3-teal"> 
+        <span onclick="document.getElementById('id01').style.display='none'" 
+        class="w3-button w3-display-topright">&times;</span>
+        <h5>Orders For Branch : {{statusfirm}} </h5>
+      </header>
+      <div class="w3-modal-content w3-animate-top">
+      <div class="w3-container">
+        <!-- <span onclick="document.getElementById('id01').style.display='none'" class="w3-button w3-display-topright">&times;</span> -->
+        <table id="myTable" class="w3-table">
+          <thead>
+             
+            <tr>
+              <!-- <th>Select</th> -->
+              <th>Order Ids</th>
+
+              <th>Delivery Person</th>
+               <th>Branch Paid</th>
+              <th>Delivery Paid</th>
+              <th>Orders Status</th>
+              <th>Amount</th>
+              <th>Status</th>
+
+              
+
+             
+      
+
+
+              <!-- <th class="text-right">Action</th> -->
+            </tr>
+          
+              <!-- <th colspan="9">
+                <div id="custom-search-input">
+                  <div class="input-group col-md-12">
+                    <input type="text" class="form-control" (keyup)="searchFunction()" id="myInput" placeholder="Search by Vendor" [(ngModel)]="filterQuery" />
+                    <span class="input-group-btn">
+                      <button class="btn btn-danger" type="button">
+                        <span class=" glyphicon glyphicon-search"></span>
+                      </button>
+                    </span>
+                  </div>
+                </div>
+              </th> -->
+           
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of this.statusresponse; let i = index; let last = last;">
+           
+   
+              <td>{{data.order}}</td>
+              <td>{{data.dperson}}</td>
+              <td>{{data.isvendorpaid}}</td>
+              <td>{{data.isdeliverypaid}}</td>
+                <td>{{data.orderstatus}}</td>
+              <td><span class="label label-danger" style="font-size: 12px;">{{data.transferamt}} /-</span></td>
+              <td *ngIf="data.status == 'SUCCESS'"><span class="label label-success" style="font-size: 12px;">{{data.status}}</span></td>
+              <td *ngIf="data.status == 'FAILED'"><span class="label label-danger" style="font-size: 12px;">{{data.status}}</span></td>
+
+              <!-- <td><span class="label label-danger" style="font-size: 12px;">{{data.status}}</span></td> -->
+
+
+
+             
+                           
+              
+             
+              <!-- <td class="text-right">
+        
+             <button (click)="examp()" class="btn btn-success a-btn-slide-text  btn-sm" title="Set Vendor Paid" style="  font-size: 14px; "> 
+              ₹  </button>
+                
+              </td> -->
+            </tr>
+          </tbody>
+          </table>
+          
+      </div>
+    </div>
+  </div>
+
+
+
+              
+    </div>
+  </div>
+
+  </div>
+</div>
+  <div class="panel panel-default slideLeft" *ngIf="this.tab1 === true">
+    <div class="panel-heading">
+      <div class="clearfix">
+        <div class="pull-left"> Branch Orders for <b>{{data[0].vendor}}</b></div>
+        <div class="container" class="pull-right">
+          <div class="row">
+            <a *ngIf="this.userType==='FIRM'" title="Back" (click)="cancel()"  class="btn btn-info a-btn-slide-text  btn-sm">
+              <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+            </a>
+
+
+     
+
+          </div>
+        </div>
+      </div>
+    </div>
+  
+   
+
+    
+       
+    <div class="panel-body" >
+      <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="table-responsive">
+          <table id="myTable" class="table table-condensed table-striped table-bordered" [mfData]="data | dataFilterPr : filterQuery:'vendor_search'" #mf="mfDataTable"
+            [mfRowsOnPage]="rowsOnPage"  >
+            <thead>
+             
+              <tr>
+                <!-- <th>Select</th> -->
+                <th>Branch</th>
+
+                <th>Order Details</th>
+                 <th>Delivery</th>
+                <th>Settlement</th>
+                <th>Orders Status</th>
+                <th>Amount</th>
+                <th>Status</th>
+
+                
+
+               
+        
+  
+  
+                <!-- <th class="text-right">Action</th> -->
+              </tr>
+             <tr>
+                <th colspan="9">
+                  <!-- <div id="custom-search-input">
+                    <div class="input-group col-md-12">
+                      <input type="text" class="form-control" (keyup)="searchFunction()" id="myInput" placeholder="Search by Vendor" [(ngModel)]="filterQuery5" />
+                      <span class="input-group-btn">
+                        <button class="btn btn-danger" type="button">
+                          <span class=" glyphicon glyphicon-search"></span>
+                        </button>
+                      </span>
+                    </div>
+                  </div> -->
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of mf.data; let i = index; let last = last;">
+             
+     
+                <td>{{data.vendor}}</td>
+                <td>{{data.orderdetails}}</td>
+                <td>{{data.dperson}}</td>
+                <td>Branch paid : {{data.isvendorpaid}}<br>
+                  Delivery paid : {{data.isdeliverypaid}}<br></td>
+                  <td>{{data.orderstatus}}</td>
+                <td><span class="label label-danger" style="font-size: 12px;">{{data.transferamt}} /-</span></td>
+                <td *ngIf="data.status == 'SUCCESS'"><span class="label label-success" style="font-size: 12px;">{{data.status}}</span></td>
+                <td *ngIf="data.status == 'FAILED'"><span class="label label-danger" style="font-size: 12px;">{{data.status}}</span></td>
+
+                <!-- <td><span class="label label-danger" style="font-size: 12px;">{{data.status}}</span></td> -->
+
+
+
+               
+                             
+                
+               
+                <!-- <td class="text-right">
+          
+               <button (click)="examp()" class="btn btn-success a-btn-slide-text  btn-sm" title="Set Vendor Paid" style="  font-size: 14px; "> 
+                ₹  </button>
+                  
+                </td> -->
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="9">
+                  <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+  
+      </div>
+    </div>
+
+
+
+
+              
+ 
+  </div>
+
+
+ 

@@ -1,0 +1,261 @@
+<head>
+  <!-- <title>Bootstrap Example</title> -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+<!-- place order homepage -->
+
+<div class="panel panel-default slideLeft">
+
+  <div class="panel-body">
+    <div class="col-md-12 col-sm-12 col-xs-12 no-padding slideLeft text-capitalize"
+      style="font-family: Verdana, Geneva, Tahoma, sans-serif;">
+
+      <div class="container-fluid">
+
+        <div class="topnav">
+
+          <div class="col-md-9">
+            <div class="search-container">
+              <form action="/action_page.php" class="row" style="float: left; margin-left: 0px; width: 100%;">
+                <input type="text" placeholder="Search By Dish Name..." class="col-md-11"
+                  [(ngModel)]="productCategorySearch" name="productCategorySearch" id="productCategorySearch"
+                  (ngModelChange)="searchProduct()">
+                <button type="submit" (click)="searchProduct()" class="btn btn-primary col-md-1">
+                  <i class="fa fa-search"></i></button>
+              </form>
+            </div>
+          </div>
+
+          <div class="col-md-2">
+            <a [routerLink]="['/checkout']" class="btn btn-success btn-sm ml-3" data-toggle="tooltip" title="Go to cart">
+              <!-- <i class="fa fa-shopping-cart"></i> Cart -->
+              <span class="cartBox"><img src="assets/extra/cart1.svg" alt=""></span>
+              <span class="badge badge-light">{{this.items.length}}</span>
+            </a>
+          </div>
+          <div class="col-md-1">
+            <a (click)="applyFilter()" class="btn btn-success btn-sm ml-3" style="padding: 0px 0px;"  data-toggle="tooltip" title="Apply Filter">
+              <span class="cartBox"><img src="assets/extra/filter.svg" style="margin-right: 5px;margin-left: 5px;"
+                  alt=""></span>
+            </a>
+          </div>
+
+          <div class="clearfix"></div>
+
+          <div class="col-md-12" style="margin-top: 20px;" *ngIf="isFilterOn">
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label for="prodtype"> Category:</label>
+                <select class="form-control" id="categorytype" required
+                  name="categorytype" [(ngModel)]="categorytype" (change)="getprodtypelistbycatgory()">
+                  <option required *ngFor="let type of categoryList; let i=index" [value]="type.name">
+                    {{type.name}}</option>
+                </select>
+
+              </div>
+            </div>
+
+            <div class="col-sm-4" *ngIf="categorytype">
+              <div class="form-group">
+                <label for="name"> Menu:</label>
+                <select class="form-control" id="name" required name="name"
+                  [(ngModel)]="selectedCat" (change)="getprodbyprodtype()">
+                  <option required *ngFor="let type of menulist; let i=index" [value]="type.name">
+                    {{type.name}}</option>
+                </select>
+
+              </div>
+            </div>
+
+            <div class="col-sm-2">
+              <div class="form-group">
+                <label for="state">
+                </label>
+                <span class="input-group-btn">
+                  <button class="btn btn-info btn-sm" title="Reset" (click)="refreshincall()"
+                    style="font-size: 9px;">
+                    <span class="glyphicon glyphicon-refresh"></span>
+                  </button>
+                </span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <table class="table table-condensed table-striped table-bordered"
+          [mfData]="data | dataFilterPr : filterQuery:'bookingvehicle'" #mf="mfDataTable" [mfRowsOnPage]="rowsOnPage">
+        </table>
+
+        <div class="card bg-info text-white">
+          <div class="card-body">
+
+            <div class="col-sm-12 table-responsive" *ngIf="!isSearch">
+              <div class="text-capitalize">
+                <!-- <h3>Shop By Product</h3> -->
+                <br>
+                <div *ngFor="let data of data; let i = index; let last = last;">
+                  <div class="col-sm-4">
+                    <div class="panel panel-default">
+                      <div class="panel-heading text-center" style="padding-top: 15px;">
+                        <p><strong>{{data?.menutype}}</strong></p>
+                      </div>
+                      <div class="panel-body">
+                        <div class="row" style="margin-bottom: 15px;">
+                          <div class="col-md-12" style="text-align: center;">
+                            <div style="margin: auto;" class="col-md-4">
+                              <img *ngIf="data?.photos" src="{{docServer}}/{{data?.photos[0].docpath}}"
+                                class="img-responsive" alt="" style="border-radius: 5px; overflow: hidden;">
+                              <img *ngIf="!data?.photos" src="{{docServer}}/blank-profile-picture.png"
+                                class="img-responsive" style="border-radius: 5px; overflow: hidden;">
+                            </div>
+                            <div class="col-md-8">
+                              <div class="a" style="color: rgb(43, 24, 17); font-weight: 700;">
+                                {{data?.name}}
+                              </div>
+                              <div class="a" style="color: rgb(43, 24, 17); margin: auto; font-weight: 400;"
+                                *ngIf="data?.hasvariant=='NO'">
+                                {{data?.rateperunit}} &#8377;
+                              </div>
+                              <div class="a"
+                                style="margin: auto;color: rgb(43, 24, 17); font-family: 'Quicksand', sans-serif; font-weight: 400;"
+                                maxlength="22" *ngIf="data?.hasvariant=='YES' && data?.variants">
+                                <span *ngIf="data?.variants.length == 0">No Stock</span>
+                                <span *ngIf="data?.variants.length != 0">Start from {{data?.variants[0].rateperunit}}
+                                  &#8377;</span>
+                              </div>
+                              <div class="a"
+                                style="margin: auto;color: rgb(43, 24, 17); font-family: 'Quicksand', sans-serif; font-weight: 400;"
+                                maxlength="22" *ngIf="data?.hasvariant=='YES' && !data?.variants">
+                                <span *ngIf="!data?.variants">No Stock</span>
+                              </div>
+                            </div>
+
+                          </div>
+
+                          <div class="col-md-12" *ngIf="data?.hasvariant==='YES' && data?.cartSelected"
+                            style="margin-top: 20px;">
+                            <label for="variant" style="color: rgb(44, 44, 44); font-size: 0.8em;">
+                              <b>Select Variant:</b>
+                            </label>
+                            <select class="form-control" name="variant" [(ngModel)]="variant" style="margin-left: 5px;"
+                              (change)="setquantity(data,i)">
+
+                              <option required *ngFor="let singlevariant of data?.variants; let i=index"
+                                [value]="singlevariant.id" selected>
+                                {{singlevariant.variant}}
+                              </option>
+                            </select>
+                          </div>
+
+                        </div>
+
+                        <!-- Add to Cart -->
+                        <div (click)="setquantity(data,null)" *ngIf="data?.hasvariant==='NO'">
+                          <div class="panel-footer text-center" style="cursor: pointer;"><i
+                              class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></i> &nbsp;Add to Cart</div>
+                        </div>
+                        <div [routerLink]="['/manageproduct']"
+                          *ngIf="data?.hasvariant==='YES' && data?.variants.length == 0">
+                          <div class="panel-footer text-center" style="cursor: pointer;"><i
+                              class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></i> &nbsp;Add Varient</div>
+                        </div>
+                        <div (click)="openVarient(i)"
+                          *ngIf="data?.hasvariant==='YES' && data?.variants.length != 0 && !data?.cartSelected">
+                          <div class="panel-footer text-center" style="cursor: pointer;"><i
+                              class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></i> &nbsp;Add to Cart</div>
+                        </div>
+                      </div>
+                    </div><br>
+                  </div>
+                  <div class="clearfix" *ngIf="(i+1) % 3 == 0"></div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- search page -->
+            <div class="col-sm-12 table-responsive" *ngIf="isSearch">
+              <div class="text-capitalize">
+                <!-- <h3>Shop By Product</h3> -->
+                <br>
+                <div *ngFor="let data of searchData; let i = index; let last = last;">
+                  <div class="col-sm-4">
+                    <div class="panel panel-default">
+                      <div class="panel-heading text-center" style="padding-top: 15px;">
+                        <p><strong>{{data?.menutype}}</strong></p>
+                      </div>
+                      <div class="panel-body">
+                        <div class="row" style="margin-bottom: 15px;">
+                          <div class="col-md-12" style="text-align: center;">
+                            <div style="margin: auto;" class="col-md-4">
+                              <img *ngIf="data?.photos" src="{{docServer}}/{{data?.photos[0].docpath}}"
+                                class="img-responsive" alt="" style="border-radius: 5px; overflow: hidden;">
+                              <img *ngIf="!data?.photos" src="{{docServer}}/blank-profile-picture.png"
+                                class="img-responsive" style="border-radius: 5px; overflow: hidden;">
+                            </div>
+                            <div class="col-md-8">
+                              <div class="a" style="color: rgb(43, 24, 17); font-weight: 700;">
+                                {{data?.name}}
+                              </div>
+                              <div class="a" style="color: rgb(43, 24, 17); margin: auto; font-weight: 400;"
+                                *ngIf="data?.hasvariant=='NO'">
+                                {{data?.rateperunit}} &#8377;
+                              </div>
+                              <div class="a"
+                                style="margin: auto;color: rgb(43, 24, 17); font-family: 'Quicksand', sans-serif; font-weight: 400;"
+                                maxlength="22" *ngIf="data?.hasvariant=='YES'">
+                                <span *ngIf="data?.variants.length == 0">No Stock</span>
+                                <span *ngIf="data?.variants.length != 0">{{data?.variants[0].rateperunit}}
+                                  &#8377;</span>
+
+                              </div>
+                            </div>
+
+                          </div>
+
+                          <div class="col-md-12" *ngIf="data?.hasvariant==='YES' && data?.variants.length != 0"
+                            style="margin-top: 20px;">
+                            <label for="variant"
+                              style="color: rgb(44, 44, 44); font-size: 0.8em;"><b>Variant:</b></label>
+                            <select class="form-control" name="variant" [(ngModel)]="variant" style="margin-left: 5px;"
+                              (change)="getstock(i)">
+
+                              <option required *ngFor="let singlevariant of data?.variants; let i=index"
+                                [value]="singlevariant.id" selected>
+                                {{singlevariant.variant}}
+                              </option>
+                            </select>
+                          </div>
+
+                        </div>
+
+                        <!-- Add to Cart -->
+                        <div (click)="setquantity(data)">
+                          <div class="panel-footer text-center" style="cursor: pointer;"><i
+                              class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></i> &nbsp;Add to Cart</div>
+                        </div>
+                      </div>
+                    </div><br>
+                  </div>
+                  <div class="clearfix" *ngIf="(i+1) % 3 == 0"></div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>

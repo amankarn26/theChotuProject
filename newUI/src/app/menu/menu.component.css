@@ -1,0 +1,38 @@
+.sidebar .sidebar-wrapper .nav [data-toggle="collapse"]~div>ul>li>a .sidebar-mini, .sidebar .sidebar-wrapper .user .info [data-toggle="collapse"]~div>ul>li>a .sidebar-mini {
+    text-transform: uppercase;
+    float: left;
+    width: 30px;
+    text-align: center;
+    letter-spacing: 1px;
+}
+
+
+.sidebar .nav .nav-item .nav-link .sidebar-mini {
+    padding-left: 5px !important;
+    opacity: .86 !important;
+}
+
+
+.nav-link {
+    cursor: pointer;
+    }
+
+    .caret {
+        border-top-color:white !important;
+        border-bottom-color: white !important;
+       }
+
+
+
+
+
+.manoj {
+    background: rgb(5,204,91) !important;
+background: linear-gradient(137deg, rgba(5,204,91,1) 0%, rgba(224,27,213,1) 41%, rgba(68,72,250,1) 100%) !important;
+}
+
+
+.sidebar:before {
+    opacity: .70 !important;
+}
+    

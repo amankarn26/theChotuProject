@@ -1,0 +1,257 @@
+<ion-header>
+  <ion-toolbar
+    style="--background: rgba(134,75,246,1);">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/tab1" (click)="cancel()">
+
+      </ion-back-button>
+    </ion-buttons>
+    <ion-title class="pageheading">My Cart</ion-title>
+
+
+    <ion-buttons class="cartt" slot="end" *ngIf="selectedItems.length">
+
+      <ion-button class="cartt" (click)="clearCart()">
+        Clear
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content style="font-size: 15px !important; --background: #e9ddff;" *ngIf="selectedItems.length >0 && !spinner">
+  <div class="upperBox" #upperBox style="display: none;">
+    <ion-row (click)="openOrderType()">
+      <ion-col size="6">
+        <div class="selectedType">
+          Order Type :
+          <span *ngIf="order.ordertype === 'PICK_UP'">Pick UP</span>
+          <span *ngIf="order.ordertype === 'HOME_DELIVERY'">Delivery</span>
+          <span *ngIf="order.ordertype === 'DINE_IN'">Dine IN</span>
+          <span style="float: right">
+            <ion-icon name="caret-down-outline" style="color:#563904;"></ion-icon>
+          </span>
+        </div>
+
+        <!-- </div> -->
+      </ion-col>
+      <ion-col size="6">
+        <div class="selectedRupee">
+          Total Payable :
+          <span *ngIf="!isDiscountAvailable">{{grandtotal | currency: 'INR':'symbol'}}</span>
+          <span *ngIf="isDiscountAvailable">{{grandtotalCopy | currency: 'INR':'symbol'}}</span>
+        </div>
+      </ion-col>
+    </ion-row>
+  </div>
+
+  <ion-row style="display: none;">
+    <ion-col col-12>
+      <ion-list style="background: #864bf6; border-radius: 5px;">
+
+        <ion-item style="--background: #864bf6;color: white;">
+          <ion-label>Order Type</ion-label>
+          <ion-select value="Pick Up" interface="action-sheet" [(ngModel)]="order.ordertype"
+            (ionChange)="setOrderType()" id="ordertype" required>
+            <ion-select-option value="PICK_UP">Pick Up</ion-select-option>
+            <ion-select-option value="HOME_DELIVERY">Home Delivery</ion-select-option>
+            <ion-select-option value="DINE_IN">Dine in</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-list>
+    </ion-col>
+  </ion-row>
+
+  <ion-list style="background: #e9ddff;">
+    <ion-item *ngFor="let item of selectedItems; let i=index" class="cartShowBox" lines="inset">
+      <div style="width: 100%;">
+
+        <ion-row>
+          <ion-col size="3"><img src="{{item.img}}" alt="item Image" width="80px" height="59px"
+              style="border-radius: 5px; margin-top:10px;box-shadow: 5px 5px 12px 0px rgba(20,21,19,0.71);" /></ion-col>
+          <ion-col size="9" style="padding-left: 10px;">
+            <label style="font-size: 12px;">
+              {{item.name}} <span *ngIf="item.hasvariant === 'YES'">-{{item.variantid.variant}} </span>
+            </label>
+            <br />
+            <label style="font-size: 12px;">
+              {{item.rateperunit | currency:'INR': 'symbol'}}
+              X {{item.serves}}
+              <span class="badge" *ngIf="item.rateunit ==='RATEPERPLATE'">Plate</span>
+              <span class="badge" *ngIf="item.rateunit ==='RATEPERBOTTLE'">Bottle</span>
+              <span class="badge" *ngIf="item.rateunit ==='RATEPERDRINK'">Bottle</span>
+              <span style="float: right;margin-top: 3px;">{{item.amount | currency:'INR': 'symbol'}}</span>
+
+            </label>
+            <br>
+            <div class="count" style="float: right;">
+              <span class="item-count" (click)="remove(i)" style="border-right: 1px solid;">
+                <ion-icon name="trash" (click)="removefromcart(item)" *ngIf="item?.serves == 1">
+                </ion-icon>
+                <span *ngIf="item?.serves != 1">-</span>
+              </span>
+              <span class="item-count show-count" style="  border-right: 1px solid;">
+                {{item.serves}}
+              </span>
+              <span class="item-count" (click)="add(i)">
+                +
+              </span>
+            </div>
+          </ion-col>
+        </ion-row>
+      </div>
+    </ion-item>
+
+    <div class="coupanApplySection" (click)="openCouponType()" *ngIf="discountFlag">
+      <div class="beforeApply" *ngIf="!isDiscountAvailable">
+        <ion-icon name="wallet"></ion-icon> &nbsp; &nbsp; Apply a Coupon Code
+        <span>Apply</span>
+      </div>
+      <div class="beforeApply" *ngIf="isDiscountAvailable">
+        <ion-icon name="wallet"></ion-icon> &nbsp; &nbsp; {{discountInfo.name}}
+        <span>{{discountInfo.code}}</span>
+      </div>
+    </div>
+
+    <ion-item class="segmentt" style="display: none;" *ngIf="discountFlag">
+      <ion-label>Apply Coupon</ion-label>
+      <ion-select ok-text="Okay" cancel-text="Dismiss" interface="action-sheet" name="coupan" [(ngModel)]="coupan"
+        (ionChange)="getcoupon()" id="couponCodeBox" placeholder="Select Coupon Code">
+        <ion-select-option *ngFor="let offer of offerlist; let i=index" [value]="offer?.couponcode">
+          {{offer?.couponcode}} -- Grab {{offer?.discount}}% OFF
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item style="--background: #e9ddff;">
+      Total Items : <span slot="end">{{selectedItems?.length}}</span>
+    </ion-item>
+
+
+    <div class="coupanApplySection" (click)="openAddressSelect()">
+      <div class="beforeApply" *ngIf="!isAddressSelect">
+        <ion-icon name="location-outline"></ion-icon> &nbsp; &nbsp; Select Address
+        <span>Select</span>
+      </div>
+      <div class="beforeApply" *ngIf="isAddressSelect">
+        <ion-icon name="location-outline"></ion-icon> &nbsp; &nbsp; {{selectedAddress.line1}}
+        <span>Change</span>
+      </div>
+    </div>
+
+    <ion-item class="segmentt" style="display: none;" >
+      <ion-select ok-text="Okay" cancel-text="Dismiss" interface="action-sheet" name="addresssId" [(ngModel)]="addresssId"
+        (ionChange)="changeAddressNow()" id="addressCodeBox" placeholder="Select Address Here">
+        <ion-select-option *ngFor="let address of allAddress; let i=index" [value]="address?.id">
+          {{address?.line1}}, {{address?.line2}}, {{address?.city}}-{{address?.pincode}}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+
+    <!-- <ion-item style="--background: #e9ddff;">
+      Total : <span slot="end">{{total | currency: 'INR':'symbol'}}</span>
+    </ion-item> -->
+    <!-- <ion-item style="--background: #e9ddff;">
+      GST : <span slot="end">{{this.order.qcost.gstamt | currency: 'INR':'symbol'}}</span>
+    </ion-item> -->
+
+    <ion-item *ngIf="isDelEnable && isDeliveryperson" style="--background: #e9ddff;">
+      Delivery Charges : <span slot="end">{{deliverycharges | currency: 'INR':'symbol'}}</span>
+    </ion-item>
+
+    <ion-item *ngIf="isDiscountAvailable" style="--background: #e9ddff;">
+      You Saved : <span slot="end">{{discountAmount | currency: 'INR':'symbol'}}</span>
+    </ion-item>
+    <ion-item *ngIf="!isDiscountAvailable" style="--background: #e9ddff;">
+      Grand Total : <span slot="end">{{grandtotal | currency: 'INR':'symbol'}}</span>
+    </ion-item>
+
+    <ion-item *ngIf="isDiscountAvailable" style="--background: #e9ddff;">
+      Grand Total : <span slot="end"> <s style="font-size: 0.7rem;">{{grandtotal | currency:
+          'INR':'symbol'}}</s> {{grandtotalCopy | currency: 'INR':'symbol'}}</span>
+    </ion-item>
+
+
+    <!-- <ion-item *ngIf="notshowdine" style="--background: #e9ddff;">
+      Expected Delivery : <span slot="end">00:45 mins</span>
+    </ion-item> -->
+    <ion-item *ngIf="isDelEnable && isDeliveryperson" style="--background: #e9ddff;">
+
+      <ion-label>
+
+        <p class="show-address" style="font-size: 20px;"><strong> Delivery Address: </strong></p>
+        <p class="show-address" style="font-size: 16px; padding-top: 5px;"><strong>{{custName | uppercase}} </strong>
+        </p>
+        <p class="show-address">{{address.line1}} </p>
+        <p class="show-address" *ngIf="address.line2">{{address.line2}}</p>
+        <p class="show-address">{{address.states}}, {{address.city}}</p>
+        <p class="show-address">{{address.pincode}}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <ion-item style="--background: #e9ddff;">
+    <ion-textarea rows="2" cols="8" placeholder="Comment" [(ngModel)]="order.comments" id="comments" name="comments">
+    </ion-textarea>
+  </ion-item>
+
+
+  <div class="coupanApplySection" (click)="openScheduleTime()" >
+    <div class="beforeApply" *ngIf="!selectSchedule">
+      <ion-icon name="wallet"></ion-icon> &nbsp; &nbsp; Schedule Order 
+      <span>Apply</span>
+    </div>
+  </div>
+
+  <ion-datetime *ngIf="selectSchedule" [(ngModel)]="selectedDate" presentation="time-date" displayFormat="DD-MMM-YYYY" placeholder="Select Date"></ion-datetime>
+  <ion-datetime *ngIf="selectSchedule" [(ngModel)]="selectedTime" presentation="time-date" displayFormat="hh-mm-A" placeholder="Select Time"></ion-datetime>
+
+
+
+  <div *ngIf="islogin">
+    <ion-button expand="block" (click)="payWithRazor()" style="--background: #151413c2;"
+      *ngIf="!isDelEnable || isDeliveryperson">Pay Now</ion-button>
+    <!-- <ion-button expand="block" (click)="initPay()" style="--background: #151413c2;" >Pay Now Test</ion-button> -->
+
+    <ion-item class="DNotAvailable" *ngIf="isDelEnable && !isDeliveryperson">
+      <ion-label text-center>Currently, we are unavailable for the Address. </ion-label>
+    </ion-item>
+  </div>
+
+  <ion-button expand="block" style="--background: #151413c2;" (click)="loginNow()" *ngIf="!islogin">Pay Now</ion-button>
+
+
+</ion-content>
+
+<ion-content style="font-size: 15px !important; " *ngIf="selectedItems.length >0 && spinner">
+  <div #upperBox> </div>
+  <div class="spin" *ngIf="spinner">
+    <ion-spinner name="lines" color="primary"></ion-spinner>
+  </div>
+</ion-content>
+
+<ion-content *ngIf="selectedItems.length == 0">
+
+  <div #upperBox> </div>
+
+  <ion-row *ngIf="!spinner">
+    <ion-icon class="empty-cart" name="cart" style="color: #ffffff;"></ion-icon>
+  </ion-row>
+  <h4 *ngIf="!spinner">Your Cart Is Empty!</h4>
+  <div style="margin-top:50px !important;" *ngIf="!spinner">
+    <ion-button expand="block" (click)="continueshopping()" style="--background: #151413c2;">Continue Shopping
+    </ion-button>
+
+  </div>
+
+  <!-- Dots -->
+  <div class="spin" *ngIf="spinner">
+    <ion-spinner name="lines" color="primary"></ion-spinner>
+  </div>
+
+
+
+
+
+
+</ion-content>

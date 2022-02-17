@@ -1,0 +1,317 @@
+<!-- <ion-header>
+  <ion-toolbar>
+    <ion-title>vendor_orders</ion-title>
+  </ion-toolbar>
+</ion-header> -->
+
+
+
+<ion-header [translucent]="true" style="--background-color: #40BFFF;">
+  <ion-toolbar style="--background-color: #40BFFF;">
+    <ion-buttons slot="start" >
+      <ion-back-button defaultHref="" (click)="back()">
+      </ion-back-button>
+    </ion-buttons>
+    <ion-title class="pageheading">
+    <strong>{{title}}
+      <ion-label *ngIf="status ==='AMOUNTPAYBLE' || status==='AMOUNTRECEIVED'">{{amount |  currency:'INR': 'symbol' }}</ion-label>
+    </strong>
+    </ion-title>
+    <!-- <ion-item slot="end" *ngIf="status ==='AMOUNTPAYBLE'" style="background: transparent;">
+      Amount:{{amount |  currency:'INR': 'symbol' }}
+    </ion-item> -->
+  </ion-toolbar>
+</ion-header>
+
+<ion-toolbar *ngIf="status !=='AMOUNTPAYBLE' && status !=='AMOUNTRECEIVED'" style="margin-top: 2px;" >
+  <ion-segment (ionChange)="segmentChanged($event)" [(ngModel)]='segment'>
+    <ion-segment-button value="all">All</ion-segment-button>
+    <ion-segment-button value="today">Today</ion-segment-button>
+    <ion-segment-button value="Week">This Week</ion-segment-button>
+  </ion-segment>
+</ion-toolbar>
+
+
+<ion-toolbar *ngIf="status ==='AMOUNTPAYBLE' || status==='AMOUNTRECEIVED'" style="margin-top: 2px;" >
+  <ion-segment (ionChange)="segmentChanged1($event)" [(ngModel)]='segment'>
+    <ion-segment-button value="TODAY">Today</ion-segment-button>
+    <ion-segment-button value="THISWEEK"> Week</ion-segment-button>
+    <ion-segment-button value="THISMONTH"> Month</ion-segment-button>
+    <ion-segment-button value="LASTMONTH">L-Month</ion-segment-button>
+
+
+  </ion-segment>
+</ion-toolbar>
+
+
+<ion-content [fullscreen]="true" *ngIf="!detailFlag && status==='ACTIVE'" >
+  <div *ngIf="!isOrders()">
+    <div class="empty-list">
+        <ion-icon class="empty-cart" name="timer" item-left></ion-icon>
+        <p>{{"No Orders"}} </p>
+    </div>
+  </div>
+  <div *ngFor="let order of orders; let i=index">
+    <ion-card class="orders-item">
+     <a  (click)="ordersDetails(i,order.id)" style="cursor: pointer;">   <h5>Order ID: <strong>{{order.invoicenum}}</strong></h5></a>
+     <!-- <ion-row>
+      <ion-col col-12 no-padding>
+          <p class="item-name"> {{order.custname}}</p>
+      </ion-col>
+      <ion-col col-12 no-padding>
+         <p class="item-name"> <ion-icon name="call-sharp" slot=""></ion-icon> {{order.custmobile}}</p>
+      </ion-col>
+     </ion-row> -->
+     <ion-row>
+      <ion-col col-12 no-padding>
+        Delivery by : {{order?.deliveryperson}}
+      </ion-col>
+      <ion-col col-12 no-padding>
+       Total Items : {{order?.oentry?.length}}
+      </ion-col>
+     </ion-row>
+
+     <ion-row>
+            <ion-col col-6 no-padding>
+                <p class="item-name">Total :<strong>{{order?.qcost?.finalamt | currency: 'INR':'symbol'}}
+                        {{order.subTotal | number}}</strong></p>
+            </ion-col>
+
+            <ion-col col-6 no-padding>
+              <p class="item-name" >Payable :<strong>{{order?.qcost?.transferamt | currency: 'INR':'symbol'}}
+                     </strong></p>
+
+          </ion-col>
+
+        </ion-row>
+        <ion-row>
+          <ion-col col-6 no-padding>
+            <p class="item-name">Ordered On:<strong>{{order.invoicedate | date}}</strong></p>
+        </ion-col>
+
+            <ion-col col-6 no-padding>
+              <p style=" margin-top: 5px;" >Expected Delivery: <strong>{{order.expdelivery | date}}</strong></p>
+            </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col col-6 no-padding>
+            <p class="status">Status: <strong>{{order?.status}}</strong></p>
+        </ion-col>
+
+        <ion-col col-6 no-padding>
+          <p class="status">Accepted : <strong>{{order?.isvendoraccept}}</strong></p>
+      </ion-col>
+
+
+
+        </ion-row>
+    </ion-card>
+</div>
+</ion-content>
+<ion-content [fullscreen]="true" *ngIf="!detailFlag && (status==='CLOSED' || status==='PACKED' || status==='ALL' )" >
+  <div *ngIf="!isOrders()">
+    <div class="empty-list">
+        <ion-icon class="empty-cart" name="timer" item-left></ion-icon>
+        <p>{{"No Orders"}} </p>
+    </div>
+  </div>
+  <div *ngFor="let order of orders; let i=index">
+    <ion-card class="orders-item">
+     <a  (click)="ordersDetails(i,order.id)" style="cursor: pointer;">   <h5>Order ID: <strong>{{order.invoicenum}}</strong></h5></a>
+
+     <ion-row>
+      <ion-col col-12 no-padding>
+        Delivery by : {{order?.deliveryperson}}
+      </ion-col>
+      <ion-col col-12 no-padding>
+       Total Items : {{order?.oentry?.length}}
+      </ion-col>
+     </ion-row>
+     <ion-row>
+      <ion-col col-6 no-padding>
+          <p class="item-name">Total :<strong>{{order?.qcost?.finalamt | currency: 'INR':'symbol'}}
+                  {{order.subTotal | number}}</strong></p>
+      </ion-col>
+
+      <ion-col col-6 no-padding>
+        <p class="item-name" >Payable :<strong>{{order?.qcost?.transferamt | currency: 'INR':'symbol'}}
+               </strong></p>
+
+    </ion-col>
+
+  </ion-row>
+        <ion-row>
+
+          <ion-col col-6 no-padding>
+            <p class="item-name">Ordered On:<strong>{{order.invoicedate | date}}</strong></p>
+        </ion-col>
+            <ion-col col-6 no-padding>
+              <p style=" margin-top: 5px;" >Expected Delivery: <strong>{{order.expdelivery | date}}</strong></p>
+            </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col col-6 no-padding>
+            <p class="status">Status: <strong>{{order.status}}</strong></p>
+        </ion-col>
+        </ion-row>
+    </ion-card>
+</div>
+</ion-content>
+
+<ion-content [fullscreen]="true" *ngIf="detailFlag" >
+  <ion-toolbar  >
+    <ion-buttons slot="start">
+     <ion-back-button defaultHref="/tabs/tab2" (click)="cancel()">
+      </ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-list>
+    <ion-item>
+       Delivery By:  {{orderItems?.deliveryperson}}<br>
+       Mobile :  {{orderItems?.deliverymobile}}
+    </ion-item>
+
+
+    <ion-item  lines="inset"  *ngFor="let item of orderItems.oentry" >
+   <font style="font-size: 12px;"  >
+    {{item?.qtyinlesserunit}}
+    <!-- {{item.qty}} -->
+    <!-- <span class="badge" *ngIf="item.rateunit ==='RATEPERKG'"> Kg</span>
+    <span class="badge" *ngIf="item.rateunit ==='RATE_PER_LITRE'"> Litre</span>
+	  <span class="badge" *ngIf="item.rateunit ==='RATE_PER_CRATE'"> Crate</span>
+     <span class="badge" *ngIf="item.rateunit ==='RATEPERDOZEN'"> Dozen</span> -->
+     X {{item.pname}}-{{item?.mfg}} -{{item.rateperunit | currency:'INR': 'symbol'}} </font>
+
+   <ion-img [src]='docServer +"/"+ item.photo.docpath' slot="start" style="width: 60px; height:60px;"></ion-img>
+
+      <ion-label  slot="end" style="text-align: right;">
+        {{(item.rateperunit * item.qty) |currency:'INR':'symbol'}}
+      </ion-label>
+    </ion-item>
+    <ion-item>
+      Total  Items : <span slot="end">{{orderItems?.oentry?.length}}</span>
+    </ion-item>
+    <ion-item>
+      Total : <span slot="end">{{orderItems.qcost.baseprice | currency: 'INR':'symbol'}}</span>
+    </ion-item>
+    <ion-item>
+      GST : <span slot="end">{{orderItems.qcost.gstamt  | currency: 'INR':'symbol'}}</span>
+    </ion-item>
+
+    <!-- <ion-item>
+      Delivery Charges : <span slot="end">{{orderItems.qcost.delivery | currency: 'INR':'symbol'}}</span>
+    </ion-item> -->
+
+
+    <ion-item>
+      Grand Total : <span slot="end">{{orderItems.qcost.finalamt  | currency: 'INR':'symbol'}}</span>
+    </ion-item>
+
+
+    <ion-item>
+     Expected Delivery : <span slot="end">{{orderItems.expdelivery|date: 'dd-MM-yyyy' }}</span>
+    </ion-item>
+
+  <ion-item>
+    <!-- <ion-label floating>Expected Delivery</ion-label> -->
+    <ion-datetime value="2019-10-01T15:43:40.394Z" display-timezone="utc" [(ngModel)]="changeexpdelivery" name="expdelivery"
+      placeholder="Change Delivery" (ionChange)="changeDelivery(orderItems.id)"></ion-datetime>
+  </ion-item>
+
+
+    <!-- <ion-item >
+
+       <ion-label>
+
+        <p class="show-address" style="font-size: 20px;"  ><strong> Delivery Address: </strong></p>
+        <p class="show-address" style="font-size: 16px; padding-top: 5px;"  ><strong>{{custName | uppercase}} </strong></p>
+        <p class="show-address">{{address.line1}} </p>
+        <p class="show-address" *ngIf="address.line2" >{{address.line2}}</p>
+        <p class="show-address">{{address.states}}, {{address.city}}</p>
+        <p class="show-address">{{address.pincode}}</p>
+    </ion-label>
+    </ion-item> -->
+  </ion-list>
+
+
+  <ion-button expand="block" *ngIf="status==='ACTIVE' && orderItems.status==='PLACED' && orderItems.isvendoraccept ==='NO'"  (click)="changeStatus('YES', orderItems.id, orderItems)" >Accept</ion-button>
+  <ion-button color="danger" expand="block" *ngIf="status==='ACTIVE' && orderItems.status==='PLACED' && orderItems.isvendoraccept ==='NO'"  (click)="presentAlertConfirm(orderItems)" >Reject</ion-button>
+  <ion-button expand="block" *ngIf="status==='ACTIVE' && orderItems.status==='PLACED' && orderItems.isvendoraccept ==='YES'"  (click)="changeStatus('PACKED', orderItems.id, orderItems)" >Packed</ion-button>
+
+
+
+</ion-content>
+
+
+<!-- for amount payable  -->
+
+<ion-content [fullscreen]="true" *ngIf="!detailFlag && (status==='AMOUNTPAYBLE' || status==='AMOUNTRECEIVED')" >
+  <div *ngIf="!isOrders()">
+    <div class="empty-list">
+        <ion-icon class="empty-cart" name="timer" item-left></ion-icon>
+        <p>{{"No Orders"}} </p>
+    </div>
+  </div>
+  <div *ngFor="let order of orders; let i=index">
+    <ion-card class="orders-item">
+     <a  (click)="ordersDetails(i,order.id)" style="cursor: pointer;">   <h5>Order ID: <strong>{{order.invoicenum}}</strong></h5></a>
+     <!-- <ion-row>
+      <ion-col col-12 no-padding>
+          <p class="item-name"> {{order.custname}}</p>
+      </ion-col>
+      <ion-col col-12 no-padding>
+         <p class="item-name"> <ion-icon name="call-sharp" slot=""></ion-icon> {{order.custmobile}}</p>
+      </ion-col>
+     </ion-row> -->
+     <ion-row>
+      <ion-col col-12 no-padding>
+        Delivery by : {{order?.deliveryperson}}
+      </ion-col>
+      <ion-col col-12 no-padding>
+       Total Items : {{order?.oentry?.length}}
+      </ion-col>
+     </ion-row>
+
+     <ion-row>
+            <ion-col col-6 no-padding>
+                <p class="item-name">Total :<strong>{{order?.qcost?.finalamt | currency: 'INR':'symbol'}}
+                        {{order.subTotal | number}}</strong></p>
+            </ion-col>
+
+            <ion-col col-6 no-padding>
+              <p class="item-name" *ngIf="status==='AMOUNTPAYBLE'" >Payable :<strong>{{order?.qcost?.transferamt | currency: 'INR':'symbol'}}
+                    </strong></p>
+                      <p class="item-name" *ngIf="status==='AMOUNTRECEIVED'" >Received :<strong>{{order?.qcost?.transferamt | currency: 'INR':'symbol'}}
+                        </strong></p>
+          </ion-col>
+
+        </ion-row>
+        <ion-row>
+
+          <ion-col col-6 no-padding>
+            <p class="item-name">Ordered On:<strong>{{order.invoicedate | date}}</strong></p>
+        </ion-col>
+
+            <ion-col col-6 no-padding>
+              <p style=" margin-top: 5px;" >Expected Delivery: <strong>{{order.expdelivery | date}}</strong></p>
+            </ion-col>
+            <!-- <ion-col col-6 no-padding>
+                <button ion-button (click)="like('NO', order.id)" *ngIf="order.favourite ==='YES'">
+                  <ion-icon name="heart" style="color:red; font-size: 30px;"  ></ion-icon>
+                </button>
+                <button ion-button (click)="like('YES', order.id)" *ngIf="order.favourite ==='NO'">
+                  <ion-icon name="heart-outline"  style=" font-size: 30px;"  ></ion-icon>
+                </button>
+            </ion-col> -->
+        </ion-row>
+        <ion-row>
+          <ion-col col-6 no-padding>
+            <p class="status">Status: <strong>{{order.status}}</strong></p>
+        </ion-col>
+
+      </ion-row>
+    </ion-card>
+</div>
+</ion-content>

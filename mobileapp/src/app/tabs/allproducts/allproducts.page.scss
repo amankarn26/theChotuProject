@@ -1,0 +1,118 @@
+
+.brandOfDeal {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 400;
+  font-size: 10px;
+  color: white;
+  letter-spacing: 0.5px;
+  
+}
+
+.brandO{
+
+ font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 10px;
+  color: white;
+  letter-spacing: 0.5px;
+}
+.priceOfDealMainBox {
+  width: 100%;
+  margin: 12px 0px;
+  margin-bottom: 0;
+}
+.priceOfDeal {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  color: orange;
+  line-height: 180%;
+  letter-spacing: 0.5px;
+}
+
+.button1{
+  border: 2px solid orange;
+  // margin: 19px -55px 10px 70px;
+  font-weight: 700;
+  color: orange;
+  padding: 3px 28px;
+  margin: 2px 13px;
+}
+.cartt{
+  text-align: end;
+}
+
+.notification-icon-button {
+  --overflow: visible;    
+  ion-badge {
+    position: absolute;
+    color: black;
+    background: #f8e6d4;
+    border-radius: 100%;
+    // opacity: 0.9;
+    // top: 0.0rem;
+    // left: 0.2rem;
+    // size: 10px;
+    top: -10px;
+    left: 0.8rem;
+    // left: -0.5rem;
+    size: 10px;
+  } 
+}
+
+.data{
+  text-align: center;
+    margin-top: 33px;
+    border: 2px solid #ffffff;
+    padding: 15px;
+}
+
+#mainContent1 {
+  margin: auto;
+  padding: 20px 10px;
+  background-color: #e9ddff;
+}
+
+.button1{
+  padding: 2px 6px;
+    border: 2px solid white;
+    margin: 6px 29px;
+    font-weight: 700;
+    color: orange;
+}
+
+.productBox {
+  display: flex;
+  flex-direction: column;
+  // align-items: center;
+  text-align: center;
+  background:#151413c2;// width: 161px;
+  box-shadow: 5px 5px 32px 0px rgba(20,21,19,0.71);
+// max-height: 234;
+}
+.addtitle{
+  color: white;
+}
+
+.textOfProduct {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  color: white;
+  line-height: 150%;
+  text-align: center;
+  letter-spacing: 0.5px;
+}
+
+.pageheading{
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 150%;
+}
+
+.ProductBoxHeading {
+  display: flex;
+}
+

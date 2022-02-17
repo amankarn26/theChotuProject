@@ -1,0 +1,54 @@
+<ion-header>
+  <ion-toolbar style="--background: rgba(134,75,246,1);">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/tab1" (click)="cancel()" style="color: white;">
+      </ion-back-button>
+    </ion-buttons>
+
+    <ion-row>
+      <ion-col>
+          <ion-title class="pageheading" style="color: white;"> <strong>{{title}}</strong></ion-title>
+        </ion-col>
+        <ion-col size="2">
+          <button ion-button (click)="openCart()" class="notification-icon-button" style="margin-top: 3px; font-size: 31px;background-color:#864bf6; color:#ffffff;">
+            <ion-badge class="notification-badge" *ngIf="cart.length">{{cart?.length}}</ion-badge>
+            <!-- <ion-icon slot="icon-only" name="cart" ></ion-icon> -->
+            <ion-icon name="cart-outline"></ion-icon>
+          </button>
+          <!-- <button ion-button (click)="onNotificationsClick()" class="notification-icon-button" style="float: right; margin-right: 5px; font-size: 31px;">
+            <ion-badge class="notification-badge" *ngIf="notificationList">{{notificationList?.length}}</ion-badge>
+         
+            <ion-icon name="notifications-outline"></ion-icon>
+
+          </button> -->
+      </ion-col>
+        </ion-row>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content >
+  <ion-searchbar class="searchBox" (ionInput)="getItems($event)" placeholder="{{'Search MenuType'}}">
+  </ion-searchbar>
+
+  <ion-list *ngFor="let item of filteredItems ; let i=index" >
+
+    <!-- list -->
+    <ion-item >
+      <ion-thumbnail slot="start" class="search">
+        <a [routerLink]="['/tabs/allproducts/',item.id,item.name]">
+          <img src="{{docServer}}/{{item.photo?.docpath}}" alt="foodname" style="width: 60px; height: 60px; border-radius: 10px">
+        </a>
+      </ion-thumbnail>
+      <ion-label>
+        <p class="item-name" >{{item.name}}</p>
+        <p class="item-detail"  >
+          <span>{{item.description | slice: 0:50 }}</span>
+        </p>
+      </ion-label>
+    </ion-item>
+
+  
+  </ion-list>
+
+</ion-content>

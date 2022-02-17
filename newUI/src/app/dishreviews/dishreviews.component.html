@@ -1,0 +1,212 @@
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Modal Header</h4>
+            </div>
+            <div class="modal-body">
+                <p>Some text in the modal.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- add dishreviews -->
+<div [hidden]="isManageState" class="col-md-12 col-sm-12 col-xs-12">
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            {{title}}
+            <a [routerLink]="['/managedishreviews/',id]" title="Manage Dish Reviews" class="pull-right">
+                <span class="glyphicon glyphicon-th-list"></span>
+            </a>
+        </div>
+
+        <div class="panel-body">
+            <form #form1="ngForm">
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="addedbyname"> Added By Name:</label>
+                        <input type="text" *ngIf=!isUpdate class="form-control" required name="addedbyname"
+                            id="addedbyname" [(ngModel)]="dishreviews.addedbyname">
+                        <input type="text" *ngIf=isUpdate class="form-control" readonly required name="addedbyname"
+                            [(ngModel)]="dishreviews.addedbyname">
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="review"> Reviews:</label>
+                        <input type="text" *ngIf=!isUpdate class="form-control" required name="review" id="review"
+                            [(ngModel)]="dishreviews.review">
+                        <input type="text" *ngIf=isUpdate class="form-control" readonly required name="review"
+                            [(ngModel)]="dishreviews.review">
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+
+                    <div class="form-group">
+                        <label for="rating"> Rating: </label>
+                        <input type="number" *ngIf=!isUpdate class="form-control" min="0" max="3" required id="rating" name="rating"
+                            [(ngModel)]="dishreviews.rating">
+                        <input type="number" *ngIf=isUpdate class="form-control" readonly required id="rating" name="rating"
+                            [(ngModel)]="dishreviews.rating">
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="addedon"> Added On:</label>
+                        <input type="date" class="form-control" *ngIf=!isUpdate name="addedon" id="addedon" [valueAsDate]="setDate" (change)="updateDate($event)">
+                        <input type="date" class="form-control" readonly *ngIf=isUpdate name="addedon"
+                            [(ngModel)]="dishreviews.addedon">
+
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="status"> Status :</label>
+                        <select class="form-control" *ngIf=!isUpdate name="status" id="status"
+                            [(ngModel)]="dishreviews.status">
+                            <option value="APPROVED">APPROVED</option>
+                            <option value="ADDED" selected>ADDED</option>
+                        </select>
+
+                        <select class="form-control" *ngIf=isUpdate name="status" id="status"
+                            [(ngModel)]="dishreviews.status">
+                            <option value="ADDED" selected>ADDED</option>
+                            <option value="APPROVED">APPROVED</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- button -->
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <button *ngIf="this.url == '/adddishreviews/' + this.id" type="submit" [disabled]="!form1.valid"
+                            class="btn btn-default" (click)="submitData()" style="margin-right: 10px;">Submit</button>
+                        <button *ngIf="this.url == '/editdishreviews/' + this.id" type="submit"
+                            [disabled]="!form1.valid" class="btn btn-default" (click)="updateData()">Update</button>
+                        <button type="button" class="btn btn-default" (click)="cancel()">Cancel</button>
+
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<!-- manage dishreviews -->
+<div [hidden]="!isManageState" class="col-md-12 col-sm-12 col-xs-12">
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            {{title}}
+            <!-- Button for Add Category -->
+            <a [routerLink]="['/adddishreviews/' + this.id ]" title="Add Dish/Drink Reviews" class="pull-right"
+                *ngIf="this.userRole == 'SUPERADMIN' && this.userType == 'FIRM'">
+                <span class="glyphicon glyphicon-plus-sign"></span>
+            </a>&nbsp;&nbsp;
+
+            <a [routerLink]="['/manageproduct']" title="Manage Dish/Drink" class="pull-right" style="margin-right: 10px;">
+                <span class="glyphicon glyphicon-th-list"></span>
+              </a> &nbsp;
+        </div>
+
+        <div class="panel-body">
+            <div class="table-responsive">
+                <table class="table table-condensed table-striped table-bordered"
+                    [mfData]="data | dataFilterPr : filterQuery: 'managedishreviews'" #mf="mfDataTable"
+                    [mfRowsOnPage]="rowsOnPage" [(mfSortBy)]="Role" [(mfSortOrder)]="sortOrder">
+                    <thead>
+                        <tr>
+                            <th>SN</th>
+                            
+                            <th>
+                                Added By Name
+                            </th>
+                            <th>
+                                Reviews
+                            </th>
+                            <th>
+                                Rating
+                            </th>
+                            <th>
+                                Status
+                            </th>
+                            <th>
+                                Added On
+                            </th>
+                            <!-- <th>Description</th> -->
+                            <th *ngIf="this.userRole==='SUPERADMIN' && this.userType==='FIRM'"
+                                (click)="deleteRole(data.id)">Action
+                            </th>
+                        </tr>
+                        <tr>
+                            <th colspan="8">
+                                <div id="custom-search-input">
+                                    <div class="input-group col-md-12">
+                                        <input type="text" class="form-control" placeholder="Search by Customer Name"
+                                            [(ngModel)]="filterQuery" />
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-danger btn-sm" type="button">
+                                                <span class=" glyphicon glyphicon-search"></span>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let data of mf.data; let i = index; let last = last;">
+                            <td>{{i+1}}</td>
+                            
+                            <td>{{data?.addedbyname}}</td>
+                            <td>{{data?.review}}</td>
+                            <td>{{data?.rating}}</td>
+                            <td>{{data?.status}}</td>
+                            <td>{{data?.addedon | date}}</td>
+
+                            <td class="text-right" *ngIf="this.userRole==='SUPERADMIN' && this.userType==='FIRM'"
+                                (click)="deleteRole(data.id)">
+                                <a [routerLink]="['/editdishreviews/',data.id]" data-toggle="tooltip"
+                                    title="Update Dish/Drink Reviews">
+                                    <button class="btn btn-default btn-sm">
+                                        <span class="glyphicon glyphicon-edit"></span>
+                                    </button>
+                                </a>
+                                <button class="btn btn-danger btn-sm" title="Delete Dish/Drink Reviews"
+                                    *ngIf="this.userRole==='SUPERADMIN' && this.userType==='FIRM'"
+                                    (click)="deleteRole(data.id)">
+                                    <span class="glyphicon glyphicon-remove-circle"></span>
+                                </button>
+
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="8">
+                                <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

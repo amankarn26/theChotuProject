@@ -1,0 +1,386 @@
+<!-- <ion-header>
+  <ion-toolbar>
+    <ion-title>vendor_home</ion-title>
+  </ion-toolbar>
+</ion-header> -->
+
+
+
+
+<ion-header [translucent]="true"    >
+  <ion-toolbar>
+    <ion-title class="pageheading">
+      <strong> HotChips</strong>
+    </ion-title>
+    <!-- <ion-label slot="end"> {{user | slice: 0:8}}</ion-label> -->
+    <ion-buttons class="cartt" slot="end" >
+
+      <ion-button (click)="onNotificationsClick()" class="notification-icon-button">
+        <ion-badge class="notification-badge" *ngIf="notificationList">{{notificationList?.length}}</ion-badge>
+        <ion-icon slot="icon-only" name="notifications"></ion-icon>
+      </ion-button>
+
+     </ion-buttons>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <div class="offers" style="background-color: #08eafa;">
+    <ion-row no-padding class="category-banner">
+      <ion-col text-left button align-self-center>
+        ORDERS
+      </ion-col>
+    </ion-row>
+  </div>
+
+
+  <!-- <ion-item>
+  <ion-icon name="cart-outline"></ion-icon>
+
+  <ion-icon name="cart"></ion-icon>
+</ion-item> -->
+
+  <!-- <ion-list>
+  <ion-item >
+    <ion-thumbnail slot="start">
+      <ion-icon name="cart-outline" style="font-size: 40px;"></ion-icon>
+    </ion-thumbnail>
+    <ion-label>Active Orders</ion-label>
+  </ion-item>
+</ion-list> -->
+
+
+  <ion-grid>
+    <ion-row justify-content-center>
+      <ion-col size="3" text-center>
+        <ion-buttons>
+          <button ion-button style="background: none; text-align: center;">
+            <ion-icon name="basket-sharp" style="font-size: 40px;" (click)="showOrders('ACTIVE')"  color="success"></ion-icon>
+            <p class="ion-text-center">Active</p>
+          </button>
+        </ion-buttons>
+      </ion-col>
+
+      <ion-col size="3" text-center>
+
+        <!-- <ion-button color="primary">
+          <ion-icon name="basket-outline" style="font-size: 40px;" (click)="showOrders('PACKED')"></ion-icon>
+        <br>  <p class="ion-text-center">Packed</p>
+        </ion-button> -->
+        <ion-buttons >
+          <button ion-button   color="primary" style="background: none; text-align: center;">
+            <ion-icon name="briefcase-sharp" style="font-size: 40px;" (click)="showOrders('PACKED')"  color="primary"></ion-icon>
+            <p class="ion-text-center">Packed</p>
+          </button>
+        </ion-buttons>
+      </ion-col>
+
+      <ion-col size="3" class="ordersIcon" text-center>
+        <ion-buttons>
+          <button ion-button style="background: none; text-align: center;">
+            <ion-icon name="cube-sharp" style="font-size: 40px;" (click)="showOrders('CLOSED')" color="secondary"></ion-icon>
+            <p class="ion-text-center">Closed</p>
+          </button>
+        </ion-buttons>
+      </ion-col>
+
+      <ion-col size="3" class="ordersIcon" text-center>
+        <ion-buttons>
+          <button ion-button style="background: none; text-align: center;">
+            <ion-icon name="newspaper-sharp" style="font-size: 40px;" (click)="showOrders('ALL')"></ion-icon>
+            <p class="ion-text-center">All</p>
+          </button>
+        </ion-buttons>
+      </ion-col>
+
+
+      <!-- <ion-col size="3" class="ordersIcon" text-center>
+        <ion-buttons>
+          <button ion-button style="background: none; text-align: center;">
+            <ion-icon name="eye" style="font-size: 40px;" (click)="showOrders('ALL')"></ion-icon>
+            <p class="ion-text-center">filter</p>
+          </button>
+        </ion-buttons>
+      </ion-col> -->
+
+
+
+
+
+
+
+    </ion-row>
+    <!-- <ion-row>
+      <ion-col size="3" class="ordersIcon" >
+        <ion-buttons>
+          <button ion-button style="background: none; text-align: center;">
+            <ion-icon name="wallet-sharp" style="font-size: 40px;" (click)="showOrders('AMOUNTPAYBLE')" color="tertiary"></ion-icon>
+            <p class="ion-text-center">Amount Payable</p>
+          </button>
+        </ion-buttons>
+      </ion-col>
+      <ion-col size="3" class="ordersIcon" >
+        <ion-buttons>
+          <button ion-button style="background: none; text-align: center;">
+            <ion-icon name="wallet-sharp" style="font-size: 40px;" (click)="showOrders('AMOUNTRECEIVED')" color="success"></ion-icon>
+            <p class="ion-text-center">Amount Received</p>
+          </button>
+        </ion-buttons>
+      </ion-col>
+      <ion-col size="3" class="ordersIcon" >
+        <ion-buttons>
+          <button ion-button style="background: none; text-align: center;">
+            <ion-icon name="grid-sharp" style="font-size: 40px;" (click)="addProductstock()" color="medium"></ion-icon>
+            <p class="ion-text-center">Stock Management </p>
+          </button>
+        </ion-buttons>
+      </ion-col>
+      <ion-col l size="3">
+
+      </ion-col>
+    </ion-row> -->
+  </ion-grid>
+
+  <div class="offers" style="background-color: #08eafa;">
+    <ion-row no-padding class="category-banner">
+      <ion-col text-left button align-self-center>
+        Amount Payable/Received
+      </ion-col>
+    </ion-row>
+  </div>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col size="3" class="ordersIcon" >
+        <ion-buttons>
+          <button ion-button style="background: none; text-align: center;">
+            <ion-icon name="wallet-sharp" style="font-size: 40px;" (click)="showOrders('AMOUNTPAYBLE')" color="tertiary"></ion-icon>
+            <p class="ion-text-center">Amount Payable</p>
+          </button>
+        </ion-buttons>
+      </ion-col>
+      <ion-col size="3" class="ordersIcon" >
+        <ion-buttons>
+          <button ion-button style="background: none; text-align: center;">
+            <ion-icon name="wallet-sharp" style="font-size: 40px;" (click)="showOrders('AMOUNTRECEIVED')" color="success"></ion-icon>
+            <p class="ion-text-center">Amount Received</p>
+          </button>
+        </ion-buttons>
+      </ion-col>
+      <!-- <ion-col size="3" class="ordersIcon" >
+        <ion-buttons>
+          <button ion-button style="background: none; text-align: center;">
+            <ion-icon name="grid-sharp" style="font-size: 40px;" (click)="addProductstock()" color="medium"></ion-icon>
+            <p class="ion-text-center">Stock Management </p>
+          </button>
+        </ion-buttons>
+      </ion-col> -->
+      <ion-col l size="6">
+
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+
+  <div class="offers" style="background-color: #08eafa;">
+    <ion-row no-padding class="category-banner">
+      <ion-col text-left button align-self-center>
+        Stock Management
+      </ion-col>
+    </ion-row>
+  </div>
+
+  <ion-grid>
+    <ion-row>
+      <!-- <ion-col size="3" class="ordersIcon" >
+        <ion-buttons>
+          <button ion-button style="background: none; text-align: center;">
+            <ion-icon name="wallet-sharp" style="font-size: 40px;" (click)="showOrders('AMOUNTPAYBLE')" color="tertiary"></ion-icon>
+            <p class="ion-text-center">Amount Payable</p>
+          </button>
+        </ion-buttons>
+      </ion-col>
+      <ion-col size="3" class="ordersIcon" >
+        <ion-buttons>
+          <button ion-button style="background: none; text-align: center;">
+            <ion-icon name="wallet-sharp" style="font-size: 40px;" (click)="showOrders('AMOUNTRECEIVED')" color="success"></ion-icon>
+            <p class="ion-text-center">Amount Received</p>
+          </button>
+        </ion-buttons>
+      </ion-col> -->
+      <ion-col size="3" class="ordersIcon" >
+        <ion-buttons>
+          <button ion-button style="background: none; text-align: center;">
+            <ion-icon name="grid-sharp" style="font-size: 40px;" (click)="addProductstock()" color="secondary"></ion-icon>
+            <p class="ion-text-center">Stock Management </p>
+          </button>
+        </ion-buttons>
+      </ion-col>
+      <ion-col  size="9">
+
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+
+  <div class="offers" style="background-color: #08eafa;">
+    <ion-row no-padding class="category-banner">
+      <ion-col text-left button align-self-center>
+        Order Statistics
+      </ion-col>
+    </ion-row>
+  </div>
+
+<!--
+  <ion-list-header>
+    <ion-label></ion-label>
+  </ion-list-header> -->
+
+
+  <ion-list *ngIf="orderStats" nopadding style="min-height: 3rem;">
+    <ion-item lines="full" >
+      <ion-label>Todays No. Of Order :
+        <ion-badge color="success" *ngIf="orderStats.todayordercount; else noordercount"> {{orderStats?.todayordercount}}</ion-badge>
+        <ng-template #noordercount>
+          <ion-badge color="danger"> 0</ion-badge>
+        </ng-template>
+      </ion-label>
+    </ion-item>
+    <ion-item lines="full">
+      <ion-label>Todays Order Amount :
+        <ion-badge color="success" *ngIf="orderStats.todayorderamt; else notodayorderamt">{{orderStats?.todayorderamt | currency: 'INR':'symbol'}}</ion-badge></ion-label>
+        <ng-template #notodayorderamt>
+          <ion-badge color="danger"> 0</ion-badge>
+        </ng-template>
+    </ion-item>
+    <ion-item lines="full">
+      <ion-label>Last Month Sale :
+        <ion-badge color="success" *ngIf="orderStats.lastmonthorder; else nolastmonthorder" >  {{orderStats?.lastmonthorder}}</ion-badge></ion-label>
+        <ng-template #nolastmonthorder>
+          <ion-badge color="danger"> 0</ion-badge>
+        </ng-template>
+    </ion-item>
+    <ion-item lines="full">
+      <ion-label>Current Month Sale :
+        <ion-badge color="success"  *ngIf="orderStats.currentmonthorder; else nocurrentmonthorder" > {{orderStats?.currentmonthorder | currency: 'INR':'symbol'}}</ion-badge></ion-label>
+        <ng-template #nocurrentmonthorder>
+          <ion-badge color="danger"> 0</ion-badge>
+        </ng-template>
+      </ion-item>
+  </ion-list>
+
+
+
+  <!-- <button (click)="getLocation()">Get Location</button> -->
+
+  <!-- <div class="offers" style="background-color: #6DC183;">
+    <ion-row no-padding class="category-banner">
+      <ion-col text-left button align-self-center>
+        Best Sellors
+      </ion-col>
+    </ion-row>
+  </div>
+
+  <ion-slides [options]="sliderConfig3">
+
+    <ion-slide>
+      <img src="https://via.placeholder.com/200X100/0000FF/808080">
+    </ion-slide>
+
+    <ion-slide>
+      <img src="https://via.placeholder.com/200X100/FF0000/FFFFFF">
+    </ion-slide>
+    <ion-slide>
+      <img src="https://via.placeholder.com/200X100/FFFF00/000000">
+    </ion-slide>
+    <ion-slide>
+      <img src="https://via.placeholder.com/200X100/0000FF/808080">
+    </ion-slide>
+
+    <ion-slide>
+      <img src="https://via.placeholder.com/200X100/000000/FFFFFF">
+    </ion-slide>
+
+    <ion-slide>
+      <img src="https://via.placeholder.com/200X100/FF0000/FFFFFF">
+    </ion-slide>
+  </ion-slides> -->
+
+
+  <div class="offers" style="background-color: #08eafa; margin-top: 10px;">
+    <ion-row no-padding class="category-banner">
+      <ion-col text-left button  align-self-center>
+        Best Deals
+      </ion-col>
+    </ion-row>
+  </div>
+     <!-- crateing by me for offer -->
+     <ion-slides [options]="sliderConfig3">
+
+      <ion-slide  *ngFor="let prod of propularprodList">
+        <!-- <img  src="{{docServer}}/{{prod?.path}}" > -->
+        <ion-card style="margin: 2px">
+          <ion-card-header style="font-size: 10px; font-weight: bold;padding: 2px;">
+               <ion-card-title>
+                {{prod?.name}}
+               </ion-card-title>
+               <ion-card-content style="padding:2px;">
+                  <img src="{{docServer}}/{{prod?.path}}" style="width: 200px; height: 150px; border-radius: 10px;">
+               </ion-card-content>
+          </ion-card-header>
+        </ion-card>
+      </ion-slide>
+    </ion-slides>
+
+<!--
+    <div class="offers" style="background-color: #6DC183;">
+      <ion-row no-padding class="category-banner">
+        <ion-col text-left button  align-self-center>
+          Frequent Orders
+        </ion-col>
+      </ion-row>
+    </div>
+       <ion-slides [options]="sliderConfig3">
+        <ion-slide  *ngFor="let prod of frequentprodList">
+          <ion-card>
+            <ion-card-header>
+                 <ion-card-title>
+                  {{prod?.name}}
+                 </ion-card-title>
+                 <ion-card-content style="padding:0px;">
+                  <a [routerLink]="['/tabs/product-details/',prod.id,prod.name,prod.category]">
+                    <img src="{{docServer}}/{{prod?.path}}"  style="width: 100px; height: 100px; border-radius: 10px" >
+                    </a>
+                 </ion-card-content>
+            </ion-card-header>
+          </ion-card>
+        </ion-slide>
+      </ion-slides> -->
+
+
+
+
+
+    <!-- <ion-item detail>
+      <ion-label>
+        Standard Item with Detail Arrow
+      </ion-label>
+    </ion-item>
+
+    <ion-item button (click)="buttonClick()" detail>
+      <ion-label>
+        Button Item with Detail Arrow
+      </ion-label>
+    </ion-item>
+
+    <ion-item detail="false" href="https://www.ionicframework.com">
+      <ion-label>
+        Anchor Item with no Detail Arrow
+      </ion-label>
+    </ion-item> -->
+
+
+
+</ion-content>

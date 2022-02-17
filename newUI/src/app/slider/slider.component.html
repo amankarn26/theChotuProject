@@ -1,0 +1,300 @@
+<div class="row animated bounceInDown" *ngIf="!flag">
+  <div class="col-sm-12">
+    <!-- <h2>{{title}}</h2> -->
+    <div class="panel  panel-default">
+      <div class="panel-heading">
+        <div class="clearfix">
+          <div class="pull-left">{{title}}</div>
+          <div class="pull-right">
+            
+            <a [routerLink]="['/addslider']" *ngIf="!flag">
+              <button class="btn btn-info btn-sm" title="Add Slider">
+                <i class="glyphicon glyphicon-plus"></i>
+              </button>
+            </a>
+
+          <a style="margin-left: 10px;">
+            <button class="btn btn-danger btn-sm" title="Delete" (click)="chageFlag();">
+              <span class="glyphicon glyphicon-remove-circle"></span>
+            </button>
+          </a>
+
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /. ROW  -->
+<hr *ngIf="!flag" />
+
+<div class="col-md-12 col-sm-12 col-xs-12 no-padding slideLeft" *ngIf="flag">
+  <div class="panel  panel-default">
+    <div class="panel-heading">
+      <div class="clearfix">
+        <div class="pull-left"> {{title}}</div>
+        <div class="container" class="pull-right">
+          <div class="row">
+            <a [routerLink]="['/manageslider']" title="Manage Event" class="btn btn-info a-btn-slide-text">
+              <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="panel-body">
+      <form>
+
+        <div *ngIf='isUpdate' class="col-md-12" style="padding:0px;">
+          <div class='col-sm-4' *ngFor="let data of getPhots; let i = index; let last = last;">
+
+            <div class="thumbnail">
+              <label>
+                <input type="checkbox" value="delList" (click)="deleteNewsList(data.id)">
+              </label>
+              <img src="{{docServer}}/{{data?.docpath}}" alt="" style="width:100%; height:200px;">
+
+            </div>
+
+          </div>
+          <div class="col-md-12" *ngIf="getPhots[0]">
+            <a class="btn btn-danger btn-sm a-btn-slide-text" (click)="deleteMultiplePhotos()"
+              title="Delete Selected Photos">
+              <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+              Delete Selected Photos
+            </a>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+          </div>
+
+        </div>
+
+        <div class="col-md-12">
+
+          <div class="form-group">
+            <label>Choose Photos :</label>
+
+            <input type="file" (change)="fileEvent($event)" multiple name="document" [(ngModel)]="document" />
+            <!--   <input type="file" (change)="fileEvent($event)" multiple name="document" [(ngModel)]="document" />-->
+            <!--  <input type="file"  multiple  (change)="uploadfile()"  >-->
+            <img class="image" />
+
+          </div>
+        </div>
+        <div class="col-md-12">
+          <!-- <img  [src]="url" style="height:200px; width:200px;" class="thumbnail"> -->
+          <img *ngFor="let url of urls" [src]="url" style="margin-left:5px; height:200px; width:200px;">
+        </div>
+        <hr>
+
+        <div class="col-md-12" *ngIf="fileArray.length >0">
+          <div class="form-group"><br>
+            <button type="button" class="btn btn-default" (click)="uploadfile()">Post</button>
+            <!--  <button type="button" class="btn btn-default" (click)="prev()"> Previous</button>-->
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="col-md-12 col-sm-12 col-xs-12 no-padding slideLeft" *ngIf="!flag">
+  <div *ngIf="!isDetails" class="container-fluid">
+    <div class='col-sm-3' *ngFor="let data of data; let i = index; let last = last;">
+      <div class="thumbnail">
+        <label *ngIf="cleanup">
+          <input type="checkbox" value="" (click)="deleteNewsList(data.id)">
+        </label>
+
+        <img src="{{docServer}}/{{data?.docpath}}" alt="{{docServer}}/{{data?.docpath }}"
+          style="width:100%; height:200px;">
+        <div class="caption text-left">
+
+          <b>
+
+            <!-- {{ (data.title.length>25)? (data.title | slice:0:25)+'..':(data.title) }} -->
+
+            <br>
+            <a [routerLink]="['/detailslider', data.id]">Offer Slider {{i+1}}</a>
+          </b>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="col-md-12" *ngIf="cleanup">
+      <!-- this.delList     *ngIf="data" -->
+      <a *ngIf=" this.delList.length" class="btn btn-danger btn-sm a-btn-slide-text" (click)="deleteMultiplePhotos()"
+        title="Delete Selected Events">
+        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+        Delete Selected
+      </a>
+      <br>
+      <br>
+    </div>
+  </div>
+
+  <div *ngIf="isDetails" class="container-fluid">
+    <div class="col-sm-12">
+      <div id="myCarousel" class="carousel slide" data-ride="carousel">
+        <!-- Indicators -->
+        <ol class="carousel-indicators">
+          <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+          <li data-target="#myCarousel" data-slide-to="1"></li>
+          <li data-target="#myCarousel" data-slide-to="2"></li>
+        </ol>
+
+        <!-- Wrapper for slides -->
+        <div class="carousel-inner" *ngIf="data?.photos[0]">
+
+          <div class="item active">
+            <img src="{{docServer}}/{{data?.photos[0]?.docpath}}" alt="{{data?.title}}"
+              style="height:100%; width: 100%;">
+            <div class="carousel-caption">
+
+              <p>{{data?.title}}</p>
+            </div>
+          </div>
+
+          <div class="item" *ngIf="data?.photos[1]">
+            <img src="{{docServer}}/{{data?.photos[1]?.docpath}}" alt="{{data?.title}}"
+              style="height:100%; width: 100%;">
+            <div class="carousel-caption">
+              <p>{{data?.title}}</p>
+            </div>
+          </div>
+
+          <div class="item" *ngIf="data?.photos[2]">
+            <img src="{{docServer}}/{{data?.photos[2]?.docpath}}" alt="{{data?.title}}"
+              style="height:100%; width: 100%;">
+            <div class="carousel-caption">
+              <p>{{data?.title}}</p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Left and right controls -->
+        <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+          <span class="glyphicon glyphicon-chevron-left"></span>
+          <span class="sr-only">Previous</span>
+        </a>
+        <a class="right carousel-control" href="#myCarousel" data-slide="next">
+          <span class="glyphicon glyphicon-chevron-right"></span>
+          <span class="sr-only">Next</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="col-sm-12">
+      <div class="table-responsive">
+        <table class="table table-condensed table-striped table-bordered">
+
+          <tbody>
+            <tr>
+              <th>Title</th>
+              <th>{{data?.title}}</th>
+            </tr>
+            <tr>
+              <th>Description</th>
+              <th>{{data?.description}}</th>
+            </tr>
+            <tr>
+              <th>Published</th>
+              <th>{{data?.published | date: "dd/MM/yyyy"}}</th>
+            </tr>
+            <tr>
+              <th>Place</th>
+              <th>{{data?.place }}</th>
+            </tr>
+            <tr>
+              <th>Lastupdate</th>
+              <th>{{data?.lastupdate | date: "dd/MM/yyyy" }}</th>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!--<div class="panel panel-default">
+    <div class="panel-heading">
+      <div class="clearfix">
+        <div class="pull-left"> {{title}}</div>
+        <div class="container" class="pull-right">
+          <div class="row">
+            <a [routerLink]="['/addevent']" class="btn btn-primary a-btn-slide-text" title="Add Event">
+              <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+              <span></span>
+            </a>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="panel-body no-padding">
+      <div class="table-responsive">
+        <table class="table table-condensed table-striped table-bordered" [mfData]="data | dataFilter : filterQuery" #mf="mfDataTable"
+          [mfRowsOnPage]="rowsOnPage"  >
+          <thead>
+            <tr>
+              <th>SN</th>
+
+
+              <th>
+                <mfDefaultSorter by="id">Name</mfDefaultSorter>
+              </th>
+              <th>
+                <mfDefaultSorter by="grade">Grade</mfDefaultSorter>
+              </th>
+              <th>Gender</th>
+              <th>Designation</th>
+              <th>Role</th>
+              <th>DOB</th>
+              <th>Email</th>
+              <th>E-type</th>
+              <th>Phone</th>
+              <th>PAN</th>
+              <th>Guardian</th>
+              <th>Action</th>
+            </tr>
+            <tr>
+              <th colspan="14">
+                <div id="custom-search-input">
+                  <div class="input-group col-md-12">
+                    <input type="text" class="form-control" placeholder="Search" [(ngModel)]="filterQuery" />
+                    <span class="input-group-btn">
+                      <button class="btn btn-danger" type="button">
+                        <span class=" glyphicon glyphicon-search"></span>
+                      </button>
+                    </span>
+                  </div>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of mf.data; let i = index; let last = last;" class="animated flipInX">
+
+            </tr>
+          </tbody>
+          <tfoot>
+
+            <tr>
+              <td colspan="14">
+                <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>-->
+</div>

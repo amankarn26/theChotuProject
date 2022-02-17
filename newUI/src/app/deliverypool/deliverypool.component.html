@@ -1,0 +1,780 @@
+<div class="col-md-12 col-sm-12 col-xs-12 no-padding slideLeft" *ngIf="flag && !updatetab">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <div class="clearfix">
+        <div class="pull-left"> {{title}}</div>
+        <div class="container" class="pull-right">
+          <div class="row">
+            <a [routerLink]="['/managedeliverypool']" title="Manage Delivery Pool"
+              *ngIf="this.userRole==='SUPERADMIN' && this.userType==='FIRM'"
+              class="btn btn-info btn-sm a-btn-slide-text" style="margin-right: 5px;">
+              <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-body text-capitalize" id="custregdata" *ngIf="tab1">
+      <form #form1="ngForm">
+        <div class="col-md-12 col-sm-12 col-xs-12 ">
+          <!-- <div class="col-md-12 col-sm-12 col-xs-12">
+              <h4>Personal details:</h4>
+            </div> -->
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="name"> Name:&nbsp;
+
+              </label>
+              <input type="text" *ngIf="!isUpdate" maxlength="250" class="form-control" id="name" name="name"
+                [(ngModel)]="customer.name" required />
+              <input type="text" *ngIf="isUpdate" maxlength="250" class="form-control" id="name" name="name"
+                [(ngModel)]="customer.name" readonly />
+            </div>
+          </div>
+          <!-- <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="fname">First Name:
+
+                </label>
+                <input type="text" *ngIf="!isUpdate" class="form-control" id="fname" name="fname"
+                  [(ngModel)]="customer.fname" required  (change)="generatepass()"/>
+                <input type="text" *ngIf="isUpdate" readonly class="form-control" id="fname" name="fname"
+                  [(ngModel)]="customer.fname" required />
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="mname">Middle Name:
+
+                </label>
+                <input type="text" class="form-control" *ngIf="!isUpdate" id="mname" name="mname"
+                  [(ngModel)]="customer.mname" required />
+                <input type="text" class="form-control" *ngIf="isUpdate" readonly id="mname" name="mname"
+                  [(ngModel)]="customer.mname" required />
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="lname">Last Name:
+
+                </label>
+                <input type="text" class="form-control" *ngIf="!isUpdate" id="lname" name="lname"
+                  [(ngModel)]="customer.lname" required />
+                <input type="text" class="form-control" *ngIf="isUpdate" readonly id="lname" name="lname"
+                  [(ngModel)]="customer.lname" required />
+
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="dob">Date Of Birth:
+
+                </label>
+                <input type="date" class="form-control" id="dob" name="dob" [(ngModel)]="customer.dob" required />
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="gender">Gender:
+                </label>&nbsp;
+                <input type="radio" required value="MALE" name="gender" ngModel [(ngModel)]="customer.gender"> Male &nbsp;
+                <input type="radio" required value="FEMALE" name="gender" ngModel [(ngModel)]="customer.gender"> Female
+                &nbsp;
+                <input type="radio" required value="TRANSGENDER" name="gender" ngModel [(ngModel)]="customer.gender">
+                Third gender
+              </div>
+            </div> -->
+        </div>
+        <div class="col-md-12 col-sm-12 col-xs-12 ">
+          <hr>
+          <!-- <div class="col-md-12 col-sm-12 col-xs-12">
+              <h4>Profile details:</h4>
+            </div> -->
+
+
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="email">Email Id:</label>
+              <input type="email" class="form-control" id="email" name="email" required [(ngModel)]="customer.email"
+                pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" />
+
+            </div>
+          </div>
+
+
+          <!-- <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="role">Role:</label>
+                <selectclass="form-control" *ngIf="!isUpdate" name="role" required [(ngModel)]="customer.role.role">
+                  <option required *ngFor="let rolee of rolelist; let i=index" [value]="rolee.role">{{rolee.role}}</option>
+                </select>
+              </div>
+            </div> -->
+          <!-- <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="profession">Profession:</label>
+                <input type="profession" class="form-control" *ngIf="!isUpdate" id="profession" name="profession" required
+                  [(ngModel)]="customer.profession" />
+                <input type="profession" class="form-control" *ngIf="isUpdate" readonly id="profession" name="profession"
+                  required [(ngModel)]="customer.profession" />
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="pan">PAN No:</label>
+                <input type="pan" class="form-control" *ngIf="!isUpdate" id="pan" name="pan" [(ngModel)]="customer.pan" />
+                <input type="pan" class="form-control" *ngIf="isUpdate" readonly id="pan" name="pan"
+                  [(ngModel)]="customer.pan" />
+
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="gst"> GST No:</label>
+                <input type="gst" class="form-control" *ngIf="!isUpdate" id="gst" name="gst" [(ngModel)]="customer.gst" />
+                <input type="gst" class="form-control" *ngIf="isUpdate" readonly id="gst" name="gst"
+                  [(ngModel)]="customer.gst" />
+
+              </div>
+            </div> -->
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="phone">Contact:</label>
+              <input *ngIf="!isUpdate" type="number" class="form-control" id="phone" name="phone" pattern="[0-9]{10}"
+                required [(ngModel)]="customer.phone" />
+
+              <input *ngIf="isUpdate" type="number" readonly class="form-control" id="phone" name="phone"
+                pattern="[0-9]{10}" required [(ngModel)]="customer.phone" />
+
+            </div>
+          </div>
+
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="line1">Address Line 1 : </label>
+              <input type="text" *ngIf="!isUpdate" required class="form-control" id="line1" name="line1"
+                [(ngModel)]="customer.address.line1" />
+              <input type="text" *ngIf="isUpdate" required class="form-control" id="line1" name="line1"
+                [(ngModel)]="customer.address.line1" />
+
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="area">Area:</label>
+              <input type="text" *ngIf="!isUpdate" class="form-control" id="area" name="area" required
+                [(ngModel)]="customer.address.line2" />
+              <input type="text" *ngIf="isUpdate" class="form-control" id="area" name="area" required
+                [(ngModel)]="customer.address.line2" />
+
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="pincode">Pin-Code: </label>
+              <input type="number" *ngIf="!isUpdate" required class="form-control" id="pincode" name="pincode"
+                [(ngModel)]="customer.address.pincode" (change)="getState($event)" />
+              <input type="number" *ngIf="isUpdate" required class="form-control" id="pincode" name="pincode"
+                [(ngModel)]="customer.address.pincode" (change)="getState($event)" />
+            </div>
+          </div>
+          <!-- <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="states">State:
+                </label>
+
+                  <select class="form-control" *ngIf="!isUpdate"  name="states" [(ngModel)]="customer.address.states" required >
+              <option *ngFor="let state of statelist; let i=index" [value]="state">{{state}}</option>
+            </select>
+                <input type="text" *ngIf="isUpdate"  required class="form-control" name="states" required
+                  [(ngModel)]="customer.address.states" />
+
+
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="city">City:
+                </label>
+
+                <select (ngModel)="citiName" *ngIf="!isUpdate" name="citiName" class="form-control" required [(ngModel)]="customer.address.city">
+                    <option *ngFor="let city of citylist; let i=index" [value]="city">{{city}}</option>
+                  </select>
+                <input type="text" *ngIf="isUpdate"  required class="form-control" name="citiName"
+                  [(ngModel)]="customer.address.city" />
+              </div>
+            </div> -->
+
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="states">State:
+              </label>
+
+              <input type="text" *ngIf="!isUpdate" required class="form-control" name="states" required
+                [(ngModel)]="customer.address.states" />
+              <input type="text" *ngIf="isUpdate" required class="form-control" name="states" required
+                [(ngModel)]="customer.address.states" />
+
+
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="city">City:
+              </label>
+
+              <input type="text" *ngIf="!isUpdate" required class="form-control" name="citiName"
+                [(ngModel)]="customer.address.city" />
+              <input type="text" *ngIf="isUpdate" required class="form-control" name="citiName"
+                [(ngModel)]="customer.address.city" />
+            </div>
+          </div>
+
+
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="vehicletype"> Vehicle Type:
+              </label>
+              <!-- <input type="text"  class="form-control" required name="pvalue" [(ngModel)]="config.pvalue"> -->
+              <select class="form-control" class="form-control" required name="vehicletype"
+                [(ngModel)]="customer.vehicletype">
+                <option value="TWO_WHEELER">TWO WHEELER</option>
+                <option value="AUTO">AUTO</option>
+                <option value="TEMPO">TEMPO</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="username">User name:</label>
+              <input type="username" readonly pattern="[0-9]{10}" class="form-control" id="username" name="username"
+                required [(ngModel)]="customer.phone" />
+
+
+            </div>
+          </div>
+
+
+          <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="!isUpdate">
+            <div class="form-group">
+              <label for="password">Password:</label>
+              <input type="text" class="form-control" id="password" name="password" readonly
+                [(ngModel)]="customer.login.password" />
+
+            </div>
+          </div>
+
+
+          <div class="col-md-12 col-sm-12 col-xs-12 img-thumbnail " style="margin-top: 10px;">
+            <h4>Account Details</h4>
+
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="actype"> Account Type
+                </label>
+                <!-- <input type="text" *ngIf="!isUpdate" readonly class="form-control" required name="name" [(ngModel)]="prodtype"> -->
+                <select class="form-control" id="actype" required name="actype" [(ngModel)]="customer.account.type">
+                  <option value="BANK">BANK</option>
+                  <option value="PAYTM">PAYTM</option>
+                  <option value="GOOGLE_PAY">GOOGLE_PAY</option>
+                  <option value="PHONE_PE">PHONE_PE</option>
+                  <option *ngIf="userRole === 'SUPERADMIN'" value="CASH">CASH</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6" *ngIf="customer.account.type === 'BANK'">
+              <div class="form-group">
+                <label for="acctnumber">Bank Name:
+                </label>
+                <input type="text" *ngIf="!isUpdate" required class="form-control" id="bankname" name="bankname"
+                  [(ngModel)]="customer.account.bankname" />
+                <input type="text" *ngIf="isUpdate" required class="form-control" id="bankname" name="bankname"
+                  [(ngModel)]="customer.account.bankname" />
+              </div>
+            </div>
+
+            <div class="col-md-6" *ngIf="customer.account.type !== 'CASH'">
+              <div class="form-group">
+                <label for="acctnumber">Account Number:
+                </label>
+                <input type="number" *ngIf="!isUpdate" required class="form-control" id="acctnumber" name="acctnumber"
+                  [(ngModel)]="customer.account.acctnumber" />
+                <input type="number" *ngIf="isUpdate" required class="form-control" id="acctnumber" name="acctnumber"
+                  [(ngModel)]="customer.account.acctnumber" />
+              </div>
+            </div>
+
+            <div class="col-md-6" *ngIf="customer.account.type === 'BANK'">
+              <div class="form-group">
+                <label for="branch">Branch Name:
+                </label>
+                <input type="text" *ngIf="!isUpdate" required class="form-control" id="branch" name="branch"
+                  [(ngModel)]="customer.account.branch" />
+                <input type="text" *ngIf="isUpdate" required class="form-control" id="branch" name="branch"
+                  [(ngModel)]="customer.account.branch" />
+              </div>
+            </div>
+            <div class="col-md-6" *ngIf="customer.account.type === 'BANK'">
+              <div class="form-group">
+                <label for="ifsccode">IFSC Code:
+                </label>
+                <input type="text" *ngIf="!isUpdate" required class="form-control" id="ifsccode" name="ifsccode"
+                  [(ngModel)]="customer.account.ifsccode" />
+                <input type="text" *ngIf="isUpdate" required class="form-control" id="ifsccode" name="ifsccode"
+                  [(ngModel)]="customer.account.ifsccode" />
+              </div>
+            </div>
+            <div class="col-md-6" *ngIf="customer.account.type === 'BANK'">
+              <div class="form-group">
+                <label for="city">CITY:
+                </label>
+                <input type="text" *ngIf="!isUpdate" required class="form-control" id="city" name="city"
+                  [(ngModel)]="customer.account.city" />
+                <input type="text" *ngIf="isUpdate" required class="form-control" id="city" name="city"
+                  [(ngModel)]="customer.account.city" />
+              </div>
+            </div>
+
+
+
+
+          </div>
+
+          <!-- <div class="col-md-12 col-sm-12 col-xs-12 img-thumbnail " style="margin-top: 10px;" *ngIf="this.userRole === 'SUPERADMIN' && isUpdate">
+        <h4>COD Support Vendors</h4>
+
+        <div class="col-sm-6">
+          <div class="form-group">
+            <label>Select Firm</label>
+            <select   class="form-control" id="firm" name="firm" [(ngModel)]="this.customer['firm']" (change)="passdeliverypool($event)">
+              <option *ngFor="let data of firmlist; let i=index" [value]="data.id">{{data.name}}</option>
+            </select>
+          </div>
+        </div>
+      
+
+ 
+
+
+
+      </div> -->
+
+
+          <!-- 
+            <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="vehiclereg">Vehicle No.:
+                  </label>
+                  <input type="number" class="form-control" id="vehiclereg" name="vehiclereg" required
+                    [(ngModel)]="customer.vehiclereg" onkeyup="this.value = this.value.toUpperCase();" />
+                </div>
+              </div>
+
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="license">License No:
+                  </label>
+                  <input type="number" class="form-control" id="license" name="license" required
+                    [(ngModel)]="customer.license" onkeyup="this.value = this.value.toUpperCase();" />
+                </div>
+              </div> -->
+
+          <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="isUpdate">
+            <form #form3="ngForm">
+
+              <div class="form-group" *ngIf="this.userRole === 'SUPERADMIN'">
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label for="name"> Area :
+                      </label>
+                      <!-- <input *ngIf="!isUpdate" type="text"  required class="form-control" name="name12" [(ngModel)]="stockval.name"> -->
+
+                      <select class="form-control" required name="area1" [(ngModel)]="stockval.area"
+                        (change)="passdata($event)">
+                        <option *ngFor="let data of areadata" value="{{data?.pincode}}">{{data?.area}}</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="col-sm-3">
+                    <div class="form-group">
+                      <label for="pvalue"> Pincode :
+                      </label>
+                      <input type="text" required class="form-control" name="pincode1" [(ngModel)]="stockval.pincode">
+
+                      <!-- <select  id="prodpropvalues" class="form-control" required name="prodpropvalues"
+                        [(ngModel)]="stockval.pvalue">
+                        <option value="{{prop.pvalue}}" *ngFor="let prop of propvalues">{{prop?.pvalue}}</option>
+                      </select> -->
+                    </div>
+                  </div>
+                  <div class="col-sm-3" style="padding-top: 25px;">
+                    <button class="btn btn-info btn-sm" [disabled]="!form3.valid" (click)="pushstockvalue()">
+                      <span class="glyphicon glyphicon-plus"></span>
+                    </button>
+                  </div>
+
+                </div>
+              </div>
+            </form>
+
+
+
+            <div class="row" *ngIf="this.userRole === 'SUPERADMIN'">
+              <div class="col-sm-6"
+                style="margin-top: 3px;  border: 1px solid #c5c4c4; min-height: 10px; overflow: auto;margin-left: 31px">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th style="width: 50px;">-</th>
+                      <th>Area</th>
+                      <th>Pincode</th>
+
+
+
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let data of this.customer.dvryarea; let i=index;">
+                      <td style="width: 50px;">
+                        <a style="cursor: pointer; color: red;" (click)="onDeletestockval(i,data.id)">
+                          <span class="glyphicon glyphicon-remove-circle"></span>
+                        </a>
+                      </td>
+                      <td>{{data?.area}}</td>
+                      <td>{{data?.pincode}}</td>
+
+
+
+                    </tr>
+                  </tbody>
+                </table>
+
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-12 col-sm-12 col-xs-12 ">
+            <hr>
+            <div class="col-md-12 col-sm-12 col-xs-12">
+              <h4>License Photo:</h4>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label>license:</label>
+                <input type="file" (change)="fileEvent($event)" name="document" [(ngModel)]="document" />
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <img [src]="urls" style="height:200px; width:200px;" class="thumbnail">
+            </div>
+
+
+
+
+          </div>
+
+          <div class="col-md-12 col-sm-12 col-xs-12 ">
+            <hr>
+            <div class="col-md-12 col-sm-12 col-xs-12">
+              <h4>Vehicle Registration Photo:</h4>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label>Vehicle Photo:</label>
+                <input type="file" (change)="fileEvent1($event)" name="document1" [(ngModel)]="document1" />
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <img [src]="urls1" style="height:200px; width:200px;" class="thumbnail">
+            </div>
+
+
+
+
+          </div>
+
+
+        </div>
+        <!-- <button *ngIf="!isUpdate" type="submit" [disabled]="!form1.valid" class="btn btn-default" (click)="submitData()">Next</button>
+          -->
+        <div class="col-md-12 col-sm-12 col-xs-12 ">
+          <div class="form-group">
+            <button *ngIf="!isUpdate" type="submit" [disabled]="!form1.valid" class="btn btn-default"
+              (click)="submitData()">Submit</button>
+            <button *ngIf="isUpdate" type="submit" [disabled]="!form1.valid" class="btn btn-default"
+              (click)="updateData()">Update</button>
+            <button type="button" class="btn btn-default" (click)="cancel()">Cancel</button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+
+  </div>
+</div>
+
+<div class="col-md-12 col-sm-12 col-xs-12 no-padding slideLeft" *ngIf="!flag && !updatetab">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <div class="clearfix">
+        <div class="pull-left"> {{title}} &nbsp;&nbsp;&nbsp; Total Delivery Pool = {{data.length}} </div>
+        <div class="container" class="pull-right">
+          <div class="row">
+            <a [routerLink]="['/adddeliverypool']" class="btn btn-primary  btn-sm a-btn-slide-text"
+              title="Add Delivery Pool"  style="margin-right: 5px;">
+              <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+              <span></span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="panel-body no-padding text-capitalize">
+      <div class="table-responsive">
+        <table class="table table-condensed table-bordered" [mfData]="data | dataFilterPr : filterQuery :'cust'"
+          #mf="mfDataTable" [mfRowsOnPage]="rowsOnPage">
+          <thead>
+            <tr>
+              <th>SN</th>
+              <th>
+                Name
+              </th>
+              <th>State</th>
+              <th>City</th>
+              <th>Phone</th>
+              <th>Email</th>
+              <th>Vehicle</th>
+              <th>Status</th>
+              <th>Assigned Areas</th>
+              <th>Action</th>
+            </tr>
+            <tr>
+              <th colspan="20">
+                <div id="custom-search-input ">
+                  <div class="input-group col-md-12">
+                    <input type="text" class="form-control" placeholder="Search by Name" [(ngModel)]="filterQuery" />
+                    <span class="input-group-btn">
+                      <button class="btn btn-danger btn-sm" type="button">
+                        <span class=" glyphicon glyphicon-search"></span>
+                      </button>
+                    </span>
+                  </div>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of mf.data; let i = index; let last = last;" class="animated flipInX">
+              <td>{{i+1}}</td>
+              <td>
+                {{data?.name}}
+              </td>
+              <td>{{data?.address.states}}</td>
+              <td>{{data?.address.city}}</td>
+
+              <td>{{data?.phone}}</td>
+              <td style="text-transform:none !important">{{data?.email}}</td>
+              <!--  <td>{{data?.gst}}</td>
+                <td>{{data?.dob | date:'y'}}/{{data?.dob | date:'MM'}}/{{data?.dob | date:'dd'}} </td>
+                 -->
+              <td>
+                Type: {{data?.vehicletype}}<br>
+                <!-- Registration: {{data?.vehiclereg}}<br>
+              License: {{data?.license}} -->
+
+
+              </td>
+              <td>{{data?.status}}</td>
+              <td>
+                <ul *ngFor="let dataa of data.dvryarea">
+                  <li>Area: {{dataa?.area}}</li>
+                  <li>Pincode : {{dataa?.pincode}}</li>
+
+                </ul>
+
+
+
+              </td>
+              <td>
+                <!-- <a [routerLink]="['/customerdetails',data.id]">
+                    <button class="btn btn-info btn-sm" title="Customer Details">
+                      <span class="glyphicon glyphicon-info-sign"></span>
+                    </button>
+                  </a> -->
+                <button *ngIf="data.status === 'PENDING' " class="btn btn-success btn-sm" title="Approve"
+                  (click)="updateStatus(data,'APPROVED')">
+                  <span class="glyphicon glyphicon-ok"></span>
+                </button>
+                <!-- <button disabled *ngIf="data.status !== 'PENDING' " class="btn btn-success btn-sm" title="Already Approved "
+                  (click)="updateStatus(data,'APPROVE')">
+                   <span class="glyphicon glyphicon-ok"></span>
+                 </button> -->
+
+
+                <button *ngIf="data.status === 'PENDING' " class="btn btn-danger btn-sm" title="Reject"
+                  (click)="updateStatus(data,'REJECTED')">
+                  <span class="glyphicon glyphicon-remove"></span>
+                </button>
+
+                <!-- <button disabled *ngIf="data.status === 'REJECTED' " class="btn btn-danger btn-sm" title="Reject"
+                 (click)="updateStatus(data,'REJECTED')">
+                  <span class="glyphicon glyphicon-remove"></span>
+                </button> -->
+
+
+                <a [routerLink]="['/editdeliverypool',data.id]">
+                  <button class="btn btn-info btn-sm" title="Update Delivery Pool">
+                    <i class="glyphicon glyphicon-edit"></i>
+                  </button>
+                </a>
+
+                <a [routerLink]="['/deliverypool_orderbyid',data.id]">
+                  <button class="btn btn-info btn-sm" title="Orders">
+                    <i class="glyphicon glyphicon-th-list"></i>
+                  </button>
+                </a>
+
+
+                <!-- <a  [routerLink]="['/update_areadeliverypool',data.id]">
+                    <button class="btn btn-success btn-sm" title="Add Level2 Details">
+                      <span class="glyphicon glyphicon-plus"></span>
+                    </button>
+                  </a> -->
+                <!-- <a [routerLink]="['/detaillevel2',data.id]">
+                    <button class="btn btn-success btn-sm" title="Level2 Details">
+                      <span class="glyphicon glyphicon-info-sign"></span>
+                    </button>
+                  </a> -->
+                <button class="btn btn-danger btn-sm" title="Delete Delivery Pool" (click)="deletecustomer(data.id)">
+                  <span class="glyphicon glyphicon-remove-circle"></span>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="20">
+                <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="col-md-12 col-sm-12 col-xs-12 no-padding slideLeft" *ngIf="updatetab">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <div class="clearfix">
+        <div class="pull-left"> {{title}}</div>
+        <div class="container" class="pull-right">
+          <div class="row">
+            <a [routerLink]="['/managedeliverypool']" title="Manage Delivery Pool"
+              class="btn btn-info btn-sm a-btn-slide-text"  style="margin-right: 5px;">
+              <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-body text-capitalize">
+      <form #form1="ngForm">
+        <div class="col-md-12 col-sm-12 col-xs-12 ">
+          <!-- <div class="col-md-12 col-sm-12 col-xs-12">
+              <h4>Personal details:</h4>
+            </div> -->
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <div class="row">
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label for="name"> Area :
+                    </label>
+                    <!-- <input *ngIf="!isUpdate" type="text"  required class="form-control" name="name12" [(ngModel)]="stockval.name"> -->
+
+                    <select class="form-control" required name="area" [(ngModel)]="stockval.area"
+                      (change)="passdata($event)">
+                      <option *ngFor="let data of areadata" value="{{data?.pincode}}">{{data?.area}}</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="col-sm-3">
+                  <div class="form-group">
+                    <label for="pvalue"> Pincode :
+                    </label>
+                    <input type="text" required class="form-control" name="pincode" [(ngModel)]="stockval.pincode">
+
+                    <!-- <select  id="prodpropvalues" class="form-control" required name="prodpropvalues"
+                      [(ngModel)]="stockval.pvalue">
+                      <option value="{{prop.pvalue}}" *ngFor="let prop of propvalues">{{prop?.pvalue}}</option>
+                    </select> -->
+                  </div>
+                </div>
+                <div class="col-sm-3" style="padding-top: 25px;">
+                  <button class="btn btn-info btn-sm" [disabled]="!form1.valid" (click)="pushstockvalue()">
+                    <span class="glyphicon glyphicon-plus"></span>
+                  </button>
+                </div>
+
+              </div>
+            </div>
+
+
+
+            <div class="row">
+              <div class="col-sm-6"
+                style="margin-top: 3px;  border: 1px solid #c5c4c4; min-height: 10px; overflow: auto;margin-left: 31px">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th style="width: 50px;">-</th>
+                      <th>Area</th>
+                      <th>Pincode</th>
+
+
+
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let data of this.area.dvryarea; let i=index;">
+                      <td style="width: 50px;">
+                        <a style="cursor: pointer; color: red;" (click)="onDeletestockval(i)">
+                          <span class="glyphicon glyphicon-remove-circle"></span>
+                        </a>
+                      </td>
+                      <td>{{data?.area}}</td>
+                      <td>{{data?.pincode}}</td>
+
+
+
+                    </tr>
+                  </tbody>
+                </table>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <br>
+        &nbsp;&nbsp;
+
+        <div class="col-md-12 col-sm-12 col-xs-12 ">
+          <div class="form-group">
+
+            <button type="submit" *ngIf="this.area.dvryarea.length>0" class="btn btn-default"
+              (click)="updateareadata()">Update</button>
+            <button type="button" class="btn btn-default" (click)="cancel()">Cancel</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

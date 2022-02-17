@@ -1,0 +1,588 @@
+<!-- <div class="row">
+  <div class="col-md-12">
+    <h2>{{title}}</h2>
+
+  </div>
+</div>
+<hr /> -->
+<div [hidden]="isManageState" class="col-md-12 col-sm-12 col-xs-12 text-capitalize">
+
+    <div class="panel panel-default" *ngIf="!detailFlag">
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                {{title}}
+                <a [routerLink]="['/managevendor']" title="View all Vendor" class="pull-right">
+                    <span class="glyphicon glyphicon-th-list"></span>
+                </a>
+            </div>
+            <div class="panel-body">
+                <form #form1="ngForm">
+                    <div class="col-sm-12">
+                        <h4> Main Details </h4>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="type"> Branch Type: </label>
+                            <input *ngIf="isUpdate" type="text" class="form-control" required name="type"
+                                [(ngModel)]="vendor.type" readonly>
+                            <select *ngIf="!isUpdate" class="form-control" id="type" required name="type"
+                                [(ngModel)]="vendor.type">
+                                <option value="INHOUSE">INHOUSE</option>
+                                <option value="EXTERNAL">EXTERNAL</option>
+                                <!-- <option value="TRAVEL">TRAVEL</option>
+                  <option value="SUPPLIER">SUPPLIER</option> -->
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="category"> Branch Category: </label>
+                            <input *ngIf="isUpdate" type="text" class="form-control" required name="category"
+                                [(ngModel)]="vendor.category" readonly>
+                            <select *ngIf="!isUpdate" class="form-control" id="category" required name="category"
+                                [(ngModel)]="vendor.category">
+                                <!-- <option value="INHOUSE">INHOUSE</option>
+                    <option value="EXTERNAL">EXTERNAL</option> -->
+                                <option value="TRAVEL">TRAVEL</option>
+                                <option value="SUPPLIER">SUPPLIER</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="name"> Name: </label>
+                            <input type="name" *ngIf="!isUpdate" class="form-control" required name="name"
+                                [(ngModel)]="vendor.name">
+                            <input type="name" *ngIf="isUpdate" readonly class="form-control" required name="name"
+                                [(ngModel)]="vendor.name">
+                        </div>
+                    </div>
+
+                    <!-- <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="defaultvend"> Default: </label>
+                 <select class="form-control" id="defaultvend" required name="defaultvend"
+                    [(ngModel)]="vendor.defaultvend">
+                    <option value="true">YES</option>
+                    <option value="false">NO</option>
+                  </select>
+                </div>
+              </div> -->
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="contactperson"> Contact person: </label>
+                            <input type="number" class="form-control" required name="contactperson"
+                                [(ngModel)]="vendor.contactperson">
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12" *ngIf="vendor.category==='TRAVEL'">
+                        <hr>
+                        <h4> Service Details </h4>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="vendor.category==='TRAVEL'">
+                        <div class="form-group">
+                            <label for="service">Service: </label>
+                            <!-- <input type="text" maxlength="60" placeholder="Maximum 60 characters" mutiline class="form-control" id="service" name="service" [(ngModel)]="vendor.service"
+                      /> -->
+                            <select class="form-control" id="service" required name="service"
+                                [(ngModel)]="vendor.service">
+                                <option value="DAILY">DAILY</option>
+                                <option value="TWICE">TWICE PER WEEK</option>
+                                <option value="WEEKLY">WEEKLY</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="vendor.category==='TRAVEL'">
+                        <div class="form-group">
+                            <label for="weeklyoff">Weekly Off : </label>
+                            <!-- <input type="number" mutiline class="form-control" id="weeklyoff" name="weeklyoff" [(ngModel)]="trrate.weeklyoff"
+                  /> -->
+                            <select class="form-control" id="weeklyoff" required name="weeklyoff"
+                                [(ngModel)]="vendor.weeklyoff">
+                                <option value="true">YES</option>
+                                <option value="false">NO</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div *ngIf="vendor.weeklyoff === 'true'" class="col-md-6 col-sm-6 col-xs-12">
+                        <div class="form-group">
+                            <label for="weekoffday">Week Off Day : </label>
+                            <!-- <input  *ngIf="!isUpdate" type="text" maxlength="60"  class="form-control" id="weekoffday" name="weekoffday" [(ngModel)]="vendor.weekoffday" required
+                /> -->
+                            <input *ngIf="isUpdate" type="text" maxlength="60" class="form-control" id="weekoffday"
+                                name="weekoffday" [(ngModel)]="vendor.weekoffday" required />
+                            <select class="form-control" id="weekoffday" required name="weekoffday"
+                                [(ngModel)]="vendor.weekoffday">
+                                <option value="SUNDAY">SUNDAY</option>
+                                <option value="MONDAY">MONDAY</option>
+                                <option value="TUESDAY">TUESDAY</option>
+                                <option value="WEDNESDAY">WEDNESDAY</option>
+                                <option value="THURSDAY">THURSDAY</option>
+                                <option value="FRIDAY">FRIDAY</option>
+                                <option value="SATURDAY">SATURDAY</option>
+                            </select>
+                        </div>
+                    </div>
+
+
+
+                    <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="vendor.category==='TRAVEL'">
+                        <div class="form-group">
+                            <label for="securetime">Secure Time : </label>
+                            <input type="time" mutiline class="form-control" id="securetime" name="securetime"
+                                [(ngModel)]="vendor.securetime" required />
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="vendor.category==='TRAVEL'">
+                        <div class="form-group">
+                            <label for="lastbooktime">Last Book Time : </label>
+                            <input type="time" mutiline class="form-control" id="lastbooktime" name="lastbooktime"
+                                [(ngModel)]="vendor.lastbooktime" required />
+
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12">
+                        <hr>
+                        <h4> Contact Details </h4>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <div class="form-group">
+                            <label for="email">Email Id:</label>
+                            <input type="email" class="form-control" maxlength="120"
+                                placeholder="Maximum 120 characters"
+                                pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" id="email" name="email" required
+                                [(ngModel)]="vendor.email" />
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="fax"> Fax: </label>
+                            <input type="text" class="form-control" required name="fax" [(ngModel)]="vendor.fax">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="phone"> Phone: </label>
+                            <input type="text" class="form-control" pattern="[0-9]{10}" required name="phone"
+                                [(ngModel)]="vendor.phone">
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <div class="form-group">
+                            <label for="line1">Address Line1 : </label>
+                            <input type="text" required class="form-control" id="line1" name="line1"
+                                [(ngModel)]="vendor.address.line1" />
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <div class="form-group">
+                            <label for="line2">Area</label>
+                            <input type="text" class="form-control" id="line2" required name="line2"
+                                [(ngModel)]="vendor.address.line2" />
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <div class="form-group">
+                            <label for="pincode">Pin-Code: </label>
+                            <input type="number" required class="form-control" id="pincode" name="pincode"
+                                [(ngModel)]="vendor.address.pincode" (change)="getState($event)" />
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <div class="form-group">
+                            <label for="states">State:
+                            </label>
+                            <!-- <select class="form-control" name="states" required [(ngModel)]="vendor.address.states" (change)="onChangeState($event)">
+                  <option *ngFor="let state of statelist; let i=index" [value]="state.state_name">{{state.state_name}}</option>
+                </select> -->
+                            <input type="text" required class="form-control" name="states" required
+                                [(ngModel)]="vendor.address.states" />
+
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <div class="form-group">
+                            <label for="city">City:
+                            </label>
+                            <!-- <select (ngModel)="citiName" name="citiName" required class="form-control" [(ngModel)]="vendor.address.city">
+                  <option *ngFor="let city of citylist; let i=index" [value]="city.city_name">{{city.city_name}}</option>
+                </select> -->
+                            <input type="text" required class="form-control" name="citiName"
+                                [(ngModel)]="vendor.address.city" />
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="remark"> Remark: </label>
+                            <input type="text" class="form-control" required name="Remark" [(ngModel)]="vendor.remark">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="description"> Description: </label>
+                            <textarea type="text" class="form-control" required name="description"
+                                [(ngModel)]="vendor.description">
+                </textarea>
+                        </div>
+                    </div>
+
+
+
+
+
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <button *ngIf="this.url == '/addvendor'" type="submit" [disabled]="!form1.valid"
+                                class="btn btn-default" (click)="submitData()">Submit</button>
+                            <button *ngIf="this.url == '/editvendor/' + this.id" type="submit" [disabled]="!form1.valid"
+                                class="btn btn-default" (click)="updateData()">Update</button>
+                            <button type="button" class="btn btn-default" (click)="cancel()">Cancel</button>
+                        </div>
+
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<div class="panel panel-default text-capitalize" *ngIf="detailFlag">
+    <div class="panel-heading">
+        <div class="clearfix">
+            <div class="pull-left"> {{title}}</div>
+            <div class="container" class="pull-right">
+                <div class="row">
+                    <a [routerLink]="['/managevendor']" title="Manage Vendor" class="btn btn-info btn-sm a-btn-slide-text">
+                        <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+                    </a>
+
+                    <a [routerLink]="['/editvendor', id]" title="Update Vendor" class="btn btn-info btn-sm a-btn-slide-text">
+
+                        <i class="glyphicon glyphicon-edit"></i>
+
+                    </a>
+                    <a class="btn btn-danger a-btn-slide-text btn-sm" (click)="deleteRole(id)">
+                        <span class="glyphicon glyphicon-remove-circle"></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel-body">
+
+        <form #form1="ngForm">
+            <div class="col-md-12 col-sm-12 col-xs-12 img-thumbnail ">
+
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <h4>Branch Details:</h4>
+                </div>
+
+
+                <!-- <div class="col-md-6 col-sm-6 col-xs-12">
+            <img [src]="url" style="height:200px; width:200px;" class="thumbnail">
+          </div> -->
+
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                        <label for="type">Branch Type: {{vendor.type}}</label>
+                    </div>
+                </div>
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                        <label for="name">Branch Name: {{vendor.name}}
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                        <label for="contactperson">Contact Person: {{vendor.contactperson}}</label>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="form-group">
+                        <label for="service">service:&nbsp;{{vendor.service}}
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="form-group">
+                        <label for="weekoffday">weekly off day:&nbsp;{{vendor.weekoffday}}
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="form-group">
+                        <label for="weeklyoff">weekly off:&nbsp;{{vendor.weeklyoff}}
+                        </label>
+                    </div>
+                </div>
+                <!-- <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="weeklyoff">weekly off:&nbsp;{{vendor.weeklyoff}}
+                </label>
+              </div>
+            </div> -->
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="form-group">
+                        <label for="defaultvend">Default Vendor:&nbsp;{{vendor.defaultvend}}
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="form-group">
+                        <label for="securetime">secure time:&nbsp;{{vendor.securetime}}
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="form-group">
+                        <label for="lastbooktime">lastbook time:&nbsp;{{vendor.lastbooktime}}
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="form-group">
+                        <label for="lastbooktime">remark:&nbsp;{{vendor.remark}}
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="form-group">
+                        <label for="lastbooktime">description:&nbsp;{{vendor.description}}
+                        </label>
+                    </div>
+                </div>
+                <!-- <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="gstno">gstno:&nbsp;{{vendor.gstno}}
+                </label>
+              </div>
+            </div> -->
+
+            </div>
+            <div class="col-md-12 col-sm-12 col-xs-12 ">
+                <hr>
+            </div>
+            <div class="col-md-12 col-sm-12 col-xs-12 img-thumbnail">
+
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <h4>Profile details:&nbsp;</h4>
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="form-group">
+                        <label for="phone">phone:&nbsp;{{vendor.phone}}
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="form-group">
+                        <label for="fax">fax:&nbsp;{{vendor.fax}}
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="form-group text-lowercase">
+                        <label for="email">Email:&nbsp;{{vendor.email}}
+                        </label>
+                    </div>
+                </div>
+
+
+                <!-- <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="dob">Date Of Birth:&nbsp;{{emp.dob|date: 'dd-MM-yyyy'}}
+
+              </label>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="gender">Gender:&nbsp;{{emp.gender}}
+              </label>&nbsp;
+            </div>
+          </div> -->
+
+            </div>
+
+            <div class="col-md-12 col-sm-12 col-xs-12 ">
+                <hr>
+            </div>
+            <!-- end columnn -->
+            <div class="col-md-12 col-sm-12 col-xs-12 img-thumbnail ">
+
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <h4>Local Address :&nbsp;</h4>
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="form-group">
+                        <label for="line1">Address Line1 :&nbsp; {{vendor.address.line1}}
+
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="form-group">
+                        <label for="line2">Area&nbsp; {{vendor.address.line2}}</label>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="form-group">
+                        <label for="pincode">Pin-Code:&nbsp;
+                            {{vendor.address.pincode}}
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="form-group">
+                        <label for="states">State:&nbsp; {{vendor.address.states}}
+
+                        </label>
+
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="form-group">
+                        <label for="city">City:&nbsp;
+                            {{vendor.address.city}}
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- <div class="col-md-12 col-sm-12 col-xs-12 ">
+
+          <hr>
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <h4>Profile details:</h4>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+
+            <div class="form-group">
+              <label for="email">Email Id:  {{emp.login.email}}</label>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="role">Role: {{emp.role.role}}
+
+              </label>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="phone">Contact: {{emp.phone}}</label>
+
+            </div>
+          </div>
+        </div> -->
+
+
+
+
+        </form>
+
+    </div>
+</div>
+
+<div [hidden]="!isManageState" class="col-md-12 col-sm-12 col-xs-12 text-capitalize">
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            {{title}}
+            <a [routerLink]="['/addvendor']" title="Add Vendor" class="pull-right">
+                <span class="glyphicon glyphicon-plus-sign"></span>
+            </a>
+        </div>
+        <div class="panel-body">
+            <div class="table-responsive">
+                <table class="table table-condensed table-striped table-bordered" [mfData]="data | dataFilterPr : filterQuery"
+            #mf="mfDataTable" [mfRowsOnPage]="rowsOnPage" [(mfSortBy)]="Role" [(mfSortOrder)]="sortOrder">
+            <thead>
+              <tr>
+                <th>SN</th>
+                <th>
+                  <mfDefaultSorter by="role">Name</mfDefaultSorter>
+                </th>
+                <th>type</th>
+                <th>contact person</th>
+                <th>category </th>
+                <th>phone</th>
+                <th>email</th>
+                <th>action</th>
+              </tr>
+              <tr>
+                <th colspan="9">
+                  <div id="custom-search-input">
+                    <div class="input-group col-md-12">
+                      <input type="text" class="form-control" placeholder="Search by name" [(ngModel)]="filterQuery" />
+                      <span class="input-group-btn">
+                        <button class="btn btn-danger btn-sm" type="button">
+                          <span class=" glyphicon glyphicon-search"></span>
+                        </button>
+                      </span>
+                    </div>
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of mf.data; let i = index; let last = last;">
+                <td>{{i+1}}</td>
+                <td>{{data?.name}}</td>
+                <td>{{data?.type }}</td>
+                <td>{{data?.contactperson}}</td>
+                <td>{{data?.category}}</td>
+                <td>{{data?.phone}}</td>
+                <td class="text-lowercase">{{data?.email}}</td>
+
+                <td class="text-right">
+                  <a [routerLink]="['/editvendor/',data.id]" data-toggle="tooltip" title="Edit vendor"
+                    *ngIf="userType == 'ADMIN'">
+                    <button class="btn btn-default btn-sm">
+                      <span class="glyphicon glyphicon-edit"></span>
+                    </button>
+                  </a>
+
+                  <a [routerLink]="['/detailvendor',data.id]">
+                    <button class="btn btn-info btn-sm" title="Vendor Details">
+                      <span class="glyphicon glyphicon-info-sign"></span>
+                    </button>
+                  </a>
+
+                  <button *ngIf="userType == 'ADMIN'" class="btn btn-danger btn-sm" title="Delete Vendor"
+                    (click)="deleteRole(data.id)">
+                    <span class="glyphicon glyphicon-remove-circle"></span>
+                  </button>
+                  <button *ngIf="userType !== 'ADMIN'" disabled class="btn btn-danger btn-sm"
+                    title="Contact admin for functionality" (click)="deleteRole(data.role)">
+                    <span class="glyphicon glyphicon-remove-circle"></span>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="9">
+                  <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+            </div>
+        </div>
+    </div>
+</div>

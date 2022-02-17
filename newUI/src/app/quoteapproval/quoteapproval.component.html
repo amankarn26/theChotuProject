@@ -1,0 +1,243 @@
+<div class="col-md-12 col-sm-12 col-xs-12 loader" *ngIf="isLoader"  >
+
+</div>
+<div class="col-lg-12 col-md-12 col-sm-12 no-padding slideLeft" *ngIf="!isLoader">
+  
+  <div class="panel panel-default">
+      <div class="panel-heading">
+          <div class="clearfix">
+              <div class="pull-left">
+                  <h3 *ngIf="this.route.url !== '/managequotation/' +this.id + '/customer'">{{title}}</h3>
+
+
+                  <h3 *ngIf="this.route.url === '/managequotation/' +this.id + '/customer'">{{custname}}'s Quotations</h3>
+                  
+
+              </div>
+              <div class="container" class="pull-right">
+                  <div class="row">
+                      <a *ngIf="userRole != 'READ_ONLY'|| userType !=='CUSTOMER'" [routerLink]="['/addquote']" class="btn btn-primary a-btn-slide-text" title="Add Quotation">
+                          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                          <span></span>
+                      </a>
+                      <a *ngIf="userRole != 'READ_ONLY'|| userType !=='CUSTOMER'" [routerLink]="['/addenq']" class="btn btn-info a-btn-slide-text" title="Add Enquiry">
+                          <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                          <span></span>
+                      </a>
+
+                      <a *ngIf="userRole != 'READ_ONLY'|| userType !=='CUSTOMER'" [routerLink]="['/managequotation']" class="btn btn-info a-btn-slide-text" title="View All Quotations">
+                        <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+                        <span></span>
+                    </a>
+
+                  </div>
+              </div>
+          </div>
+
+      </div>
+
+
+      <div class="panel-body" *ngIf="data[0]">
+          <div class="table-responsive">
+            <table class="table table-condensed table-bordered " [mfData]="data | dataFilterPr : filterQuery:'quotation'" #mf="mfDataTable"
+              [mfRowsOnPage]="rowsOnPage"  >
+
+              <thead> 
+                <tr>
+
+                  <th>
+                    <mfDefaultSorter by="id">Q. No.</mfDefaultSorter>
+                  </th>
+                  <th>Quote Date</th>
+
+                  <th>Firm Name</th>
+
+                  <th> Primary Handler</th>
+
+                  <th> Requestor Type</th>
+                   
+                      
+                            
+                  <th>
+                    Product-HSN
+                  </th>
+                  <th>Order Details</th>
+
+                  <th>Quantity</th>
+
+                  <th>Delivery Date</th>
+                  <th> Validity</th>
+                  <th> Amount</th>
+                  <th> Status</th>
+                  <th>Cost Auto-Calculated?</th>
+
+                  <th *ngIf="userRole != 'READ_ONLY'" class="text-center">Action</th>
+                </tr>
+                <tr>
+                  <th colspan="20">
+                    <div id="custom-search-input ">
+                      <div class="input-group col-md-12">
+                        <input type="text" class="form-control" placeholder="Search by Customer, Product Or Quotation No." [(ngModel)]="filterQuery"
+                        />
+                        <span class="input-group-btn">
+                          <button class="btn btn-danger" type="button">
+                            <span class=" glyphicon glyphicon-search"></span>
+                          </button>
+                        </span>
+                      </div>
+                    </div>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let data of mf.data; let i = index; let last = last;" class="animated flipInX"  [ngStyle]="data.costautocal==='YES'?{'background-color': '#c1ebff'} : {'background-color': 'rgb(245, 194, 194)'}">
+
+
+
+                  <td>{{data.id}}</td>
+              
+                  <td>{{data?.generatedon|date: "dd-MM-yyyy hh:mm:ss a"}}</td>
+
+                  <td>{{data.custname}}, {{data.custcity}}</td>
+                  <td>{{data.primhandlername}}</td>
+                  
+               
+                  <td>{{data.requestortype}}</td>
+                  <td>{{data?.prodname}}-{{data?.hsncode}}</td>
+                 
+                        <td>
+                            <textarea *ngIf="data.costautocal==='YES'" readonly style="white-space: pre-line;font-weight:640;width:246px;height:150px;background-color:#c1ebff">
+                                  {{data?.orderdetails}}
+                            </textarea>
+                            <textarea *ngIf="data.costautocal==='NO'" readonly style="white-space: pre-line;font-weight:640;width:246px;height:150px;background-color:rgb(245, 194, 194)">
+                                  {{data?.orderdetails}}
+                            </textarea>
+                        </td>
+                
+                  <td *ngIf="data.namune > 1">{{data?.prodqty}} X {{data?.namune}}</td>
+                  <td *ngIf="data.namune === 1">{{data?.prodqty}}</td>
+
+
+                            <td *ngIf="data.costautocal==='NO'">{{data?.qtransport?.deliverytime|date: "dd-MM-yyyy"}}</td>
+                            <td *ngIf="data.costautocal==='YES'">{{data?.qtransport?.deliverytime|date: "dd-MM-yyyy"}} {{data?.generatedon|date: "hh:mm:ss a"}}</td>
+                <td>{{data?.validtill|date: "dd-MM-yyyy"}}</td>
+               
+
+
+                  <td>{{data?.qcost?.finalamt}} &nbsp;
+                    <i class="fa fa-inr"></i>
+                  </td>
+                  <td>{{data?.status}}</td>
+                  <td>{{data?.costautocal}}</td>
+                 
+                  <!-- <td *ngIf="userRole != 'READ_ONLY'" >
+                   
+                    <a [routerLink]="['/detailquote',data.id]">
+                      <button class="btn btn-primary btn-sm" title="Quotation Details">
+                        <span class="glyphicon glyphicon-info-sign"></span>
+                      </button>
+                    </a>
+                    <a *ngIf="data.costautocal==='NO'" [routerLink]="['/generatequotation',data.id]"> 
+                      <button class="btn btn-primary btn-sm" title="Generate Quotation"  >
+                      <span class="glyphicon glyphicon-eject" >
+
+                      </span>
+                      </button>
+
+                     
+                    </a>
+
+                    <a [routerLink]="['/addfeedback',data.id]">
+                      <button class="btn btn-primary" title="Feedback"  >
+                        <span class="glyphicon glyphicon-bookmark"></span>
+                      </button>
+                      </a>
+                    <a *ngIf="data.costautocal==='YES'"  [routerLink]="['/addquote',data.id]"> 
+                      <button style="background:#0e9e8f;" class="btn btn-primary btn-sm" title="Clone Quotation" (click)="getQuotationById(data.id)">
+                      <span class="glyphicon glyphicon-duplicate" >
+
+                      </span>
+                      </button>
+                 
+                    </a>
+                    <a   [routerLink]="['/addenq',data.id]">
+                      <button class="btn btn-info btn-sm" title="Change Quotation"     >
+                        <span class="glyphicon  glyphicon-duplicate"></span>
+                      </button>
+                    </a>
+              
+                    <button class="btn btn-primary btn-sm" title="Confirm Order" (click)="confirmorder(this.data)" *ngIf="data.costautocal==='YES' && data.status!=='ORDER_CONFIRM' && data.status!=='REQUEST_UNPAID_APPROVAL'">
+                      <span class="glyphicon  glyphicon-shopping-cart"></span>
+                    </button>
+                    <button disabled class="btn btn-primary btn-sm" title="Order is Confirmed"  *ngIf="data.costautocal==='YES' && data.status==='ORDER_CONFIRM'">
+                      <span class="glyphicon  glyphicon-shopping-cart"></span>
+                    </button>
+
+                    <button disabled class="btn btn-primary btn-sm" title="Order is Under Approval Stage"  *ngIf="data.costautocal==='YES' && data.status==='REQUEST_UNPAID_APPROVAL'">
+                      <span class="glyphicon  glyphicon-shopping-cart"></span>
+                    </button>
+
+                    <button class="btn btn-danger btn-sm" title="Delete quotation" (click)="deletequotation(data.id)">
+                                    <span class="glyphicon glyphicon-remove-circle"></span>
+                                </button>
+                    
+                   
+                  </td> -->
+
+                  <td>
+
+                    <a [routerLink]="['/detailquotation',data.id]">
+                      <button class="btn btn-info" title="Quotation Details">
+                        <span class="glyphicon glyphicon-info-sign"></span>
+                      </button>
+                    </a>
+
+                    <a>
+                      <button class="btn  btn-success" title="Approve Quotation Request" (click)="approvequote(data)">
+                        <span class="glyphicon glyphicon-ok-sign"></span>
+                      </button>
+                    </a>
+                    <a>
+                      <button class="btn  btn-warning" title="Reject Quotation Request" (click)="rejectquote(data)">
+                        <span class="glyphicon glyphicon-thumbs-down"></span>
+                      </button>
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+              <tfoot>
+
+                <tr>
+                  <td colspan="20">
+                    <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                  </td>
+                </tr>
+                <tr>
+                  <!-- <td colspan="20">
+                    <nav aria-label="Page navigation example">
+                      <ul class="pagination justify-content-center">
+                        <li class="page-item ">
+                          <a class="page-link" (click)="decrement()">Previous</a>
+                        </li>
+                        <li class="page-item ">
+                          <a class="page-link" (click)="getall()">All</a>
+                        </li>
+                        <li class="page-item ">
+                          <a class="page-link" (click)="increment()" title="Next 100">Next</a>
+                        </li>
+                      </ul>
+                    </nav>
+                  </td> -->
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+
+        <div class="panel-body" style=" font-size: large; " *ngIf="!data[0]">
+          <div class="alert alert-info">
+            <strong>Info!</strong> Currently No Quotations are there for Approval.
+          </div>
+        </div>
+  </div>
+</div>

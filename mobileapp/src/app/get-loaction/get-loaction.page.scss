@@ -1,0 +1,16 @@
+.fullPage {
+    .parentBox {
+        .innerBox {
+            margin: 5px;
+            margin-top: 10px;
+            padding: 10px;
+            border-left: 3px #864bf6 solid;
+
+            .title {
+                font-size: 20px;
+                font-weight: 800;
+                color: #864bf6;
+            }
+        }
+    }
+}

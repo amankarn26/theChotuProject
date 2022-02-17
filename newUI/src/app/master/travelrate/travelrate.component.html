@@ -1,0 +1,225 @@
+<!-- <div class="row">
+  <div class="col-md-12">
+    <h2>{{title}}</h2>
+
+  </div>
+</div> -->
+<!-- /. ROW  -->
+<hr />
+<div [hidden]="isManageState" class="col-md-12 col-sm-12 col-xs-12">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      {{subtitle}}
+      <a [routerLink]="['/managetravelrate']" title="Manage Travel Rate" class="pull-right">
+        <span class="glyphicon glyphicon-th-list"></span>
+      </a>
+    </div>
+    <div class="panel-body">
+      <form #form1="ngForm">
+        <!-- <div class="col-md-6 col-sm-6 col-xs-12">
+          <div class="form-group">
+            <label for="dept">Category: </label>
+            <select class="form-control" name="category" required [(ngModel)]="supplier.category">
+              <option required *ngFor="let dep of catList; let i=index" [value]="dep.id">{{dep.name}}</option>
+            </select>
+          </div>
+        </div> -->
+        <div class="col-md-6 col-sm-6 col-xs-12">
+          <div class="form-group">
+            <label for="vendor">Branch:
+            </label>
+            <select class="form-control" *ngIf="!isUpdate" name="vendor" required [(ngModel)]="trate.vendor" (change)="onChangeVendor($event)">
+              <option required *ngFor="let vendor of vendorList; let i=index" [value]="vendor.id">{{vendor.name}}
+              </option>
+            </select>
+            <input type="text" *ngIf="isUpdate" disabled class="form-control"  name="vendor" [(ngModel)]="trate.vname">
+            <!-- <select class="form-control" *ngIf="isUpdate" readonly disabled name="vendor" required [(ngModel)]="trate.vendor">
+              <option required *ngFor="let vendor of vendorList; let i=index" [value]="vendor.id">{{vendor.name}}
+              </option>
+            </select> -->
+          </div>
+        </div>
+        <!-- <div class="col-sm-6">
+          <div class="form-group">
+            <label for="destcity"> Destination State: </label>
+            <input type="text" class="form-control" required name="destcity" [(ngModel)]="trate.custstate">
+          </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="form-group">
+              <label for="destcity"> Destination City: </label>
+              <input type="text" class="form-control" required name="destcity" [(ngModel)]="trate.destcity">
+            </div>
+          </div>
+        destcity -->
+
+
+          <div class=" col-sm-3 ">
+              <div class="form-group">
+                <label for="custstate">Destination State:
+                </label>
+                  <input *ngIf="isUpdate"  class="form-control" name="custstate" [(ngModel)]="custstate" />
+                <select *ngIf="!isUpdate" class="form-control" name="custstate" required [(ngModel)]="custstate"
+                  (change)="onChangeState($event)">
+                  <option *ngFor="let state of statelist; let i=index" [value]="state">{{state}}</option>
+                </select>
+
+
+              </div>
+            </div>
+            <div class=" col-sm-3 ">
+              <div class="form-group">
+                <label for="destcity">Destination City:
+
+                </label>
+                <input *ngIf="isUpdate"  name="destcity" class="form-control" [(ngModel)]="trate.destcity" />
+                <select *ngIf="!isUpdate" (ngModel)="citiName" name="destcity"  class="form-control" [(ngModel)]="trate.destcity"
+                  (change)="getClienList()">
+                  <option *ngFor="let city of citylist; let i=index" [value]="city">{{city}}</option>
+                </select>
+              </div>
+            </div>
+
+        <div class="col-md-6 col-sm-6 col-xs-12">
+          <div class="form-group">
+            <label for="minwt">Min Weight:</label>
+            <input type="number" class="form-control" id="minwt" name="minwt" required [(ngModel)]="trate.minwt" />
+          </div>
+        </div>
+
+        <div class="col-md-6 col-sm-6 col-xs-12">
+          <div class="form-group">
+            <label for="maxwt">Max Weight:</label>
+            <input type="number" class="form-control" id="maxwt" name="maxwt" required [(ngModel)]="trate.maxwt" />
+          </div>
+        </div>
+
+    <div class="col-md-6 col-sm-6 col-xs-12">
+      <div class="form-group">
+        <label for="rateunit"> Rate unit:
+        </label>
+        <!-- <input type="number" class="form-control" required name="rateunit" [(ngModel)]="product.rateunit"> -->
+        <select class="form-control" id="rateunit" *ngIf="!isUpdate" required name="rateunit" [(ngModel)]="trate.rateunit">
+          <option value="RATEPER1000">RATE PER 1000</option>
+          <option value="RATEPERPACK">RATE PER PACK</option>
+          <option value="RATEPERPRODUCT">RATE PER PRODUCT</option>
+          <option value="RATEPERDOZEN">RATE PER DOZEN</option>
+          <option value="RATEPERKG">RATE PER KG</option>
+
+
+        </select>
+        <select class="form-control" id="rateunit" *ngIf="isUpdate" required name="rateunit" [(ngModel)]="trate.rateunit" disabled>
+          <option value="RATEPER1000">RATE PER 1000</option>
+          <option value="RATEPERPACK">RATE PER PACK</option>
+          <option value="RATEPERPRODUCT">RATE PER PRODUCT</option>
+          <option value="RATEPERDOZEN">RATE PER DOZEN</option>
+          <option value="RATEPERKG">RATE PER KG</option>
+
+
+        </select>
+
+      </div>
+    </div>
+
+        <div class="col-md-6 col-sm-6 col-xs-12">
+          <div class="form-group">
+            <label for="rateperunit">Rate Per Unit:</label>
+            <input type="number" class="form-control" id="rateperunit" name="rateperunit" required [(ngModel)]="trate.rateperunit" />
+          </div>
+        </div>
+
+
+
+
+        <div class="col-md-6">
+          <div class="form-group">
+            <button *ngIf="this.url == '/addtravelrate'" type="submit" [disabled]="!form1.valid" class="btn btn-default" (click)="submitData()">Submit</button>
+            <button *ngIf="this.url == '/edittravelrate/' + this.id" type="submit" [disabled]="!form1.valid" class="btn btn-default" (click)="updateData()">Update</button>
+           <button type="button" class="btn btn-default" (click)="cancel()">Cancel</button>
+          </div>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+
+<div [hidden]="!isManageState" class="col-md-12 col-sm-12 col-xs-12">
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      {{subtitle}}
+      <a [routerLink]="['/addtravelrate']" title="Add Travel Rate" class="pull-right">
+       <span class="glyphicon glyphicon-plus-sign"></span>
+      </a>
+    </div>
+    <div class="panel-body">
+      <div class="table-responsive">
+        <!-- <table class="table table-condensed table-striped table-bordered" [mfData]="data | dataFilterPr : filterQuery" #mf="mfDataTable"
+          [mfRowsOnPage]="rowsOnPage" [(mfSortBy)]="Role" [(mfSortOrder)]="sortOrder">
+          <thead>
+            <tr>
+              <th>SN</th>
+
+              <th>Vendor Name</th>
+
+              <th>Destination City</th>
+              <th>Minwt</th>
+              <th>Maxwt</th>
+              <th>Rateunit</th>
+              <th>Rateperunit</th>
+              <th>Action</th>
+            </tr>
+            <tr>
+              <th colspan="9">
+                <div id="custom-search-input">
+                  <div class="input-group col-md-12">
+                    <input type="text" class="form-control" placeholder="Search by name" [(ngModel)]="filterQuery" />
+                    <span class="input-group-btn">
+                      <button class="btn btn-danger btn-sm" type="button">
+                        <span class=" glyphicon glyphicon-search"></span>
+                      </button>
+                    </span>
+                  </div>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of mf.data; let i = index; let last = last;">
+              <td>{{i+1}}</td>
+              <td>{{data?.vname}}</td>
+
+              <td>{{data?.destcity}}</td>
+              <td>{{data?.minwt}}</td>
+              <td>{{data?.maxwt}}</td>
+              <td>{{data?.rateunit}}</td>
+              <td>{{data?.rateperunit}}</td>
+
+              <td class="text-right">
+                <a [routerLink]="['/edittravelrate/',data.id]" data-toggle="tooltip" title="Update Travel rate" *ngIf="userType == 'ADMIN'">
+                  <button class="btn btn-default btn-sm">
+                    <span class="glyphicon glyphicon-edit"></span>
+                  </button>
+                </a>
+                <button *ngIf="userType == 'ADMIN'" class="btn btn-danger btn-sm" title="Delete Travel Rate" (click)="deleteRole(data.id)">
+                  <span class="glyphicon glyphicon-remove-circle"></span>
+                </button>
+                <button *ngIf="userType !== 'ADMIN'" disabled class="btn btn-danger btn-sm" title="Contact admin for functionality" (click)="deleteRole(data.role)">
+                  <span class="glyphicon glyphicon-remove-circle"></span>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="9">
+                <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+              </td>
+            </tr>
+          </tfoot>
+        </table> -->
+      </div>
+    </div>
+  </div>
+</div>

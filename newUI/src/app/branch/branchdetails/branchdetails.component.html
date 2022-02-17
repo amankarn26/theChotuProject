@@ -1,0 +1,875 @@
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+<!-- branch detail -->
+<div class="panel panel-default" *ngIf="this.route.url === '/detailbranch/'+this.id">
+    <div class="panel-heading">
+      <div class="clearfix">
+        <div class="pull-left"> {{title}}</div>
+        <div class="container" class="pull-right">
+          <div class="row">
+            <!-- <a [routerLink]="['/manageemployee']" title="Manage Employees" class="btn btn-info a-btn-slide-text">
+              <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+            </a> -->
+            <!-- ||userRole === 'MARKETING' -->
+            <a  [routerLink]="['/editbranch', id]" title="Update Vendor" class="btn btn-info a-btn-slide-text btn-sm">
+              <i class="glyphicon glyphicon-edit"></i>
+            </a>
+
+            <a title="Manage Vendor" [routerLink]="['/managebranch']"  class="btn btn-info a-btn-slide-text  btn-sm">
+              <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-body">
+      <form #form1="ngForm">
+        <div class="col-md-12 col-sm-12 col-xs-12 ">
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <h4>Profile Details:</h4>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <img [src]="url" style="height:200px; width:200px;" class="thumbnail">
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+              <div class="form-group">
+                <label for="email">Email Id: {{emp?.email}}</label>
+              </div>
+            </div>
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="form-group">
+                  <label for="email">Username: {{emp?.login?.username}}</label>
+                </div>
+              </div>
+            <div class="col-md-12 col-sm-12 col-xs-12">
+              <div class="form-group">
+                <label for="role">Role: {{emp?.login?.role}}
+                </label>
+              </div>
+            </div>
+            <div class="col-md-12 col-sm-12 col-xs-12">
+              <div class="form-group">
+                <label for="phone">Phone No: {{emp?.phone}}</label>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+
+        <div class="col-md-12 col-sm-12 col-xs-12 ">
+          <hr>
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <h4>Personal details:&nbsp;</h4>
+          </div>
+
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="fname">Branch Name:&nbsp;{{emp?.name}}
+              </label>
+            </div>
+          </div>
+
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="form-group">
+              <label for="phone">Branch Type: {{emp?.branchtype}}</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- firm detail -->
+        <!-- <div class="col-md-12 col-sm-12 col-xs-12 ">
+          <hr>
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <h4>Firm details:</h4>
+          </div>
+
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="category">Category:&nbsp; {{emp?.category}}
+              </label>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="etype">Firm Code:&nbsp; {{emp?.code}}
+
+              </label>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="designation">Total Employess:&nbsp;{{emp?.empcount}}
+              </label>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="servicerate">Service Rate:&nbsp; {{emp?.servicerate}}
+              </label>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="servicerate">Use Delivery Pool:&nbsp; {{emp?.usedeliverypool}}
+              </label>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="servicerate"> Delivery Days:&nbsp; {{emp?.deliverdays}}
+              </label>
+            </div>
+          </div>
+         
+          <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="emp.iscodsupported === 'YES'">
+            <div class="form-group">
+              <label for="servicerate"> Delivery Type:&nbsp; {{emp?.deliverytype}}
+              </label>
+            </div>
+          </div>
+        </div> -->
+
+        <!-- end columnn -->
+        <div class="col-md-12 col-sm-12 col-xs-12 ">
+          <hr>
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <h4>Local Address :&nbsp;</h4>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="line1">Address Line1 :&nbsp; {{emp?.address.line1}}
+
+              </label>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="line2">Address Line 2:&nbsp; {{emp?.address.line2}}</label>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="pincode">Pin-Code:&nbsp; {{emp?.address.pincode}}
+              </label>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="states">State:&nbsp; {{emp?.address.states}}
+
+              </label>
+
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="city">City:&nbsp; {{emp?.address.city}}
+              </label>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="city">Latitude:&nbsp; {{emp?.address.latitude}}
+              </label>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="city">Longitude:&nbsp; {{emp?.address.longitude}}
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- account detail -->
+        <!-- <div class="col-md-12 col-sm-12 col-xs-12 ">
+          <hr>
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <h4>Firm Account details:</h4>
+          </div>
+
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="category">Payment Mode:&nbsp; {{emp?.account.type}}
+              </label>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="emp?.account.type !== 'GOOGLE_PAY'">
+            <div class="form-group">
+              <label for="category">Account Number:&nbsp; {{emp?.account.acctnumber}}
+              </label>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="emp?.account.type === 'GOOGLE_PAY'">
+            <div class="form-group">
+              <label for="category">Google Pay Number:&nbsp; {{emp?.account.acctnumber}}
+              </label>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="etype">IFSC Code:&nbsp; {{emp?.account.ifsccode}}
+
+              </label>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="designation">Branch Name:&nbsp;{{emp?.account.bankname}}
+              </label>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="servicerate">City:&nbsp; {{emp?.account.city}}
+              </label>
+            </div>
+          </div>
+        
+          <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="emp.iscodsupported === 'YES'">
+            <div class="form-group">
+              <label for="servicerate"> Delivery Type:&nbsp; {{emp?.deliverytype}}
+              </label>
+            </div>
+          </div>       
+        </div> -->
+      </form>
+    </div>
+</div>
+
+<!-- branch stock -->
+<div class="col-md-12 col-sm-12 col-xs-12 text-capitalize" *ngIf="this.route.url === '/branch_stock/'+this.id+'/'+this.routecategory">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+       Manage Product Stock
+        <a [routerLink]="['/managebranch']"  title="Manage Vendor" class="pull-right" *ngIf="(this.userType ==='FIRM') && (this.userRole ==='SUPERADMIN') ">
+          <span class="glyphicon glyphicon-th-list"></span>
+        </a>
+      </div>
+
+      <ul  class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#stockadded" id="a">Added Stock</a></li>
+        <li><a data-toggle="tab" href="#notadded" id="b">Stock Not Added</a></li>
+        
+
+
+
+
+      </ul>
+      <div class="tab-content">
+        <div id="stockadded" class="tab-pane fade in active">
+      <div class="panel-body">
+        <div class="table-responsive">
+          <table class="table table-condensed table-striped table-bordered"[mfData]="data | dataFilterPr : filterQuery:'fproduct'" #mf="mfDataTable"
+          [mfRowsOnPage]="rowsOnPage" >
+           
+            <thead>
+              <tr>
+                <th colspan="10">
+                  <div id="custom-search-input">
+  
+                      <div class="col-sm-12">
+                          <div class="col-md-6 col-sm-6 col-xs-12">
+                              <div class="form-group" >
+                                <label for="gender"> Search by
+                                </label>&nbsp;
+                               
+                                <input type="radio" value="Customdate"  [(ngModel)]="prodtypeselect"  name="prodtypeselect" > Product Type &nbsp;
+  
+  
+                              </div>
+                            </div>
+                      </div>
+  
+                      <div class="col-sm-12" *ngIf="prodtypeselect">
+                         <!-- <div class="col-sm-3" *ngIf="userRole==='SUPERADMIN'" >
+                          <div class="form-group">
+                            <label for="prodtype"> Category:
+                            </label>
+                            <select class="form-control" id="categorytype" *ngIf="userRole==='SUPERADMIN'"  required name="categorytype"
+                            [(ngModel)]="categorytype" (change)="getprodtypelistbycatgory()">
+                            <option required *ngFor="let type of categoryList; let i=index" [value]="type.name">{{type.name}}</option>
+                          </select>
+  
+                          </div>
+                        </div> -->
+  
+                      
+                          <div class="col-sm-3"  >
+                            <div class="form-group">
+                              <label for="prodtype"> Product type:
+                              </label>
+                              <select class="form-control" *ngIf="!isUpdate" id="prodtype" required name="prodtype"
+                                [(ngModel)]="prodtype" (change)="getdatabyprodtype()">
+                                <option required *ngFor="let type of prodtlist; let i=index" [value]="type.prodtype">{{type.prodtype}}</option>
+                              </select>
+  
+                            </div>
+                          </div>
+  
+                          <div class="col-sm-3">
+                            <div class="form-group">
+                              <label for="state">Reset :
+                              </label>
+                              <span class="input-group-btn">
+                                <button   class="btn btn-info btn-sm" title="Reset" (click)="refreshincall()" style="font-size: 9px;">
+                                  <span class="glyphicon glyphicon-refresh"></span>
+                                </button>
+                                </span>
+                            </div>
+                        </div>
+  
+                      
+  
+  
+  
+                        </div>
+                   
+                  </div>
+                </th>
+              </tr>
+              <tr>
+                <th>SN</th>
+                <th>Name</th>
+                
+                <th>Product Type</th>
+                <th>Rateunit</th>
+              
+                <th>Product Stock</th>
+      
+  
+                <th>Action</th>
+              </tr>
+              <tr>
+                <th colspan="18">
+                  <div id="custom-search-input">
+                    <div class="input-group col-md-12">
+                      <input type="text" class="form-control" placeholder="Search by name or type"
+                        [(ngModel)]="filterQuery" />
+                      <span class="input-group-btn">
+                        <button class="btn btn-danger btn-sm" type="button">
+                          <span class=" glyphicon glyphicon-search"></span>
+                        </button>
+                      </span>
+                    </div>
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of mf.data; let i = index; let last = last;">
+                <td>{{i+1}}</td>
+                <!-- <td>{{data?.name}}</td> -->
+                <td>
+                  <div class="img-thumbnail  ">
+                    <img *ngIf="data?.image" src="{{docServer}}/{{data?.image}}" class="img-circle" alt="" style="width:100px; height:100px;">
+                  <img *ngIf="!data?.image" src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg" class="img-circle" alt="" style="width:100px; height:100px;">
+
+                    <div class="caption text-capitalize text-center"> {{data?.name}}</div>
+                  </div>
+                </td>
+               
+                <td>{{data?.prodtype}}</td>
+                
+                <td>
+  
+              
+                <p *ngIf="data.rateunit==='RATEPERKG'">Rate Per KG</p>
+                <p *ngIf="data.rateunit==='RATEPERPRODUCT'">Rate Per Product</p>
+               <p *ngIf="data.rateunit==='RATEPERDOZEN'">Rate Per Dozen</p>
+              <p *ngIf="data.rateunit==='RATE_PER_PKT'">Rate Per Packet</p>
+              <p *ngIf="data.rateunit==='RATE_PER_CRATE'">Rate Per Crate</p>
+              <p *ngIf="data.rateunit==='RATE_PER_LITRE'">Rate Per Litre</p>
+              </td>
+              <td>
+<!-- 
+                <div class="img-thumbnail">
+                  <img *ngIf="data?.image" src="{{docServer}}/{{data?.image}}" class="img-circle" alt="" style="width:100px; height:100px;">
+                  <img *ngIf="!data?.image" src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg" class="img-circle" alt="" style="width:100px; height:100px;">
+
+                
+                </div><br> -->
+                <ul *ngFor="let dataa of data.pstock">
+                  <!-- <li>
+                    <div class="img-thumbnail" *ngIf="dataa?.available ==='NO'"  style=" background: #ff000047; ">
+                      <img *ngIf="data?.image" src="{{docServer}}/{{data?.image}}" class="img-circle" alt="" style="width:100px; height:100px;">
+                      <img *ngIf="!data?.image" src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg" class="img-circle" alt="" style="width:100px; height:100px;">
+    
+                    
+                    </div>
+                    <div class="img-thumbnail" *ngIf="dataa?.available ==='YES'"  style=" background: #60cb815c; ">
+                      <img *ngIf="data?.image" src="{{docServer}}/{{data?.image}}" class="img-circle" alt="" style="width:100px; height:100px;">
+                      <img *ngIf="!data?.image" src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg" class="img-circle" alt="" style="width:100px; height:100px;">
+    
+                    
+                    </div>
+                   </li> -->
+                  <li>Varient: <b>{{dataa?.mfg}} , {{dataa?.ratewithgst}} ₹ </b>,
+                    
+                    
+                    <b *ngIf="dataa?.available ==='YES'" style="color: #00bc00; font-weight: 600;" > In Stock </b>
+                  
+                    <b *ngIf="dataa?.available ==='NO'" style="color: #ff1414; font-weight: 600;"  > Out Of Stock </b>
+                    <a [routerLink]="['/editpstock',dataa.id]" title="Update">
+                      <span class="glyphicon glyphicon-edit"></span>
+                    </a>
+                  </li>
+
+                  <!-- <li *ngIf="dataa?.available ==='YES'" style="color: #00bc00; font-weight: 600;" >In Stock : {{dataa?.available}}</li>
+                  <li *ngIf="dataa?.available ==='NO'" style="color: #ff1414; font-weight: 600;" >In Stock : {{dataa?.available}}</li> -->
+
+
+                  </ul>
+                  
+       
+                    
+              </td>
+              <td class="text-right">
+
+                <!-- <a [routerLink]="['/addproperty',data.id,data.name]" data-toggle="tooltip" title="Add Product Property"
+                  >
+                  <button class="btn btn-default btn-sm">
+                    <span class="glyphicon glyphicon-plus"></span>
+                  </button>
+                </a>
+
+                <a [routerLink]="['/addpropertyvalue',data.id]" data-toggle="tooltip" title="Add Product Property Value"
+                >
+                <button class="btn btn-default btn-sm">
+                  <span class="glyphicon glyphicon-plus"></span>
+                </button>
+              </a> -->
+                <a [routerLink]="['/addpstock',data.id,data.prodtype,this.id]" data-toggle="tooltip" title="Add In Product Stock"
+                  *ngIf="userRole !=='MARKETING'">
+                  <button class="btn btn-default btn-sm">
+                    <span class="glyphicon glyphicon-plus"></span>
+                  </button>
+                </a>
+                <a [routerLink]="['/managepstock',data.name, data.id ,data.prodtype,this.id]" data-toggle="tooltip"
+                  title="Manage Product Stock">
+                  <button class="btn btn-info btn-sm">
+                    <span class="glyphicon glyphicon-th-list"></span>
+                  </button>
+                </a>
+                <!-- <a [routerLink]="['/editproduct/',data.id]" data-toggle="tooltip" title="Update Product"
+                *ngIf="(this.userType ==='FIRM') && (this.userRole ==='SUPERADMIN') ">
+                  <button class="btn btn-default btn-sm">
+                    <span class="glyphicon glyphicon-edit"></span>
+                  </button>
+                </a> -->
+       
+                <a [routerLink]="['/detailproduct',data.id]">
+                  <button class="btn btn-primary btn-sm" title="Product Details">
+                    <span class="glyphicon glyphicon-info-sign"></span>
+                  </button>
+                </a>
+                <!-- <button *ngIf="(this.userType ==='FIRM') && (this.userRole ==='SUPERADMIN') " class="btn btn-danger btn-sm" title="Delete Product"
+                  (click)="deleteRole(data.id)">
+                  <span class="glyphicon glyphicon-remove-circle"></span>
+                </button> -->
+              </td>
+               
+                <!-- <td class="text-right"> -->
+  
+                 
+                  <!-- <a [routerLink]="['/addpstock',data.id,data.prodtype]" data-toggle="tooltip" title="Add In Product Stock"
+                    *ngIf="userRole !=='MARKETING'">
+                    <button class="btn btn-default btn-sm">
+                      <span class="glyphicon glyphicon-plus"></span>
+                    </button>
+                  </a>
+                  <a [routerLink]="['/managepstock',data.name, data.id]" data-toggle="tooltip"
+                    title="Manage Product Stock">
+                    <button class="btn btn-info btn-sm">
+                      <span class="glyphicon glyphicon-th-list"></span>
+                    </button>
+                  </a>
+                  <a [routerLink]="['/editproduct/',data.id]" data-toggle="tooltip" title="Update Product"
+                  *ngIf="(this.userType ==='FIRM') && (this.userRole ==='SUPERADMIN') ">
+                    <button class="btn btn-default btn-sm">
+                      <span class="glyphicon glyphicon-edit"></span>
+                    </button>
+                  </a>
+              
+                  <a [routerLink]="['/detailproduct',data.id]">
+                    <button class="btn btn-info btn-sm" title="Product Details">
+                      <span class="glyphicon glyphicon-info-sign"></span>
+                    </button>
+                  </a>
+                  <button *ngIf="(this.userType ==='FIRM') && (this.userRole ==='SUPERADMIN') " class="btn btn-danger btn-sm" title="Delete Product"
+                    (click)="deleteRole(data.id)">
+                    <span class="glyphicon glyphicon-remove-circle"></span>
+                  </button> -->
+
+                  <!-- No Actions
+                </td> -->
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="21">
+                  <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+         
+        </div>
+      </div>
+      </div>
+      <div id="notadded" class="tab-pane fade">
+        <div class="panel-body">
+          <div class="table-responsive">
+            <table class="table table-condensed table-striped table-bordered"
+              [mfData]="notadddeddata | dataFilterPr : filterQuery:'fproduct'" #mff="mfDataTable" [mfRowsOnPage]="rowsOnPage"
+              [(mfSortBy)]="Role" [(mfSortOrder)]="sortOrder">
+             
+              <thead>
+                <tr>
+                  <th colspan="10">
+                    <div id="custom-search-input">
+    
+                         <div class="col-sm-12">
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <div class="form-group" >
+                                  <label for="gender"> Search by
+                                  </label>&nbsp;
+                                 
+                                  <input type="radio" value="Customdate"  [(ngModel)]="prodtypeselectt"  name="prodtypeselectt" > Product Type &nbsp;
+    
+    
+                                </div>
+                              </div>
+                        </div> 
+    
+                        <div class="col-sm-12" *ngIf="prodtypeselectt">
+                          
+    
+                        
+                            <div class="col-sm-3"  >
+                              <div class="form-group">
+                                <label for="prodtype"> Product type:
+                                </label>
+                                <select class="form-control" *ngIf="!isUpdate" id="notdataprodtype" required name="notdataprodtype"
+                                  [(ngModel)]="notdataprodtype" (change)="getnotaddedbyprodtype()">
+                                  <option required *ngFor="let type of prodtlist; let i=index" [value]="type.prodtype">{{type.prodtype}}</option>
+                                </select>
+    
+                              </div>
+                            </div>
+    
+                            <div class="col-sm-3">
+                              <div class="form-group">
+                                <label for="state">Reset :
+                                </label>
+                                <span class="input-group-btn">
+                                  <button   class="btn btn-info btn-sm" title="Reset" (click)="refreshincallnot()" style="font-size: 9px;">
+                                    <span class="glyphicon glyphicon-refresh"></span>
+                                  </button>
+                                  </span>
+                              </div>
+                          </div>
+    
+                        
+    
+    
+    
+                          </div>
+                     
+                    </div>
+                  </th>
+                </tr>
+                <tr>
+                  <th>SN</th>
+                  <th>Name</th>
+                  
+                  <th>Product Type</th>
+                  <th>Rateunit</th>
+                
+                  <!-- <th>Product Stock</th> -->
+        
+    
+                  <th>Action</th>
+                </tr>
+                <tr>
+                  <th colspan="18">
+                    <div id="custom-search-input">
+                      <div class="input-group col-md-12">
+                        <input type="text" class="form-control" placeholder="Search by name or type"
+                          [(ngModel)]="filterQuery" />
+                        <span class="input-group-btn">
+                          <button class="btn btn-danger btn-sm" type="button">
+                            <span class=" glyphicon glyphicon-search"></span>
+                          </button>
+                        </span>
+                      </div>
+                    </div>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let data of mff.data; let i = index; let last = last;">
+                  <td>{{i+1}}</td>
+        
+                  <td>
+                    <div class="img-thumbnail  ">
+                      <img *ngIf="data?.image" src="{{docServer}}/{{data?.image}}" class="img-circle" alt="" style="width:100px; height:100px;">
+                    <img *ngIf="!data?.image" src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg" class="img-circle" alt="" style="width:100px; height:100px;">
+  
+                      <div class="caption text-capitalize text-center"> {{data?.name}}</div>
+                    </div>
+                  </td>
+                 
+                  <td>{{data?.prodtype}}</td>
+                  
+                  <td>
+    
+                
+                  <p *ngIf="data.rateunit==='RATEPERKG'">Rate Per KG</p>
+                  <p *ngIf="data.rateunit==='RATEPERPRODUCT'">Rate Per Product</p>
+                 <p *ngIf="data.rateunit==='RATEPERDOZEN'">Rate Per Dozen</p>
+              <p *ngIf="data.rateunit==='RATE_PER_PKT'">Rate Per Packet</p>
+              <p *ngIf="data.rateunit==='RATE_PER_CRATE'">Rate Per Crate</p>
+              <p *ngIf="data.rateunit==='RATE_PER_LITRE'">Rate Per Litre</p>
+                </td>
+                <!-- <td>
+
+                  <ul *ngFor="let dataa of data.pstock">
+                  
+                    <li>Varient: <b>{{dataa?.mfg}} , {{dataa?.ratewithgst}} ₹ </b>,
+                      
+                      
+                      <b *ngIf="dataa?.available ==='YES'" style="color: #00bc00; font-weight: 600;" > In Stock </b>
+                    
+                      <b *ngIf="dataa?.available ==='NO'" style="color: #ff1414; font-weight: 600;"  > Out Of Stock </b>
+                    </li>
+  
+                  
+  
+                    </ul>
+                    
+         
+                      
+                </td> -->
+                <td class="text-right">
+  
+                  <a [routerLink]="['/addpstock',data.id,data.prodtype,this.id]" data-toggle="tooltip" title="Add In Product Stock"
+                    *ngIf="userRole !=='MARKETING'">
+                    <button class="btn btn-default btn-sm">
+                      <span class="glyphicon glyphicon-plus"></span>
+                    </button>
+                  </a>
+                  <!-- <a [routerLink]="['/managepstock',data.name, data.id ,data.prodtype,this.id]" data-toggle="tooltip"
+                    title="Manage Product Stock">
+                    <button class="btn btn-info btn-sm">
+                      <span class="glyphicon glyphicon-th-list"></span>
+                    </button>
+                  </a> -->
+                
+                  <a [routerLink]="['/detailproduct',data.id]">
+                    <button class="btn btn-primary btn-sm" title="Product Details">
+                      <span class="glyphicon glyphicon-info-sign"></span>
+                    </button>
+                  </a>
+                
+                </td>
+                 
+             
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="21">
+                    <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+           
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+<!-- branch broadcast -->
+<div class="col-md-12 col-sm-12 col-xs-12 text-capitalize" *ngIf="this.route.url === '/branch_broadcast'">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        Branch Broadcast List
+        <a [routerLink]="['/managebranch']"  title="Manage Branch" class="pull-right" *ngIf="(this.userType ==='BRANCH') && (this.userRole ==='SUPERADMIN') ">
+          <span class="glyphicon glyphicon-th-list"></span>
+        </a>
+      </div>
+
+      <!-- <ul  class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#stockadded" id="a">Added Stock</a></li>
+        <li><a data-toggle="tab" href="#notadded" id="b">Stock Not Added</a></li>
+      </ul> -->
+      <div class="tab-content">
+        <div id="stockadded" class="tab-pane fade in active">
+          <div class="panel-body">
+            <div class="table-responsive">
+              <table class="table table-condensed table-striped table-bordered"
+                 [mfData]="data | dataFilterPr : filterQuery:'branchbrodcast'" #mf="mfDataTable" [mfRowsOnPage]="rowsOnPage"
+                 [(mfSortBy)]="Role" [(mfSortOrder)]="sortOrder">
+           
+                <thead>
+                  <tr>
+                   <th colspan="10">
+                     <div id="custom-search-input">
+                      <div class="col-sm-12">
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                           <div class="form-group" >
+                              <label for="gender"> Actions :</label>
+                              &nbsp;
+                              <!-- <input type="radio" value="Customdate"  [(ngModel)]="prodtypeselect"  name="prodtypeselect" > Product Type &nbsp; -->
+                              <button  class="btn btn-success animated flipInX" *ngIf="!this.empmails[0]" (click)="sendsmstoall()">
+                                 Send SMS to All Branch ?
+                              </button>
+                              &nbsp;&nbsp;
+                              <button type="submit" *ngIf="this.empmails[0]" class="btn btn-success animated flipInX" (click)="showpopup()">Send SMS to Selected Branchs</button> 
+                           </div>
+                        </div>                        
+                      </div>
+                     </div>
+                   </th>
+                  </tr>
+
+                  <tr>
+                   <!-- <th><input type="checkbox" (click)="checkall()"  value="employees" style="width: 25px;height:20px"></th> -->
+                   <th>Select</th>               
+                   <th>Branch Name</th>
+                   <th>Phone Number</th>         
+                  </tr>
+
+                  <tr>
+                     <th colspan="18">
+                       <div id="custom-search-input">
+                        <div class="input-group col-md-12">
+                           <input type="text" class="form-control" placeholder="Search by name or mobile"[(ngModel)]="filterQuery" />
+                           <span class="input-group-btn">
+                             <button class="btn btn-danger btn-sm" type="button">
+                               <span class=" glyphicon glyphicon-search"></span>
+                             </button>
+                           </span>
+                        </div>
+                       </div>
+                     </th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <tr *ngFor="let data of mf.data; let i = index; let last = last;">
+                     <td><input type="checkbox" id="myText"  value="employees" (click)="deleteNewsList(i,data.mobile,data.name)" style="width: 25px;height:20px"></td>    
+                     <td>{{data?.name}}</td>
+                     <td>{{data?.phone}}</td>           
+                  </tr>
+                </tbody>
+
+                <tfoot>
+                  <tr>
+                    <td colspan="21">
+                      <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                    </td>
+                  </tr>
+                </tfoot>
+               </table>  
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+<div id="id01" class="w3-modal">
+    <div class="w3-modal-content w3-animate-top w3-card-4">
+      <header class="w3-container w3-teal" style="background-color: #58427fc9!important;">
+        <span onclick="document.getElementById('id01').style.display='none'"
+        class="w3-button w3-display-topright">&times;</span>
+        <h4>Send SMS</h4>
+      </header>
+
+      <form class="w3-container w3-card-4 w3-light-grey">
+        <!-- <h2></h2> -->
+        <!-- <p>Use any of the w3-round classes to create rounded borders.</p> -->
+  
+        <p>
+          <label>To </label>
+          <input class="w3-input w3-border w3-round-large" readonly name="vendlistname" [(ngModel)]="vendlistname" type="text">         
+        </p>
+     
+        <p>
+           <label>Type </label>
+           <!-- <input 
+            class="w3-input w3-border w3-round-large" readonly name="message.type" [(ngModel)]="message.type" type="text"> -->
+           <select  class="w3-input w3-border w3-round-large" name="message.DCS" [(ngModel)]="message.DCS" >
+            <option value="0">English</option>
+            <option value="8">Hindi</option>
+           </select>
+        </p>
+  
+        <p>
+        <label>Type your message</label>
+        <textarea style="width: 868px;height: 197px;"
+        class="w3-input w3-border w3-round-large" maxlength="160" name="messagebody" placeholder="Maximum 160 Characters" [(ngModel)]="message.message">
+          </textarea>
+        </p>
+      
+        <button class="w3-btn w3-blue-grey" (click)="sendmail()">Submit</button>
+        <br>
+      </form>
+    </div>
+</div>
+ 
+<div id="id02" class="w3-modal">
+    <div class="w3-modal-content w3-animate-top w3-card-4">
+      <header class="w3-container w3-teal" style="background-color: #58427fc9!important;">
+        <span (click)="crossbutton()" class="w3-button w3-display-topright">&times;</span>
+        <h4>Send SMS</h4>
+      </header>
+
+      <form class="w3-container w3-card-4 w3-light-grey">
+        <!-- <h2></h2> -->
+        <!-- <p>Use any of the w3-round classes to create rounded borders.</p> -->
+  
+        <p>
+          <label>To </label>
+          <input class="w3-input w3-border w3-round-large" readonly name="vendlistname" [(ngModel)]="vendlistname" type="text">         
+        </p>
+
+        <p>
+          <label>Type </label>
+            <!-- <input 
+            class="w3-input w3-border w3-round-large" readonly name="message.type" [(ngModel)]="message.type" type="text"> -->
+          <select  class="w3-input w3-border w3-round-large" name="message.DCS" [(ngModel)]="message.DCS" >
+            <option value="0">English</option>
+            <option value="8">Hindi</option>
+          </select>
+        </p>
+  
+        <p>
+          <label>Type your message</label>
+          <textarea style="width: 868px;height: 197px;"
+            class="w3-input w3-border w3-round-large" maxlength="160" name="messagebody" placeholder="Maximum 160 Characters" [(ngModel)]="message.message">
+          </textarea>
+        </p>
+      
+        <button class="w3-btn w3-blue-grey" (click)="sendmail()">Submit</button>
+        <br>
+      </form>
+    </div>
+</div>

@@ -1,0 +1,27 @@
+.loader {
+    border: 16px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 16px solid blue;
+    border-bottom: 16px solid blue;
+    width: 120px;
+    height: 120px;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+  
+    margin-top: 100px;
+    margin-left: 40%;
+  }
+  
+  a:hover {
+    cursor:pointer;
+   }
+   
+.btn-sm, .btn-group-sm>.btn {
+  padding: 5px 10px;
+  font-size: 8px;
+  line-height: 1.5;
+  border-radius: 3px;
+}
+.table-bordered>thead>tr>th, .table-bordered>tbody>tr>th, .table-bordered>tfoot>tr>th, .table-bordered>thead>tr>td, .table-bordered>tbody>tr>td, .table-bordered>tfoot>tr>td {
+  border: 1px solid #adabab;
+}

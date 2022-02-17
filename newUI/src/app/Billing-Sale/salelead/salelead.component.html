@@ -1,0 +1,393 @@
+<button id="openModalButton" [hidden]="true" data-toggle="modal" data-target="#csvImport">Open Modal</button>
+<div id="csvImport" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Imported File {{csvName}}</h4>
+      </div>
+      <div class="modal-body">
+        <table class="table table-condensed table-sm" style="font-size:10px;">
+          <tr>
+            <th>Name</th>
+            <th>Status</th>
+            <th>Error</th>
+          </tr>
+          <tr>
+            <td>
+              <div *ngFor="let name of name"> {{name}}</div>
+            </td>
+            <td>
+              <div *ngFor="let status of status"> {{status}}</div>
+            </td>
+            <td>
+              <div *ngFor="let error of error"> {{error}}</div>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div [hidden]="isManageState" class="col-md-12 col-sm-12 col-xs-12 text-capitalize">
+  <div class="panel panel-default" *ngIf="!detailFlag">
+    <div class="panel panel-default">
+      <div class="panel-heading"> {{title}}
+        <div class="pull-right">
+          <a [routerLink]="['/managesalelead']" title="Manage Inquiry" class="pull-right">
+            <span class="glyphicon glyphicon-th-list"></span>
+          </a> &nbsp;
+          <!-- <span class="glyphicon glyphicon-import alert-info" title="Import SheetCount"
+            (click)="import_client()"></span>&nbsp; -->
+        </div>
+      </div>
+      <div class="panel-body" *ngIf="tab1">
+        <form #form1="ngForm">
+          <!-- <div *ngIf="showImport" class="well">
+            <div *ngIf="showImport">
+              <div class="form-group">
+                <label>Select CSV :</label>
+                <input type="file" (change)="fileEvent1($event)" name="document" [(ngModel)]="csvFile" />
+              </div>
+              <div class="form-group">
+                <button type="button" class="btn btn-default" (click)="import_cancel()">Cancel</button>
+                <button type="button" class="btn btn-default" (click)="uploadfile1()">Upload</button>
+              </div>
+            </div>
+          </div> -->
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="name"> Product Name: </label>
+              <select *ngIf="!isUpdate" class="form-control" name="prodname" required [(ngModel)]="salelead.product"
+                (change)="pasprodname($event)">
+                <option required *ngFor="let dep of prodlist; let i=index" [value]="dep.id">{{dep.name}}</option>
+              </select>
+              <input *ngIf="isUpdate" readonly type="text" class="form-control" id="prodname" name="prodname"
+                [(ngModel)]="salelead.prodname" />
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="numofprods"> Number of Products:</label>
+              <input type="number" *ngIf="!isUpdate" class="form-control" name="numofprods"
+                [(ngModel)]="salelead.numofprods">
+              <input type="number" *ngIf="isUpdate" class="form-control" name="numofprods"
+                [(ngModel)]="salelead.numofprods" readonly>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="companyname"> Company Name:
+              </label>
+              <input type="text" *ngIf="!isUpdate" class="form-control" required name="companyname"
+                [(ngModel)]="salelead.companyname">
+              <input type="text" *ngIf="isUpdate" class="form-control" required name="companyname"
+                [(ngModel)]="salelead.companyname">
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="contactperson">Contact Person:
+              </label>
+              <input type="text" *ngIf="!isUpdate" class="form-control" name="contactperson"
+                [(ngModel)]="salelead.contactperson">
+              <input type="text" *ngIf="isUpdate" class="form-control" name="contactperson"
+                [(ngModel)]="salelead.contactperson">
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="designation">Designation: </label>
+              <input type="text" class="form-control" id="designation" name="designation"
+                [(ngModel)]="salelead.designation" />
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group" *ngIf="!isUpdate">
+              <label for="email">E-mail Id:</label>
+              <input type="email" class="form-control" id="email" name="email" [(ngModel)]="salelead.email"
+                pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" />
+            </div>
+            <div class="form-group" *ngIf="isUpdate">
+              <label for="email">E-mail Id:</label>
+              <input type="email" class="form-control" id="email" name="email" [(ngModel)]="salelead.email"
+                pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" />
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="mobile">Mobile:</label>
+              <input type="number" class="form-control" id="mobile" name="mobile" pattern="[0-9]{10}"
+                [(ngModel)]="salelead.mobile" />
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="line1">Address Line 1 : </label>
+              <input type="text" *ngIf="!isUpdate" class="form-control" id="line1" name="line1" required
+                [(ngModel)]="salelead.address.line1" />
+              <input type="text" *ngIf="isUpdate" readonly class="form-control" id="line1" name="line1" required
+                [(ngModel)]="salelead.address.line1" />
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="line2">Area</label>
+              <input type="text" *ngIf="!isUpdate" class="form-control" id="area" name="area"
+                [(ngModel)]="salelead.address.line2" />
+              <input type="text" *ngIf="isUpdate" readonly class="form-control" id="area" name="area"
+                [(ngModel)]="salelead.address.line2" />
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="pincode">Pin-Code: </label>
+              <input type="number" *ngIf="!isUpdate" class="form-control" id="pincode" name="pincode" required
+                [(ngModel)]="salelead.address.pincode" />
+              <input type="number" *ngIf="isUpdate" readonly class="form-control" id="pincode" name="pincode" required
+                [(ngModel)]="salelead.address.pincode" />
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="city">City:</label>
+              <input type="text" *ngIf="!isUpdate" class="form-control" name="citiName" required
+                [(ngModel)]="salelead.address.city" />
+              <input type="text" *ngIf="isUpdate" readonly class="form-control" name="citiName" required
+                [(ngModel)]="salelead.address.city" />
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="states">State: </label>
+              <input type="text" *ngIf="!isUpdate" class="form-control" name="states" required
+                [(ngModel)]="salelead.address.states" />
+              <input type="text" *ngIf="isUpdate" readonly class="form-control" name="states" required
+                [(ngModel)]="salelead.address.states" />
+            </div>
+          </div>
+
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="status">Status
+              </label>
+              <select class="form-control" name="status" *ngIf="!isUpdate" [(ngModel)]="salelead.status">
+                <option value="BOOKED">BOOKED</option>
+                <option value="SOLD">SOLD</option>
+              </select>
+              <select class="form-control" name="status" *ngIf="isUpdate" disabled [(ngModel)]="salelead.status">
+                <option value="BOOKED">BOOKED</option>
+                <option value="SOLD">SOLD</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+              <label for="remark"> Remark:
+              </label>
+              <input type="text" *ngIf="!isUpdate" class="form-control" name="remark" [(ngModel)]="salelead.remark">
+              <input type="text" *ngIf="isUpdate" class="form-control" name="remark" [(ngModel)]="salelead.remark">
+            </div>
+          </div>
+          <!-- <div class="col-md-12">
+            <div class="form-group">
+              <button *ngIf="this.url == '/addproduct'" type="submit" [disabled]="!form1.valid" class="btn btn-default"
+                (click)="submitData()">Next</button>
+            </div>
+          </div> -->
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="col-md-12 col-sm-12 col-xs-12 ">
+              <div class="form-group">
+                <button *ngIf="!isUpdate" type="submit" [disabled]="!form1.valid" class="btn btn-default"
+                  (click)="submitData()">Submit</button>
+                <button *ngIf="isUpdate" type="submit" [disabled]="!form1.valid" class="btn btn-default"
+                  (click)="updateData()">Update</button>
+                <button type="button" class="btn btn-default" (click)="cancel()">Cancel</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel panel-default" *ngIf="detailFlag">
+    <div class="panel-heading">
+      <div class="clearfix">
+        <div class="pull-left"> {{title}}</div>
+        <div class="container" class="pull-right">
+          <div class="row">
+            <a [routerLink]="['/managesalelead']" title="Manage Inquiry" class="btn btn-info btn-sm a-btn-slide-text">
+              <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+            </a>
+
+            <a [routerLink]="['/editsalelead', id]" title="Update Inquiry" class="btn btn-info btn-sm a-btn-slide-text">
+              <i class="glyphicon glyphicon-edit"></i>
+            </a>
+            <!-- <a class="btn btn-danger a-btn-slide-text btn-sm" title="Delete Inquiry" (click)="deleteslead(data.id)">
+              <span class="glyphicon glyphicon-remove-circle"></span>
+            </a> -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="panel-body">
+      <form #form1="ngForm">
+        <div class="col-md-12 col-sm-12 col-xs-12 img-thumbnail ">
+          <div class="col-sm-12">
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="prodname">Product Name: {{salelead?.prodname}}
+                </label>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="companyname">GST Type :&nbsp;{{salelead.companyname}}
+                </label>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="contactperson"> Contact Person :&nbsp;{{salelead.contactperson}}
+                </label>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="designation"> Designation :&nbsp;{{salelead.designation}}
+                </label>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="email"> E-mail :&nbsp;{{salelead.email}}
+                </label>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="status"> Status :&nbsp;{{salelead.status}}
+                </label>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="mobile"> Mobile No. :&nbsp;{{salelead.mobile}}
+                </label>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="remark"> Remark :&nbsp;{{salelead.remark}}
+                </label>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div [hidden]="!isManageState" class="col-md-12 col-sm-12 col-xs-12">
+  <div class="panel panel-default">
+    <div class="panel-heading">{{title}}
+      <a [routerLink]="['/addsalelead']" title="Add Inquiry" class="pull-right">
+        <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+      </a>
+      
+    </div>
+    <div class="panel-body">
+      <div class="table-responsive">
+        <!-- <table class="table table-condensed table-striped table-bordered" 
+        [mfData]="data | dataFilterPr : filterQuery: 'fsalelead'" #mf="mfDataTable" [mfRowsOnPage]="rowsOnPage" 
+        [(mfSortBy)]="Role" [(mfSortOrder)]="sortOrder">
+          <thead>
+            <tr>
+              <th>SN</th>
+              <th>
+                <mfDefaultSorter by="role">Product Name</mfDefaultSorter>
+              </th>
+              
+              <th>Company Name</th>
+              <th>Contact Person</th>
+              <th>Designation</th>
+              <th>E-mail</th>
+              <th>Mobile</th>
+              <th>Status</th>
+              <th>Remark</th>
+              <th>Action</th>
+            </tr>
+            <tr>
+              <th colspan="16">
+                <div id="custom-search-input">
+                  <div class="input-group col-md-12">
+                    <input type="text" class="form-control" placeholder="Search by Product name or remark"
+                      [(ngModel)]="filterQuery" />
+                    <span class="input-group-btn">
+                      <button class="btn btn-danger btn-sm" type="button">
+                        <span class=" glyphicon glyphicon-search"></span>
+                      </button>
+                    </span>
+                  </div>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of mf.data; let i = index; let last = last;"
+              [ngStyle]="data.reorderlevel<=data.unitsinstock?{'background-color':'none'} : {'background-color': 'rgb(245, 194, 194)'}">
+              <td>{{i+1}}</td>
+              <td>{{data?.prodname}}</td>
+              <td>{{data?.companyname}}</td>
+              <td>{{data?.contactperson}}</td>
+              <td>{{data?.designation}}</td>
+              <td>{{data?.email}}</td>
+              <td>{{data?.mobile}}</td>
+              <td>{{data?.status}}</td>
+              <td>{{data?.remark}}</td>
+
+              <td>
+                
+                <a [routerLink]="['/addfollowup/',data.id]" data-toggle="tooltip" title="Add Follow-Up">
+                  <button class="btn btn-success btn-sm">
+                    <span class="glyphicon glyphicon-briefcase"></span>
+                  </button>
+                </a>
+                <a [routerLink]="['/editsalelead/',data.id]" data-toggle="tooltip" title="Update Inquiry">
+                  <button class="btn btn-default btn-sm">
+                    <span class="glyphicon glyphicon-edit"></span>
+                  </button>
+                </a>
+                <a [routerLink]="['/detailsalelead/',data.id]">
+                  <button class="btn btn-info btn-sm" title="Inquiry Details">
+                    <span class="glyphicon glyphicon-info-sign"></span>
+                  </button>
+                </a>
+                
+
+              </td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="20">
+                <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+              </td>
+            </tr>
+          </tfoot>
+        </table> -->
+        <div class="col-sm-12 ">
+          <strong> Note: Rows with red color indicates low stock</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

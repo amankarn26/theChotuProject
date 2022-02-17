@@ -1,0 +1,263 @@
+<div class="panel panel-default slideLeft" *ngIf="flag">
+  <div class="panel-heading">
+    <div class="clearfix">
+      <div class="pull-left"> {{title}}</div>
+      <div class="container" class="pull-right">
+        <div class="row">
+          <!-- <a [routerLink]="['/addrole']" class="btn btn-primary a-btn-slide-text" title="Add Role">
+                      <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                      <span></span>
+                  </a>
+                <a href="#" class="btn btn-default a-btn-slide-text" title="Edit">
+                      <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                      <span></span>
+                  </a>
+                <a href="#" class="btn btn-info a-btn-slide-text" title="View">
+                      <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+                      <span></span>
+                  </a>
+                <a href="#" class="btn btn-danger a-btn-slide-text" title="Delete">
+                      <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                      <span></span>
+                  </a>-->
+          <a [routerLink]="['/managecallblock']" title="Manage speech" class="btn btn-info a-btn-slide-text">
+            <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="panel-body">
+    <form #fname="ngForm">
+     
+      <div class="col-sm-6">
+        <div class="form-group">
+            <label for="requestedby">Block Requested By:  </label>
+            <select required *ngIf="!isUpdate"  class="form-control"  id="requestedby" name="requestedby" [(ngModel)]="blockcall.requestedby" (change)="onChangeRM($event)">
+              <option *ngFor="let data of rmList; let i=index" [value]="data.id">{{data.name}}</option>
+            </select>
+
+            <input *ngIf="isUpdate" readonly type="text"  class="form-control" id="requestedby" name="requestedby" [(ngModel)]="blockcall.reqbyname"
+            />
+           
+        
+          </div>
+      </div>
+  
+  
+     <div class="col-sm-6">
+      <div class="form-group">
+          <label for="call">Customer Name  </label>
+          <select *ngIf="!isUpdate" required class="form-control" id="customer" name="customer" [(ngModel)]="blockcall.customer" (change)="onChangecustomer($event)">
+            <option *ngFor="let data of custListbyrm; let i=index" [value]="data.id">{{data.name}}</option>
+          </select>
+         
+          
+          <input *ngIf="isUpdate" readonly type="text"  class="form-control " id="customer" name="customer" [(ngModel)]="blockcall.customer"
+          />
+        </div>
+     </div>
+     <div class="col-sm-6">
+      <div class="form-group">
+          <label for="call">Head  </label>
+          <input *ngIf="!isUpdate" required type="text"  class="form-control " id="head" name="head" [(ngModel)]="blockcall.head"
+          />
+          <input *ngIf="isUpdate" readonly type="text"  class="form-control " id="customer" name="customer" [(ngModel)]="blockcall.head"
+          />
+        </div>
+     </div>
+     <div class="col-sm-6">
+      <div class="form-group">
+          <label for="blockreason">Block Reason  </label>
+          <textarea *ngIf="!isUpdate" required type="text"  class="form-control" id="blockreason" name="blockreason" [(ngModel)]="blockcall.blockreason"
+          ></textarea>
+          <textarea *ngIf="isUpdate" readonly type="text"  class="form-control" id="blockreason" name="blockreason" [(ngModel)]="blockcall.blockreason"
+          ></textarea>
+         
+        </div>
+     </div>
+     <div class="col-sm-6">
+      <div class="form-group">
+          <label for="rejectreason">Reject Reason</label>
+          <textarea  required type="text"  class="form-control" id="rejectreason" name="rejectreason" [(ngModel)]="blockcall.rejectreason"
+          ></textarea>
+         
+        </div>
+     </div>
+     <div class="col-sm-6">
+      <div class="form-group">
+          <label for="call">State</label>
+          <select  required class="form-control" id="state" name="state" [(ngModel)]="blockcall.state" >
+            <option value="REQUESTED">REQUESTED</option>
+            <option value="APPROVED">APPROVED</option>
+            <option value="REJECTED">REJECTED</option>
+
+          </select>
+         
+        </div>
+     </div>
+      <div class="col-md-12">
+        <div class="form-group">
+          <button *ngIf="!isUpdate" type="submit" class="btn btn-default" [disabled]="!fname.valid" (click)="submitData()">Submit</button>
+          <button *ngIf="isUpdate" type="submit" class="btn btn-default" [disabled]="!fname.valid" (click)="updateData()">Update</button>
+          <button type="button" class="btn btn-default" (click)="cancel()">Cancel</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="panel panel-default slideLeft" *ngIf="!flag">
+  <div class="panel-heading">
+    <div class="clearfix">
+      <div class="pull-left"> {{title}}</div>
+      <div class="container" class="pull-right">
+        <div class="row">
+          <a [routerLink]="['/addcallblock']" class="btn btn-primary a-btn-slide-text" title="Add Call Block">
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+            <span></span>
+          </a>
+        <!--   <a href="#" class="btn btn-default a-btn-slide-text" title="Edit">
+            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+            <span></span>
+          </a>
+          <a href="#" class="btn btn-info a-btn-slide-text" title="View">
+            <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+            <span></span>
+          </a>
+          <a href="#" class="btn btn-danger a-btn-slide-text" title="Delete">
+            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+            <span></span>
+          </a> -->
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="panel-body">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+      <div class="table-responsive">
+        <table class="table table-condensed table-striped table-bordered" [mfData]="data | dataFilterPr : filterQuery" #mf="mfDataTable"
+          [mfRowsOnPage]="rowsOnPage"  >
+          <thead>
+            <tr>
+              <th>SN</th>
+              <th>
+                <mfDefaultSorter by="custname">Customer</mfDefaultSorter>
+              </th>
+              <th>Requested By</th>
+              <th>Head</th>
+              <th>Block Reason</th>
+              <th>Reject Reason</th>
+              <th>Requested</th>
+
+              <!--  <th>First Name</th>
+                    <th>Last Name</th> -->
+              <th class="text-right">Action</th>
+            </tr>
+            <tr>
+              <th colspan="14">
+                <div id="custom-search-input">
+                  <div class="input-group col-md-12">
+                    <input type="text" class="form-control" placeholder="Search" [(ngModel)]="filterQuery" />
+                    <span class="input-group-btn">
+                      <button class="btn btn-danger" type="button">
+                        <span class=" glyphicon glyphicon-search"></span>
+                      </button>
+                    </span>
+                  </div>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of mf.data; let i = index; let last = last;">
+              <td>{{i+1}}</td>
+              <td>{{data.custname}}</td>
+              <td>{{data.reqbyname}}</td>
+              <td>{{data.head}}</td>
+              <td>{{data.blockreason}}</td>
+              <td>{{data.rejectreason}}</td>
+
+              <td>{{data.state}}</td>
+
+
+
+              <td class="text-right">
+
+                <button *ngIf="data.state === 'REQUESTED'" class="btn btn-success btn-sm" title="Approve Request"
+                (click)="deletecustomer(data)">
+                 <span class="glyphicon glyphicon-ok"></span>
+               </button>
+               <!-- <button *ngIf="data.state === 'REQUESTED'" class="btn btn-warning btn-sm" data-toggle="modal"  id="openModalButton1"  data-target="#csvImport" title="Reject Request"
+               (change)="setreason(data)">
+                 <span class="glyphicon glyphicon-thumbs-down"></span>
+               </button> -->
+
+               <button *ngIf="data.state === 'REQUESTED'" class="btn btn-warning btn-sm"     title="Reject Request"
+               (click)="setreason(data)">
+                 <span class="glyphicon glyphicon-thumbs-down"></span>
+               </button>
+
+
+
+               <button disabled *ngIf="data.state === 'APPROVED'||data.state === 'REJECTED' " class="btn btn-success btn-sm" title="Approve Request"
+               (click)="approveReimburse(data)">
+                <span class="glyphicon glyphicon-ok"></span>
+              </button>
+              <button disabled *ngIf="data.state === 'APPROVED'||data.state === 'REJECTED'" class="btn btn-warning btn-sm" title="Reject Request"
+                (click)="approveReimburse1(data)">
+                <span class="glyphicon glyphicon-thumbs-down"></span>
+              </button>
+                <a [routerLink]="['/updatecallblock', data.id]" class="btn btn-default" title="Update Call Block" >
+                      <span class="glyphicon glyphicon-edit"></span>
+                </a>
+                <a class="btn btn-danger a-btn-slide-text" title="Delete Request" (click)="deletecustomer(data.id)">
+                  <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                  <span></span>
+                </a>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="14">
+                <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<button id="openModalButton1" [hidden]="true" data-toggle="modal" data-target="#csvImport">Open Modal</button>
+
+<div id="csvImport" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title pull-left">Reason for Rejection</h4>
+        </div>
+        <div class="modal-body">
+      
+            <div class=" col-md-12 ">
+                <div class="form-group">
+                  <label for="comments" class=" pull-left">Please Give Reason to reject the Call Block Requests</label>
+                  <textarea type="text" maxlength="510" placeholder="Maximum 510 characters" mutiline class="form-control" id="rejectreason" name="rejectreason"
+                    [(ngModel)]="rejectreason">
+                    </textarea>
+                </div>
+              </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default"  data-dismiss="modal" (click)="approveReimburse1(data)">Submit</button>
+        </div>
+      </div>
+    </div>
+</div>

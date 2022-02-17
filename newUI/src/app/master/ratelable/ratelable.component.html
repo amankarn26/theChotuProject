@@ -1,0 +1,255 @@
+<!-- <button id="openModalButton" [hidden]="true" data-toggle="modal" data-target="#csvImport">Open Modal</button> -->
+<!-- <div id="csvImport" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Imported File {{csvName}}</h4>
+      </div>
+      <div class="modal-body">
+        <table class="table table-condensed table-sm" style="font-size:10px;">
+          <tr>
+            <th>Name</th>
+            <th>Status</th>
+            <th>Error</th>
+          </tr>
+          <tr>
+            <td>
+              <div *ngFor="let name of name"> {{name}}</div>
+            </td>
+            <td>
+              <div *ngFor="let status of status"> {{status}}</div>
+            </td>
+            <td>
+              <div *ngFor="let error of error"> {{error}}</div>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div> -->
+<!-- <div class="row">
+    <div class="col-md-12">
+      <h2>{{title}}</h2>
+
+    </div>
+  </div>
+  <hr /> -->
+
+  <div [hidden]="isManageState" class="col-md-12 col-sm-12 col-xs-12 text-capitalize">
+
+    <div class="panel panel-default" *ngIf="!detailFlag">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          {{title}}
+          <a [routerLink]="['/manageratelabel']" title="Manage RateLabel" class="pull-right">
+            <span class="glyphicon glyphicon-th-list"></span>
+          </a>
+        </div>
+        <div class="panel-body" *ngIf="tab1">
+           <form #form1="ngForm" >
+
+
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="label"> Label:
+                </label>
+                <input type="text" *ngIf="!isUpdate" class="form-control"  name="label" required [(ngModel)]="ratelabel.label">
+                <input type="text" *ngIf="isUpdate" readonly  class="form-control"  name="label" required [(ngModel)]="ratelabel.label" >
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="description"> Description:
+                </label>
+                <input type="text" *ngIf="!isUpdate" class="form-control" name="description" [(ngModel)]="ratelabel.description">
+                <input type="text" *ngIf="isUpdate"  class="form-control" name="description" [(ngModel)]="ratelabel.description">
+
+              </div>
+            </div>
+
+            <div class="col-md-12">
+              <div class="form-group">
+                <button *ngIf="this.url == '/addratelabel'" type="submit" [disabled]="!form1.valid" class="btn btn-default" (click)="submitData()">Submit</button>
+                <button *ngIf="this.url == '/editratelabel/' + this.id" type="submit" [disabled]="!form1.valid" class="btn btn-default" (click)="updateData()">Update</button>
+               <button type="button" class="btn btn-default" (click)="cancel()">Cancel</button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="panel panel-default" *ngIf="detailFlag">
+      <div class="panel-heading">
+        <div class="clearfix">
+          <div class="pull-left"> {{title}}</div>
+          <div class="container" class="pull-right">
+            <div class="row">
+              <a [routerLink]="['/manageratelabel']" title="Manage RateLabel" class="btn btn-info btn-sm a-btn-slide-text">
+                <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+              </a>
+
+              <a [routerLink]="['/editratelabel', id]" title="Update RateLabel" class="btn btn-info btn-sm a-btn-slide-text">
+
+                <i class="glyphicon glyphicon-edit"></i>
+
+              </a>
+              <a class="btn btn-danger a-btn-slide-text btn-sm"  title="Delete RateLabel"   (click)="deleteRole(id)">
+                <span class="glyphicon glyphicon-remove-circle"></span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="panel-body">
+
+        <form #form1="ngForm">
+          <div class="col-md-12 col-sm-12 col-xs-12 ">
+
+            <!-- <div class="col-md-12 col-sm-12 col-xs-12">
+              <h4>RateLabel Details:</h4>
+            </div> -->
+
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="form-group">
+                  <label for="label">Label: {{ratelabel.label}}</label>
+                </div>
+              </div>
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="form-group">
+                  <label for="description">Description: {{ratelabel.description}}
+                  </label>
+                </div>
+              </div>
+
+              <!-- <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-group">
+                  <label for="gstno">gstno:&nbsp;{{vendor.gstno}}
+                  </label>
+                </div>
+              </div> -->
+            </div>
+          </div>
+
+
+
+
+
+        </form>
+
+      </div>
+    </div>
+
+
+  </div>
+
+  <div [hidden]="!isManageState" class="col-md-12 col-sm-12 col-xs-12 ">
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        {{title}}
+
+        &nbsp;
+
+        <div class="pull-right">
+        <a [routerLink]="['/addratelabel']"  title="Add RateLabel" >
+      <span class="glyphicon glyphicon-plus-sign"></span>
+        </a>      &nbsp;&nbsp;
+
+        <!-- <span class="glyphicon glyphicon-import alert-info" title="Import Rate Lables"
+        (click)="import_client()"></span>&nbsp;&nbsp; -->
+
+       </div>
+      </div>
+      <div class="panel-body">
+
+          <!-- <div *ngIf="showImport" class="well">
+              <div *ngIf="showImport">
+                <div class="form-group">
+                  <label>Select CSV :</label>
+                  <input type="file" (change)="fileEvent1($event)" name="document" [(ngModel)]="csvFile" />
+                </div>
+                <div class="form-group">
+                  <button type="button" class="btn btn-default" (click)="import_cancel()">Cancel</button>
+                  <button type="button" class="btn btn-default" (click)="uploadfile1()">Upload</button>
+                </div>
+              </div>
+            </div> -->
+        <div class="table-responsive">
+          <!-- <table class="table table-condensed table-striped table-bordered" [mfData]="data | dataFilterPr : filterQuery:'ratelabel'" #mf="mfDataTable"
+            [mfRowsOnPage]="rowsOnPage" [(mfSortBy)]="Role" [(mfSortOrder)]="sortOrder">
+
+            <thead>
+              <tr>
+                <th>SN</th>
+                <th>
+                  <mfDefaultSorter by="role">Label</mfDefaultSorter>
+                </th>
+                <th>Description</th>
+                <th class="text-right">Action</th>
+
+              </tr>
+              <tr>
+                <th colspan="12">
+                  <div id="custom-search-input">
+                    <div class="input-group col-sm-12">
+                      <input type="text" class="form-control" placeholder="Search by name" [(ngModel)]="filterQuery" />
+                      <span class="input-group-btn">
+                        <button class="btn btn-danger btn-sm" type="button">
+                          <span class=" glyphicon glyphicon-search"></span>
+                        </button>
+                      </span>
+                    </div>
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of mf.data; let i = index; let last = last;">
+                <td>{{i+1}}</td>
+                <td>{{data?.label}}</td>
+                <td>{{data?.description}}</td>
+
+
+                <td class="text-right">
+                  <a  [routerLink]="['/editratelabel/',data.id]" data-toggle="tooltip" title="Update RateLabel" *ngIf="userType == 'ADMIN'">
+                    <button  class="btn btn-default btn-sm">
+                      <span class="glyphicon glyphicon-edit"></span>
+                    </button>
+                  </a>
+
+                  <a [routerLink]="['/detailratelabel',data.id]">
+                    <button class="btn btn-info btn-sm" title="RateLabel Details">
+                      <span class="glyphicon glyphicon-info-sign"></span>
+                    </button>
+                  </a>
+
+                  <button *ngIf="userType == 'ADMIN'" class="btn btn-danger btn-sm" title="Delete RateLabel" (click)="deleteRole(data.id)">
+                    <span class="glyphicon glyphicon-remove-circle"></span>
+                  </button>
+                  <button *ngIf="userType !== 'ADMIN'" disabled class="btn btn-danger btn-sm" title="Contact admin for functionality" (click)="deleteRole(data.role)">
+                    <span class="glyphicon glyphicon-remove-circle"></span>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="11">
+                  <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                </td>
+              </tr>
+            </tfoot>
+          </table> -->
+        </div>
+      </div>
+    </div>
+  </div>

@@ -1,0 +1,1758 @@
+<!-- <div class="row">
+  <div class="col-md-12">
+    <h2>{{title}}</h2>
+
+  </div>
+</div>
+<hr /> -->
+
+<div [hidden]="isManageState" class="col-md-12 col-sm-12 col-xs-12">
+
+  <div class="panel panel-default">
+    <div class="panel-heading thbg">
+      {{title}} For Quote Number :<mark class="bg-yellow"><strong> {{quotenum}}</strong></mark>
+
+      <a [routerLink]="['/managesale']" title="Manage Selling" class="pull-right">
+        <span class="glyphicon glyphicon-th-list"></span>
+      </a>&nbsp; &nbsp;
+      <a style="margin-right: 8px;margin-top: -3.9px;font-size: 11px;" title="Download"
+        *ngIf="this.route.url === '/invoicesell/' + this.id" class="btn btn-info a-btn-slide-text pull-right"
+        (click)="generatePdf()">
+        <i class="glyphicon glyphicon-download-alt"></i>
+      </a>
+    </div>
+    <div class="panel-body" style="padding: 0px;">
+      <form #form1="ngForm" *ngIf="!detailFlag">
+        <div class="col-sm-12 img-thumbnail block">
+          <table class="table table-bordered">
+            <thead>
+              <tr class="thbg">
+                <th *ngIf="this.route.url === '/sale'" class="thbg">Photo</th>
+                <th class="thbg">Stock</th>
+                <th class="thbg">Product</th>
+                <th class="thbg">Description</th>
+                <th class="thbg">Quantity</th>
+                <th class="thbg">Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let pdata of this.productdata; let i = index; let last = last;">
+                <td *ngIf="this.route.url === '/sale'"> <img src="{{docServer}}/{{pdata?.photo}}" alt=""
+                    style="width:50%; height:50px;"></td>
+                <td *ngIf="pdata.prod_stock">
+                  <button class="btn btn-info btn-sm " disabled>
+                    <span class="glyphicon glyphicon-plus"></span>
+                  </button>
+                </td>
+                <td class="quadrat" *ngIf="!pdata.prod_stock " title="Click to add stock">
+                  <button class="btn btn-info btn-sm" (click)="getstockforProduct(pdata, i)">
+                    <span class="glyphicon glyphicon-plus"></span>
+                  </button>
+                </td>
+                <td>{{pdata?.pname}}</td>
+                <td>
+                  <span *ngFor="let item of pdata.properties">
+                    {{item.name}}: {{item.pvalue}}<br>
+                  </span>
+                  <!-- Model:{{pdata?.vmodel}} ,
+                    Colour: {{pdata?.vcolour}}<br>
+                    Chasis No: {{pdata?.chassisnum}}
+                    Engine No: {{pdata?.enginenum}} -->
+                </td>
+                <td>1</td>
+                <td>
+                  Amount : {{pdata?.amount}}<br>
+                  GST Amount : {{pdata?.gstamt}}<br>
+                  Final Amount : {{pdata?.finalamt}}
+                </td>
+              </tr>
+              <tr *ngFor="let sdata of this.sparepartdata; let i = index; let last = last;">
+
+                <td *ngIf="this.route.url === '/sale'">
+                  <img *ngIf="sdata?.photos" src="{{docServer}}/{{sdata?.photos[0]?.docpath}}"
+                    alt="{{docServer}}/{{pdata?.photo}}" style="width:50%; height:50px;">
+                </td>
+                <td class="quadrat" *ngIf="(this.route.url === '/sale/'+this.id)&& sdata.stockids.length===0"
+                  title="Click to add stock">
+                  <button class="btn btn-info btn-sm" *ngIf="sdata.stockids.length===0"
+                    (click)="getstockforSpare(sdata, i)">
+                    <span class="glyphicon glyphicon-plus"></span>
+                  </button>
+                </td>
+                <td *ngIf="(this.route.url === '/sale/'+this.id)&&sdata?.stockids?.length>0">
+                  <button class="btn btn-info btn-sm" *ngIf="sdata?.stockids?.length>0" disabled>
+                    <span class="glyphicon glyphicon-plus"></span>
+                  </button>
+                </td>
+                <td class="quadrat" *ngIf="(this.route.url === '/sale') && !sdata.spare_stock"
+                  title="Sock is not Available">
+                  <!-- <button class="btn btn-info btn-sm" *ngIf="sdata.stockids.length===0"  (click)="getstockforSpare(sdata, i)">
+                          <span class="glyphicon glyphicon-plus"></span>
+                      </button> -->
+                </td>
+                <td *ngIf="(this.route.url === '/sale') && sdata?.spare_stock" title="Sock is Available">
+                  <button class="btn btn-info btn-sm" disabled>
+                    <span class="glyphicon glyphicon-plus"></span>
+                  </button>
+                </td>
+                <!-- <td *ngIf="(this.route.url === '/sale') && sdata?.spare_stock?.length>0" >
+                      <button class="btn btn-info btn-sm" *ngIf="sdata?.stockids?.length>0" disabled>
+                          <span class="glyphicon glyphicon-plus"></span>
+                      </button>
+                  </td> -->
+                <td>
+                  <span *ngIf="sdata?.name"> {{sdata?.name}}</span>
+                  <span *ngIf="sdata?.pname"> {{sdata?.pname}}</span>
+                </td>
+                <td>
+                  <!-- Model:{{sdata?.vmodel}} ,
+                    Colour: {{sdata?.vcolour}}<br>
+                    Chasis No: {{sdata?.chassisnum}}
+                    Engine No: {{sdata?.enginenum}} -->
+                </td>
+                <td>
+                  {{sdata?.qty}}
+                </td>
+                <td>
+                  Amount : {{sdata?.amount}}<br>
+                  GST Amount : {{sdata?.gstamt}}<br>
+                  Final Amount : {{sdata?.finalamt}}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+        </div>
+
+
+        <div class="col-sm-8" style="padding: 0px;">
+          <div class="col-sm-12 img-thumbnail" id="first">
+            <div class="row">
+              <div class=" col-sm-3">
+                <div class="form-group">
+                  <label for="invoicenum">Invoice No.:
+                  </label>
+                  <input *ngIf="!isUpdate" type="text" class="form-control input-sm" id="invoicenum" name="invoicenum"
+                    readonly [(ngModel)]="invoicenum" required (change)="generatepass()" />
+                  <input *ngIf="isUpdate" type="text" class="form-control input-sm" id="invoicenum" name="invoicenum"
+                    readonly [(ngModel)]="invoicenum" required />
+                </div>
+              </div>
+
+              <!-- <div class=" col-sm-3">
+                  <div class="form-group">
+                    <label for="challannumber">Challan No.:
+                    </label>
+                    <input *ngIf="!isUpdate" type="text" class="form-control input-sm" id="challannumber" name="challannumber"
+                      [(ngModel)]="challannumber"  (change)="generatepass()" />
+                    <input *ngIf="isUpdate" type="text" class="form-control input-sm" id="challannumber" name="challannumber"
+                      [(ngModel)]="challannumber"  />
+                  </div>
+                </div> -->
+
+              <div class=" col-sm-3">
+                <div class="form-group">
+                  <label for="bookingdate">Booking Date:
+                  </label>
+                  <input *ngIf="!isUpdate" type="date" class="form-control input-sm input-sm" id="bookingdate"
+                    name="bookingdate" [(ngModel)]="bookingdate" required />
+                  <input *ngIf="isUpdate" type="date" class="form-control input-sm" id="bookingdate" name="bookingdate"
+                    readonly [(ngModel)]="bookingdate" required />
+                </div>
+              </div>
+
+
+
+              <div class=" col-sm-3">
+                <div class="form-group">
+                  <label for="pricetype">Price Type:
+                  </label>
+                  <select class="form-control input-sm" name="pricetype" *ngIf="!isUpdate" required
+                    [(ngModel)]="pricetype">
+                    <option value="RETAIL">RETAIL</option>
+                    <option value="CSD">CSD</option>
+                    <option value="GOVT">GOVT</option>
+                    <option value="INSTITUTIONAL">INSTITUTIONAL</option>
+                    <option value="DGS_D">DGS_D</option>
+                    <option value="NONE">NONE</option>
+                  </select>
+                  <select class="form-control input-sm" name="pricetype" *ngIf="isUpdate" disabled required
+                    [(ngModel)]="pricetype">
+                    <option value="RETAIL">RETAIL</option>
+                    <option value="CSD">CSD</option>
+                    <option value="GOVT">GOVT</option>
+                    <option value="INSTITUTIONAL">INSTITUTIONAL</option>
+                    <option value="DGS_D">DGS_D</option>
+                    <option value="NONE">NONE</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label for="expdelivery"> Expected Delivery:
+                  </label>
+                  <input type="date" class="form-control input-sm" required name="expDelivery"
+                    [(ngModel)]="expdelivery">
+                </div>
+              </div>
+              <!-- <div class=" col-sm-12" >
+                          <div class="form-group">
+                            <label for="salesman">Salesman: </label>
+                            <input *ngIf="isUpdate" readonly class="form-control input-sm" name="primhandler" [(ngModel)]="salesman" />
+                            <select class="form-control input-sm" name="salesman" [(ngModel)]="salesman" required (change)="onChangeHandler1($event)">
+                              <option required *ngFor="let primhandler of empList; let i=index" [value]="primhandler.id">{{primhandler.name}}</option>
+                          </select>
+                          </div>
+                        </div> -->
+
+
+            </div>
+
+
+          </div>
+          <div class="col-sm-12 img-thumbnail" id="secondA">
+
+            <div class="row">
+
+              <div class=" col-sm-3 ">
+                <div class="form-group">
+                  <label for="custstate"> State:
+                  </label>
+                  <input *ngIf="isUpdate" readonly class="form-control input-sm" name="custstate"
+                    [(ngModel)]="custstate" />
+                  <select *ngIf="!isUpdate" class="form-control input-sm" name="custstate" required
+                    [(ngModel)]="custstate" (change)="onChangeState($event)">
+                    <option *ngFor="let state of statelist; let i=index" [value]="state">{{state}}</option>
+                  </select>
+                </div>
+              </div>
+              <div class=" col-sm-3 ">
+                <div class="form-group">
+                  <label for="custcity"> City:
+                  </label>
+                  <input *ngIf="isUpdate" readonly name="custcity" class="form-control input-sm"
+                    [(ngModel)]="custcity" />
+                  <select *ngIf="!isUpdate" (ngModel)="citiName" name="custcity" required class="form-control input-sm"
+                    [(ngModel)]="custcity" (change)="getClienList()">
+                    <option *ngFor="let city of citylist; let i=index" [value]="city">{{city}}</option>
+                  </select>
+                </div>
+              </div>
+
+
+              <div class=" col-sm-3 ">
+                <div class="form-group">
+                  <label for="customer">Customer :
+                  </label>
+                  <input *ngIf="isUpdate" readonly class="form-control input-sm" name="customer1"
+                    [(ngModel)]="customer" />
+                  <select *ngIf="!isUpdate" class="form-control input-sm" name="customer1" [(ngModel)]="customer"
+                    required (change)="onChangeCustomer($event)">
+                    <option required *ngFor="let retailer of clientdata; let i=index" [value]="retailer.id">
+                      {{retailer.name}}</option>
+                  </select>
+                </div>
+              </div>
+
+
+
+              <div class=" col-sm-3 ">
+                <div class="form-group">
+                  <label for="consignee">Consignee :
+                  </label>
+                  <input *ngIf="isUpdate" readonly class="form-control input-sm" name="consignee"
+                    [(ngModel)]="consignee" />
+                  <select *ngIf="!isUpdate" class="form-control input-sm" name="consignee" [(ngModel)]="consignee"
+                    required (change)="onChangeConsignee($event)">
+                    <option required *ngFor="let retailer of clientdata; let i=index" [value]="retailer.id">
+                      {{retailer.name}}</option>
+                  </select>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div class="col-sm-12 img-thumbnail" id="secondB">
+
+            <div class="row">
+              <div class=" col-sm-3 ">
+                <div class="form-group">
+                  <label for="saletype">Sale Type:
+                  </label>
+                  <select class="form-control input-sm" name="saletype" *ngIf="!isUpdate" required
+                    [(ngModel)]="saletype">
+                    <option value="NEW">NEW</option>
+                    <option value="EXCHANGE">EXCHANGE</option>
+                  </select>
+                  <select class="form-control input-sm" name="saletype" *ngIf="isUpdate" disabled required
+                    [(ngModel)]="saletype">
+                    <option value="NEW">NEW</option>
+                    <option value="EXCHANGE">EXCHANGE</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class=" col-sm-3">
+                <div class="form-group">
+                  <label for="hypothecation">Hypothecation:
+                  </label>
+                  <select class="form-control input-sm" name="hypothecation" *ngIf="!isUpdate" required
+                    [(ngModel)]="hypothecation" (change)="onchangeHypo()">
+                    <option value="YES">YES</option>
+                    <option value="NO">NO</option>
+                  </select>
+                  <select class="form-control input-sm" name="hypothecation" *ngIf="isUpdate" disabled required
+                    [(ngModel)]="hypothecation">
+                    <option value="YES">YES</option>
+                    <option value="NO">NO</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="col-sm-3" *ngIf="hypothecation==='YES'">
+                <div class="form-group">
+                  <label for="financename">Financer:
+                  </label>
+                  <input *ngIf="!isUpdate" type="text" class="form-control input-sm" id="financename" name="financename"
+                    [(ngModel)]="financename" required />
+                  <input *ngIf="isUpdate" type="text" class="form-control input-sm" id="financename" name="financename"
+                    [(ngModel)]="financename" required />
+                </div>
+              </div>
+              <div class="col-sm-3" *ngIf="hypothecation==='YES'">
+                <div class="form-group">
+                  <label for="hypothecationcost">Hypothecation Cost:
+                  </label>
+                  <input *ngIf="!isUpdate" type="number" class="form-control input-sm" id="hypothecationcost"
+                    name="hypothecationcost" [(ngModel)]="qcost.hypothecationcost" required (change)="recal()" />
+                  <input *ngIf="isUpdate" type="number" class="form-control input-sm" id="hypothecationcost"
+                    name="hypothecationcost" [(ngModel)]="qcost.hypothecationcost" required (change)="recal()" />
+                </div>
+              </div>
+
+
+              <div class=" col-sm-3">
+                <div class="form-group" style="background: #afe7e7;border-radius: 5px;">
+                  <label for="isexchg">Exchange:
+                  </label>
+                  <select class="form-control input-sm" name="isexchg" *ngIf="!isUpdate" required [(ngModel)]="isexchg"
+                    (change)="onchangeExc()">
+                    <option value="YES">YES</option>
+                    <option value="NO">NO</option>
+                  </select>
+                  <select class="form-control input-sm" name="isexchg" *ngIf="isUpdate" disabled required
+                    [(ngModel)]="isexchg" (change)="onchangeExc()">
+                    <option value="YES">YES</option>
+                    <option value="NO">NO</option>
+                  </select>
+                </div>
+              </div>
+
+
+
+
+              <div class=" col-sm-3" *ngIf="isexchg==='YES'">
+                <div class="form-group" style="background: #afe7e7;border-radius: 5px;">
+                  <label for="model">Model:
+                  </label>
+                  <input *ngIf="!isUpdate" type="text" class="form-control input-sm" id="model" name="model"
+                    [(ngModel)]="exchange.model" required />
+                  <input *ngIf="isUpdate" type="text" class="form-control input-sm" id="model" name="model" readonly
+                    [(ngModel)]="exchange.model" required />
+                </div>
+              </div>
+
+
+              <div class=" col-sm-3" *ngIf="isexchg==='YES'">
+                <div class="form-group" style="background: #afe7e7;border-radius: 5px;">
+                  <label for="yrofmfg">Year Of Manifacturing:
+                  </label>
+                  <input type="year" class="form-control input-sm" id="yrofmfg" name="yrofmfg"
+                    [(ngModel)]="exchange.yrofmfg" required />
+                  <!-- <input *ngIf="isUpdate" type="year" class="form-control input-sm" id="yrofmfg" name="yrofmfg" readonly
+                    [(ngModel)]="exchange.yrofmfg" required /> -->
+                </div>
+              </div>
+
+              <div class=" col-sm-3" *ngIf="isexchg==='YES'">
+                <div class="form-group" style="background: #afe7e7;border-radius: 5px;">
+                  <label for="regno">Reg No.:
+                  </label>
+                  <input type="text" class="form-control input-sm" id="regno" name="regno" [(ngModel)]="exchange.regno"
+                    required />
+                  <!-- <input *ngIf="isUpdate" type="text" class="form-control input-sm" id="regno" name="regno" readonly
+                    [(ngModel)]="exchange.regno" required /> -->
+                </div>
+              </div>
+
+              <div class=" col-sm-3" *ngIf="isexchg==='YES'">
+                <div class="form-group" style="background: #afe7e7;border-radius: 5px;">
+                  <label for="exchgvalue">Exchange Value:
+                  </label>
+                  <input type="number" class="form-control input-sm" id="exchgvalue" name="exchgvalue"
+                    [(ngModel)]="qcost.exchgvalue" required (change)="recal()" />
+                  <!-- <input *ngIf="isUpdate" type="text" class="form-control input-sm" id="exchgvalue" name="exchgvalue" readonly
+                    [(ngModel)]="qcost.exchgvalue" required (change)="recal()" /> -->
+                </div>
+              </div>
+
+
+              <div class=" col-sm-3">
+                <div class="form-group" style="background: #0b0b0a1f;border-radius: 5px;">
+                  <label for="isInsurance">Insurance:
+                  </label>
+                  <select class="form-control input-sm" name="isInsurance" *ngIf="!isUpdate" required
+                    [(ngModel)]="isInsurance">
+                    <option value="YES">YES</option>
+                    <option value="NO">NO</option>
+                  </select>
+                  <select class="form-control input-sm" name="isInsurance" *ngIf="isUpdate" disabled required
+                    [(ngModel)]="isInsurance">
+                    <option value="YES">YES</option>
+                    <option value="NO">NO</option>
+                  </select>
+                </div>
+              </div>
+
+            </div>
+            <div class="row" *ngIf="isInsurance==='YES'">
+
+              <div class="col-sm-3" *ngIf="isInsurance==='YES'">
+                <div class="form-group" style="background: #0b0b0a1f;border-radius: 5px;">
+                  <label for="model">No. Of Years:
+                  </label>
+                  <input *ngIf="!isUpdate" type="number" class="form-control input-sm" id="insyear" name="insyear"
+                    [(ngModel)]="qcost.yearsinsured" required />
+                  <input *ngIf="isUpdate" type="number" class="form-control input-sm" id="insyear" name="insyear"
+                    readonly [(ngModel)]="qcost.yearsinsured" required />
+                </div>
+              </div>
+
+              <div class="col-sm-3" *ngIf="isInsurance==='YES'">
+                <div class="form-group" style="background: #0b0b0a1f;border-radius: 5px;">
+                  <label for="insurance">Insurance Cost:
+                  </label>
+                  <input *ngIf="!isUpdate" type="number" class="form-control input-sm" id="insurance" name="insurance"
+                    [(ngModel)]="qcost.insurance" required (change)="recal()" />
+                  <input *ngIf="isUpdate" type="number" class="form-control input-sm" id="insurance" name="insurance"
+                    readonly [(ngModel)]="qcost.insurance" required (change)="recal()" />
+                </div>
+              </div>
+
+
+
+              <div class="col-md-3" *ngIf="isInsurance==='YES'">
+                <div class="form-group" style="background: #0b0b0a1f;border-radius: 5px;">
+                  <label for="customer">Customer Name:</label>
+                  <select class="form-control input-sm" disabled name="customer" required
+                    [(ngModel)]="customer">
+                    <option required *ngFor="let data of clientdata; let i=index" [value]="data.id">{{data.name}}</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="col-md-3" *ngIf="isInsurance==='YES'">
+                <div class="form-group" style="background: #0b0b0a1f;border-radius: 5px;">
+                  <label style=" padding-left: 5px; " for="insurername"> Insurer Name: </label>
+                  <!-- <input type="text" class="form-control input-sm" required name="insurername" [(ngModel)]="quote.insurance.insurername"> -->
+                  <select class="form-control input-sm" id="insurer" name="insurername" required
+                    [(ngModel)]="insurance.insurername">
+                    <option *ngFor="let dep of insurerlist; let i=index" [value]="dep.name">{{dep.name}}</option>
+                  </select>
+                </div>
+              </div>
+
+
+              <div class="col-md-3" *ngIf="isInsurance==='YES'">
+                <div class="form-group" style="background: #0b0b0a1f;border-radius: 5px;">
+                  <label style=" padding-left: 5px; " for="policynum"> Policy Number: </label>
+                  <input type="text" class="form-control input-sm" required name="policynum"
+                    [(ngModel)]="insurance.policynum">
+                </div>
+              </div>
+              <div class="col-md-3" *ngIf="isInsurance==='YES'">
+                <div class="form-group" style="background: #0b0b0a1f;border-radius: 5px;">
+                  <label style=" padding-left: 5px; " for="startdate"> Start Date: </label>
+                  <input type="date" class="form-control input-sm" required name="startdate"
+                    [(ngModel)]="insurance.startdate">
+                </div>
+              </div>
+
+              <div class="col-md-3" *ngIf="isInsurance === 'YES' && insurance.startdate">
+                <div class="form-group" style="background: #0b0b0a1f;border-radius: 5px;">
+                  <label style=" padding-left: 5px; " for="enddate"> End Date: </label>
+                  <input type="date" class="form-control input-sm" required name="enddate" min="{{insurance.startdate}}"
+                    [(ngModel)]="insurance.enddate">
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+          <div class="col-sm-12 img-thumbnail" id="secondC">
+            <div class="row">
+              <div class=" col-sm-3">
+                <div class="form-group">
+                  <label for="tax">Road Tax and Safety Tax:
+                  </label>
+                  <input *ngIf="!isUpdate" type="text" class="form-control input-sm" id="tax" name="tax"
+                    [(ngModel)]="qcost.roadtax" required (change)="recal()" />
+                  <input *ngIf="isUpdate" type="text" class="form-control input-sm" id="tax" name="tax" readonly
+                    [(ngModel)]="qcost.roadtax" required (change)="recal()" />
+                </div>
+              </div>
+
+              <div class=" col-sm-3">
+                <div class="form-group">
+                  <label for="extwarranty">Extended<br> Waranty:
+                  </label>
+                  <input *ngIf="!isUpdate" type="text" class="form-control input-sm" id="extwarranty" name="extwarranty"
+                    [(ngModel)]="qcost.extwarranty" required />
+                  <input *ngIf="isUpdate" type="text" class="form-control input-sm" id="extwarranty" name="extwarranty"
+                    readonly [(ngModel)]="qcost.extwarranty" required />
+                </div>
+              </div>
+              <div class=" col-sm-3">
+                <div class="form-group">
+                  <label for="rcbookcost">RC Book + RC Postage Charge:
+                  </label>
+                  <input *ngIf="!isUpdate" type="text" class="form-control input-sm" id="rcbookcost" name="rcbookcost"
+                    [(ngModel)]="qcost.rcbookcost" required (change)="recal()" />
+                  <input *ngIf="isUpdate" type="text" class="form-control input-sm" id="rcbookcost" name="rcbookcost"
+                    readonly [(ngModel)]="qcost.rcbookcost" required (change)="recal()" />
+                </div>
+              </div>
+
+
+
+              <div class=" col-sm-3">
+                <div class="form-group">
+                  <label for="paymentmode">Payment<br> Mode:
+                  </label>
+                  <select class="form-control input-sm" name="paymentmode" *ngIf="!isUpdate" required
+                    [(ngModel)]="paymentmode">
+                    <option value="CASH">CASH</option>
+                    <option value="BANK">BANK</option>
+                  </select>
+                  <select class="form-control input-sm" name="paymentmode" *ngIf="isUpdate" disabled required
+                    [(ngModel)]="paymentmode">
+                    <option value="CASH">CASH</option>
+                    <option value="BANK">BANK</option>
+                  </select>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- <div class=" col-sm-3">
+                <div class="form-group">
+                  <label for="bookingamt">Booking Amount:
+                  </label>
+                  <input *ngIf="!isUpdate" type="text" class="form-control input-sm" id="bookingamt" name="bookingamt"
+                    [(ngModel)]="qcost.bookingamt" (change)="recal()" required />
+                  <input *ngIf="isUpdate" type="text" class="form-control input-sm" id="bookingamt" name="bookingamt" readonly
+                    [(ngModel)]="qcost.bookingamt" (change)="recal()" required />
+                </div>
+              </div> -->
+          </div>
+
+          <div class="col-sm-12 img-thumbnail" id="secondD">
+            <div class="col-sm-12" style="padding: 0px;">
+              <div class="form-group">
+                <label for="salesman">Comments: </label>
+                <textarea rows="4" cols="50" class="form-control input-sm" name="comment" [(ngModel)]="comments">
+                      </textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-4 img-thumbnail" id="third">
+
+          <table border="1" cellspacing="10" cellpadding="5" style="width: 100%; ">
+            <tr style="background-color: yellow;" class="text-strong">
+              <th colspan="2" class="thbg">CUSTOMER DETAILS</th>
+            </tr>
+            <tr>
+              <th>Customer </th>
+              <th>{{customerData?.name}}</th>
+            </tr>
+            <tr>
+              <th>Gender </th>
+              <th>{{customerData?.gender}}</th>
+            </tr>
+            <tr>
+              <th>Profession</th>
+              <th>{{customerData?.profession}}</th>
+            </tr>
+            <tr>
+              <th>Phone</th>
+              <th>{{customerData?.phone}}</th>
+            </tr>
+          </table>
+
+          <table border="1" cellspacing="10" cellpadding="5" style="width: 100%; ">
+            <tr style="background-color: yellow;">
+              <th colspan="2" class="thbg">CALCULATIONS</th>
+            </tr>
+            <tr>
+              <th>Calculation Items </th>
+              <th style="text-align:right">Cost (Rs.)</th>
+            </tr>
+            <tr>
+              <th>Ex-showroom</th>
+              <th style="text-align:right">{{qcost?.exshowroom}}</th>
+            </tr>
+            <tr>
+              <th>Insurance</th>
+              <th style="text-align:right">{{qcost?.insurance}}</th>
+            </tr>
+            <tr>
+              <th>Road Tax and Safety Tax</th>
+              <th style="text-align:right">{{qcost?.roadtax}}</th>
+            </tr>
+            <!-- <tr><th>Accessories Value</th><th style="text-align:right">{{qcost?.roadtax}}</th></tr> -->
+            <tr>
+              <th>Accessories Value</th>
+              <th style="text-align:right">{{qcost?.accessorycost}}</th>
+            </tr>
+            <tr>
+              <th>Extended Waranty</th>
+              <th style="text-align:right">{{qcost?.extwarranty}}</th>
+            </tr>
+            <tr>
+              <th>Hypothecation</th>
+              <th style="text-align:right">{{qcost?.hypothecationcost}}</th>
+            </tr>
+            <tr>
+              <th>RC Book + RC Postage Charge</th>
+              <th style="text-align:right">{{qcost?.rcbookcost}}</th>
+            </tr>
+
+            <!-- <tr>
+                <th>Extended Waranty</th>
+                <th style="text-align:right">{{qcost?.extwarranty}}</th>
+              </tr> -->
+
+            <tr>
+              <th>GST Amount(Rs.)</th>
+              <th style="text-align:right">{{qcost?.gstamt}}</th>
+            </tr>
+            <tr>
+              <th>Total Amount(Rs.)</th>
+              <th style="text-align:right">{{qcost?.finalamt}}</th>
+            </tr>
+
+            <tr>
+              <th>Booking Amount(Rs.)</th>
+              <th style="text-align:right">{{qcost?.bookingamt}}</th>
+            </tr>
+            <tr>
+              <th>Exchange Value</th>
+              <th style="text-align:right">{{qcost?.exchgvalue}}</th>
+            </tr>
+            <tr>
+              <th>Balance Amount</th>
+              <th style="text-align:right">{{qcost?.balanceamt}}</th>
+            </tr>
+
+          </table>
+        </div>
+
+
+        <div class="col-md-12">
+          <div class="form-group">
+            <button type="submit" [disabled]="!form1.valid" class="btn btn-default"
+              (click)="submitData()">Submit</button>
+            <button *ngIf="this.url == '/editfirm/' + this.id" type="submit" [disabled]="!form1.valid"
+              class="btn btn-default" (click)="updateData()">Update</button>
+            <button type="button" class="btn btn-default" (click)="cancel()">Cancel</button>
+          </div>
+        </div>
+      </form>
+
+      <!-- Modal -->
+      <button id="openModalButton" [hidden]="true" data-toggle="modal" data-target="#csvImport">Open Modal</button>
+
+      <div id="csvImport" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Product Photo</h4>
+            </div>
+            <div class="modal-body">
+              <div class="img-thumbnail ">
+                <img *ngIf="datalist?.photo?.docpath" data-toggle="modal" data-target="#csvImport"
+                  src="{{docServer}}/{{datalist?.photo?.docpath}}" class="img-thumbnail" alt="">
+                <img *ngIf="!datalist?.photo?.docpath && datalist?.bookaccessories" data-toggle="modal"
+                  data-target="#csvImport" src="{{docServer}}/sparepartdefault.jpg" class="img-thumbnail" alt="">
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--End Modal-->
+      <form #form1="ngForm" *ngIf="detailFlag && !isInvoice" title="without invoice">
+
+        <div class="col-sm-12 img-thumbnail block">
+
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Photo</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div class="img-thumbnail ">
+                    <img *ngIf="datalist?.photo?.docpath" data-toggle="modal" data-target="#csvImport"
+                      src="{{docServer}}/{{datalist?.photo?.docpath}}" class="img-thumbnail" alt=""
+                      style="width:100px; height:100px; cursor: pointer;">
+                    <img *ngIf="!datalist?.photo?.docpath && datalist?.bookaccessories" data-toggle="modal"
+                      data-target="#csvImport" src="{{docServer}}/sparepartdefault.jpg" class="img-thumbnail" alt=""
+                      style="width:100px; height:100px; cursor: pointer;">
+                    <!-- <img *ngIf="datalist?.photo?.docpath && datalist?.bookaccessories" data-toggle="modal" data-target="#csvImport" src="{{docServer}}/sparepartdefault.jpg" class="img-thumbnail" alt=""
+                        style="width:100px; height:100px; cursor: pointer;"> -->
+
+
+                  </div>
+
+
+                </td>
+              </tr>
+
+
+            </tbody>
+          </table>
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <!-- <th>Photo</th> -->
+                <th>Product</th>
+                <th>Description</th>
+                <th>Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              <tr *ngFor="let pdata of this.productdata; let i = index; let last = last;">
+                <!-- <td> <img src="{{docServer}}/{{pdata?.photo}}" alt="{{docServer}}/{{pdata?.photo}}"
+                        style="width:50%; height:50px;"></td> -->
+                <td>{{pdata?.pname}}</td>
+                <td>
+                  Model:{{pdata?.vmodel}} ,
+                  Colour: {{pdata?.vcolour}}<br>
+                  Chasis No: {{pdata?.chassisnum}}
+                  Engine No: {{pdata?.enginenum}}<br>
+                  HSN Code:{{sdata?.hsncode}}
+                </td>
+                <td>
+                  Amount : {{pdata?.amount}} &#x20b9;<br>
+                  GST Amount : {{pdata?.gstamt}} &#x20b9;<br>
+                  Final Amount : {{pdata?.finalamt}} &#x20b9;
+                </td>
+              </tr>
+
+
+
+              <tr *ngFor="let sdata of this.sparepartdata; let i = index; let last = last;">
+                <!-- <td>
+
+                      <img src="{{docServer}}/{{sdata?.photos[0].docpath}}" alt="{{docServer}}/{{pdata?.photo}}"
+                        style="width:50%; height:50px;">
+
+                      </td> -->
+                <td>{{sdata?.pname}}</td>
+
+
+                <td>
+                  HSN Code:{{sdata?.hsncode}}
+                  <!-- Colour: {{sdata?.vcolour}}<br>
+                      Chasis No: {{sdata?.chassisnum}}
+                      Engine No: {{sdata?.enginenum}} -->
+                </td>
+                <td>
+                  Amount : {{sdata?.amount}} &#x20b9;<br>
+                  GST Amount : {{sdata?.gstamt}} &#x20b9;<br>
+                  Final Amount : {{sdata?.finalamt}} &#x20b9;
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+
+        </div>
+
+
+        <div class="col-sm-8" style="padding: 0px;">
+          <div class="col-sm-12 img-thumbnail" id="first">
+
+            <div class=" col-sm-3">
+              <div class="form-group">
+                <label for="invoicenum">Invoice No:
+                </label>
+                <input *ngIf="!isUpdate" type="text" class="form-control" id="invoicenum" name="invoicenum" readonly
+                  value="{{datalist?.invoicenum}}" />
+
+              </div>
+            </div>
+            <div class=" col-sm-3">
+              <div class="form-group">
+                <label for="bookingdate">Booking Date:
+                </label>
+                <input type="text" class="form-control" value="{{datalist?.bookingdate|date:'dd-MM-yyyy'}}" readonly />
+
+              </div>
+            </div>
+
+
+
+            <div class=" col-sm-3">
+              <div class="form-group">
+                <label for="pricetype">Price Type:
+                </label>
+
+                <input type="text" class="form-control" readonly value="{{datalist?.pricetype}}" required />
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="form-group">
+                <label for="expdelivery"> Expected Delivery:
+                </label>
+
+                <input type="text" class="form-control" readonly value="{{datalist?.expdelivery|date:'dd-MM-yyyy'}}" />
+              </div>
+            </div>
+            <div class=" col-sm-12">
+              <div class="form-group">
+                <label for="salesman">Salesman: </label>
+                <input type="text" class="form-control" readonly value="{{datalist?.salesmanname}}" required />
+              </div>
+            </div>
+
+
+
+
+
+          </div>
+          <div class="col-sm-12 img-thumbnail" id="secondA">
+
+
+
+            <div class=" col-sm-3 ">
+              <div class="form-group">
+                <label for="custstate"> State:
+                </label>
+                <input type="text" class="form-control" readonly value="{{custstate}}" />
+              </div>
+            </div>
+            <div class=" col-sm-3 ">
+              <div class="form-group">
+                <label for="custcity"> City:
+                </label>
+                <input type="text" class="form-control" readonly value="{{custcity}}" />
+              </div>
+            </div>
+
+
+            <div class=" col-sm-3 ">
+              <div class="form-group">
+                <label for="customer">Customer :
+                </label>
+                <input type="text" class="form-control" readonly value="{{customerData?.name}}" />
+              </div>
+            </div>
+          </div>
+
+
+          <div class="col-sm-12 img-thumbnail" id="secondB">
+            <div class=" col-sm-3 ">
+              <div class="form-group">
+                <label for="saletype">Sale Type:
+                </label>
+                <input type="text" class="form-control" readonly value="{{datalist?.saletype}}" />
+              </div>
+            </div>
+
+            <div class=" col-sm-3">
+              <div class="form-group">
+                <label for="hypothecation">Hypothecation:
+                </label>
+
+                <input type="text" class="form-control" readonly value="{{datalist?.hypothecation}}" />
+              </div>
+            </div>
+
+            <div class="col-sm-3" *ngIf="datalist?.hypothecation==='YES'">
+              <div class="form-group">
+                <label for="financename">Financer:
+                </label>
+                <input type="text" class="form-control" readonly value="{{datalist?.financename}}" />
+              </div>
+            </div>
+            <div class="col-sm-3" *ngIf="datalist?.hypothecation==='YES'">
+              <div class="form-group">
+                <label for="hypothecationcost">Hypothecation Cost:
+                </label>
+
+                <input type="text" class="form-control" readonly value="{{qcost?.hypothecationcost}}" />
+              </div>
+            </div>
+
+
+            <div class=" col-sm-3">
+              <div class="form-group">
+                <label for="isexchg">Exchange:
+                </label>
+                <!-- <select class="form-control" name="isexchg" *ngIf="!isUpdate" required [(ngModel)]="{{isexchg}}">
+                      <option value="YES">YES</option>
+                      <option value="NO">NO</option>
+                    </select>
+                    <select class="form-control" name="isexchg" *ngIf="isUpdate" disabled required [(ngModel)]="isexchg">
+                      <option value="YES">YES</option>
+                      <option value="NO">NO</option>
+                    </select> -->
+
+                <input type="text" class="form-control" readonly value="{{datalist?.isexchg}}" />
+              </div>
+            </div>
+
+
+
+
+            <div class=" col-sm-3" *ngIf="isexchg==='YES'">
+              <div class="form-group">
+                <label for="model">Model:
+                </label>
+                <input type="text" class="form-control" id="model" name="model" readonly [(ngModel)]="exchange.model"
+                  required />
+              </div>
+            </div>
+
+
+            <div class=" col-sm-3" *ngIf="isexchg==='YES'">
+              <div class="form-group">
+                <label for="yrofmfg">Year Of Manifacturing:
+                </label>
+                <input *ngIf="!isUpdate" type="text" class="form-control" id="yrofmfg" name="yrofmfg"
+                  value="{{exchange.yrofmfg | date:'dd-MM-yyyy'}}" readonly />
+                <!-- <input *ngIf="isUpdate" type="date" class="form-control" id="yrofmfg" name="yrofmfg" readonly
+                      [(ngModel)]="exchange.yrofmfg" required /> -->
+              </div>
+            </div>
+
+            <div class=" col-sm-3" *ngIf="isexchg==='YES'">
+              <div class="form-group">
+                <label for="exchgvalue">Exchange Value:
+                </label>
+                <input *ngIf="!isUpdate" type="number" class="form-control" id="exchgvalue" name="exchgvalue"
+                  [(ngModel)]="qcost.exchgvalue" required readonly (change)="recal()" />
+                <!-- <input *ngIf="isUpdate" type="text" class="form-control" id="exchgvalue" name="exchgvalue" readonly
+                      [(ngModel)]="qcost.exchgvalue" required (change)="recal()" /> -->
+              </div>
+            </div>
+
+
+            <div class=" col-sm-3">
+              <div class="form-group">
+                <label for="isInsurance">Insurance:
+                </label>
+                <input *ngIf="qcost.exchgvalue>0" type="text" class="form-control" id="exchgvalues" name="exchgvalues"
+                  value="YES" readonly />
+                <input *ngIf="qcost.exchgvalue==0" type="text" class="form-control" id="exchgvalues" name="exchgvalues"
+                  value="NO" readonly />
+              </div>
+            </div>
+
+
+            <div class="col-sm-3" *ngIf="qcost.yearsinsured>0">
+              <div class="form-group">
+                <label for="model">No. Of Years:
+                </label>
+                <input *ngIf="!isUpdate" type="number" readonly class="form-control" id="insyear" name="insyear"
+                  [(ngModel)]="qcost.yearsinsured" required />
+                <input *ngIf="isUpdate" type="number" readonly class="form-control" id="insyear" name="insyear" readonly
+                  [(ngModel)]="qcost.yearsinsured" required />
+              </div>
+            </div>
+
+            <div class="col-sm-3" *ngIf="qcost.exchgvalue>0">
+              <div class="form-group">
+                <label for="insurance">Insurance Cost:
+                </label>
+                <input *ngIf="!isUpdate" type="number" readonly class="form-control" id="insurance" name="insurance"
+                  [(ngModel)]="qcost.insurance" required (change)="recal()" />
+                <input *ngIf="isUpdate" type="number" readonly class="form-control" id="insurance" name="insurance"
+                  readonly [(ngModel)]="qcost.insurance" required (change)="recal()" />
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-12 img-thumbnail" id="secondC">
+
+            <div class="row">
+              <div class=" col-sm-3">
+                <div class="form-group">
+                  <label for="tax">Road Tax and Safety Tax:
+                  </label>
+                  <input *ngIf="!isUpdate" type="text" class="form-control" id="tax" readonly name="tax"
+                    [(ngModel)]="qcost.roadtax" required (change)="recal()" />
+                  <input *ngIf="isUpdate" type="text" class="form-control" readonly id="tax" name="tax" readonly
+                    [(ngModel)]="qcost.roadtax" required (change)="recal()" />
+                </div>
+              </div>
+
+              <div class=" col-sm-3">
+                <div class="form-group">
+                  <label for="extwarranty">Extended<br> Waranty:
+                  </label>
+                  <input *ngIf="!isUpdate" type="text" class="form-control" readonly id="extwarranty" name="extwarranty"
+                    [(ngModel)]="qcost.extwarranty" required />
+                  <input *ngIf="isUpdate" type="text" class="form-control" readonly id="extwarranty" name="extwarranty"
+                    readonly [(ngModel)]="qcost.extwarranty" required />
+                </div>
+              </div>
+              <div class=" col-sm-3">
+                <div class="form-group">
+                  <label for="rcbookcost">RC Book + RC Postage Charge:
+                  </label>
+                  <input *ngIf="!isUpdate" type="text" class="form-control" id="rcbookcost" readonly name="rcbookcost"
+                    [(ngModel)]="qcost.rcbookcost" required (change)="recal()" />
+                  <input *ngIf="isUpdate" type="text" class="form-control" id="rcbookcost" readonly name="rcbookcost"
+                    readonly [(ngModel)]="qcost.rcbookcost" required (change)="recal()" />
+                </div>
+              </div>
+
+              <div class=" col-sm-3">
+                <div class="form-group">
+                  <label for="bookingamt">Booking<br> Amount:
+                  </label>
+                  <input *ngIf="!isUpdate" type="text" class="form-control" id="bookingamt" readonly name="bookingamt"
+                    [(ngModel)]="qcost.bookingamt" required />
+                  <input *ngIf="isUpdate" type="text" class="form-control" id="bookingamt" readonly name="bookingamt"
+                    readonly [(ngModel)]="qcost.bookingamt" required />
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+
+
+
+          <div class="col-sm-12 img-thumbnail" id="secondD">
+            <div class="col-sm-12" style="padding: 0px;">
+              <div class="form-group">
+                <label for="salesman">Comments: </label>
+                <textarea rows="4" cols="50" class="form-control" name="comment" readonly [(ngModel)]="comments">
+                        </textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-4 img-thumbnail" id="third">
+
+          <table border="1" cellspacing="10" cellpadding="5" style="width: 100%; ">
+            <tr style="background-color: yellow;" class="text-strong">
+              <th colspan="2">CUSTOMER DETAILS</th>
+            </tr>
+            <tr>
+              <th>Customer </th>
+              <th>{{customerData?.name}}</th>
+            </tr>
+            <tr>
+              <th>Gender </th>
+              <th>{{customerData?.gender}}</th>
+            </tr>
+            <tr>
+              <th>Profession</th>
+              <th>{{customerData?.profession}}</th>
+            </tr>
+            <tr>
+              <th>Phone</th>
+              <th>{{customerData?.phone}}</th>
+            </tr>
+          </table>
+
+
+
+          <table border="1" cellspacing="10" cellpadding="5" style="width: 100%; ">
+            <tr style="background-color: yellow;">
+              <th colspan="2">CALCULATIONS</th>
+            </tr>
+            <tr>
+              <th>Calculation Items </th>
+              <th style="text-align:right">Cost (Rs.)</th>
+            </tr>
+            <tr>
+              <th>Ex-showroom</th>
+              <th style="text-align:right">{{qcost?.exshowroom}}</th>
+            </tr>
+            <tr>
+              <th>Insurance</th>
+              <th style="text-align:right">{{qcost?.insurance}}</th>
+            </tr>
+            <tr>
+              <th>Road Tax and Safety Tax</th>
+              <th style="text-align:right">{{qcost?.roadtax}}</th>
+            </tr>
+            <!-- <tr><th>Accessories Value</th><th style="text-align:right">{{qcost?.roadtax}}</th></tr> -->
+            <tr>
+              <th>Accessories Value</th>
+              <th style="text-align:right">{{qcost?.accessorycost}}</th>
+            </tr>
+            <tr>
+              <th>Extended Waranty</th>
+              <th style="text-align:right">{{qcost?.extwarranty}}</th>
+            </tr>
+            <tr>
+              <th>Hypothecation</th>
+              <th style="text-align:right">{{qcost?.hypothecationcost}}</th>
+            </tr>
+            <tr>
+              <th>RC Book + RC Postage Charge</th>
+              <th style="text-align:right">{{qcost?.rcbookcost}}</th>
+            </tr>
+            <tr>
+              <th>Exchange Value</th>
+              <th style="text-align:right">{{qcost?.exchgvalue}}</th>
+            </tr>
+            <tr>
+              <th>Extended Waranty</th>
+              <th style="text-align:right">{{qcost?.extwarranty}}</th>
+            </tr>
+            <tr>
+              <th>Booking Amount(Rs.)</th>
+              <th style="text-align:right">{{qcost?.bookingamt}}</th>
+            </tr>
+            <tr>
+              <th>GST Amount(Rs.)</th>
+              <th style="text-align:right">{{qcost?.gstamt}}</th>
+            </tr>
+            <tr>
+              <th>Total Amount(Rs.)</th>
+              <th style="text-align:right">{{qcost?.finalamt}}</th>
+            </tr>
+          </table>
+
+          <!-- "":2.2, // product total
+              "":2000,
+              "yearsinsured":3,
+              "":12,
+              "":12000,  // insurance
+              "":2000,
+
+              "":5000,
+              "":8520,
+              "gstamt":250,
+              "bookingamt":1100,
+              "finalamt":"78000" -->
+
+
+        </div>
+
+
+        <!-- <div class="col-md-12">
+              <div class="form-group">
+                <button type="submit" [disabled]="!form1.valid"
+                  class="btn btn-default" (click)="submitData()">Submit</button>
+                <button *ngIf="this.url == '/editfirm/' + this.id" type="submit" [disabled]="!form1.valid"
+                  class="btn btn-default" (click)="updateData()">Update</button>
+                <button type="button" class="btn btn-default" (click)="cancel()">Cancel</button>
+              </div>
+            </div> -->
+      </form>
+      <form #form1="ngForm" *ngIf="detailFlag && isInvoice" title="Sale Invoice" class="nospace">
+        <!-- <div class="col-md-12 col-sm-12 col-xs-12" *ngIf="isinvoice" style="padding: 20px 0px;" id="content" #content> -->
+        <!-- <div class="panel panel-default"> -->
+        <!-- <div class="panel-heading">
+                  <div class="clearfix">
+                    <div class="pull-left"> {{title}} &nbsp; &nbsp;
+
+
+                    </div>
+                    <div class="container" class="pull-right">
+                      <div class="row">
+
+                        <a title="Download" class="btn btn-info a-btn-slide-text" (click)="generatePdf()">
+                          <i class="glyphicon glyphicon-download-alt"></i>
+                        </a>
+
+                        <a title="Back" class="btn btn-info a-btn-slide-text" (click)="cancel()">
+                          <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+                        </a>
+
+                      </div>
+                    </div>
+                  </div>
+                </div> -->
+
+        <!-- <div class="panel-body text-capitalize" style="padding: 20px 0px;" id="content" #content> -->
+        <div class="col-md-12 col-sm-12 col-xs-12" style="padding: 0px 0px;" id="content" #content>
+
+          <div class="col-sm-12 col-md-12 col-xs-12 img-thumbnail center-block">
+            <table class="table table-bordered">
+
+              <thead>
+
+                <tr>
+                  <th colspan="2" class="text-center">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="col-md-1">
+                          <img src="{{docServer}}/{{firm?.logo?.docpath}}"
+                            style="height:80px; width:100px; vertical-align:middle;" *ngIf="firm.logo">
+                        </div>
+
+                        <div class="col-md-10 text-center">
+                          <h5> INVOICE</h5>
+                          <h3> {{firm?.name}} - {{firm?.code}}</h3>
+                          <span>{{firm?.address?.line1}}
+                            {{firm?.address.line2}} <br>
+                            {{firm?.address?.city}}, {{firm?.address?.states}}-{{firm?.address?.pincode}}
+                          </span>
+                        </div>
+                        <div class="col-md-1">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <h6 class="text-left">PH: {{firm?.phone}}</h6>
+                    </div>
+                    <div class="col-md-6">
+                      <h6 class="text-right" style="text-transform: lowercase;">Email: {{firm?.email}}</h6>
+                    </div>
+                  </th>
+                </tr>
+
+                <tr>
+                  <th colspan="2 " class="">
+                    <div class="row">
+                      <div class="col-md-6" style="text-transform: uppercase;font-weight: 700;">
+                        GSTIN :&nbsp;&nbsp;&nbsp;&nbsp;{{firm?.gstin}} <br>
+                        PAN :&nbsp;&nbsp;&nbsp;&nbsp;{{firm?.pannum}} <br>
+                        Invoice No.:&nbsp;&nbsp;&nbsp;&nbsp;{{datalist?.invoicenum}} <br>
+                        Invoice Dt. :&nbsp;&nbsp;&nbsp;&nbsp;{{datalist?.invoicedate|date:'dd/MM/yyyy'}} <br>
+                      </div>
+
+                      <div class="col-md-6" style="text-transform: uppercase;font-weight: 700;">
+                        Phone :&nbsp;&nbsp;&nbsp;&nbsp;{{firm?.phone}} <br>
+                        Email:&nbsp;&nbsp;&nbsp;&nbsp;{{firm?.email}} <br>
+                        PAN :&nbsp;&nbsp;&nbsp;&nbsp;{{firm?.pannum}}
+
+                      </div>
+                    </div>
+
+                  </th>
+                </tr>
+
+                <tr>
+                  <th style="text-align: center;"> Details Of Receiver (Billed To)
+
+                  </th>
+                  <th style="text-align: center;"> Details Of Consignee(Shipped To)</th>
+                </tr>
+
+                <tr *ngIf="this.datalist">
+
+                  <td style="text-transform: uppercase;font-weight: 700;">
+
+                    <!-- Name :&nbsp;&nbsp;&nbsp;&nbsp;{{datalist?.financename}} <br>
+                     -->
+
+                    <table width="100%">
+                      <tr>
+                        <th> Name</th>
+                        <th style="text-align: left;"> : {{customerData?.name}} </th>
+                      </tr>
+                      <tr>
+                        <th> Address</th>
+                        <th style="text-align: left;"> : {{customerData?.address?.line1}}
+                          &nbsp;&nbsp;{{customerData?.address.line2}}</th>
+                      </tr>
+                      <tr>
+                        <th> City</th>
+                        <th style="text-align: left;"> : {{customerData?.address?.city}}
+                          -&nbsp;&nbsp;&nbsp;&nbsp;{{customerData?.address?.pincode}} </th>
+                      </tr>
+                      <tr>
+                        <th> Mobile</th>
+                        <th style="text-align: left;"> : {{customerData?.phone}} </th>
+                      </tr>
+                      <tr>
+                        <th> Email</th>
+                        <th style="text-align: left;"> : {{customerData?.email}} </th>
+                      </tr>
+                      <tr>
+                        <th> GSTIN</th>
+                        <th style="text-align: left;"> : {{customerData?.gst}} </th>
+                      </tr>
+                      <tr>
+                        <th> PAN</th>
+                        <th style="text-align: left;"> : {{customerData?.pan}} </th>
+                      </tr>
+                    </table>
+
+                  </td>
+
+                  <td style="text-transform: uppercase;font-weight: 700;">
+                    <table width="100%">
+                      <tr>
+                        <th> Name</th>
+                        <th style="text-align: left;"> : {{consigneeData?.name}} </th>
+                      </tr>
+                      <tr>
+                        <th> Address</th>
+                        <th style="text-align: left;"> : {{consigneeData?.address?.line1}}
+                          &nbsp;&nbsp;{{consigneeData?.address.line2}}</th>
+                      </tr>
+                      <tr>
+                        <th> City</th>
+                        <th style="text-align: left;"> : {{consigneeData?.address?.city}}
+                          -&nbsp;&nbsp;&nbsp;&nbsp;{{consigneeData?.address?.pincode}} </th>
+                      </tr>
+                      <tr>
+                        <th> Mobile</th>
+                        <th style="text-align: left;"> : {{consigneeData?.phone}} </th>
+                      </tr>
+                      <tr>
+                        <th> Email</th>
+                        <th style="text-align: left;"> : {{consigneeData?.email}} </th>
+                      </tr>
+                      <tr>
+                        <th> GSTIN</th>
+                        <th style="text-align: left;"> : {{consigneeData?.gst}} </th>
+                      </tr>
+                      <tr>
+                        <th> PAN</th>
+                        <th style="text-align: left;"> : {{consigneeData?.pan}} </th>
+                      </tr>
+                    </table>
+                    <!-- Name :  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{customerData?.name}} <br>
+                      Address :&nbsp;{{customerData?.address?.line1}} ,{{customerData?.address.line2}}
+                      <br>
+                      City:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{customerData?.address?.city}}
+                      -&nbsp;&nbsp;&nbsp;&nbsp;{{customerData?.address?.pincode}} <br>
+                      Mobile :&nbsp;&nbsp;&nbsp;&nbsp;{{customerData?.phone}} <br>
+                      Email:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{customerData?.email}} <br>
+                      GSTIN:&nbsp;&nbsp;&nbsp;&nbsp;{{customerData?.gst}} &nbsp;&nbsp;&nbsp;&nbsp;
+                      PAN:&nbsp;&nbsp;&nbsp;&nbsp;{{customerData?.pan}} <br> -->
+
+                  </td>
+                </tr>
+                <tr *ngIf="this.datalist">
+                  <th colspan=2> Hypothecation with :
+                    <ng-container *ngIf="this.datalist.hypothecation === 'YES'">{{datalist?.financename}}</ng-container>
+                    <ng-container *ngIf="this.datalist.hypothecation === 'NO'">N.A.</ng-container>
+
+                  </th>
+                </tr>
+
+                <tr *ngIf="this.datalist && datalist.isexchg==='YES'">
+                  <th colspan=2> Exchange Amount :
+                    {{this.datalist?.exchange?.exchgvalue}} &#x20b9;
+                  </th>
+                </tr>
+
+                <tr *ngIf="this.datalist">
+                  <th colspan=2> SalesMan Name :{{datalist?.salesmanname}}</th>
+                </tr>
+
+                <tr *ngIf="this.datalist" class="nospace">
+                  <td colspan="2" class="nospace">
+                    <table class="table table-bordered">
+                      <tr>
+                        <th width="5%">SNo</th>
+                        <th width="75%">Particulars</th>
+                        <th style="text-align:right">Amount</th>
+                      </tr>
+                      <tr *ngFor="let pdata of this.productdata; let i = index; let last = last;">
+
+                        <td width="5%">{{i+1}}</td>
+                        <td colspan="2" class="nospace" style="padding: 0px;">
+
+                          <table class="table table-bordered nospace">
+                            <tr>
+                              <td width="79%">
+                                <strong>{{pdata?.pname}} </strong> <br>
+                                CGST CHARGE @ {{pdata?.gst/2}}%<br>
+                                SGST CHARGE @ {{pdata?.gst/2}}%<br>
+                              </td>
+
+                              <td style="text-align:right">
+                                <strong> {{pdata?.amount}} &#x20b9;</strong> <br>
+                                {{pdata?.gstamt/2}} &#x20b9;<br>
+                                {{pdata?.gstamt/2}} &#x20b9;<br>
+                                <hr class="nospace">
+                                <strong> {{pdata?.finalamt}} &#x20b9;</strong>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td colspan="2" class="fw700 nospace">
+                                <div class="col-sm-6">
+                                  <div class="col-sm-6">
+                                    Chassis Number :<br>
+                                    Engine Number :<br>
+                                    Colour Name :<br>
+                                    Model Name :<br>
+                                    Maker Name :<br>
+                                    HSN/SAC Code :<br>
+                                    MFG MM/YYYY Code :
+                                  </div>
+                                  <div class="col-sm-6" style="text-align: left;">
+                                    <strong>{{pdata?.chassisnum}} </strong> <br>
+                                    <strong>{{pdata?.enginenum}}</strong><br>
+                                    {{pdata?.vcolour}}<br>
+                                    {{pdata?.vmodel}}<br>
+                                    {{pdata?.makername}} <br>
+                                    {{pdata?.hsncode}}<br>
+                                    {{pdata?.mfgdate| date :'dd-MM-yyyy'}}<br>
+                                  </div>
+
+                                </div>
+                                <div class="col-sm-6">
+
+                                  <div class="col-sm-5">
+                                    Key Number :<br>
+                                    Lot No :<br>
+                                    Hand Book Number :<br>
+                                    Battery Name :<br>
+                                    Battery Number :<br>
+                                    Insurance Cov. Note No.:
+                                  </div>
+
+                                  <div class="col-sm-6" style="text-align: left;">
+                                    <br>
+                                    {{pdata?.lotno}} <br>
+                                    <br>
+                                    {{pdata?.batteryname}}<br>
+                                    {{pdata?.batternum}}<br>
+                                  </div>
+                                </div>
+                              </td>
+
+
+
+                            </tr>
+                          </table>
+
+
+
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+
+                <tr *ngIf="this.datalist">
+                  <td colspan=2> Insurance Company Name : {{datalist?.qcost?.yearsinsured}} Years
+                    &nbsp;&nbsp;&nbsp;&nbsp; [Amount : {{datalist?.qcost?.insurance}}]</td>
+                </tr>
+
+
+                <tr *ngIf="this.datalist">
+
+                  <td colspan="2" class="nospace">
+
+                    <table class="table table-bordered">
+                      <tbody>
+                        <tr>
+                          <th> SN</th>
+                          <th> Particulars</th>
+                          <th> HSN/SAC Code</th>
+                          <th> QTY.</th>
+                          <th> Rate</th>
+                          <th> Total</th>
+                          <th> Discount</th>
+                          <th> Taxable Value</th>
+                          <th> TAX %</th>
+                          <th> CGST Amount </th>
+                          <th> SGST Amount </th>
+                          <th> IGST Amount </th>
+                          <th> GST Amount</th>
+                          <th> Amount</th>
+
+                        </tr>
+
+                        <tr *ngFor="let sdata of this.sparepartdata; let i = index; let last = last;">
+                          <th>{{i+1}}</th>
+                          <th>{{sdata?.pname}}</th>
+                          <th> {{sdata?.hsncode}}</th>
+                          <th> {{sdata?.qty}}</th>
+                          <th> {{sdata?.amount}}</th>
+                          <th> 0</th>
+                          <th> {{sdata?.finalamt}}</th>
+                          <th> {{sdata?.amount}}</th>
+                          <th> {{sdata?.gst}}</th>
+                          <th style="text-align: right;"> {{sdata?.gstamt/2}}</th>
+                          <th style="text-align: right;"> {{sdata?.gstamt/2}}</th>
+                          <th> </th>
+
+                          <th style="text-align: right;"> {{sdata?.gstamt}}</th>
+                          <th style="text-align: right;"> {{sdata?.finalamt}}</th>
+                        </tr>
+                        <tr>
+                          <th colspan="13" style="text-align: right;">Total: </th>
+                          <th style="text-align: right;">{{datalist?.qcost?.accessorycost}} &#x20b9; </th>
+
+                        </tr>
+
+
+                      </tbody>
+
+
+                    </table>
+
+
+                  </td>
+                </tr>
+                <tr>
+                  <th colspan="2"></th>
+                </tr>
+                <tr>
+                  <td colspan="2" class="nospace">
+
+
+                    <table class="table table-bordered">
+
+                      <tr>
+                        <th>Particulars</th>
+                        <th>Value</th>
+                        <th>Discount</th>
+                        <th>Taxable Value</th>
+                        <th>Gst Amount</th>
+                        <th>Total</th>
+                        <th colspan="6" rowspan="3"></th>
+                      </tr>
+
+                      <tr>
+                        <th>Labour Total:</th>
+                        <th>0.00</th>
+                        <th>0.00</th>
+                        <th>0.00</th>
+                        <th>0.00</th>
+                        <th>0.00</th>
+
+                      </tr>
+                      <tr>
+                        <th>Other Total:</th>
+                        <th>0.00</th>
+                        <th>0.00</th>
+                        <th>0.00</th>
+                        <th>0.00</th>
+                        <th>0.00</th>
+
+                      </tr>
+                      <tr>
+                        <th>Round Off:</th>
+                        <th>0.00</th>
+                        <th>0.00</th>
+                        <th>0.00</th>
+                        <th>0.00</th>
+                        <th>0.00</th>
+                        <th style="text-align: right;"> Invoice Total :{{datalist?.qcost?.finalamt}} &#x20b9;</th>
+                      </tr>
+                    </table>
+
+
+
+
+                  </td>
+                </tr>
+
+                <tr *ngIf="this.datalist">
+                  <th style="text-align: right;">Booking Amount : {{datalist?.qcost?.bookingamt}} &#x20b9;</th>
+                  <th style="text-align: right;">Balance Amount : {{datalist?.qcost?.balanceamt}} &#x20b9;</th>
+                </tr>
+                <tr>
+                  <th colspan="2">Invoice Value (In Words) : {{inwords}}</th>
+                </tr>
+
+                <tr>
+
+                  <td colspan="2">
+                    <div class="col-sm-6 text-left">
+                      <br><br><br><br><br><br>
+                      <strong>Customer Signature</strong>
+                    </div>
+
+
+                    <div class="col-sm-6 text-right">
+                      <strong>{{firm?.name}}</strong> <br><br><br><br><br><br>
+                      <strong>Authorised Signature</strong>
+                    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                  </td>
+                </tr>
+              </thead>
+
+
+            </table>
+            <!-- <div class="text-center">This is system generated payslip and does not require signature</div> -->
+          </div>
+        </div>
+
+        <!-- </div> -->
+        <!-- </div> -->
+        <!-- </div> -->
+      </form>
+    </div>
+  </div>
+</div>
+
+<div [hidden]="!isManageState" class="col-md-12 col-sm-12 col-xs-12">
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      {{title}}
+      <a title="Back" class="pull-right" (click)="cancel()">
+        <span class="glyphicon glyphicon-th-list"></span>
+      </a>
+
+      <!-- <a [routerLink]="['/managefirm']" title="View all firms" class="pull-right">
+          <span class="glyphicon glyphicon-th-list"></span>
+        </a> -->
+    </div>
+    <div class="panel-body">
+      <div class="table-responsive">
+        <table class="table table-condensed table-striped table-bordered"
+          [mfData]="data | dataFilterPr : filterQuery:'managesale'" #mf="mfDataTable" [mfRowsOnPage]="rowsOnPage"
+          [(mfSortBy)]="Role" [(mfSortOrder)]="sortOrder">
+          <thead>
+            <tr>
+              <th>SN</th>
+              <th>Photo</th>
+              <th>Product Details</th>
+              <th>Invoice No</th>
+              <th>Booking Date</th>
+              <th>Customer</th>
+              <th>Delivery Date</th>
+              <th>Exchange / Insured</th>
+              <!-- <th>Price Type</th> -->
+              <th>Salesman</th>
+              <th>Sale Type</th>
+              <!-- <th>Status</th> -->
+              <th>Total Products</th>
+              <th>Total</th>
+              <th>Action</th>
+            </tr>
+            <tr>
+              <th colspan="13">
+                <div id="custom-search-input">
+                  <div class="input-group col-md-12">
+                    <input type="text" class="form-control"
+                      placeholder="Search by customer name, salesman name or invoicen no" [(ngModel)]="filterQuery" />
+                    <span class="input-group-btn">
+                      <button class="btn btn-danger" type="button">
+                        <span class=" glyphicon glyphicon-search"></span>
+                      </button>
+                    </span>
+                  </div>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of mf.data; let i = index; let last = last;">
+              <td>{{i+1}}</td>
+              <td>
+                <div class="img-thumbnail ">
+                  <img *ngIf="data?.photo?.docpath" src="{{docServer}}/{{data?.photo?.docpath}}" class="img-thumbnail"
+                    alt="" style="width:100px; height:100px;">
+                  <img *ngIf="!data?.photo?.docpath" src="{{docServer}}/sparepartdefault.jpg" class="img-thumbnail"
+                    alt="" style="width:100px; height:100px;">
+
+
+                </div>
+
+              </td>
+
+              <td>
+                <pre>{{data?.prodetails}}</pre>
+              </td>
+              <td>{{data?.invoicenum}}</td>
+              <td>{{data?.bookingdate|date : 'dd/MM/yyyy'}}</td>
+              <td>{{data?.custname}},<br>
+                Mobile Number : {{data?.custmobile}}</td>
+
+              <td>{{data?.expdelivery|date : 'dd/MM/yyyy'}}</td>
+
+              <td>Is Exchange : {{data?.isexchg}}<br>
+                Is Insured : {{data?.isinsured}}</td>
+
+              <!-- <td>{{data?.pricetype}}</td> -->
+              <td> {{data?.salesmanname}}
+                <!-- <br> {{data?.address.line2}},
+                  <br> {{data?.address.country}},
+                  <br> {{data?.address.states}},{{data?.address.city}},
+                  <br> {{data?.address.pincode}} -->
+              </td>
+              <td>{{data?.saletype}}</td>
+              <!-- <td>{{data?.status}}</td> -->
+              <td>{{data?.totalprods}}</td>
+              <td>{{data?.total}} &#x20b9;</td>
+
+              <td class="text-right">
+                <!-- <a [routerLink]="['/editfirm/',data.id]" data-toggle="tooltip" title="Update Firm">
+                    <button class="btn btn-default btn-sm">
+                      <span class="glyphicon glyphicon-edit"></span>
+                    </button>
+                  </a> -->
+
+
+                <a [routerLink]="['/detailsale',data.id]">
+                  <button class="btn btn-info btn-sm" title="Sale Details">
+                    <span class="glyphicon glyphicon-info-sign"></span>
+                  </button>
+                </a>
+                <a [routerLink]="['/invoicesell',data.id]">
+                  <button class="btn btn-info btn-sm" title="Invoice Details">
+                    <span>&#x20b9;</span>
+                  </button>
+                </a>
+                <!-- <button class="btn btn-danger btn-sm" title="Delete Booking" (click)="deleteRole(data.id)">
+                    <span class="glyphicon glyphicon-remove-circle"></span>
+                  </button> -->
+                <!-- <button *ngIf="userType !== 'ADMIN'" disabled class="btn btn-danger btn-sm" title="Contact admin for functionality" (click)="deleteRole(data.role)">
+                    <span class="glyphicon glyphicon-remove-circle"></span>
+                  </button> -->
+              </td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="13">
+                <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

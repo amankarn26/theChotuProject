@@ -1,0 +1,147 @@
+<ion-header [translucent]="true">
+  <ion-toolbar
+    style="--background: rgba(134,75,246,1);">
+
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/tab1" *ngIf="!isUpdate" style="color: white;">
+      </ion-back-button>
+      <ion-back-button defaultHref="/tabs/tab1" (click)="back()" *ngIf="isUpdate" style="color: white;">
+      </ion-back-button>
+    </ion-buttons>
+    <ion-title class="pageheading">
+      <strong>My Profile</strong>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content [fullscreen]="true" *ngIf="!isUpdate && !ismapShow" class="styleBackground" style="margin-top: 65px;">
+  
+
+  <div class="topSapration"></div>
+  <div class="basicDetails">
+    <div class="imgBox" style="background-image: url('assets/extra/android.svg')"></div>
+    <div class="detailsBox">
+      <div class="detailsName">{{name}}</div>
+      <div class="detailsSub">{{phone}}</div>
+      <div class="detailsSub">{{email}}</div>
+    </div>
+  </div>
+  <div class="addressBox">
+    <div class="detailsName">Address :</div>
+    <div class="detailsSub">{{Address?.line1}} {{Address?.line2}}, 
+      {{Address?.states}}, {{Address?.city}} - 
+      {{Address?.pincode}}</div>
+  </div>
+
+  <div class="updateButtons">
+    <div class="updatebutton" (click)="gotoupdatepass()">Update Password</div>
+    <div class="updatebutton" (click)="gotoupdatelocation()">Addresses</div>
+  </div>
+
+  <div class="logoutButton" (click)="logout()">Logout</div>
+
+</ion-content>
+
+
+<ion-content [fullscreen]="true" *ngIf="isUpdate && updatePassword && !ismapShow">
+  <form #form5="ngForm">
+    <ion-list lines="full" class="ion-no-margin ion-no-padding">
+      <ion-row>
+        <ion-col col-12 style="padding-top: 40px;">
+          <ion-item>
+            <ion-input type="password" [(ngModel)]="pass" name="phonesss" placeholder="Enter 6 Digit Numeric Password"
+              pattern="[0-9]{6}" required></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-input type="password" [(ngModel)]="vpass" name="phonesss1" placeholder="Re-enter  Password"
+              pattern="[0-9]{6}" required></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+
+      <ion-row>
+        <ion-col>
+          <ion-item text-center>
+            <ion-label text-center style="text-align: center !important">
+              <ion-button size="small" style="--background: #864bf6;" [disabled]="!form5.valid">Update</ion-button>
+              <!-- <div class="allButton" (click)="update()">Update</div> -->
+              &nbsp;
+              &nbsp;
+              <ion-button size="small" style="--background: #864bf6;" (click)="back()">Cancel </ion-button>
+
+            </ion-label>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-list>
+
+  </form>
+
+</ion-content>
+
+
+<ion-content [fullscreen]="true" *ngIf="isUpdate && updateLocation && !ismapShow">
+  <form #form6="ngForm">
+    <ion-list lines="full" class="ion-no-margin ion-no-padding">
+
+
+      <ion-row>
+        <ion-col col-sm-12 style="padding-top: 40px;">
+
+          <ion-item>
+            <ion-label position="floating"></ion-label>
+            <ion-input placeholder="Address Line 1" type="text" class="form-control" id="uline12" name="uline12"
+              [(ngModel)]="address.line1" required></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-input placeholder="Area " type="text" class="form-control" id="uline2" name="uline2"
+              [(ngModel)]="address.line2"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-input placeholder="Zip Code" type="number" required class="form-control" id="upincode" name="upincode"
+              [(ngModel)]="address.pincode" (change)="getState($event)"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-input placeholder="City" type="text" required class="form-control" name="ucitiName"
+              [(ngModel)]="address.city"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-input placeholder="State" type="text" required class="form-control" name="ustates" required
+              [(ngModel)]="address.states"></ion-input>
+
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col col-sm-6 *ngIf="isMapSet">
+          <ion-button size="small" style="--background: #864bf6; width: 100%;" [disabled]="!form6.valid" (click)="updatecustomer()">Update</ion-button>
+        </ion-col>
+        <ion-col col-sm-6 *ngIf="!isMapSet">
+          <ion-button size="small" style="--background: #864bf6; width: 100%;" [disabled]="!form6.valid" (click)="setLocation()">Select Location</ion-button>
+        </ion-col>
+        <ion-col col-sm-6>
+          &nbsp;
+          &nbsp;
+          <ion-button style="--background: #864bf6; float: right;" size="small" (click)="back()">Cancel </ion-button>
+        </ion-col>
+
+      </ion-row>
+    </ion-list>
+  </form>
+
+</ion-content>
+
+
+<ion-content class="mapBox" *ngIf="ismapShow">
+  <div id="mapcontainer">
+    <div id="map"></div>
+  </div>
+  <div class="buttons">
+    <div class="proceed" (click)="stopMap()">Select this location</div>
+  </div>
+</ion-content>

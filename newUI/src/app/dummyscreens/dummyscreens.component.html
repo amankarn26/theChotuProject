@@ -1,0 +1,399 @@
+
+
+
+<div [hidden]="isManageState" class="col-md-12 col-sm-12 col-xs-12">
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+      Excecutive Details
+        <a [routerLink]="['/managefirm']" title="View All Firm" class="pull-right">
+          <span class="glyphicon glyphicon-th-list"></span>
+        </a>
+      </div>
+      <div class="panel-body">
+         <form #form1="ngForm" >
+           <div class="col-sm-12 img-thumbnail ">
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="name"> Name:
+              </label>
+              <input type="text" class="form-control" required name="name" [(ngModel)]="firm.name"  >
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="code"> Code:
+              </label>
+              <input type="text" class="form-control" *ngIf="!isUpdate"  required maxlength="3" name="code" [(ngModel)]="firm.code" onkeyup="this.value = this.value.toUpperCase();">
+              <input type="text" class="form-control" *ngIf="isUpdate"  readonly maxlength="3" name="code" [(ngModel)]="firm.code" onkeyup="this.value = this.value.toUpperCase();">
+            </div>
+          </div>
+  
+  
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="pannum"> PAN No:</label>
+              <input type="text" *ngIf="!isUpdate"  class="form-control" name="pannum"  pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}" [(ngModel)]="firm.pannum" >
+              <input type="text" *ngIf="isUpdate"  readonly class="form-control"  pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}" name="pannum" [(ngModel)]="firm.pannum" >
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="gstin"> GST NO:</label>
+              <input type="text" *ngIf="!isUpdate" class="form-control" name="gstin" [(ngModel)]="firm.gstin" pattern="^([0][1-9]|[1-2][0-9]|[3][0-5])([a-zA-Z]{5}[0-9]{4}[a-zA-Z]{1}[1-9a-zA-Z]{1}[zZ]{1}[0-9a-zA-Z]{1})+$"
+           >
+              <input type="text"  *ngIf="isUpdate" readonly class="form-control" name="gstin" [(ngModel)]="firm.gstin"
+              pattern="^([0][1-9]|[1-2][0-9]|[3][0-5])([a-zA-Z]{5}[0-9]{4}[a-zA-Z]{1}[1-9a-zA-Z]{1}[zZ]{1}[0-9a-zA-Z]{1})+$"
+             >
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="phone"> Phone:</label>
+              <input type="number" class="form-control"
+               name="phone" pattern="[0-9]{10}" [(ngModel)]="firm.phone" required (change)="Setphone()">
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="emaill"> Email:
+              </label>
+              <input type="email" class="form-control" name="emaill" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"  [(ngModel)]="firm.email" required>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="empcount"> Member Count:</label>
+              <input type="number" class="form-control" name="empcount" [(ngModel)]="firm.empcount">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="line1">Address Line 1:
+              </label>
+              <input type="text" class="form-control" id="line1" name="line1" [(ngModel)]="firm.address.line1" required />
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="line2">Area</label>
+              <input type="text" class="form-control" id="line2" required name="line2" [(ngModel)]="firm.address.line2" />
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="pincode">Pin-Code:
+              </label>
+              <!-- <input type="number" class="form-control" id="pincode" name="pincode" [(ngModel)]="firm.address.pincode" required pattern="[0-9]{6}"
+              /> -->
+  
+  
+                <input type="number" *ngIf="!isUpdate" required class="form-control" id="pincode" name="pincode" [(ngModel)]="firm.address.pincode" (change)="getState($event)"
+                />
+                <input type="number" *ngIf="isUpdate" required class="form-control" id="pincode" name="pincode" [(ngModel)]="firm.address.pincode"
+                  (change)="getState($event)" />
+  
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="states">State:
+              </label>
+              <!-- <select class="form-control" name="states" [(ngModel)]="firm.address.states" required (change)="onChangeState($event)">
+                <option *ngFor="let state of statelist; let i=index" [value]="state.state_name">{{state.state_name}}</option>
+              </select> -->
+              <input type="text"  required class="form-control" name="states" required [(ngModel)]="firm.address.states" />
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="city">City:
+              </label>
+              <!-- <select (ngModel)="citiName" name="citiName" class="form-control" required [(ngModel)]="firm.address.city">
+                <option *ngFor="let city of citylist; let i=index" [value]="city.city_name">{{city.city_name}}</option>
+              </select> -->
+              <input type="text"  required class="form-control" name="citiName" [(ngModel)]="firm.address.city" />
+            </div>
+          </div>
+  
+  
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="name"> Delivery Pool:
+              </label>
+              <!-- <input type="text"  class="form-control" required name="pvalue" [(ngModel)]="config.pvalue"> -->
+              <select class="form-control" class="form-control" required name="dp" [(ngModel)]="firm.usedeliverypool">
+                <option value="YES">YES</option>
+                <option value="NO">NO</option>
+              </select>
+            </div>
+          </div>
+  
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="category"> Firm Category:
+              </label>
+              <select class="form-control" *ngIf="!isUpdate" id="category" required name="category"
+                [(ngModel)]="firm.category">
+                <option required *ngFor="let type of categoryList; let i=index" [value]="type.name">{{type.name}}</option>
+              </select>
+              <select class="form-control" id="category" *ngIf="isUpdate" readonly required name="category"
+                [(ngModel)]="firm.category">
+                <option required *ngFor="let type of categoryList; let i=index" [value]="type.name">{{type.name}}</option>
+              </select>
+            </div>
+          </div>
+  
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="servicerate">Service Rate:
+              </label>
+                <input type="number" *ngIf="!isUpdate" required class="form-control" id="servicerate" name="servicerate" [(ngModel)]="firm.servicerate"
+                />
+                <input type="number" *ngIf="isUpdate" required class="form-control" id="servicerate" name="servicerate" [(ngModel)]="firm.servicerate"
+                   />
+            </div>
+          </div>
+  
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="deliverdays">Delivery Days:
+              </label>
+                <input type="number" *ngIf="!isUpdate" required class="form-control" id="deliverdays" name="deliverdays" [(ngModel)]="firm.deliverdays"
+                />
+                <input type="number" *ngIf="isUpdate" required class="form-control" id="deliverdays" name="deliverdays" [(ngModel)]="firm.deliverdays"
+                   />
+            </div>
+          </div>
+        </div>
+  
+  
+  
+  
+  
+        <div class="col-md-12 col-sm-12 col-xs-12 img-thumbnail " style="margin-top: 10px;">
+          <h4>Account Details</h4>
+  
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="actype"> Account Type
+              </label>
+              <!-- <input type="text" *ngIf="!isUpdate" readonly class="form-control" required name="name" [(ngModel)]="prodtype"> -->
+              <select class="form-control" id="actype" required name="actype"
+                [(ngModel)]="firm.account.type" required>
+                <option value="BANK">BANK</option>
+                <option value="PAYTM">PAYTM</option>
+                <option value="GOOGLE_PAY">GOOGLE_PAY</option>
+              </select>
+            </div>
+          </div>
+  
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="acctnumber">Account Number:
+              </label>
+                <input type="number" *ngIf="!isUpdate" required class="form-control" id="acctnumber" name="acctnumber" [(ngModel)]="firm.account.acctnumber"
+                />
+                <input type="number" *ngIf="isUpdate" required class="form-control" id="acctnumber" name="acctnumber" [(ngModel)]="firm.account.acctnumber"
+                   />
+            </div>
+          </div>
+  
+          <div class="col-md-6" *ngIf="firm.account.type === 'BANK'" >
+            <div class="form-group">
+              <label for="branch">Branch Name:
+              </label>
+                <input type="text" *ngIf="!isUpdate" required class="form-control" id="branch" name="branch" [(ngModel)]="firm.account.branch"
+                />
+                <input type="text" *ngIf="isUpdate" required class="form-control" id="branch" name="branch" [(ngModel)]="firm.account.branch"
+                   />
+            </div>
+          </div>
+          <div class="col-md-6" *ngIf="firm.account.type === 'BANK'">
+            <div class="form-group">
+              <label for="ifsccode">IFSC Code:
+              </label>
+                <input type="text" *ngIf="!isUpdate" required class="form-control" id="ifsccode" name="ifsccode" [(ngModel)]="firm.account.ifsccode"
+                />
+                <input type="text" *ngIf="isUpdate" required class="form-control" id="ifsccode" name="ifsccode" [(ngModel)]="firm.account.ifsccode"
+                   />
+            </div>
+          </div>
+          <div class="col-md-6" *ngIf="firm.account.type === 'BANK'">
+            <div class="form-group">
+              <label for="city">CITY:
+              </label>
+                <input type="text" *ngIf="!isUpdate" required class="form-control" id="city" name="city" [(ngModel)]="firm.account.city"
+                />
+                <input type="text" *ngIf="isUpdate" required class="form-control" id="city" name="city" [(ngModel)]="firm.account.city"
+                   />
+            </div>
+          </div>
+  
+  
+  
+  
+        </div>
+  
+        <div class="col-md-12 col-sm-12 col-xs-12 img-thumbnail " style="margin-top: 10px;">
+          <h4>Login Details</h4>
+  
+          <div class="col-sm-3">
+            <div class="form-group">
+              <label for="username">User name:</label>
+              <input type="number" pattern="[0-9]{10}" readonly  class="form-control" id="username" name="username" required [(ngModel)]="firm.login.username"
+                />
+            </div>
+          </div>
+          <div class="col-sm-3" *ngIf="!isUpdate" >
+            <div class="form-group">
+              <label for="password">Password:</label>
+              <input type="text" class="form-control" id="password" name="password" readonly [(ngModel)]="firm.login.password"
+                />
+            </div>
+          </div>
+        </div>
+  
+  
+          <div class="col-md-12 col-sm-12 col-xs-12 img-thumbnail " style="margin-top: 10px;">
+            <h4>Systme Configuration</h4>
+            <form #form2="ngForm">
+            <div class="col-sm-5">
+              <div class="form-group">
+                <label for="cname"> Name
+                </label>
+                <!-- <input type="text" *ngIf="!isUpdate" readonly class="form-control" required name="name" [(ngModel)]="prodtype"> -->
+                <select class="form-control" id="cname" required name="cname"
+                  [(ngModel)]="config.name" required>
+                  <option value="enable.insurance">Insurance</option>
+                  <option value="enable.customer">Customer</option>
+                  <option value="enable.employee">Employee</option>
+                  <option value="enable.product">Product</option>
+                  <option value="enable.exchange">Exchange</option>
+                  <option value="enable.warranty">Warranty</option>
+                  <option value="enable.servicing">Servicing</option>
+                  <option value="enable.jobcard">Jobcard</option>
+                  <option value="enable.crm">CRM</option>
+                  <option value="enable.campaign">Campaign</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-sm-5">
+              <div class="form-group">
+                <label for="name"> Value:
+                </label>
+                <!-- <input type="text"  class="form-control" required name="pvalue" [(ngModel)]="config.pvalue"> -->
+                <select class="form-control" class="form-control" required name="pvalue" [(ngModel)]="config.value">
+                  <option value="YES">YES</option>
+                  <option value="NO">NO</option>
+                </select>
+              </div>
+            </div>
+          </form>
+  
+            <div class="col-sm-2">
+              <div class="form-group" style="margin-top: 5px;">
+                <br>
+                <label for="Addbutton" [hidden]='true'>Add
+                </label>
+                <button [disabled]="!form2.valid" class="btn btn-info btn-sm" (click)="push()">
+                  <span class="glyphicon glyphicon-plus"></span>
+                </button>
+              </div>
+            </div>
+  
+            <div class="col-sm-12 img-thumbnail rounded"
+            style="margin-top: 3px;  border: 1px solid #c5c4c4; min-height: 10px; overflow: auto;">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th style="width: 50px;">-</th>
+                  <th>Name</th>
+  
+                  <th>Value</th>
+  
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let data of configlist; let i=index;">
+                  <td style="width: 50px;">
+                    <a style="cursor: pointer; color: orange;" (click)="delproperty(i)">
+                      <span class="glyphicon glyphicon-remove-circle"></span>
+                    </a>
+                  </td>
+                  <!-- <td style="width: 50px;" *ngIf="isUpdate">
+                    <a style="cursor: pointer; color: red;" (click)="onDeletelabourfromdb(data.id)">
+                      <span class="glyphicon glyphicon-remove-circle"></span>
+                    </a>
+                  </td> -->
+  
+                  <td>{{data?.name}}</td>
+                  <td>{{data?.value}}</td>
+                </tr>
+  
+                <tr *ngFor="let data of configlist1; let i=index;" >
+                  <td style="width: 50px;">
+                    <a style="cursor: pointer; color: red;" (click)="delproperty1(data.id)">
+                      <span class="glyphicon glyphicon-remove-circle"></span>
+                    </a>
+                  </td>
+                  <!-- <td style="width: 50px;" *ngIf="isUpdate">
+                    <a style="cursor: pointer; color: red;" (click)="onDeletelabourfromdb(data.id)">
+                      <span class="glyphicon glyphicon-remove-circle"></span>
+                    </a>
+                  </td> -->
+  
+                  <td>{{data?.name}}</td>
+                  <td>{{data?.value}}</td>
+                </tr>
+                <!-- <tr *ngFor="let data of datalist1; let i=index;">
+                  <td style="width: 50px;">
+                    <a style="cursor: pointer; color: red;" (click)="delproperty1(data.id)">
+                      <span class="glyphicon glyphicon-remove-circle"></span>
+                    </a>
+                  </td>
+  
+  
+                  <td>{{data?.pvalue}}</td>
+                </tr> -->
+              </tbody>
+            </table>
+          </div>
+          </div>
+          <div class="col-md-12 col-sm-12 col-xs-12 ">
+              <hr>
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                  <h4>Firm Logo:</h4>
+                </div>
+              <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-group">
+                  <label>Logo:</label>
+                  <input type="file" (change)="fileEvent($event)"  name="document" [(ngModel)]="document" />
+                </div>
+              </div>
+              <div class="col-md-6 col-sm-6 col-xs-12">
+                <img [src]="urls" style="height:200px; width:200px;" class="thumbnail">
+              </div>
+  
+  
+  
+  
+            </div>
+  
+  
+  
+  
+          <div class="col-md-6">
+            <div class="form-group">
+              <button [disabled]="!form1.valid" type="submit"  class="btn btn-default" (click)="submitData()">Submit</button>
+
+              <button  [disabled]="!form1.valid" class="btn btn-default" (click)="updateData()">Update</button>
+             <button type="button" class="btn btn-default" (click)="cancel()">Cancel</button>
+            </div>
+          </div>
+        </form>
+  
+      </div>
+    </div>
+  </div>
+  

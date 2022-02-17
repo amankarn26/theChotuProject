@@ -1,0 +1,17 @@
+.billno{
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+    margin-left: 5px;
+    padding: 5px;
+}
+
+.spaaan
+{
+    color: white;
+    height: 100px;
+    /* width: 100px; */
+    background-color: aqua;
+    border: 2px black;
+    border-radius: 5px;
+}

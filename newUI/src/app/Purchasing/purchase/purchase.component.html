@@ -1,0 +1,800 @@
+<!-- <div class="row">
+  <div class="col-md-12">
+    <h2>{{title}}</h2>
+
+  </div>
+</div>
+<hr /> -->
+
+<div [hidden]="isManageState" class="col-md-12 col-sm-12 col-xs-12">
+<div class="panel panel-default" *ngIf="!detailFlag">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      {{title}}
+      <a [routerLink]="['/managepurchase']" title="View all purchase" class="pull-right">
+        <span class="glyphicon glyphicon-th-list"></span>
+      </a>
+    </div>
+    <div class="panel-body text-capitalize">
+        <form #form1="ngForm" >
+
+        <div class="col-sm-6">
+          <div class="form-group">
+            <label for="vendor"> Supplier Name:
+
+            </label>
+            <select class="form-control" name="vendorname" required [(ngModel)]="purchase.supplier" (change)="onChangeHandler1($event)">
+              <option required *ngFor="let sup of vendorList; let i=index" [value]="sup.id">{{sup.name}}</option>
+            </select>
+          </div>
+        </div>
+
+
+        <!-- <div class="col-sm-6">
+          <div class="form-group">
+            <label for="poby"> Purchase Order By:
+
+            </label>
+            <input type="text" class="form-control" required name="pobyname" [(ngModel)]="purchase.pobyname">
+            <select class="form-control" name="pobyname" required [(ngModel)]="purchase.poby" (change)="onChangeHandler2($event)">
+                <option required *ngFor="let sup of empList; let i=index" [value]="sup.id">{{sup.name}}</option>
+              </select>
+          </div>
+        </div> -->
+
+
+        <div class="col-sm-6">
+          <div class="form-group">
+            <label for="porderno"> Purchase Order No:
+
+            </label>
+            <input type="text" class="form-control" readonly  name="porderno" [(ngModel)]="purchase.porderno">
+          </div>
+        </div>
+
+
+        <div class="col-sm-6">
+          <div class="form-group">
+            <label for="expdelivery"> Expected Delivery:
+
+            </label>
+            <input type="date" min="{{this.todate}}" class="form-control" required name="expDelivery" [(ngModel)]="purchase.expdelivery">
+          </div>
+        </div>
+        <!-- <div class="col-sm-6">
+            <div class="form-group">
+              <label for="generatedon"> Generated On:
+
+              </label>
+              <input type="date" class="form-control" required  name="generatedon" [(ngModel)]="purchase.generatedon">
+            </div>
+          </div> -->
+
+        <div class="col-sm-6">
+            <div class="form-group">
+              <label for="paymentmode"> Payment Type:
+
+              </label>
+              <select  class="form-control" name="paymentmode" [(ngModel)]="purchase.paymentmode" required >
+                  <option value="BANK">BANK</option>
+
+                  <option value="CASH">CASH</option>
+
+                  <!-- <option value="CASH">CASH</option> -->
+                  <!-- <option value="NA">NA</option> -->
+                </select>
+            </div>
+          </div>
+          <!-- <div class="col-sm-6">
+              <div class="form-group">
+                <label for="state"> State:
+
+                </label>
+                <select  class="form-control" name="state" [(ngModel)]="purchase.state" required >
+                    <option value="ADDED">ADDED</option>
+
+                    <option value="APPROVED">APPROVED</option>
+
+                    <option value="SENT">SENT</option>
+                    <option value="RECEIVED">RECEIVED</option>
+                    <option value="PAID">PAID</option>
+                  </select>
+              </div>
+            </div> -->
+            <!-- <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="deliveredby"> Delivered by:
+
+                  </label>
+                  <input type="text" class="form-control"  name="deliveredby" [(ngModel)]="purchase.deliveredby">
+                </div>
+              </div> -->
+              <div class="col-sm-6">
+                  <div class="form-group">
+                    <label for="estdcarting"> Estimate Carting:
+
+                    </label>
+                    <input type="number" class="form-control"  *ngIf="!isUpdate" required name="estdcarting" [(ngModel)]="purchase.estdcarting" (change)="recal()">
+                    <input type="number" readonly *ngIf="isUpdate" class="form-control" required name="estdcarting" [(ngModel)]="purchase.estdcarting" (change)="recal()">
+
+                  </div>
+                </div>
+
+
+                    <!-- <div class="col-sm-6">
+                        <div class="form-group">
+                          <label for="purchaseorder"> purchaseorder:
+
+                          </label>
+                          <input type="number" class="form-control"  name="purchaseorder" [(ngModel)]="details.purchaseorder">
+                        </div>
+                      </div> -->
+                      <div class="col-lg-12 col-md-12 col-sm-12 ">
+                          <hr>
+                        </div>
+                      <div class="col-lg-12 bgcol" style="padding:0px;">
+                          <div class="col-lg-12 col-md-12 col-sm-12">
+                              <h4>Product Details:</h4>
+                            </div>
+
+
+                              <div class="col-sm-6">
+                                <div class="form-group">
+                                  <label for="prodtype"> Product type:
+                                  </label>
+                                  <select class="form-control"  id="prodtype"  name="prodtype"
+                                    [(ngModel)]="details.ptype" (change)="getallproductfromprodtype()">
+                                    <option required *ngFor="let type of prodtlist; let i=index" [value]="type.prodtype">{{type.prodtype}}</option>
+                                  </select>
+                                </div>
+                              </div>
+
+                      <div class="col-sm-6" >
+                          <div class="form-group">
+                            <label for="product"> Product:
+
+                            </label>
+                            <select   class="form-control" name="product" [(ngModel)]="details.product"  (change)="getproductgst($event)">
+                                <option  *ngFor="let product of prodlList; let i=index" [value]="product.id">{{product.name}}</option>
+                              </select>
+                          </div>
+                        </div>
+                
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                              <label for="qty"> Total Quantity:
+
+                              </label>
+                              <input type="number" class="form-control"  name="qty" [(ngModel)]="details.qty" (change)="prodtot()">
+                            </div>
+                          </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                              <label for="rateperunit"> Rateperunit:
+
+                              </label>
+                              <input type="number" class="form-control"  name="rateperunittt" (change)="prodtot()" [(ngModel)]="details.rateperunit">
+                            </div>
+                          </div>
+                          <div class="col-sm-6">
+                              <div class="form-group">
+                                <label for="hsncode"> HSN Code:  </label>
+
+                                <input type="text" class="form-control" readonly  name="hsncode" [(ngModel)]="details.hsncode">
+                              </div>
+                            </div>
+                            <div class="col-sm-6" >
+                                <div class="form-group">
+                                  <label for="rateunit"> Rate Unit:
+
+                                  </label>
+                                  <input type="text" class="form-control" readonly  name="rateunit" [(ngModel)]="details.rateunit">
+                                </div>
+                              </div>
+                              <!-- <div class="col-sm-6" >
+                                  <div class="form-group">
+                                    <label for="rateperunit"> Purchase Price:
+                                    </label>
+                                    <input type="number" class="form-control"  name="purchaseprice" [(ngModel)]="details.purchaseprice" (change)="prodtot()">
+                                  </div>
+                                </div> -->
+
+
+
+
+
+                                          <div class="col-sm-6">
+                                            <div class="form-group">
+                                              <label for="gst"> GST Percent:
+                                              </label>
+                                              <input *ngIf="!isUpdate" type="number" class="form-control" disabled name="gst" [(ngModel)]="details.gst">
+                                              <input *ngIf="isUpdate" type="number" class="form-control" disabled name="gst" [(ngModel)]="details.gst">
+                                            </div>
+                                          </div>
+                                          <div class="col-sm-6">
+                                              <div class="form-group">
+                                                <label for="gstamt"> GST Amount:
+                                                </label>
+                                                <input *ngIf="!isUpdate" type="number" class="form-control"  disabled name="gstamt" [(ngModel)]="details.gstamt">
+                                                <input *ngIf="isUpdate" type="number" class="form-control"  disabled name="gstamt" [(ngModel)]="details.gstamt">
+                                              </div>
+                                            </div>
+
+                                              <div class="col-sm-6">
+                                                <div class="form-group">
+                                                  <label for="expktweight"> Amount:
+                                                  </label>
+                                                  <input *ngIf="!isUpdate" type="number" class="form-control" disabled name="expktweight" [(ngModel)]="details.amount">
+                                                  <input *ngIf="isUpdate" type="number" class="form-control" disabled name="expktweight" [(ngModel)]="details.amount">
+                                                </div>
+                                              </div>
+
+                                              <div class="col-sm-6">
+                                                <div class="form-group">
+                                                  <label for="subtotal"> Subtotal
+                                                  </label>
+                                                  <input *ngIf="!isUpdate" type="number" class="form-control" disabled name="subtotal" [(ngModel)]="details.subtotal">
+                                                  <input *ngIf="isUpdate" type="number" class="form-control" disabled name="subtotal" [(ngModel)]="details.subtotal">
+                                                </div>
+                                              </div>
+ 
+                                          </div>
+                                          <div class="col-sm-12">
+
+                                               <div>
+                                                 <div>
+                                                   <br><form name="form1">
+                                                     <button class="btn btn-info btn-sm" (click)="push()">
+                                                       <span class="glyphicon glyphicon-plus"></span>
+                                                     </button>
+                                                   </form>
+                                                 </div>
+                                               </div>
+                                             </div>
+                                             <hr>
+                                             <div class="col-sm-12" style="margin-top: 3px;  border: 1px solid #c5c4c4; min-height: 10px; overflow: auto;">
+                                               <table class="table">
+                                                 <thead>
+                                                   <tr>
+                                                     <th style="width: 50px;">-</th>
+                                                     <!-- <th>Product</th> -->
+                                                     <th>Product Name</th>
+                                                     <th>HSN Code</th>
+                                                     <!-- <th>Colour</th> -->
+                                                     <th>Total Quantity</th>
+                                                     <!-- <th>totalpacks</th> -->
+                                                     <!-- <th>UnitsPerPack</th> -->
+                                                     <!-- <th>Rateunit</th> -->
+                                                     <th>Rate Per Unit</th>
+                                                     <th>Amount</th>
+                                                     <th>GST Amount</th>
+                                                     <th>Subtotal</th>
+                                                     <!-- <th>RateLabelPerc</th>
+                                                     <th>FinalAmount</th> -->
+                                                     </tr>
+                                                 </thead>
+                                                 <tbody>
+                                                   <tr *ngFor="let data of purchase.details; let i=index;">
+                                                     <td style="width: 50px;" *ngIf="!isUpdate" >
+                                                       <a style="cursor: pointer; color: red;" title="Delete Details" (click)="onDeleteproduct(i)">
+                                                         <span class="glyphicon glyphicon-remove-circle"></span>
+                                                       </a>&nbsp;
+                                                      
+                                                       <a style="cursor: pointer; color: blue;" title="Clone Details" (click)="clone(data)">
+                                                        <span class="	glyphicon glyphicon-file"></span>
+                                                      </a>
+                                                     </td>
+                                                     <td style="width: 50px;" *ngIf="isUpdate" >
+                                                        <a style="cursor: pointer; color: red;" title="Delete Details" (click)="onDeleteproductfromdb(data.id)">
+                                                          <span class="glyphicon glyphicon-remove-circle"></span>
+                                                        </a>
+                                                        <a style="cursor: pointer;color: blue;" title="Clone Details" (click)="clone(data)">
+                                                         <span class="glyphicon glyphicon-file"></span>
+                                                       </a>
+                                                      </td>
+                                                     <!-- <td>{{data?.product}}</td> -->
+                                                     <td>{{data?.pname}}</td>
+                                                     <td>{{data?.hsncode}}</td>
+                                                     <!-- <td>{{data?.vcolour}}</td> -->
+                                                     <td>{{data?.qty}}</td>
+                                                     <!-- <td>{{data?.totalpacks}}</td> -->
+                                                     <!-- <td>{{data?.unitsperpack}}</td> -->
+                                                     <!-- <td>{{data?.rateunit}}</td> -->
+                                                     <td>{{data?.rateperunit}}</td>
+                                                     <td>{{data?.amount}}</td>
+                                                     <td>{{data?.gstamt}}</td>
+                                                     <td>{{data?.subtotal}}</td>
+                                                     <!-- <td>{{data?.ratelabelperc}}</td>
+                                                     <td>{{data?.finalamt}}</td> -->
+                                                     </tr>
+
+                                                 </tbody>
+                                               </table>
+
+                                             </div>
+                                             <div class="col-lg-12 col-md-12 col-sm-12 ">
+                                              <hr>
+                                            </div>
+                                             <!-- <div class="col-sm-6">
+                                              <div class="form-group">
+                                                <label for="totalweight"> Total Weight:
+
+                                                </label>
+                                                <input type="number" class="form-control" required name="totalweight" [(ngModel)]="purchase.totalweight">
+                                              </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                  <label for="totalpacks"> Total Packs:
+                                                  </label>
+                                                  <input type="number" class="form-control"  name="totalpacks" [(ngModel)]="purchase.totalpacks">
+                                                </div>
+                                              </div> -->
+
+                                              <div class="col-sm-3">
+                                                <div class="form-group">
+                                                  <label for="totalproducts"> Total Products:
+                                                  </label>
+                                                  <input type="number" class="form-control"  name="totalproducts" readonly [(ngModel)]="purchase.totalproducts">
+                                           
+                                                  </div>
+                                              </div>
+                                              <div class="col-sm-3">
+                                                <div class="form-group">
+                                                  <label for="totalamt"> Total Amount:
+                                                  </label>
+                                                  <input type="number" class="form-control"  name="totalamt" readonly [(ngModel)]="purchase.totalamt">
+                                           
+                                                  </div>
+                                              </div>
+                                              <div class="col-sm-3">
+                                                <div class="form-group">
+                                                  <label for="finalamt"> Final Amount:
+                                                  </label>
+                                                  <input type="number" class="form-control" title="FinalAmount will be Total of Est. Amt and Total Amt"  name="finalamt" readonly [(ngModel)]="purchase.finalamt">
+                                           
+                                                  </div>
+                                              </div>
+                                              <div class="col-sm-6">
+                                                <div class="form-group">
+                                                  <label for="description"> Description:
+                                                  </label>
+                                                  <textarea type="text" class="form-control"  name="description" [(ngModel)]="purchase.description">
+                                                </textarea>
+                                                  </div>
+                                              </div>
+                                          
+                                             <div>
+                                                      <hr>
+                                             </div>
+
+
+        <div class="col-md-12">
+          <div class="form-group">
+            <button *ngIf="this.url == '/addpurchase'" type="submit" [disabled]="!form1.valid" class="btn btn-default" (click)="submitData()">Submit</button>
+            <button *ngIf="this.url == '/editpurchase/' + this.id" type="submit" [disabled]="!form1.valid" class="btn btn-default" (click)="updateData()">Update</button>
+           <button type="button" class="btn btn-default" (click)="cancel()">Cancel</button>
+          </div>
+        </div>
+      </form>
+
+    </div>
+  </div>
+  </div>
+  <div class="panel panel-default" *ngIf="detailFlag">
+  <div class="panel-heading">
+      <div class="clearfix">
+        <div class="pull-left"> {{title}}</div>
+        <div class="container" class="pull-right">
+          <div class="row">
+            <a [routerLink]="['/managepurchase']" title="Manage Purchase Order" class="btn btn-info btn-sm a-btn-slide-text">
+              <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+            </a>
+
+            <!-- <a [routerLink]="['/editpurchase', id]" title="Update Purchase" class="btn btn-info btn-sm a-btn-slide-text">
+
+              <i class="glyphicon glyphicon-edit"></i>
+
+            </a> -->
+            <!-- <a class="btn btn-danger a-btn-slide-text btn-sm" title="Delete Purchase Detail" (click)="deleteEmployee(id)">
+              <span class="glyphicon glyphicon-remove-circle"></span>
+            </a> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  <div class="panel-body">
+
+      <form  >
+        <div class="col-md-12 col-sm-12 col-xs-12 ">
+
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <!-- <h4>Purchase Order Details:</h4> -->
+          </div>
+          <div class="col-md-12 col-sm-12 col-xs-12">
+
+          </div>
+          <div class="col-md-12 col-sm-12 col-xs-12">
+
+              <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="name">Supplier:&nbsp;&nbsp; {{purchase.suppname}}
+                </label>
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="contactperson">Created By:&nbsp;&nbsp; {{purchase.pobyname}}</label>
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="porderno">Purchase Order No.:&nbsp;&nbsp;{{purchase.porderno}}
+                </label>
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="expdelivery">Expected Delivery:&nbsp;&nbsp;{{purchase.expdelivery|date: 'dd/MM/yyyy'}}
+                </label>
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="generatedon">Generated On:&nbsp;&nbsp;{{generatedon|date: 'dd/MM/yyyy'}}
+                </label>
+              </div>
+            </div>
+          </div>
+
+
+          <!-- <div class="col-md-12 col-sm-12 col-xs-12">
+            <hr>
+              <h4>QTransport Details:</h4>
+            </div> -->
+
+            <div class="col-md-12 col-sm-12 col-xs-12">
+
+
+                <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="paymentmode">Payment Type:&nbsp;&nbsp;{{purchase.paymentmode}}
+                </label>
+              </div>
+            </div>
+            <!-- <div class="col-md-6 col-sm-6 col-xs-12">
+              <div class="form-group">
+                <label for="state">Status:&nbsp;&nbsp;{{purchase.state}}
+                </label>
+              </div>
+            </div> -->
+            <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="this.totalproducts">
+                <div class="form-group">
+                  <label for="state">Total Products:&nbsp;&nbsp;{{totalproducts}}
+                  </label>
+                </div>
+              </div>
+              <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="this.totalspares">
+                  <div class="form-group">
+                    <label for="state">Total Spareparts:&nbsp;&nbsp;{{totalspares}}
+                    </label>
+                  </div>
+                </div>
+            <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="this.purchase.deliveredby">
+              <div class="form-group">
+                <label for="totalweight">Delivered By:&nbsp;&nbsp;{{purchase.deliveredby}}
+                </label>
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="form-group">
+                  <label for="numbundles">Estimate Carting:&nbsp;&nbsp;{{purchase.estdcarting}}
+                  </label>
+                </div>
+              </div>
+              <div class="col-md-6 col-sm-6 col-xs-12">
+                  <div class="form-group">
+                    <label for="totalamt">Total Amount:&nbsp;&nbsp;{{purchase.totalamt}}
+                    </label>
+                  </div>
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="form-group">
+                      <label for="finalamt">Final Amount:&nbsp;&nbsp;{{purchase.finalamt}}
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="form-group">
+                      <label for="description">Description:&nbsp;&nbsp;{{purchase.description}}
+                      </label>
+                    </div>
+                  </div>
+              <!-- <div class="col-md-12 col-sm-12 col-xs-12">
+                  <h5>Temptravel Details:</h5>
+                </div> -->
+
+                    <!-- <div class="col-md-6 col-sm-6 col-xs-12">
+                        <div class="form-group">
+                          <label for="totalweight">Total Weight:&nbsp;&nbsp;{{purchase.totalweight}}
+                          </label>
+                        </div>
+                      </div>
+                      <div class="col-md-12 col-sm-12 col-xs-12">
+                          <div class="form-group">
+                            <label for="totalpacks">Total Packs:&nbsp;&nbsp;{{purchase.totalpacks}}
+                            </label>
+                          </div>
+                        </div>  -->
+                        <!-- <div class="col-md-6 col-sm-6 col-xs-12">
+                            <div class="form-group">
+                              <label for="parcelamt">Tparcelamount:{{purchase.qtransport}}
+                              </label>
+                            </div>
+                          </div> -->
+
+          </div>
+
+        </div>
+
+
+
+
+        <div class="col-md-12 col-sm-12 col-xs-12 ">
+          <hr>
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <h4>Purchase Order Details:</h4>
+            </div>
+        <div class="col-sm-12" style="margin-top: 3px;  border: 1px solid #c5c4c4; min-height: 10px; overflow: auto;">
+
+            <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 50px;">-</th>
+                    <!-- <th>Product</th> -->
+                    <th>Product Name</th>
+                    <th>HSN Code</th>
+                    <th>Total Quantity</th>
+                    <!-- <th>totalpacks</th> -->
+                    <!-- <th>UnitsPerPack</th> -->
+                    <!-- <th>Rateunit</th> -->
+                    <th>Rate Per Unit</th>
+
+                    <th>Amount</th>
+                    <th>GST Amount</th>
+                    <th>Final Amount</th>
+                    <!-- <th>RateLabelPerc</th>
+                    <th>FinalAmount</th> -->
+                    </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let data of purchase.details; let i=index;">
+                    <td style="width: 50px;">
+                      <!-- <a style="cursor: pointer; color: red;" (click)="onDeleteproduct(i)">
+                        <span class="glyphicon glyphicon-remove-circle"></span>
+                      </a>
+                      <a style="cursor: pointer; color: blue;" (click)="clone(data)">
+                       <span class="glyphicon glyphicon glyphicon-duplicate"></span>
+
+                     </a> -->
+                     {{i+1}}
+                    </td>
+                    <!-- <td>{{data?.product}}</td> -->
+                    <!-- <td>{{data?.product}}</td> -->
+
+                    <td>{{data?.pname}}</td>
+                    <td>{{data?.hsncode}}</td>
+                    <td>{{data?.qty}}</td>
+                    <!-- <td>{{data?.totalpacks}}</td> -->
+                    <!-- <td>{{data?.unitsperpack}}</td> -->
+                    <!-- <td>{{data?.rateunit}}</td> -->
+                    <td>{{data?.rateperunit}}</td>
+                    <td>{{data?.amount}}</td>
+                    <td>{{data?.gstamt}}</td>
+
+                    <td>{{data?.subtotal}}</td>
+                    <!-- <td>{{data?.ratelabelperc}}</td>
+                    <td>{{data?.finalamt}}</td> -->
+                    </tr>
+
+                </tbody>
+              </table>
+        </div>
+      </div>
+
+      </form>
+
+    </div>
+  </div>
+</div>
+
+
+<div [hidden]="!isManageState" class="col-md-12 col-sm-12 col-xs-12">
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      {{title}}
+      <a [routerLink]="['/addpurchase']" title="Add Purchase Order" class="pull-right">
+        <span class="glyphicon glyphicon-plus-sign"></span>
+      </a>
+    </div>
+    <div class="panel-body text-capitalize">
+      <div class="table-responsive">
+        <table class="table table-condensed table-striped table-bordered"
+        [mfData]="data | dataFilterPr : filterQuery:'purchaseorder'"
+         #mf="mfDataTable"
+          [mfRowsOnPage]="rowsOnPage" [(mfSortBy)]="Role" [(mfSortOrder)]="sortOrder">
+          <thead>
+            <tr>
+              <th>SN</th>
+              <th>ID</th>
+              <th> Purchase Order No </th>
+              <th> Supplier </th>
+              <th> Created By </th>
+              <th>
+                Expected Delivery
+              </th>
+              <th> Generated On</th>
+              <th> Amount</th>
+              <th>Status</th>
+              <th> Payment Type </th>
+              <th> Final Amount </th>
+
+              <th>Action</th>
+            </tr>
+            <tr>
+              <th colspan="12">
+                <div id="custom-search-input">
+                  <div class="input-group col-md-12">
+                    <input type="text" class="form-control" placeholder="Search by Supplier Name or Created by" [(ngModel)]="filterQuery" />
+                    <span class="input-group-btn">
+                      <button class="btn btn-danger btn-sm" type="button">
+                        <span class=" glyphicon glyphicon-search"></span>
+                      </button>
+                    </span>
+                  </div>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of mf.data; let i = index; let last = last;">
+              <td>{{i+1}}</td>
+              <td>{{data?.id}}</td>
+              <td>{{data?.porderno}}</td>
+              <td>{{data?.suppname}}</td>
+              <td>{{data?.pobyname}}</td>
+
+              <td>{{data?. expdelivery | date: 'dd-MM-yyyy'}}</td>
+              <td>{{data?.generatedon | date: 'dd-MM-yyyy'}}</td>
+              <td>{{data?.totalamt}}</td>
+              <td>{{data?.state}}</td>
+              <td>{{data?.paymentmode}}</td>
+              <td>{{data?.finalamt}}</td>
+
+              <td class="text-right">
+
+
+
+
+
+                  <button class="btn btn-primary btn-sm" (click)="Send(data)" *ngIf="data.state === 'APPROVED'" title="Sent">
+                    <span class="glyphicon glyphicon-send"></span>
+                  </button>
+
+
+
+                    <a  data-toggle="tooltip" *ngIf="data.state === 'SENT'" (click)="voucher(data)" title="Paid">
+                    <button class="btn btn-warning btn-sm">
+                      <span class="glyphicon glyphicon-usd"></span>
+                    </button>
+                  </a>
+
+                  <button class="btn btn-success btn-sm" (click)="Received(data)" *ngIf="data.state === 'SENT'" title="Received">
+                    <span class="glyphicon glyphicon-certificate"></span>
+                  </button>
+
+
+                  <a  [routerLink]="['/addpurchaseorderinward/',data.id]" data-toggle="tooltip" title="Add Inward Purhase" *ngIf="data.state === 'RECEIVED' && data.isinwarded==='NO'">
+                    <button  class="btn btn-default btn-sm">
+                      <span class="glyphicon glyphicon-backward"></span>
+                    </button>
+                  </a>
+
+                  <a data-toggle="tooltip" title="Inward Entry Already Added" *ngIf="data.state === 'RECEIVED' && data.isinwarded==='YES'">
+                    <button disabled class="btn btn-default btn-sm">
+                      <span class="glyphicon glyphicon-forward"></span>
+                    </button>
+                  </a>
+
+
+
+
+
+                   <a [routerLink]="['/editpurchase/',data.id]"  data-toggle="tooltip" title="Update Purhase"
+                   *ngIf="userType == 'ADMIN' || userType == 'SUPERADMIN' && data.state == 'ADDED'">
+                    <button class="btn btn-default btn-sm">
+                      <span class="glyphicon glyphicon-edit"></span>
+                    </button>
+                  </a>
+
+
+
+
+
+                <a  data-toggle="tooltip" title="Approve"*ngIf="userType == 'ADMIN' || userType == 'SUPERADMIN' && data.state == 'ADDED'" (click)="Approved(data)">
+                  <button class="btn btn-default btn-sm">
+                    <span class="glyphicon glyphicon-ok-circle"></span>
+                  </button>
+                </a>
+                <a  data-toggle="tooltip" title="Order Approved" *ngIf="(userType == 'ADMIN' || userType == 'SUPERADMIN') && data.state == 'APPROVED'">
+                  <button disabled class="btn btn-default btn-sm">
+                    <span class="glyphicon glyphicon-ok-circle"></span>
+                  </button>
+                </a>
+
+                <button *ngIf="data.state === 'ADDED'  && (userType === 'ADMIN' || userType == 'SUPERADMIN')" class="btn btn-warning btn-sm"
+                   title="Reject"
+                  (click)="setreason(data)">
+                    <span class="glyphicon glyphicon-thumbs-down"></span>
+                  </button>
+
+
+
+
+                <a [routerLink]="['/detailpurchase',data.id]" >
+                  <button class="btn btn-info btn-sm" title="Purchase Order Details">
+                    <span class="glyphicon glyphicon-info-sign"></span>
+                  </button>
+                </a>
+                <button *ngIf="(userType == 'ADMIN' || userType == 'SUPERADMIN') && (data.state === 'ADDED'  || data.isinwarded  === 'YES')  "   class="btn btn-danger btn-sm" title="Delete Purchase Order" (click)="deleteRole(data.id)">
+                  <span class="glyphicon glyphicon-remove-circle"></span>
+                </button>
+                <button *ngIf="userType == 'MARKETING'" disabled class="btn btn-danger btn-sm" title="Contact admin for functionality" (click)="deleteRole(data.role)">
+                  <span class="glyphicon glyphicon-remove-circle"></span>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="12">
+                <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button id="openModalButton1" [hidden]="true" data-toggle="modal" data-target="#csvImport">Open Modal</button>
+
+<div id="csvImport" class="modal fade" role="dialog">
+  <form #rform="ngForm">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title pull-left">Reason for Rejection</h4>
+        </div>
+        <div class="modal-body">
+
+            <div class=" col-md-12 ">
+                <div class="form-group">
+                  <label for="comments" class=" pull-left">Please Give Reason to reject the Purchase Order</label>
+                  <textarea type="text" required maxlength="510" placeholder="Maximum 510 characters" mutiline class="form-control" id="rejectreason" name="rejectreason"
+                  [(ngModel)]="purchase.rejectreason">
+                    </textarea>
+                </div>
+              </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" [disabled]="!rform.valid"  data-dismiss="modal" (click)="approveReimburse1(data)">Submit</button>
+        </div>
+      </div>
+    </div>
+  </form>
+  </div>

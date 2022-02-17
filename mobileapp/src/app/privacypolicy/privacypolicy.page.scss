@@ -1,0 +1,35 @@
+.headBox {
+    --background: #e9ddff;
+
+    .BoxHeading {
+        margin: 50px 20px;
+
+        .lastImage {
+            width: 100%;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .lasttext {
+            width: 100%;
+            font-family: 'Roboto', sans-serif;
+            font-weight: 400;
+            text-align: justify;
+            margin-top: 20px;
+
+            a {
+                color: #222222;
+                text-decoration: none;
+            }
+        }
+        .lastButton {
+            width: 100%;
+            background-color: #864bf6;
+            color: #FFF;
+            padding: 13px;
+            font-family: "Poppins", sans-serif;
+            font-weight: 700;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+    }
+}

@@ -1,0 +1,156 @@
+<head>
+    <title>Admin Apps</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+    <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+
+</head>
+
+<div class="topnav">
+    <div class="float" id="myNavbar">
+        <div class="col-md-7 col-sm-8 col-xs-8">
+            <ul class="nav navbar-nav">
+                <li>
+                    <img src="assets/img/logo.png" class="image-circle"
+                        style="height: 60px; border: 4px solid #c4890b" />
+                </li>
+                <li>
+                    <a [routerLink]="['/homepage']">
+                        <!-- <i class="glyphicon glyphicon-home"></i> -->
+                        Home
+                    </a>
+                </li>
+                <li>
+                    <a [routerLink]="['/aboutus']">
+                        <!-- <i class="fa fa-fw fa-user"></i> -->
+                        About Us
+                    </a>
+                </li>
+                <li>
+                    <a [routerLink]="['/termsandcond']">
+                        <!-- <i class="fa fa-legal"></i> -->
+                        Terms & Conditions
+                    </a>
+                </li>
+                <li>
+                    <a [routerLink]="['/privacypolicy']">
+                        <!-- <i class="glyphicon glyphicon-lock"></i> -->
+                        Privacy Policy
+                    </a>
+                </li>
+                <li class="noNav">
+                    <a href="">
+                        <i class="fa fa-phone"></i>
+                        +91- 71225 2612</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="col-md-5 col-sm-4 col-xs-4" style="float: right">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="http://www.softwiders.com/" target="_blank">
+                        Technology partner Softwiders Pvt. Ltd.
+                    </a>
+                </li>
+                <button [routerLink]="['/login']" class="button button1" style="margin-right: 5px">
+                    <i class="fa fa-fw fa-user"></i> Login
+                </button>
+            </ul>
+        </div>
+
+        <br />
+    </div>
+
+    <!-- </div> -->
+</div>
+
+
+<div class="container-fluid" style="background-color: #faf9fb; font-family: 'Times New Roman', Times, serif;">
+    <div class="innerBox">
+        <h1>Who we are?</h1>
+
+        <div class="row">
+            <div class="col-md-6">
+                <img src="assets/extra/public.svg" alt="BackImage" style="width:30vw; height:30vw;">
+            </div>
+            <div class="col-md-6">
+                <p>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- </div> -->
+
+<!-- <footer class="site-footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-10 col-md-10" style="color: #c4890b;">
+                <h6 style="color: #c4890b;">About Us</h6>
+                <p class="text-justify">The most loved and iconic brand, Molecule, the first of its kind molecular
+                    gastronomy concept club from Gurgaon is now open in Bhopal. The largest floor space for any club
+                    in
+                    BHOPAL.Molecule is a unique concept Air Bar, Brewery and Kitchen redefining the era of World War
+                    2.
+                    The wide range of delicious delectable, expansive North Indian, Italian,Chinese and Continental
+                    Cuisines and unique cocktails makes Molecule one of the best Air Bar and Kitchen in tricity. The
+                    niche of Molecule is based on the combination of gastronomical recipes and innovative dishes.
+                    Also,
+                    the quirky ambiance and a vivacious seating add more to the lounging experience. Get ready to
+                    witness the affordable and distinctive getaway from your daily hustles, Molecule is coming to
+                    Bhopal
+                    to reshape your usual dining experience</p>
+            </div>
+
+            <div class="col-xs-2 col-md-2">
+                <h6 style="color: #c4890b;">Download App</h6>
+                <ul class="footer-links">
+                    <li><a href="https://play.google.com/store/apps/details?id=io.inouvelle.justgolocal"><img
+                                class="download-btn" src="assets/img/download-1.svg" alt=""></a></li>
+                    <li><a href="#"><img class="download-btn" src="assets/img/download-2.svg" alt=""></a></li>
+                </ul>
+
+                <h6 style="font-size: 12px; color: #c4890b;">Scan to Download App</h6>
+                <ul class="footer-links">
+                    <li><a href="#"><img class="download-btn" src="assets/img/qrcode.png" alt=""></a></li>
+
+                </ul>
+
+            </div>
+
+
+        </div>
+        <hr>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-sm-6 col-xs-12">
+                <p class="copyright-text" style="color: #c4890b;">
+                    <a href="http://www.inouvelle.com"> <img src="assets/img/logo.png" style="height: 50px;
+                width: 50px; border-radius: 27px;"></a>&nbsp;Copyright &copy; 2020 All Rights Reserved
+                </p>
+            </div>
+
+            <div class="col-md-4 col-sm-6 col-xs-6" style="padding-top: 10px; padding-bottom: 5px;">
+                <ul class="social-icons" style="margin-left: 150px;">
+                    <li><a class="facebook" href="#" style="background-color: #435ea3; color: cornsilk;"><i
+                                class="fa fa-facebook"></i></a></li>
+                    <li><a class="twitter" href="#" style="background-color:  #00a9f0; color: cornsilk;"><i
+                                class="fa fa-twitter"></i></a></li>
+                    <li><a class="dribbble" href="#" style="background-color: #FF0000; color: cornsilk;"><i
+                                class="fa fa-dribbble"></i></a></li>
+                    <li><a class="linkedin" href="#" style="background-color:  #007dbd; color: cornsilk;"><i
+                                class="fa fa-linkedin"></i></a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</footer> -->

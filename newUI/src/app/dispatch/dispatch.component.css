@@ -1,0 +1,40 @@
+.billno{
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+    margin-left: 5px;
+    padding: 5px;
+}
+
+
+
+.thbg {
+    background-color: #7941BB/*blue*/;
+    color: white ! important;
+  }
+
+
+
+  @media print {
+    /* body * {
+      visibility: hidden;
+    }
+    #print-section, #print-section * {
+      visibility: visible;
+    }
+    #print-section {
+      position: absolute;
+      left: 0;
+      top: 0;
+    } */
+    .lctable th,
+    .lctable td {
+       border: 1px solid black;
+       border-collapse: collapse;
+          padding: 6px;
+       font-size: 14px;
+   }
+  }
+
+
+

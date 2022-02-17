@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- <title>Bootstrap Example</title> -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <div class="topnav">
+    <div class="float" id="myNavbar">
+      <div class="col-md-7 col-sm-8 col-xs-8">
+        <ul class="nav navbar-nav">
+          <li>
+            <img src="assets/img/logo.png" class="image-circle" style="height: 60px; border: 4px solid #c4890b" />
+          </li>
+          <li>
+            <a [routerLink]="['/homepage']">
+              <!-- <i class="glyphicon glyphicon-home"></i> -->
+              Home
+            </a>
+          </li>
+          <li>
+            <a [routerLink]="['/aboutus']">
+              <!-- <i class="fa fa-fw fa-user"></i> -->
+              About Us
+            </a>
+          </li>
+          <li>
+            <a [routerLink]="['/termsandcond']">
+              <!-- <i class="fa fa-legal"></i> -->
+              Terms & Conditions
+            </a>
+          </li>
+          <li>
+            <a [routerLink]="['/privacypolicy']">
+              <!-- <i class="glyphicon glyphicon-lock"></i> -->
+              Privacy Policy
+            </a>
+          </li>
+          <li class="noNav">
+            <a href="">
+              <i class="fa fa-phone"></i>
+              +91- 71225 2612</a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="col-md-5 col-sm-4 col-xs-4" style="float: right">
+        <ul class="nav navbar-nav navbar-right">
+          <li>
+            <a href="http://www.softwiders.com/" target="_blank">
+              Technology partner Softwiders Pvt. Ltd.
+            </a>
+          </li>
+          <button [routerLink]="['/login']" class="button button1" style="margin-right: 5px">
+            <i class="fa fa-fw fa-user"></i> Login
+          </button>
+        </ul>
+      </div>
+
+      <br />
+    </div>
+
+    <!-- </div> -->
+  </div>
+
+  <!-- slider -->
+  <div class="owl-stage-outer">
+    <div class="box-Carousel">
+      <div id="myCarousel" class="carousel slide" data-ride="carousel">
+        <ol class="carousel-indicators" *ngIf="slider">
+          <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+          <li data-target="#myCarousel" data-slide-to="1" *ngIf="slider[1]"></li>
+          <li data-target="#myCarousel" data-slide-to="2" *ngIf="slider[2]"></li>
+          <li data-target="#myCarousel" data-slide-to="3" *ngIf="slider[3]"></li>
+        </ol>
+
+        <div class="carousel-inner" *ngIf="slider">
+          <div class="item active" *ngIf="slider[0]">
+            <img src="{{ docServer }}/{{ slider[0]?.docpath }}" alt="{{ docServer }}/{{ slider[0]?.docpath }}"
+              class="responsive" />
+          </div>
+
+          <div class="item" *ngIf="slider[1]">
+            <img src="{{ docServer }}/{{ slider[1]?.docpath }}" alt="{{ docServer }}/{{ slider[1]?.docpath }}"
+              class="responsive" />
+          </div>
+
+          <div class="item" *ngIf="slider[2]">
+            <img src="{{ docServer }}/{{ slider[2]?.docpath }}" alt="{{ docServer }}/{{ slider[2]?.docpath }}"
+              class="responsive" />
+          </div>
+
+          <div class="item" *ngIf="slider[3]">
+            <img src="{{ docServer }}/{{ slider[3]?.docpath }}" alt="{{ docServer }}/{{ slider[3]?.docpath }}"
+              class="responsive" />
+          </div>
+        </div>
+
+        <!-- Left and right controls -->
+        <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+          <span class="glyphicon glyphicon-chevron-left"></span>
+          <span class="sr-only">Previous</span>
+        </a>
+        <a class="right carousel-control" href="#myCarousel" data-slide="next">
+          <span class="glyphicon glyphicon-chevron-right"></span>
+          <span class="sr-only">Next</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="clearfix"></div>
+
+
+
+  <!-- bestseller or Top Recommendation (FOOD) -->
+  <section class="container-fluid text-center productBox">
+    <h2 class="heading">
+      Top Recommendations
+    </h2>
+    <div class="lineOfHeading">
+      <div class="mainline"></div>
+    </div>
+    <br />
+    <div class="row containBox">
+      <div *ngFor="let data of bestfood; let i = index; let last = last">
+        <div class="col-sm-3">
+          <div class="eachBox">
+            <div class="imageBox" [routerLink]="['/login']">
+              <img *ngIf="data?.photos[0]" src="{{ docServer }}/{{ data?.photos[0].docpath }}" class="img-responsive"
+                style="width: 100%;" alt="Image" />
+              <img *ngIf="!data?.photos[0]"
+                src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg" class="img-responsive"
+                style="width: 100%; " alt="Image" />
+            </div>
+
+            <div class="caption">
+              {{ data?.name }}
+              <div class="captionprice" *ngIf="data?.hasvariant === 'NO'">{{ data?.rateperunit }} &#8377;</div>
+              <div class="captionprice" *ngIf="data?.hasvariant === 'YES' && data?.variants[0]">Starting from {{
+                data?.variants[0].rateperunit }} &#8377;</div>
+              <div class="captionprice" *ngIf="data?.hasvariant === 'YES' && !data?.variants[0]">Coming Soon</div>
+            </div>
+          </div>
+        </div>
+        <div class="clearfix" *ngIf="(i+1) % 4 == 0"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MenuType (FOOD) -->
+  <section class="container-fluid text-center productBox">
+    <h2 class="heading">
+      Explore Menus
+    </h2>
+    <div class="lineOfHeading">
+      <div class="mainline"></div>
+    </div>
+    <br />
+    <div class="row containBox">
+      <div *ngFor="let data of menuFood; let i = index; let last = last">
+        <div class="col-sm-3">
+          <div class="eachBox">
+            <div class="imageBox" [routerLink]="['/login']">
+              <img *ngIf="data?.photo?.docpath" src="{{ docServer }}/{{ data?.photo?.docpath }}" class="img-responsive"
+                style="width: 100%;" alt="Image" />
+              <img *ngIf="!data?.photo?.docpath"
+                src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg" class="img-responsive"
+                style="width: 100%; " alt="Image" />
+            </div>
+
+            <div class="caption">
+              {{ data?.name }}
+            </div>
+          </div>
+        </div>
+        <div class="clearfix" *ngIf="(i+1) % 4 == 0"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- bestseller or Top Recommendation (Drink) -->
+  <section class="container-fluid text-center productBox">
+    <h2 class="heading">
+      Quality is Our First Priority
+    </h2>
+    <div class="lineOfHeading">
+      <div class="mainline"></div>
+    </div>
+    <br />
+    <div class="row containBox">
+      <div *ngFor="let data of bestdrinks; let i = index; let last = last">
+        <div class="col-sm-3">
+          <div class="eachBox">
+            <div class="imageBox" [routerLink]="['/login']">
+              <img *ngIf="data?.photos[0]" src="{{ docServer }}/{{ data?.photos[0].docpath }}" class="img-responsive"
+                style="width: 100%;" alt="Image" />
+              <img *ngIf="!data?.photos[0]"
+                src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg" class="img-responsive"
+                style="width: 100%; " alt="Image" />
+            </div>
+
+            <div class="caption">
+              {{ data?.name }}
+              <div class="captionprice" *ngIf="data?.hasvariant === 'NO'">{{ data?.rateperunit }} &#8377;</div>
+              <div class="captionprice" *ngIf="data?.hasvariant === 'YES' && data?.variants[0]">Starting from {{
+                data?.variants[0].rateperunit }} &#8377;</div>
+              <div class="captionprice" *ngIf="data?.hasvariant === 'YES' && !data?.variants[0]">Coming Soon</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="clearfix" *ngIf="(i+1) % 4 == 0"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Events Slider -->
+  <section class="container-fluid text-center productBox" *ngIf="eventSlider.length != 0">
+    <h2 class="heading">
+      Events
+    </h2>
+    <div class="lineOfHeading">
+      <div class="mainline"></div>
+    </div>
+    <br />
+    <div class="containBox">
+      <div class="owl-stage-outer">
+        <div class="">
+          <div id="myCarousel1" class="carouselSmall slide" data-ride="carousel">
+            <ol class="carousel-indicators" >
+              <li data-target="#myCarousel1" data-slide-to="0" class="active"></li>
+              <li data-target="#myCarousel1" data-slide-to="1" *ngIf="eventSlider[1]"></li>
+              <li data-target="#myCarousel1" data-slide-to="2" *ngIf="eventSlider[2]"></li>
+              <li data-target="#myCarousel1" data-slide-to="3" *ngIf="eventSlider[3]"></li>
+              <li data-target="#myCarousel1" data-slide-to="4" *ngIf="eventSlider[4]"></li>
+              <li data-target="#myCarousel1" data-slide-to="5" *ngIf="eventSlider[5]"></li>
+              <li data-target="#myCarousel1" data-slide-to="6" *ngIf="eventSlider[6]"></li>
+              <li data-target="#myCarousel1" data-slide-to="7" *ngIf="eventSlider[7]"></li>
+              <li data-target="#myCarousel1" data-slide-to="8" *ngIf="eventSlider[8]"></li>
+              <li data-target="#myCarousel1" data-slide-to="9" *ngIf="eventSlider[9]"></li>
+              <li data-target="#myCarousel1" data-slide-to="10" *ngIf="eventSlider[10]"></li>
+              <li data-target="#myCarousel1" data-slide-to="11" *ngIf="eventSlider[11]"></li>
+              <li data-target="#myCarousel1" data-slide-to="12" *ngIf="eventSlider[12]"></li>
+              <li data-target="#myCarousel1" data-slide-to="13" *ngIf="eventSlider[13]"></li>
+              <li data-target="#myCarousel1" data-slide-to="14" *ngIf="eventSlider[14]"></li>
+              <li data-target="#myCarousel1" data-slide-to="15" *ngIf="eventSlider[15]"></li>
+              <li data-target="#myCarousel1" data-slide-to="16" *ngIf="eventSlider[16]"></li>
+              <li data-target="#myCarousel1" data-slide-to="17" *ngIf="eventSlider[17]"></li>
+              <li data-target="#myCarousel1" data-slide-to="18" *ngIf="eventSlider[18]"></li>
+              <li data-target="#myCarousel1" data-slide-to="19" *ngIf="eventSlider[19]"></li>
+              <li data-target="#myCarousel1" data-slide-to="20" *ngIf="eventSlider[20]"></li>
+            </ol>
+
+            <div class="carousel-inner" >
+              <ng-container *ngFor="let data of eventSlider; let i = index; let last = last">
+                <div class="item " [ngClass]="{active: i==0}">
+                  <img src="{{ docServer }}/{{ data?.photo?.docpath }}" alt="{{ docServer }}/{{ data?.photo?.docpath }}"
+                    class="responsive" />
+  
+                  <div class="carousel-caption">
+                    <h1>{{ data?.name }}</h1>
+                    <p>{{ data?.description }}</p>
+                    <p>From {{data?.fromdate | date:'medium'}} To {{data?.todate | date:'medium'}}</p>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+
+            <!-- Left and right controls -->
+            <!-- <a class="left carousel-control" href="#myCarousel1" data-slide="prev" *ngIf="eventSlider.length != 1">
+              <span class="glyphicon glyphicon-chevron-left"></span>
+              <span class="sr-only">Previous</span>
+            </a>
+            <a class="right carousel-control" href="#myCarousel1" data-slide="next" *ngIf="eventSlider.length != 1">
+              <span class="glyphicon glyphicon-chevron-right"></span>
+              <span class="sr-only">Next</span>
+            </a> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Delicacies (FOOD) -->
+  <section class="container-fluid text-center productBox">
+    <h2 class="heading">
+      Chef Special
+    </h2>
+    <div class="lineOfHeading">
+      <div class="mainline"></div>
+    </div>
+    <br />
+    <div class="row containBox">
+      <div *ngFor="let data of delifood; let i = index; let last = last">
+        <div class="col-sm-3">
+          <div class="eachBox">
+            <div class="imageBox" [routerLink]="['/login']">
+              <img *ngIf="data?.photos[0]" src="{{ docServer }}/{{ data?.photos[0].docpath }}" class="img-responsive"
+                style="width: 100%;" alt="Image" />
+              <img *ngIf="!data?.photos[0]"
+                src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg" class="img-responsive"
+                style="width: 100%; " alt="Image" />
+            </div>
+
+            <div class="caption">
+              {{ data?.name }}
+              <div class="captionprice" *ngIf="data?.hasvariant === 'NO'">{{ data?.rateperunit }} &#8377;</div>
+              <div class="captionprice" *ngIf="data?.hasvariant === 'YES' && data?.variants[0]">Starting from {{
+                data?.variants[0].rateperunit }} &#8377;</div>
+              <div class="captionprice" *ngIf="data?.hasvariant === 'YES' && !data?.variants[0]">Coming Soon</div>
+            </div>
+          </div>
+        </div>
+        <div class="clearfix" *ngIf="(i+1) % 4 == 0"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MenuType (FOOD) -->
+  <section class="container-fluid text-center productBox">
+    <h2 class="heading">
+      We serve what you want
+    </h2>
+    <div class="lineOfHeading">
+      <div class="mainline"></div>
+    </div>
+    <br />
+    <div class="row containBox">
+      <div *ngFor="let data of menuDrinks; let i = index; let last = last">
+        <div class="col-sm-3">
+          <div class="eachBox">
+            <div class="imageBox" [routerLink]="['/login']">
+              <img *ngIf="data?.photo?.docpath" src="{{ docServer }}/{{ data?.photo?.docpath }}" class="img-responsive"
+                style="width: 100%;" alt="Image" />
+              <img *ngIf="!data?.photo?.docpath"
+                src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg" class="img-responsive"
+                style="width: 100%; " alt="Image" />
+            </div>
+
+            <div class="caption">
+              {{ data?.name }}
+            </div>
+          </div>
+        </div>
+        <div class="clearfix" *ngIf="(i+1) % 4 == 0"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Delicacies (Drink) -->
+  <section class="container-fluid text-center productBox">
+    <h2 class="heading">
+      Drink Like A Fish
+    </h2>
+    <div class="lineOfHeading">
+      <div class="mainline"></div>
+    </div>
+    <br />
+    <div class="row containBox">
+      <div *ngFor="let data of delidrinks; let i = index; let last = last">
+        <div class="col-sm-3">
+          <div class="eachBox">
+            <div class="imageBox" [routerLink]="['/login']">
+              <img *ngIf="data?.photos[0]" src="{{ docServer }}/{{ data?.photos[0].docpath }}" class="img-responsive"
+                style="width: 100%;" alt="Image" />
+              <img *ngIf="!data?.photos[0]"
+                src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg" class="img-responsive"
+                style="width: 100%; " alt="Image" />
+            </div>
+
+            <div class="caption">
+              {{ data?.name }}
+              <div class="captionprice" *ngIf="data?.hasvariant === 'NO'">{{ data?.rateperunit }} &#8377;</div>
+              <div class="captionprice" *ngIf="data?.hasvariant === 'YES' && data?.variants[0]">Starting from {{
+                data?.variants[0].rateperunit }} &#8377;</div>
+              <div class="captionprice" *ngIf="data?.hasvariant === 'YES' && !data?.variants[0]">Coming Soon</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="clearfix" *ngIf="(i+1) % 4 == 0"></div>
+      </div>
+    </div>
+  </section>
+
+
+
+
+
+  <!-- Modal -->
+  <div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Modal Header</h4>
+        </div>
+        <div class="modal-body">
+          <p>Some text in the modal.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+
+
+
+
+
+
+  <!-- footer -->
+  <footer class="site-footer" style="background-color: rgb(39, 35, 23); font-size: 12px">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-8 col-md-8">
+          <h6 style="color: #c4890b">About Us</h6>
+          <p class="text-justify" style="color: #c4890b; font-size: 12px">
+            <i style="color: #737373"></i> 
+          </p>
+        </div>
+
+        <div class="col-xs-2 col-md-2"></div>
+
+        <div class="col-xs-2 col-md-2">
+          <h6 style="color: #c4890b">Download App</h6>
+          <ul class="footer-links">
+            <li>
+              <a href="https://play.google.com/store/apps/details?id=io.inouvelle.molecule"><img class="download-btn"
+                  src="assets/img/download-1.svg" alt="" /></a>
+            </li>
+            <li>
+              <a href="#"><img class="download-btn" src="assets/img/download-2.svg" alt="" /></a>
+            </li>
+          </ul>
+
+          <h6 style="font-size: 12px; color: #c4890b">
+            Scan to Download App
+          </h6>
+          <ul class="footer-links">
+            <li>
+              <a href="https://play.google.com/store/apps/details?id=io.inouvelle.molecule"><img class="download-btn" src="assets/img/qrcode.png" alt="" /></a>
+            </li>
+          </ul>
+        </div>
+        <div class="col-md-8 col-sm-6 col-xs-12">
+          <p class="copyright-text" style="padding-top: 10px">
+            <a href="http://www.inouvelle.com">
+              <img src="assets/img/logo.png" style="height: 50px; width: 50px; border-radius: 27px" /></a>&nbsp;
+            Copyright
+            &copy; 2021 All Rights Reserved
+            <!-- <i> <a href="http://www.inouvelle.com">Softwiders PVT LTD</a></i> -->
+          </p>
+        </div>
+        <div class="col-md-4 col-sm-6 col-xs-12" style="padding-top: 10px; padding-bottom: 5px;">
+          <ul class="social-icons" style="text-align: right;">
+            <li style="margin-left: auto; margin-right: auto;"><a class="facebook" href="#"><i class="fa fa-facebook"></i></a></li>
+            <li style="margin-left: auto; margin-right: auto;"><a class="twitter" href="#"><i class="fa fa-twitter"></i></a></li>
+            <li style="margin-left: auto; margin-right: auto;"><a class="dribbble" href="#"><i class="fa fa-dribbble"></i></a></li>
+            <li style="margin-left: auto; margin-right: auto;"><a class="linkedin" href="#"><i class="fa fa-linkedin"></i></a></li>
+          </ul>
+        </div>
+      </div>
+      <!-- <hr> -->
+    </div>
+  </footer>
+
+  <!-- copyright -->
+  <!-- <small class="Copyright" style="color: #c4890b;">
+    <div class="copyblock" style="margin-left: 30px;">
+
+      <div class="col-md-8 col-sm-6 col-xs-12">
+        <p class="copyright-text" style="padding-top: 10px;">
+          <a href="http://www.inouvelle.com"> <img src="assets/img/logo.png" style="height: 50px;
+        width: 50px;
+        border-radius: 27px;"></a>&nbsp; Copyright &copy; 2021 All Rights Reserved
+        </p>
+      </div>
+
+      <div class="col-md-4 col-sm-6 col-xs-12" style="padding-top: 10px; padding-bottom: 5px;">
+        <ul class="social-icons" style="margin-left: 180px;">
+          <li><a class="facebook" href="#"><i class="fa fa-facebook"></i></a></li>
+          <li><a class="twitter" href="#"><i class="fa fa-twitter"></i></a></li>
+          <li><a class="dribbble" href="#"><i class="fa fa-dribbble"></i></a></li>
+          <li><a class="linkedin" href="#"><i class="fa fa-linkedin"></i></a></li>
+        </ul>
+      </div>
+
+    </div>
+  </small> -->
+
+</body>
+
+</html>

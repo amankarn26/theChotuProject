@@ -1,0 +1,545 @@
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<div class="panel panel-default slideLeft" *ngIf="this.tab1===false">
+    <div class="panel-heading">
+      <div class="clearfix">
+        <div class="pull-left"> Cancelled Order Settlement</div><br>
+
+
+      </div>
+  
+    </div>
+    <div>
+    <ul  class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#cancelled" id="a">Todays Cancelled Payable Amount</a></li>
+        <li><a data-toggle="tab" href="#Refund" id="b">Todays Refunded Amount</a></li>
+        
+
+
+
+
+      </ul>
+      <div class="tab-content">
+        <div id="cancelled" class="tab-pane fade in active">
+    <div class="panel-body" >
+      <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="table-responsive">
+          <table class="table table-condensed table-striped table-bordered" [mfData]="todayspayableorders | dataFilterPr : filterQuery:'orders'" #mf="mfDataTable"
+            [mfRowsOnPage]="rowsOnPage"  >
+            <thead>
+                <tr>
+                    <th colspan="10">
+                      <div id="custom-search-input">
+  
+                          <div class="col-sm-12">
+                              <div class="col-md-6 col-sm-6 col-xs-12">
+                                  <div class="form-group" >
+                                    <label for="gender">
+                                    </label>&nbsp;
+                                    <input type="radio" value="Pmonth" name="ccmonth" (click)="getyestspayable()"> Yesterday &nbsp;
+                                    <input checked type="radio" id="myCheck" value="Pmonth" name="ccmonth" (click)="gettodayspayable()"> Today &nbsp;
+                                    <input type="radio" value="Customdate" [(ngModel)]="customdate"  name="ccmonth" (click)="gettodaysdate()" > Custom Date &nbsp;
+
+
+                                    <!-- <input type="radio" value="Nmonth" name="cmonth" ngModel [(ngModel)]="month"(change)="changemonth('n')"> Next Month -->
+                                  </div>
+                                </div>
+                          </div>
+  
+                          <div class="col-sm-12">
+                              <div class="col-sm-3"  *ngIf="customdate">
+                                      <div class="form-group">
+                                        <label for="fromDate">From Date:
+                                        </label>
+                                        <input type="date" class="form-control" id="fromDatee" name="fromDatee" [(ngModel)]="fromDatee" required />
+                                      </div>
+                              </div>
+                              <div class="col-sm-3"  *ngIf="customdate">
+                                  <div class="form-group">
+                                    <label for="toDate">To Date:
+                                    </label>
+                                    <input type="date" class="form-control" id="toDatee" name="toDatee"  required [(ngModel)]="toDatee"  />
+                                  </div>
+                              </div>
+  
+                          
+  
+                              <div class="col-sm-3"  *ngIf="customdate">
+                                  <div class="form-group">
+                                    <label for="state">Search:
+                                    </label>
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-danger" type="button" (click)="searchdayspayable()">
+                                          <span class=" glyphicon glyphicon-search"></span>
+                                        </button>
+                                      </span>
+                                  </div>
+                              </div>
+  
+               
+  
+                            </div>
+                      
+                      </div>
+                    </th>
+                  </tr>
+                  <tr>
+                    <!-- <th>Select</th> -->
+                    <th>Order No.</th>
+                    <th>Product</th>
+                     <th>Order Details</th>
+                    
+                    
+                    <th>Customer</th>
+                    <th>Delivery Add.</th>
+                    <th>Expected Delivery</th>
+                    <th>Payment Details</th>
+                    <th>Status</th>
+    
+                   
+            
+      
+      
+                    <th class="text-right">Action</th>
+                  </tr>
+                 <tr>
+                    <th colspan="9">
+                      <div id="custom-search-input">
+                        <div class="input-group col-md-12">
+                          <input type="text" class="form-control" placeholder="Search by Customer Name, Phone, City , Pincode Or Order Number" [(ngModel)]="filterQuery" />
+                          <span class="input-group-btn">
+                            <button class="btn btn-danger" type="button">
+                              <span class=" glyphicon glyphicon-search"></span>
+                            </button>
+                          </span>
+                        </div>
+                      </div>
+                    </th>
+                  </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let data of mf.data; let i = index; let last = last;">
+                  <!-- <td> <input type="checkbox" value="employees" (click)="deleteNewsList(data.id)"></td> -->
+                  <td>{{data.invoicenum}}<br>
+                    Total items : {{data.qcost.totalitem}}
+                    </td>
+                    <td>  <div class="img-thumbnail  ">
+                    <img *ngIf="data?.oentry[0]?.photo?.docpath" src="{{docServer}}/{{data?.oentry[0]?.photo?.docpath}}" class="img-circle" alt="" style="width:100px; height:100px;">
+                    <img *ngIf="!data?.oentry[0]?.photo?.docpath" src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg" class="img-circle" alt="" style="width:100px; height:100px;">     
+                    <div class="caption text-capitalize text-center" *ngIf="data.oentry.length<=1; else elseBlock"> {{data.oentry[0]?.pname}}</div>
+                    <ng-template #elseBlock>
+                    <a [routerLink]="['/orderdetails',data.id]"><div class="caption text-capitalize text-center"> {{data.oentry[0]?.pname}} + {{data.oentry.length - 1}} Other Items</div></a>  
+                    </ng-template>
+  
+                  </div></td>
+                   <td>
+                          <textarea style="margin: 0px; width: 180px; height: 124px;" readonly>{{data.detail}}</textarea>
+                  </td>
+                   
+  
+                  <td>{{data.custname}}<br>
+                      Phone-{{data.custmobile}}</td>
+                  <td>{{data.deliveryaddress.line1}},<br>
+                      {{data.deliveryaddress.city}}- {{data.deliveryaddress.pincode}}<br>
+                      
+                  </td>
+                  <td>{{data.expdelivery | date}}<br>
+                      
+                  </td>
+                  <td>Mode -{{data.paymentmode}}<br>
+                    Txn ID- {{data.transactionid}}
+                   Amount -{{data.qcost.finalamt}}/-<br>
+                                 <span class="badge badge-primary">Refund Amount :{{data?.qcost?.refundamt}}/-</span><br></td>
+  
+                  <td><span class="label label-primary">{{data.status}}</span></td>
+  
+  
+                 
+                               
+                  
+                 
+                  <td class="text-right">
+                    <button (click)="cancelledpaidorders(data.id)" class="btn btn-warning a-btn-slide-text  btn-sm" title="Set Order Refunded" style="  font-size: 14px; "> 
+                        ₹  </button>
+                  </td>
+                </tr>
+              </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="9">
+                  <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+  
+      </div>
+    </div>
+    </div>
+    <div id="Refund" class="tab-pane fade">
+        <div class="panel-body">
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="table-responsive">
+                <table class="table table-condensed table-striped table-bordered" [mfData]="todaysreceivedorders | dataFilterPr : filterQuery:'orders'" #mff="mfDataTable"
+                [mfRowsOnPage]="rowsOnPage"  >
+                <thead>
+                    <tr>
+                        <th colspan="10">
+                          <div id="custom-search-input">
+      
+                              <div class="col-sm-12">
+                                  <div class="col-md-6 col-sm-6 col-xs-12">
+                                      <div class="form-group" >
+                                        <label for="gender">
+                                        </label>&nbsp;
+                                        <input type="radio" value="Pmonth" name="cmonth" (click)="getyestreceieved()"> Yesterday &nbsp;
+                                        <input checked type="radio"  id="myCheck1" value="Pmonth" name="cmonth" (click)="gettodaysreceived()"> Today &nbsp;
+                                        <input type="radio" value="Customdate" [(ngModel)]="customdate1"  name="cmonth" (click)="gettodaysdate()" > Custom Date &nbsp;
+    
+    
+                                        <!-- <input type="radio" value="Nmonth" name="cmonth" ngModel [(ngModel)]="month"(change)="changemonth('n')"> Next Month -->
+                                      </div>
+                                    </div>
+                              </div>
+      
+                              <div class="col-sm-12">
+                                  <div class="col-sm-3"  *ngIf="customdate1">
+                                          <div class="form-group">
+                                            <label for="fromDate">From Date:
+                                            </label>
+                                            <input type="date" class="form-control" id="fromDatee" name="fromDatee" [(ngModel)]="fromDatee" required />
+                                          </div>
+                                  </div>
+                                  <div class="col-sm-3"  *ngIf="customdate1">
+                                      <div class="form-group">
+                                        <label for="toDate">To Date:
+                                        </label>
+                                        <input type="date" class="form-control" id="toDatee" name="toDatee"  required [(ngModel)]="toDatee"  />
+                                      </div>
+                                  </div>
+      
+                              
+      
+                                  <div class="col-sm-3"  *ngIf="customdate1">
+                                      <div class="form-group">
+                                        <label for="state">Search:
+                                        </label>
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-danger" type="button" (click)="searchdaysreceived()">
+                                              <span class=" glyphicon glyphicon-search"></span>
+                                            </button>
+                                          </span>
+                                      </div>
+                                  </div>
+      
+                   
+      
+                                </div>
+                          
+                          </div>
+                        </th>
+                      </tr>
+                      <tr>
+                        <!-- <th>Select</th> -->
+                        <th>Order No.</th>
+                        <th>Product</th>
+                         <th>Order Details</th>
+                        
+                        
+                        <th>Customer</th>
+                        <th>Delivery Add.</th>
+                        <th>Expected Delivery</th>
+                        <th>Payment Details</th>
+                        <th>Status</th>
+        
+                       
+                
+          
+          
+                        <!-- <th class="text-right">Action</th> -->
+                      </tr>
+                     <tr>
+                        <th colspan="9">
+                          <div id="custom-search-input">
+                            <div class="input-group col-md-12">
+                              <input type="text" class="form-control" placeholder="Search by Customer Name, Phone, City , Pincode Or Order Number" [(ngModel)]="filterQuery" />
+                              <span class="input-group-btn">
+                                <button class="btn btn-danger" type="button">
+                                  <span class=" glyphicon glyphicon-search"></span>
+                                </button>
+                              </span>
+                            </div>
+                          </div>
+                        </th>
+                      </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let data of mff.data; let i = index; let last = last;">
+                      <!-- <td> <input type="checkbox" value="employees" (click)="deleteNewsList(data.id)"></td> -->
+                      <td>{{data.invoicenum}}<br>
+                    Total items : {{data.qcost.totalitem}}
+                    </td>
+                    <td>  <div class="img-thumbnail  ">
+                        <img *ngIf="data?.oentry[0]?.photo?.docpath" src="{{docServer}}/{{data?.oentry[0]?.photo?.docpath}}" class="img-circle" alt="" style="width:100px; height:100px;">
+                        <img *ngIf="!data?.oentry[0]?.photo?.docpath" src="https://sainfoinc.com/wp-content/uploads/2018/02/image-not-available.jpg" class="img-circle" alt="" style="width:100px; height:100px;">     
+                        <div class="caption text-capitalize text-center" *ngIf="data.oentry.length<=1; else elseBlock"> {{data.oentry[0]?.pname}}</div>
+                        <ng-template #elseBlock>
+                        <a [routerLink]="['/orderdetails',data.id]"><div class="caption text-capitalize text-center"> {{data.oentry[0]?.pname}} + {{data.oentry.length - 1}} Other Items</div></a>  
+                        </ng-template>
+      
+                      </div></td>
+                       <td>
+                              <textarea style="margin: 0px; width: 180px; height: 124px;" readonly>{{data.detail}}</textarea>
+                      </td>
+                       
+      
+                      <td>{{data.custname}}<br>
+                          Phone-{{data.custmobile}}</td>
+                      <td>{{data.deliveryaddress.line1}},<br>
+                          {{data.deliveryaddress.city}}- {{data.deliveryaddress.pincode}}<br>
+                          
+                      </td>
+                      <td>{{data.expdelivery | date}}<br>
+                          
+                      </td>
+                      <td>Mode -{{data.paymentmode}}<br>
+                        Txn ID- {{data.transactionid}}
+                       Amount -{{data.qcost.finalamt}}/-<br>
+                                     <span class="badge badge-primary">Refund Amount :{{data?.qcost?.refundamt}}/-</span><br></td>
+      
+                      <td><span class="label label-primary">{{data.status}}</span></td>
+      
+      
+                     
+                                   
+                      
+                     
+                      <!-- <td class="text-right">
+                        <button (click)="cancelledpaidorders(data.id)" class="btn btn-warning a-btn-slide-text  btn-sm" title="Set Order Refunded" style="  font-size: 14px; "> 
+                            ₹  </button>
+                      </td> -->
+                    </tr>
+                  </tbody>
+                <tfoot>
+                  <tr>
+                    <td colspan="9">
+                      <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+      
+          </div>
+        </div>
+        </div>
+
+        
+  <!-- <h2>W3.CSS Modal</h2> -->
+  <button (click)="clickmodal()" style="display: none;" [hidden]="true" class="w3-button w3-black">Open Modal</button>
+
+
+  <div id="id01" class="w3-modal" >
+    <div class="w3-modal-content w3-animate-top w3-card-4">
+      <header class="w3-container w3-teal"> 
+        <span onclick="document.getElementById('id01').style.display='none'" 
+        class="w3-button w3-display-topright">&times;</span>
+        <h5>Orders For Delivery Person : <b>{{statusdelivery}} </b></h5>
+      </header>
+      <div class="w3-container">
+        <!-- <span onclick="document.getElementById('id01').style.display='none'" class="w3-button w3-display-topright">&times;</span> -->
+        <table class="w3-table">
+          <thead>
+             
+            <tr>
+              <!-- <th>Select</th> -->
+              <th>Order Ids</th>
+
+              <th>Branch</th>
+               <th>Branch Paid</th>
+              <th>Delivery Paid</th>
+              <th>Orders Status</th>
+              <th>Amount</th>
+              <th>Status</th>
+
+              
+
+             
+      
+
+
+              <!-- <th class="text-right">Action</th> -->
+            </tr>
+          
+              <!-- <th colspan="9">
+                <div id="custom-search-input">
+                  <div class="input-group col-md-12">
+                    <input type="text" class="form-control" placeholder="Search by Customer Name, Phone, City , Pincode Or Order Number" [(ngModel)]="filterQuery" />
+                    <span class="input-group-btn">
+                      <button class="btn btn-danger" type="button">
+                        <span class=" glyphicon glyphicon-search"></span>
+                      </button>
+                    </span>
+                  </div>
+                </div>
+              </th> -->
+           
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of this.statusresponse; let i = index; let last = last;">
+           
+   
+              <td>{{data.order}}</td>
+              <td>{{data.vendor}}</td>
+              <td>{{data.isvendorpaid}}</td>
+              <td>{{data.isdeliverypaid}}</td>
+                <td>{{data.orderstatus}}</td>
+              <td><span class="label label-danger" style="font-size: 12px;">{{data.deliveryamt}} /-</span></td>
+              <td *ngIf="data.status == 'SUCCESS'"><span class="label label-success" style="font-size: 12px;">{{data.status}}</span></td>
+              <td *ngIf="data.status == 'FAILED'"><span class="label label-danger" style="font-size: 12px;">{{data.status}}</span></td>
+
+              <!-- <td><span class="label label-danger" style="font-size: 12px;">{{data.status}}</span></td> -->
+
+
+
+             
+                           
+              
+             
+              <!-- <td class="text-right">
+        
+             <button (click)="examp()" class="btn btn-success a-btn-slide-text  btn-sm" title="Set Vendor Paid" style="  font-size: 14px; "> 
+              ₹  </button>
+                
+              </td> -->
+            </tr>
+          </tbody>
+          </table>
+          
+      </div>
+    </div>
+  </div>
+
+
+
+              
+    </div>
+  </div>
+
+  </div>
+
+  <div class="panel panel-default slideLeft" *ngIf="this.tab1===true">
+    <div class="panel-heading">
+      <div class="clearfix">
+        <div class="pull-left"> Delivery Orders</div>
+        <div class="container" class="pull-right">
+          <div class="row">
+            <a *ngIf="this.userType==='FIRM'" title="Back" (click)="cancel()"  class="btn btn-info a-btn-slide-text  btn-sm">
+              <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+            </a>
+
+
+     
+
+          </div>
+        </div>
+      </div>
+    </div>
+  
+   
+
+    
+       
+    <div class="panel-body" >
+      <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="table-responsive">
+          <table class="table table-condensed table-striped table-bordered" [mfData]="data | dataFilterPr : filterQuery:'orders'" #mf="mfDataTable"
+            [mfRowsOnPage]="rowsOnPage"  >
+            <thead>
+             
+              <tr>
+                <!-- <th>Select</th> -->
+                <th>Branch</th>
+
+                <th>Order Details</th>
+                 <th>Delivery</th>
+                <th>Settlement</th>
+                <th>Orders Status</th>
+                <th>Amount</th>
+                <th>Status</th>
+
+                
+
+               
+        
+  
+  
+                <!-- <th class="text-right">Action</th> -->
+              </tr>
+             <tr>
+                <th colspan="9">
+                  <div id="custom-search-input">
+                    <div class="input-group col-md-12">
+                      <input type="text" class="form-control" placeholder="Search by Customer Name, Phone, City , Pincode Or Order Number" [(ngModel)]="filterQuery" />
+                      <span class="input-group-btn">
+                        <button class="btn btn-danger" type="button">
+                          <span class=" glyphicon glyphicon-search"></span>
+                        </button>
+                      </span>
+                    </div>
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let data of mf.data; let i = index; let last = last;">
+             
+     
+                <td>{{data.vendor}}</td>
+                <td>{{data.orderdetails}}</td>
+                <td>{{data.dperson}}</td>
+                <td>Branch paid : {{data.isvendorpaid}}<br>
+                  Delivery paid : {{data.isdeliverypaid}}<br></td>
+                  <td>{{data.orderstatus}}</td>
+                <td><span class="label label-danger" style="font-size: 12px;">{{data.deliveryamt}} /-</span></td>
+                <td *ngIf="data.status == 'SUCCESS'"><span class="label label-success" style="font-size: 12px;">{{data.status}}</span></td>
+                <td *ngIf="data.status == 'FAILED'"><span class="label label-danger" style="font-size: 12px;">{{data.status}}</span></td>
+
+                <!-- <td><span class="label label-danger" style="font-size: 12px;">{{data.status}}</span></td> -->
+
+
+
+               
+                             
+                
+               
+                <!-- <td class="text-right">
+          
+               <button (click)="examp()" class="btn btn-success a-btn-slide-text  btn-sm" title="Set Vendor Paid" style="  font-size: 14px; "> 
+                ₹  </button>
+                  
+                </td> -->
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="9">
+                  <mfBootstrapPaginator [rowsOnPageSet]="[5,10,15]"></mfBootstrapPaginator>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+  
+      </div>
+    </div>
+
+
+
+
+              
+ 
+  </div>
+
+
+ 

@@ -1,0 +1,236 @@
+
+<ion-header [translucent]="true">
+  <ion-toolbar
+    style="--background: rgba(134,75,246,1);">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="" (click)="back()" *ngIf="!detailFlag">
+      </ion-back-button>
+      <ion-back-button defaultHref="/tabs/tab2" (click)="cancel()" *ngIf="detailFlag">
+      </ion-back-button>
+    </ion-buttons>
+    <ion-title class="pageheading">
+      <strong> My Orders</strong>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+
+
+<ion-toolbar *ngIf="!detailFlag" style="--background:#e9ddff;">
+  <ion-segment (ionChange)="segmentChanged($event)" [(ngModel)]='segment'>
+    <ion-segment-button value="All">All</ion-segment-button>
+    <ion-segment-button value="favourite">Favourite</ion-segment-button>
+  </ion-segment>
+</ion-toolbar>
+
+<ion-content [fullscreen]="true" *ngIf="!detailFlag" style="--background: #e9ddff">
+  <div *ngIf="!isOrders()">
+    <div class="empty-list">
+      <ion-icon class="empty-cart" name="timer" item-left></ion-icon>
+      <p>{{"No Orders"}} </p>
+    </div>
+  </div>
+
+
+  <div class="mainBox" *ngFor="let order of orders; let i=index">
+    <div class="firstRow" *ngIf="order.oentry.length > 0" (click)="ordersDetails(i,order.id)">
+      <ion-row>
+        <ion-col size="8" class="heading">{{order.oentry[0].dname}} <span *ngIf="order.oentry.length > 1">+ {{order.oentry.length - 1}}</span></ion-col>
+        <ion-col size="4">{{order.invoicenum}}</ion-col>
+      </ion-row>
+    </div>
+    <div class="secondRow" (click)="ordersDetails(i,order.id)">
+      <ion-row>
+        <ion-col size="5">
+          Order Type: 
+          <div class="innerTask">
+            <span *ngIf="order?.ordertype === 'PICK_UP'">Pick UP</span>
+            <span *ngIf="order?.ordertype === 'HOME_DELIVERY'">Delivery</span>
+            <span *ngIf="order?.ordertype === 'DINE_IN'">Dine IN</span> 
+            - 
+            {{order.status}}
+          </div>
+        </ion-col>
+        <ion-col size="7">
+          Order On:
+          <div class="innerTask">{{order.invoicedate | date:'medium'}}</div>
+        </ion-col>
+      </ion-row>
+    </div>
+    <div class="lastBox">
+      <ion-row>
+        <!-- <ion-col size="6">{{order?.qcost?.finalamt | currency: 'INR':'symbol'}}</ion-col> -->
+        <ion-col size="4">Total Item: {{order.oentry.length}}</ion-col>
+        <ion-col size="8" class="AllButton">
+          <button ion-button *ngIf="order.status ==='CLOSED'">
+            <a href="{{docServer}}/{{order?.invoice?.docpath}}">
+              <ion-icon name="code-download-outline" style=" font-size: 1.4rem; color:#552900;"></ion-icon>
+            </a>
+          </button>
+          &nbsp;
+          <button ion-button (click)="like('NO', order.id)" *ngIf="order.favourite ==='YES'">
+            <ion-icon name="heart" style="color:red; font-size: 1.4rem;"></ion-icon>
+          </button>
+          <button ion-button (click)="like('YES', order.id)" *ngIf="order.favourite ==='NO'">
+            <ion-icon name="heart-outline" style=" font-size: 1.4rem;"></ion-icon>
+          </button>
+          &nbsp;
+          <button ion-button (click)="repeatorder(order.id)">
+            <ion-icon name="repeat" style=" font-size: 1.4rem; color:green;"></ion-icon>
+          </button>
+          &nbsp;
+          <button ion-button>
+            <a [routerLink]="['/reviewdish/',order.id]">
+              <ion-icon name="star" style=" font-size: 1.4rem; color:#ffffff;"></ion-icon>
+            </a>
+          </button>
+        </ion-col>
+      </ion-row>
+    </div>
+
+    <!-- <div *ngIf="order.status ==='CLOSED'">
+      <ion-button href="{{docServer}}/{{order?.invoice?.docpath}}" style="--background: #151413c2;" size="small"><ion-icon name="code-download-outline"></ion-icon>
+       &nbsp; Invoice</ion-button>
+    </div> -->
+  </div>
+  
+  <!-- <div *ngFor="let order of orders; let i=index">
+    <ion-card class="orders-item">
+      <a (click)="ordersDetails(i,order.id)" style="cursor: pointer;">
+        <h5 style="color: #ffffff;">Order NO: <strong>{{order.invoicenum}}</strong></h5>
+      </a>
+
+
+      <ion-row>
+        <ion-col col-12 no-padding>
+          Total Items : {{order?.oentry?.length}}
+        </ion-col>
+        <ion-col col-12 no-padding>
+         <ion-label style="font-size: 12px;"><strong style="font-size: 15px;">Order Type : </strong>{{order?.ordertype}}</ion-label> 
+        </ion-col>
+      </ion-row>
+      <ion-row>
+
+        <ion-col col-12 no-padding>
+          <p class="item-name">Total Amount:<strong>{{order?.qcost?.finalamt | currency: 'INR':'symbol'}}
+              {{order.subTotal | number}}</strong></p>
+        </ion-col>
+        <ion-col col-12 no-padding>
+          <h6 class="item-name">Ordered On:<strong>{{order.invoicedate | date}}</strong></h6>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col col-6 no-padding>
+          <p class="status">Status: <strong>{{order.status}}</strong></p>
+        </ion-col>
+        <ion-col col-6 no-padding>
+          <button ion-button (click)="like('NO', order.id)" *ngIf="order.favourite ==='YES'">
+            <ion-icon name="heart" style="color:red; font-size: 30px;"></ion-icon>
+          </button>
+
+          <button ion-button (click)="like('YES', order.id)" *ngIf="order.favourite ==='NO'">
+            <ion-icon name="heart-outline" style=" font-size: 30px;"></ion-icon>
+          </button>
+
+          &nbsp;
+
+          <button ion-button (click)="repeatorder(order.id)">
+            <ion-icon name="repeat" style=" font-size: 30px; color:green;"></ion-icon>
+          </button>
+
+          &nbsp;
+
+          <button ion-button>
+            <a [routerLink]="['/reviewdish/',order.id]">
+              <ion-icon name="star" style=" font-size: 30px; color:#ffffff;"></ion-icon>
+            </a>
+          </button>
+        </ion-col>
+
+      </ion-row>
+      <ion-row>
+        <ion-col col-12 no-padding *ngIf="order.status === 'CLOSED'">
+          <ion-button download="MyInoice" href="{{docServer}}/{{order?.invoice?.docpath}}" style="--background: #151413c2;">
+            Invoice<ion-icon name="download-outline"></ion-icon>
+          </ion-button>
+
+        </ion-col>
+      </ion-row>
+    </ion-card>
+  </div> -->
+</ion-content>
+
+<ion-content [fullscreen]="true" *ngIf="detailFlag" style="--background:#e9ddff;">
+  <ion-list style="background: #e9ddff;">
+
+    <ion-item style="--background: #e9ddff;">
+      <ion-row>
+        <ion-col col-12 no-padding>
+          <a style="cursor: pointer;">
+            <h5 style="color: #ffffff;">Order NO: <strong>{{orderItems?.invoicenum}}</strong></h5>
+          </a>
+        </ion-col>
+      </ion-row>
+    </ion-item>
+
+    <ion-item style="--background: #e9ddff;">
+      <ion-row>
+
+        <ion-col col-12 no-padding>
+          Total Items : {{orderItems?.oentry?.length}}
+        </ion-col>
+      </ion-row>
+    </ion-item>
+
+    <ion-item lines="inset" *ngFor="let item of orderItems.oentry" class="cartShowBox">
+
+      <font style="font-size: 12px;">
+        {{item.dname}}<span *ngIf="item.hasvariant === 'YES'">-{{item.variant}} </span>
+        <br>
+        {{item?.qty}}X
+        <span class="badge" *ngIf="item.rateunit ==='RATEPERPLATE'">Plate</span>
+        <span class="badge" *ngIf="item.rateunit ==='RATEPERBOTTLE'">Bottle</span>
+        <span class="badge" *ngIf="item.rateunit ==='RATEPERDRINK'">Bottle</span><br>
+
+        {{item.rateperunit | currency:'INR': 'symbol'}}
+      </font>
+      <ion-img [src]='docServer +"/"+ item.photo.docpath' slot="start" style="width: 60px; height:60px;"></ion-img>
+
+
+
+      <ion-label slot="end" style="text-align: right;">
+        {{(item.rateperunit * item.qty) |currency:'INR':'symbol'}}
+      </ion-label>
+    </ion-item>
+    <ion-item style="--background: #e9ddff;">
+      Total : <span slot="end">{{orderItems.qcost.baseprice | currency: 'INR':'symbol'}}</span>
+    </ion-item>
+    <ion-item style="--background: #e9ddff;">
+      GST : <span slot="end">{{orderItems.qcost.gstamt | currency: 'INR':'symbol'}}</span>
+    </ion-item>
+
+    <ion-item *ngIf="orderItems.qcost.discountvalue" style="--background: #e9ddff;">
+      DiscountAmount : <span slot="end">{{orderItems.qcost.discountvalue | currency: 'INR':'symbol'}}</span>
+    </ion-item>
+
+    <ion-item *ngIf="orderItems.ordertype === 'HOME_DELIVERY'" style="--background: #e9ddff;">
+      Delivery Charges : <span slot="end">{{orderItems.qcost.delivery | currency: 'INR':'symbol'}}</span>
+    </ion-item>
+
+
+    <ion-item style="--background: #e9ddff;">
+      Grand Total : <span slot="end">{{orderItems.qcost.finalamt | currency: 'INR':'symbol'}}</span>
+    </ion-item>
+
+    <ion-item class="status" style="--background: #e9ddff;">
+      Order Status : <span slot="end"><strong class="status" >{{orderItems.status}}</strong></span>
+
+
+    </ion-item>
+
+    <ion-item style="--background: #e9ddff;">
+      Comment : <span slot="end">{{orderItems.comments }}</span>
+    </ion-item>
+  </ion-list>
+
+</ion-content>

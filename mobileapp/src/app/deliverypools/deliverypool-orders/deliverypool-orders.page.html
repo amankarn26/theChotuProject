@@ -1,0 +1,301 @@
+<!-- <ion-header>
+  <ion-toolbar>
+    <ion-title>vendor_orders</ion-title>
+  </ion-toolbar>
+</ion-header> -->
+
+<ion-header [translucent]="true">
+  <ion-toolbar style="--background: rgba(134,75,246,1);">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/tab2" (click)="cancel()" *ngIf="detailFlag" style="color: white;">
+      </ion-back-button>
+     
+        <ion-back-button defaultHref="#" (click)="back()" *ngIf="!detailFlag" style="color: white;">
+        </ion-back-button>
+    </ion-buttons>
+    <ion-title class="pageheading">
+      <strong>{{title}}
+        <ion-label *ngIf="status ==='AMOUNTPAYBLE' || status==='AMOUNTRECEIVED'">{{amount | currency:'INR': 'symbol' }}
+        </ion-label>
+      </strong>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-toolbar *ngIf="status ==='AMOUNTPAYBLE' || status==='AMOUNTRECEIVED'" style="margin-top: 2px;">
+  <ion-segment (ionChange)="segmentChanged1($event)" [(ngModel)]='segment'>
+    <ion-segment-button value="TODAY">Today</ion-segment-button>
+    <ion-segment-button value="THISWEEK">Week</ion-segment-button>
+    <ion-segment-button value="THISMONTH">Month</ion-segment-button>
+    <ion-segment-button value="LASTMONTH">L-Month</ion-segment-button>
+  </ion-segment>
+</ion-toolbar>
+
+
+<ion-content [fullscreen]="true" *ngIf="!detailFlag && status==='PACKED'" style="--background:#e9ddff;">
+  <div *ngIf="!isOrders()">
+    <div class="empty-list">
+      <ion-icon class="empty-cart" name="timer" item-left style="color: #864bf6;"></ion-icon>
+      <p>{{"No Orders"}} </p>
+    </div>
+  </div>
+  <div *ngFor="let order of orders; let i=index">
+
+    <ion-card class="orders-item" style="background-color: #864bf6;color: white;">
+
+      <div class="firstRow" (click)="ordersDetails(i,order.id)" style="cursor: pointer;">
+        <ion-row>
+          <ion-col size="8" class="heading">{{order.oentry[0].dname}} <span *ngIf="order.oentry.length > 1">+
+              {{order.oentry.length - 1}}</span></ion-col>
+          <ion-col size="4">{{order.invoicenum}}</ion-col>
+        </ion-row>
+      </div>
+
+      <div class="secondRow" (click)="ordersDetails(i,order.id)" style="cursor: pointer;">
+        <ion-row>
+          <ion-col size="6">
+            Customer
+            <div class="innerTask"> {{order.custname}}</div>
+          </ion-col>
+          <ion-col size="6">
+            <div class="innerTask">
+              <ion-icon name="call-sharp" slot=""></ion-icon> {{order.custmobile}}
+            </div>
+          </ion-col>
+        </ion-row>
+
+      </div>
+
+      <div class="secondRow" (click)="ordersDetails(i,order.id)" style="cursor: pointer;">
+      <ion-row>
+        <ion-col size="6">
+         Total:
+         <div class="innerTask"> {{order?.qcost?.finalamt | currency: 'INR':'symbol'}}
+              {{order.subTotal | number}}</div>
+        </ion-col>
+
+        <ion-col size="6">
+        Payable :
+        <div class="innerTask">
+        {{order?.qcost?.delivery | currency: 'INR':'symbol'}}
+            </div>
+
+        </ion-col>
+        </ion-row>
+        </div>
+      <div class="secondRow" (click)="ordersDetails(i,order.id)" style="cursor: pointer;">
+      <ion-row> 
+        <ion-col size="6">
+          Ordered On:
+         <div class="innerTask"> {{order.invoicedate | date}}</div>
+        </ion-col>
+        <ion-col size="6">
+          Expected Delivery: 
+          <div class="innerTask">{{order.expdelivery | date}}</div>
+        </ion-col>
+      </ion-row>
+      </div>
+
+      <div class="secondRow" (click)="ordersDetails(i,order.id)" style="cursor: pointer;">
+      <ion-row>
+        <ion-col size="6">
+          Status: 
+          <div class="innerTask">{{order.status}}</div>
+        </ion-col>
+        <ion-col size="6">
+          Accepted: 
+          <div class="innerTask">{{order?.isdeliveryaccept}}</div>
+        </ion-col>
+      </ion-row>
+      </div>
+
+      <ion-row>
+        <ion-col col-12 no-padding>
+          Total Items: {{orderItems?.oentry?.length}}
+        </ion-col>
+      </ion-row>
+    </ion-card>
+
+  </div>
+</ion-content>
+<ion-content [fullscreen]="true" *ngIf="!detailFlag && status !=='PACKED'" style="--background:#e9ddff;">
+  <div *ngIf="!isOrders()">
+    <div class="empty-list">
+      <ion-icon class="empty-cart" name="timer" item-left style="color: #864bf6;"></ion-icon>
+      <p>{{"No Orders"}} </p>
+    </div>
+  </div>
+  <div *ngFor="let order of orders; let i=index">
+    <ion-card class="orders-item" style="background-color: #864bf6;color: white;">
+      <div class="firstRow" (click)="ordersDetails(i,order.id)" style="cursor: pointer;">
+        <ion-row>
+          <ion-col size="8" class="heading">{{order.oentry[0].dname}} <span *ngIf="order.oentry.length > 1">+
+              {{order.oentry.length - 1}}</span></ion-col>
+          <ion-col size="4">{{order.invoicenum}}</ion-col>
+        </ion-row>
+      </div>
+
+      <div class="secondRow" (click)="ordersDetails(i,order.id)" style="cursor: pointer;">
+        <ion-row>
+          <ion-col size="6">
+            Customer:
+            <div class="innerTask"> {{order.custname}}</div>
+          </ion-col>
+          <ion-col size="6">
+            <div class="innerTask">
+              <ion-icon name="call-sharp" slot=""></ion-icon> {{order.custmobile}}
+            </div>
+          </ion-col>
+        </ion-row>
+      </div>
+
+      <div class="secondRow" (click)="ordersDetails(i,order.id)" style="cursor: pointer;">
+      <ion-row>
+        <ion-col size="6">
+           Amount:
+           <div class="innerTask">{{order?.qcost?.finalamt | currency: 'INR':'symbol'}}
+              {{order.subTotal | number}}</div>
+        </ion-col>
+
+        <ion-col size="6">
+         Payable:
+         <div class="innerTask">{{order?.qcost?.delivery | currency: 'INR':'symbol'}}</div>
+        </ion-col>
+
+      </ion-row>
+      </div>
+      <div class="secondRow" (click)="ordersDetails(i,order.id)" style="cursor: pointer;">
+      <ion-row>
+        <ion-col size="6">
+          Ordered On:
+          <div class="innerTask">{{order.invoicedate | date}}</div>
+        </ion-col>
+        <ion-col size="6">
+          Expected Delivery: 
+          <div class="innerTask">{{order.expdelivery | date}}</div>
+        </ion-col>
+      </ion-row>
+      </div>
+
+     <div class="secondRow" (click)="ordersDetails(i,order.id)" style="cursor: pointer;">
+      <ion-row>
+        <ion-col size="6">
+          Status: <div class="innerTask">{{order.status}}</div>
+        </ion-col>
+
+        <ion-col size="6">
+          Accepted: 
+          <div class="innerTask">{{order?.isdeliveryaccept}}</div>
+        </ion-col>
+      </ion-row>
+      </div>
+      <ion-row>
+      <ion-col col-12 no-padding>
+          Total Items : {{orderItems?.oentry?.length}}
+        </ion-col>
+      </ion-row>
+    </ion-card>
+
+  </div>
+</ion-content>
+
+<ion-content [fullscreen]="true" *ngIf="detailFlag" style="--background:#e9ddff;">
+  
+  <ion-list style="background: #e9ddff;">
+    <!-- <ion-item>
+       Vendor:  {{orderItems?.firmname}}
+       <br>
+       Mobile :  {{orderItems?.vendmobile}}
+    </ion-item> -->
+
+
+    <ion-item lines="inset" *ngFor="let item of orderItems.oentry" class="cartShowBox">
+      <!-- <font style="font-size: 12px;">
+        {{item?.qtyinlesserunit}}
+        
+         <span class="badge" *ngIf="item.rateunit ==='RATEPERDOZEN'"> Dozen</span> -->
+         <div style="width: 100%;">
+
+          <ion-row>
+            <ion-col size="3"><img [src]='docServer +"/"+ item.photo.docpath' alt="item Image" width="80px" height="59px"
+                style="border-radius: 5px; margin-top:10px;box-shadow: 5px 5px 12px 0px rgba(20,21,19,0.71);" /></ion-col>
+            <ion-col size="9" style="padding-left: 10px;">
+              <label style="font-size: 12px;">
+                {{item.dname}} <span *ngIf="item.hasvariant === 'YES'" style="color: white;">-{{item.variant}} </span>
+              </label>
+              <br />
+              <label style="font-size: 12px;">
+                {{item.rateperunit | currency:'INR': 'symbol'}}
+                X {{item.qty}}
+                <span class="badge" *ngIf="item.rateunit ==='RATEPERPLATE'">Plate</span>
+                <span class="badge" *ngIf="item.rateunit ==='RATEPERBOTTLE'">Bottle</span>
+                <span class="badge" *ngIf="item.rateunit ==='RATEPERDRINK'">Bottle</span>
+                <span style="float: right;margin-top: 3px;">{{item.amount | currency:'INR': 'symbol'}}</span>
+  
+              </label>
+              <br>
+              
+            </ion-col>
+          </ion-row>
+        </div>
+    </ion-item>
+    <ion-item style="--background: #e9ddff;" class="colorchange">
+      Total Items : <span slot="end">{{orderItems?.oentry?.length}}</span>
+    </ion-item>
+    <ion-item style="--background: #e9ddff;" class="colorchange">
+      Total : <span slot="end">{{orderItems.qcost.baseprice | currency: 'INR':'symbol'}}</span>
+    </ion-item>
+    <ion-item style="--background: #e9ddff;"class="colorchange">
+      GST : <span slot="end">{{orderItems.qcost.gstamt | currency: 'INR':'symbol'}}</span>
+    </ion-item>
+
+    <ion-item style="--background: #e9ddff;" class="colorchange">
+      Delivery Charges : <span slot="end">{{orderItems.qcost.delivery | currency: 'INR':'symbol'}}</span>
+    </ion-item>
+
+    <ion-item style="--background: #e9ddff;" class="colorchange">
+      Grand Total : <span slot="end">{{orderItems.qcost.finalamt | currency: 'INR':'symbol'}}</span>
+    </ion-item>
+
+    <ion-item style="--background: #e9ddff;" class="colorchange">
+      Expected Delivery : <span slot="end">{{orderItems.expdelivery|date: 'dd-MM-yyyy' }}</span>
+    </ion-item>
+
+    <ion-item style="--background: #e9ddff;" class="colorchange">
+      <ion-label>
+        <p class="show-address" style="font-size: 20px; font-weight: 500;"><strong> Delivery Address: </strong></p>
+        <p class="show-address" style="font-size: 16px; padding-top: 5px;font-weight: 500;"><strong>{{orderItems?.custname | uppercase}}
+          </strong></p>
+        <p class="show-address" style="font-weight: 500;">{{orderItems.deliveryaddress.line1}} </p>
+        <p class="show-address" style="font-weight: 500;" *ngIf="orderItems.deliveryaddress.line2">{{orderItems?.deliveryaddress?.line2}}</p>
+        <p class="show-address" style="font-weight: 500;">{{orderItems.deliveryaddress.states}}, {{orderItems.deliveryaddress.city}}</p>
+        <p class="show-address" style="font-weight: 500;">{{orderItems.deliveryaddress.pincode}}</p>
+        <p class="show-address" style="font-weight: 500;"> Phone: {{orderItems?.custmobile}}</p>
+      </ion-label>
+    </ion-item>
+
+    <!-- <ion-item>
+      <ion-label>
+        <p class="show-address" style="font-size: 20px;"><strong> Vendor Address: </strong></p>
+        <p class="show-address" style="font-size: 16px; padding-top: 5px;"><strong>{{orderItems?.firmname | uppercase}}
+          </strong></p>
+        <p class="show-address">{{orderItems?.vendaddress?.line1}} </p>
+        <p class="show-address" *ngIf="orderItems.vendaddress.line2">{{orderItems?.vendaddress?.line2}}</p>
+        <p class="show-address">{{orderItems.vendaddress.states}}, {{orderItems.vendaddress.city}}</p>
+        <p class="show-address">{{orderItems.vendaddress.pincode}}</p>
+        <p class="show-address"> Phone: {{orderItems?.vendmobile}}</p>
+      </ion-label>
+    </ion-item> -->
+  </ion-list>
+  <ion-button expand="block"
+    *ngIf="(orderItems.status==='PLACED' || orderItems.status==='PACKED' ) && orderItems.isdeliveryaccept ==='NO'"
+    (click)="changeStatus('YES', orderItems.id, orderItems)" style="--background: #151413c2;">Accept</ion-button>
+  <ion-button  expand="block"
+    *ngIf="(orderItems.status==='PLACED' || orderItems.status==='PACKED') && orderItems.isdeliveryaccept ==='NO'"
+    (click)="presentAlertConfirm(orderItems)" style="--background: #151413c2;">Reject</ion-button>
+  <ion-button *ngIf="status==='PACKED'" expand="block" (click)="changeStatus('PICKED_UP', orderItems.id, orderItems)" style="--background: #151413c2;">
+    Picked Up</ion-button>
+  <ion-button *ngIf="status==='PICKED_UP'" expand="block"
+    (click)="changeStatus('DELIVERED', orderItems.id, orderItems)" style="--background: #151413c2;">Delivered</ion-button>
+</ion-content>

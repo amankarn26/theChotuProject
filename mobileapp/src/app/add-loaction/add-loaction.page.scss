@@ -1,0 +1,99 @@
+.mainBox {
+    width: 100%;
+
+    .inputBox {
+        margin: 10px;
+        padding: 10px;
+
+        .input {
+            width: 100%;
+            border: none;
+            border-bottom: 1px #864bf6 solid;
+        }
+    }
+}
+
+.buttonBox {
+    width: 100%;
+    margin-top: 20px;
+
+    .buttons {
+        margin: 10px;
+
+        .button {
+            font-size: 14px;
+            text-align: center;
+            background-color: #864bf6;
+            color: #FFFFFF;
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .hide {
+            background-color: #b188ff !important;
+        }
+    }
+}
+
+
+
+#mapcontainer {
+    text-align: center;
+  
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+  
+    
+  }
+  
+  #mapcontainer strong {
+    font-size: 20px;
+    line-height: 26px;
+  }
+  
+  #mapcontainer p {
+    font-size: 16px;
+    line-height: 22px;
+  
+    color: #8c8c8c;
+  
+    margin: 0;
+  }
+  
+  #mapcontainer a {
+    text-decoration: none;
+  }
+  
+  #map {
+    height: 90vh;
+    width: 100vw;
+    margin: auto;
+  }
+
+  .visible {
+    display: block !important;
+  }
+  
+  .mapBox {
+    position: relative;
+    display: none;
+    .buttons {
+        width: 80%;
+        position: absolute;
+        bottom: 20px;
+        left: 0px;
+    
+        .proceed {
+            background-color: #864bf6;
+            padding: 15px;
+            margin-left: 10px;
+            text-align: center;
+            border-radius: 50px;
+            color: white;
+        }
+        
+    }
+  }

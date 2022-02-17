@@ -1,0 +1,201 @@
+<!-- <ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title class="pageheading">
+      Tab 3
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Tab 3</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <app-explore-container name="Tab 3 page"></app-explore-container>
+</ion-content> -->
+
+<ion-header [translucent]="true"    >
+  <ion-toolbar style="--background: rgba(134,75,246,1);">
+
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/deliverypools/deliverypool-home" *ngIf="!isUpdate" style="color: white;" >
+      </ion-back-button>
+      <ion-back-button defaultHref="/deliverypools/deliverypool-home" (click)="back()" *ngIf="isUpdate" style="color: white;">
+      </ion-back-button>
+    </ion-buttons>
+    <ion-title class="pageheading">
+     My Profile
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" *ngIf="!isUpdate" >
+ <ion-list style="font-style: italic;">
+   <ion-item  class="ion-text-capitalize" class="d">
+     Name : {{name}}
+   </ion-item>
+
+   <ion-item class="d">
+    Phone : {{phone}}
+  </ion-item>
+
+  <ion-item class="d">
+    Email : {{email}}
+  </ion-item>
+
+  <ion-item class="d">
+  <h4>Address</h4>
+  </ion-item>
+
+  <ion-item class="ion-text-capitalize" class="d">
+
+    {{Address.line1}}  {{Address.line2}} <br>
+    {{Address.states}},{{Address.city}}<br>
+    {{Address.pincode}}
+  </ion-item>
+
+
+
+  <ion-item class="d">
+    <br>
+     Send Your Complaints on  :<br>
+     Email:&nbsp;softwiders@gmail.com
+
+  </ion-item>
+  <ion-item class="d">
+    <a href="tel:9322717587" style="color: #864bf6;">Call us at 9322717587</a>
+  </ion-item>
+
+<!--
+  <ion-skeleton-text animated style="width: 50%">
+  pankajfdsfdsfsfs</ion-skeleton-text> -->
+  <ion-item>
+
+    <ion-tabs>
+    <ion-tab-bar slot="bottom">
+      <ion-tab-button (click)="gotoupdatepass()" >
+        <ion-icon name="key"></ion-icon>
+        <ion-label>Update Password</ion-label>
+
+      </ion-tab-button>
+
+      <ion-tab-button (click)="gotoupdatelocation()"  >
+        <ion-icon name="location"></ion-icon>
+        <ion-label>Update Address</ion-label>
+      </ion-tab-button>
+    </ion-tab-bar>
+  </ion-tabs>
+
+</ion-item>
+
+ </ion-list>
+
+ <!-- <ion-item text-center >
+  <ion-label text-center style="text-align: center; !important"   >
+    <ion-button size="small"  (click)="gotoupdatepass()" >Change Password</ion-button>
+ </ion-label>
+ </ion-item> -->
+
+</ion-content>
+
+
+<ion-content [fullscreen]="true" *ngIf="isUpdate && updatePassword" >
+  <form #form5="ngForm" >
+    <ion-list lines="full" class="ion-no-margin ion-no-padding">
+      <ion-row>
+        <ion-col col-12 style="padding-top: 40px;">
+          <ion-item>
+            <ion-input type="password" [(ngModel)]="pass" name="phonesss" placeholder="Enter 6 Digit Numeric Password" pattern="[0-9]{6}"
+              required></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-input type="password" [(ngModel)]="vpass" name="phonesss1" placeholder="Re-enter  Password" pattern="[0-9]{6}"
+              required></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+
+      <ion-row  >
+      <ion-item text-center   >
+        <ion-label text-center style="text-align: center important;"  >
+          <ion-button size="small" [disabled]="!form5.valid" (click)="update()" style="--background: #864bf6;">Update</ion-button>
+
+          &nbsp;
+          &nbsp;
+          <ion-button size="small"  (click)="back()" style="--background: #864bf6;">Cancel </ion-button>
+
+       </ion-label>
+      </ion-item>
+      </ion-row>
+
+
+      <!-- <ion-row>
+        <ion-col col-12>
+          <button class="login-btn" type="submit" [disabled]="!form5.valid" ion-button (click)="checkifnumberexists()"
+          style="font-weight: bolder; size: 16px; !important">Next
+          </button>
+        </ion-col>
+      </ion-row> -->
+    </ion-list>
+
+  </form>
+
+ </ion-content>
+
+ <ion-content [fullscreen]="true" *ngIf="isUpdate && updateLocation" >
+  <form #form6="ngForm" >
+    <ion-list lines="full" class="ion-no-margin ion-no-padding">
+
+
+      <ion-row>
+
+        <ion-item>
+          <ion-label position="floating"></ion-label>
+          <ion-input placeholder="Address Line 1" type="text" class="form-control" id="uline12" name="uline12"
+            [(ngModel)]="address.line1" required></ion-input>
+
+
+          <ion-input placeholder="Area " type="text" class="form-control" id="uline2" name="uline2"
+            [(ngModel)]="address.line2"></ion-input>
+
+          <ion-input placeholder="Zip Code" type="number" required class="form-control" id="upincode" name="upincode"
+            [(ngModel)]="address.pincode" (change)="getState($event)"></ion-input>
+          <ion-input placeholder="City" type="text" required class="form-control" name="ucitiName"
+            [(ngModel)]="address.city"></ion-input>
+          <ion-input placeholder="State" type="text" required class="form-control" name="ustates" required
+            [(ngModel)]="address.states"></ion-input>
+
+        </ion-item>
+
+        <!-- <ion-item>
+          {{this.lattitude}} - {{this.longitude}}
+        </ion-item> -->
+
+
+      </ion-row>
+
+      <ion-row  >
+        <ion-item text-center   >
+          <ion-label text-center style="text-align: center !important;"  >
+            <ion-button size="small" [disabled]="!form6.valid" (click)="updatecustomer()" style="--background: #864bf6;">Update</ion-button>
+
+            &nbsp;
+            &nbsp;
+            <ion-button size="small"  (click)="back()" style="--background: #864bf6;">Cancel </ion-button>
+
+         </ion-label>
+        </ion-item>
+        </ion-row>
+
+    </ion-list>
+
+
+
+
+  </form>
+
+ </ion-content>
